@@ -83,11 +83,11 @@
             border-radius:50%;
             display:block;
             margin:0 auto 25px auto;
-            object-fit:contain;
+            object-fit:cover;
             background:white;
-            padding:15px;
             box-shadow:0 10px 30px rgba(0,0,0,0.3);
             animation: slideIn 0.8s ease;
+            overflow:hidden;
         }
         .title{
             font-size:28px;
@@ -127,28 +127,39 @@
         /* Tombol kembali */
         .back {
             position:fixed;
-            top:20px;
-            left:20px;
+            top:30px;
+            left:30px;
             z-index:9999;
             display:inline-flex;
             align-items:center;
-            gap:8px;
-            padding:10px 16px;
-            background:white;
-            border-radius:12px;
-            box-shadow:0 4px 12px rgba(0,0,0,.1);
-            color:#374151;
+            gap:10px;
+            padding:12px 24px;
+            background:linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            border:2px solid rgba(6, 95, 70, 0.2);
+            border-radius:50px;
+            color:var(--green-dark);
             text-decoration:none;
-            font-size:14px;
-            font-weight:600;
+            font-size:15px;
+            font-weight:700;
             transition:all 0.3s ease;
+            box-shadow:0 4px 15px rgba(0,0,0,.1);
         }
         .back:hover{
-            background:var(--green-dark);
+            background:linear-gradient(135deg, var(--green) 0%, var(--green-2) 100%);
             color:white;
-            transform:translateX(-5px);
+            border-color:var(--green);
+            transform:translateY(-2px);
+            box-shadow:0 8px 25px rgba(5,150,105,0.3);
         }
-        .back svg{width:18px;height:18px;display:block}
+        .back svg{
+            width:16px;
+            height:16px;
+            display:block;
+            transition:transform 0.3s ease;
+        }
+        .back:hover svg{
+            transform:translateX(-3px);
+        }
 
         .form-header{
             text-align:center;
@@ -159,7 +170,9 @@
             height:48px;
             display:block;
             margin:0 auto 15px auto;
-            object-fit:contain;
+            object-fit:cover;
+            border-radius:50%;
+            overflow:hidden;
         }
         .form-title{
             font-size:28px;
@@ -387,7 +400,6 @@
                 </a>
 
                 <div class="form-header">
-                    <img class="wheat" src="{{ asset('images/padi.png') }}" alt="Ikon Padi" />
                     <h2 class="form-title">Selamat Datang!</h2>
                     <p class="form-desc">Masuk ke akun Anda untuk melanjutkan</p>
                 </div>

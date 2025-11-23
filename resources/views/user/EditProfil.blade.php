@@ -19,6 +19,7 @@
         max-width: 900px;
         margin: 2rem auto;
         padding: 0 2rem;
+        margin-top: 120px;
     }
 
     .edit-profile-card {
@@ -413,11 +414,16 @@
                         <i class="fas fa-save"></i>
                         Simpan
                     </button>
-                    <a href="{{ route('home') }}" class="btn btn-cancel">
+                    <button type="button" class="btn btn-cancel" onclick="logoutUser()">
                         <i class="fas fa-sign-out-alt"></i>
                         Keluar
-                    </a>
+                    </button>
                 </div>
+            </form>
+            
+            <!-- Form Logout tersembunyi -->
+            <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
             </form>
         </div>
     </div>
@@ -426,6 +432,13 @@
 
 @push('scripts')
 <script>
+    // Logout function
+    function logoutUser() {
+        if (confirm('Apakah Anda yakin ingin keluar dari akun?')) {
+            document.getElementById('logoutForm').submit();
+        }
+    }
+
     // Preview uploaded image
     function previewImage(event) {
         const input = event.target;

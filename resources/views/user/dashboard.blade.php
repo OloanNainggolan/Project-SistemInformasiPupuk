@@ -364,12 +364,12 @@
         <div class="hero-text">
             <span class="welcome-text">Selamat Datang!</span>
             <p>Mari bersama kita tingkatkan hasil pertanian dengan akses mudah ke pupuk dan bibit subsidi. Dapatkan informasi, layanan, dan panduan agar pertanian semakin maju dan sejahtera.</p>
-            <button class="cta-button">Lihat Selengkapnya</button>
+            <button class="cta-button" onclick="scrollToWhyChoose()">Lihat Selengkapnya</button>
         </div>
     </div>
 </section>
 
-<section class="why-choose-us">
+<section class="why-choose-us" id="why-choose-section">
     <div class="container">
         <h2>MENGAPA MEMILIH PUPUK & BIBIT SUBSIDI?</h2>
         <p class="subtitle-text">Program subsidi pemerintah memberikan akses kepada petani untuk mendapatkan pupuk dan bibit berkualitas tinggi dengan harga terjangkau, mendukung peningkatan produktivitas dan kesejahteraan petani Indonesia.</p>
@@ -491,4 +491,17 @@
         </div>
     </div>
 </section>
+
+<script>
+    // Smooth scroll function untuk tombol "Lihat Selengkapnya"
+    function scrollToWhyChoose() {
+        const section = document.getElementById('why-choose-section');
+        if (section) {
+            section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }
+</script>
 @endsection

@@ -22,14 +22,15 @@
 
         /* ========== STICKY HEADER ========== */
         .user-header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
             padding: 0;
+            border-bottom: 3px solid #10b981;
         }
 
         .header-container {
@@ -45,116 +46,192 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo-section:hover {
+            transform: translateY(-2px);
         }
 
         .logo {
             width: 50px;
             height: 50px;
-            background-color: #d4a574;
-            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+        }
+
+        .logo i {
+            color: white;
+            font-size: 24px;
         }
 
         .logo-text h1 {
-            font-size: 18px;
-            color: #2d5016;
-            font-weight: 600;
+            font-size: 17px;
+            color: #065f46;
+            font-weight: 700;
             margin: 0;
+            letter-spacing: 0.3px;
         }
 
         .logo-text p {
             font-size: 12px;
-            color: #666;
+            color: #059669;
+            font-weight: 500;
             margin: 0;
         }
 
         .nav-menu {
             display: flex;
-            gap: 30px;
+            gap: 8px;
             list-style: none;
             align-items: center;
         }
 
         .nav-menu a {
             text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            font-size: 15px;
-            transition: color 0.3s;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
             position: relative;
-            padding: 5px 0;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu a i {
+            font-size: 16px;
+            color: #10b981;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            transition: width 0.3s ease;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .nav-menu a:hover::before {
+            width: 100%;
         }
 
         .nav-menu a:hover {
-            color: #4CAF50;
+            background: linear-gradient(135deg, #dcfce7, #d1fae5);
+            color: #065f46;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16,185,129,0.2);
+        }
+
+        .nav-menu a:hover i {
+            transform: scale(1.2);
+            color: #059669;
         }
 
         .nav-menu a.active {
-            color: #4CAF50;
-            font-weight: 600;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
         }
 
-        .nav-menu a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background-color: #4CAF50;
-            border-radius: 2px;
+        .nav-menu a.active i {
+            color: white;
+        }
+
+        .nav-menu a.active::before {
+            display: none;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 8px;
         }
 
         .notification-icon {
             position: relative;
-            font-size: 20px;
-            color: #333;
+            font-size: 18px;
+            color: #374151;
             cursor: pointer;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .notification-icon i {
+            color: #10b981;
         }
 
         .notification-icon:hover {
-            color: #4CAF50;
+            background: linear-gradient(135deg, #dcfce7, #d1fae5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16,185,129,0.2);
+        }
+
+        .notification-icon:hover i {
+            transform: scale(1.2);
+            color: #059669;
         }
 
         .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: #f44336;
+            top: 5px;
+            right: 5px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 8px;
+            height: 8px;
             font-size: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
         }
 
         .profile-section {
             position: relative;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
-            padding: 5px 12px;
-            border-radius: 20px;
-            transition: background-color 0.3s;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
 
         .profile-section:hover {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #dcfce7, #d1fae5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16,185,129,0.2);
         }
 
         .profile-dropdown {
@@ -205,36 +282,39 @@
 
         .dropdown-item i {
             width: 20px;
-            color: #4CAF50;
+            color: #10b981;
             font-size: 16px;
         }
 
         .dropdown-item.logout {
-            color: #f44336;
+            color: #ef4444;
         }
 
         .dropdown-item.logout i {
-            color: #f44336;
+            color: #ef4444;
         }
 
         .dropdown-item.logout:hover {
-            background-color: #ffebee;
+            background-color: #fee2e2;
         }
 
         .profile-avatar {
-            width: 20px;
-            height: 20px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #10b981, #059669);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 500;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+            border: 2px solid white;
+            flex-shrink: 0;
         }
         
         .profile-avatar i {
-            font-size: 11px;
+            font-size: 15px;
         }
 
         .profile-info {
@@ -243,14 +323,17 @@
         }
 
         .profile-name {
-            font-size: 15px;
-            font-weight: 500;
-            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            color: #065f46;
+            white-space: nowrap;
+            line-height: 1;
         }
 
         .profile-role {
-            font-size: 12px;
-            color: #666;
+            font-size: 11px;
+            color: #059669;
+            font-weight: 500;
         }
 
         /* Mobile Menu Toggle */
@@ -272,37 +355,122 @@
 
         /* ========== FOOTER ========== */
         footer {
-            background-color: #065f46;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
             color: white;
-            padding: 40px 50px 20px;
+            padding: 60px 50px 0;
             margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 30px;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .footer-logo-icon i {
+            font-size: 30px;
+            color: white;
         }
 
         .footer-logo h2 {
             color: #FFF;
-            margin-bottom: 15px;
-            font-size: 20px;
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .footer-logo p {
             line-height: 1.8;
             color: #d1fae5;
             font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-social a:hover {
+            background: #10b981;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
         }
 
         .footer-section h3 {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #FFF;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 2px;
         }
 
         .footer-links {
@@ -310,31 +478,72 @@
         }
 
         .footer-links li {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .footer-links a {
             color: #d1fae5;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
             font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .footer-links a:hover {
             color: #FFF;
+            transform: translateX(5px);
         }
 
         .footer-links i {
-            margin-right: 8px;
             width: 20px;
+            color: #10b981;
+            font-size: 16px;
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: #d1fae5;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-contact-item i {
+            color: #10b981;
+            font-size: 18px;
+            margin-top: 2px;
+            min-width: 20px;
         }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.2);
+            padding: 25px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
             color: #d1fae5;
             font-size: 14px;
+            background: rgba(0, 0, 0, 0.2);
+            margin: 0 -50px;
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        .footer-bottom a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom a:hover {
+            color: #34d399;
         }
 
         /* ========== RESPONSIVE ========== */
@@ -348,8 +557,12 @@
                 gap: 30px;
             }
 
+            .footer-logo {
+                grid-column: 1 / -1;
+            }
+
             footer {
-                padding: 30px 30px 20px;
+                padding: 50px 30px 0;
             }
         }
 
@@ -391,11 +604,19 @@
 
             .footer-content {
                 grid-template-columns: 1fr;
-                gap: 25px;
+                gap: 30px;
+            }
+
+            .footer-logo {
+                grid-column: auto;
             }
 
             footer {
-                padding: 25px 20px 15px;
+                padding: 40px 20px 0;
+            }
+
+            .footer-bottom {
+                font-size: 12px;
             }
 
             .content-wrapper {
@@ -411,15 +632,17 @@
     <header class="user-header">
         <div class="header-container">
             <!-- Logo Section -->
-            <div class="logo-section">
-                <div class="logo">
-                    🌾
+            <a href="{{ route('dashboard') }}" style="text-decoration: none;">
+                <div class="logo-section">
+                    <div class="logo">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Pupuk & Bibit Subsidi</h1>
+                        <p>Sistem Informasi Pemerintah</p>
+                    </div>
                 </div>
-                <div class="logo-text">
-                    <h1>Pupuk & Bibit Subsidi</h1>
-                    <p>Sistem Informasi Pertanian</p>
-                </div>
-            </div>
+            </a>
 
             <!-- Mobile Menu Toggle -->
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
@@ -428,9 +651,24 @@
 
             <!-- Navigation Menu -->
             <ul class="nav-menu" id="navMenu">
-                <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Beranda</a></li>
-                <li><a href="{{ route('pupuk.bibit') }}" class="{{ request()->routeIs('pupuk.bibit') ? 'active' : '' }}">Pupuk & Bibit</a></li>
-                <li><a href="{{ route('kontak') }}" class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a></li>
+                <li>
+                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <i class="fas fa-home"></i>
+                        <span>Beranda</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('pupuk.bibit') }}" class="{{ request()->routeIs('pupuk.bibit') ? 'active' : '' }}">
+                        <i class="fas fa-leaf"></i>
+                        <span>Pupuk & Bibit</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('kontak') }}" class="{{ request()->routeIs('kontak') ? 'active' : '' }}">
+                        <i class="fas fa-envelope"></i>
+                        <span>Kontak</span>
+                    </a>
+                </li>
             </ul>
 
             <!-- Right Section -->
@@ -444,10 +682,14 @@
                 <!-- Profile Section with Dropdown -->
                 <div class="profile-section">
                     <div class="profile-avatar">
-                        <i class="fas fa-user"></i>
+                        @if(auth()->user()->foto)
+                            <img src="{{ asset(auth()->user()->foto) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        @else
+                            <i class="fas fa-user"></i>
+                        @endif
                     </div>
                     <div class="profile-info">
-                        <span class="profile-name">User Petani</span>
+                        <span class="profile-name">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'User' }}</span>
                     </div>
                     
                     <!-- Dropdown Menu -->
@@ -483,34 +725,61 @@
         <div class="footer-content">
             <!-- Branding Section -->
             <div class="footer-logo">
+                <div class="footer-logo-icon">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
                 <h2>Pupuk Subsidi Indonesia</h2>
                 <p>Platform resmi pemerintah untuk distribusi pupuk dan bibit bersubsidi kepada petani Indonesia. Mendukung ketahanan pangan nasional melalui program subsidi berkelanjutan.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
             </div>
 
             <!-- Menu Links -->
             <div class="footer-section">
                 <h3>Menu Utama</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Beranda</a></li>
-                    <li><a href="{{ route('pupuk.bibit') }}"><i class="fas fa-seedling"></i> Pupuk & Bibit</a></li>
-                    <li><a href="{{ route('profil.user') }}"><i class="fas fa-user"></i> Profil</a></li>
-                    <li><a href="{{ route('kontak') }}"><i class="fas fa-envelope"></i> Kontak</a></li>
+                    <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i>Beranda</a></li>
+                    <li><a href="{{ route('pupuk.bibit') }}"><i class="fas fa-seedling"></i>Pupuk & Bibit</a></li>
+                    <li><a href="{{ route('profil.user') }}"><i class="fas fa-user"></i>Profil</a></li>
+                    <li><a href="{{ route('kontak') }}"><i class="fas fa-envelope"></i>Kontak</a></li>
+                </ul>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h3>Informasi</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fa-solid fa-circle-info"></i>Tentang Kami</a></li>
+                    <li><a href="#"><i class="fa-solid fa-file-shield"></i>Kebijakan Privasi</a></li>
+                    <li><a href="#"><i class="fa-solid fa-file-contract"></i>Syarat & Ketentuan</a></li>
+                    <li><a href="#"><i class="fa-solid fa-circle-question"></i>FAQ</a></li>
                 </ul>
             </div>
 
             <!-- Contact Info -->
             <div class="footer-section">
                 <h3>Hubungi Kami</h3>
-                <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i> Jl. Sitoluama, Laguboti, Toba</li>
-                    <li><i class="fas fa-phone"></i> +62 813 2323 09</li>
-                    <li><i class="fas fa-envelope"></i> info@pupuksubsidi.id</li>
-                </ul>
+                <div class="footer-contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Jl. Sitoluama, Laguboti, Toba</span>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>+62 813 2323 09</span>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>info@pupuksubsidi.id</span>
+                </div>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} INFORMATION SYSTEMS - Del Institute of Technology. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} INFORMATION SYSTEMS - <a href="https://www.del.ac.id" target="_blank">Del Institute of Technology</a>. All Rights Reserved.</p>
         </div>
     </footer>
 
