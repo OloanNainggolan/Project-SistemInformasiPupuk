@@ -6,51 +6,51 @@
 <style>
     /* Main Container */
     .container {
-        max-width: 1400px;
-        margin: 2rem auto;
-        padding: 0 2rem;
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 2rem;
+        margin-top: 80px;
     }
 
     .dashboard-title {
-        background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
-        padding: 1.5rem 2.5rem;
-        border-radius: 30px;
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        padding: 1.2rem 2rem;
+        border-radius: 15px;
         display: inline-block;
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         font-weight: 700;
-        color: #1b5e20;
+        color: white;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
     }
 
     .dashboard-content {
         display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 2rem;
+        grid-template-columns: 350px 1fr;
+        gap: 2.5rem;
     }
 
     /* Profile Card */
     .profile-card {
         background: white;
-        border-radius: 20px;
-        padding: 2.5rem;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         height: fit-content;
-        transition: transform 0.3s ease;
-    }
-
-    .profile-card:hover {
-        transform: translateY(-5px);
+        border: 1px solid #f0f0f0;
     }
 
     .profile-avatar {
-        width: 120px;
-        height: 120px;
+        width: 110px;
+        height: 110px;
         border-radius: 50%;
-        margin: 0 auto 1.5rem;
+        margin: 0 auto 1.2rem;
         overflow: hidden;
-        border: 4px solid #4caf50;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        border: 3px solid #4caf50;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .profile-avatar img {
@@ -61,13 +61,14 @@
 
     .profile-name {
         text-align: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
     }
 
     .profile-name h2 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         color: #2e7d32;
         margin-bottom: 0.3rem;
+        font-weight: 600;
     }
 
     .profile-name p {
@@ -76,19 +77,20 @@
     }
 
     .profile-info {
-        margin: 2rem 0;
+        margin: 1.5rem 0;
         padding: 1.5rem 0;
-        border-top: 1px solid #e0e0e0;
-        border-bottom: 1px solid #e0e0e0;
+        border-top: 1px solid #e8e8e8;
+        border-bottom: 1px solid #e8e8e8;
     }
 
     .info-item {
         display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        margin-bottom: 1rem;
+        align-items: flex-start;
+        gap: 0.9rem;
+        margin-bottom: 1.1rem;
         color: #555;
         font-size: 0.9rem;
+        line-height: 1.5;
     }
 
     .info-item:last-child {
@@ -96,22 +98,22 @@
     }
 
     .info-icon {
-        width: 20px;
-        height: 20px;
-        color: #4caf50;
+        font-size: 18px;
+        min-width: 20px;
+        text-align: center;
     }
 
     .profile-actions {
         display: flex;
         flex-direction: column;
-        gap: 0.8rem;
-        margin-top: 2rem;
+        gap: 0.9rem;
+        margin-top: 1.5rem;
     }
 
     .btn {
-        padding: 0.9rem;
+        padding: 0.85rem 1rem;
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -119,70 +121,77 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 0.6rem;
     }
 
     .btn-edit {
         background: #4caf50;
         color: white;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
     }
 
     .btn-edit:hover {
         background: #45a049;
-        transform: scale(1.02);
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
     }
 
     .btn-logout {
         background: #f44336;
         color: white;
+        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
     }
 
     .btn-logout:hover {
         background: #da190b;
-        transform: scale(1.02);
-        box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
     }
 
     /* Land Info Section */
     .land-info {
         background: white;
-        border-radius: 20px;
+        border-radius: 16px;
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border: 1px solid #f0f0f0;
     }
 
     .land-info h3 {
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         color: #2e7d32;
         margin-bottom: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .land-details {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 1.5rem;
-        flex-wrap: wrap;
     }
 
     .land-item {
-        flex: 1;
-        min-width: 150px;
+        background: #fafafa;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #f0f0f0;
     }
 
     .land-label {
         font-size: 0.85rem;
-        color: #888;
+        color: #777;
         margin-bottom: 0.5rem;
+        font-weight: 500;
     }
 
     .land-value {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         font-weight: 600;
         color: #333;
-        background: #f5f5f5;
-        padding: 0.8rem;
-        border-radius: 10px;
     }
 
     .commodity-tags {

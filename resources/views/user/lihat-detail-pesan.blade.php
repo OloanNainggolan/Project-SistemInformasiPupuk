@@ -70,27 +70,3 @@
     </div>
 </main>
 @endsection
-seQty() {
-            if (currentQty > 1) {
-                currentQty--;
-                updateQty();
-            }
-        }
-
-        function updateQty() {
-            document.getElementById('qtyValue').textContent = currentQty;
-            document.getElementById('quantityInput').value = currentQty; // Update hidden input
-            const total = basePrice * currentQty;
-            document.getElementById('subtotal').textContent = 'Rp' + total.toLocaleString('id-ID');
-            document.getElementById('total').textContent = 'Rp' + total.toLocaleString('id-ID');
-        }
-    </script>
-</body>
-</html>
->>>>>>> 7f94dce479a19a8dccb38a2595d9662974475824
-
-            </div>
-        </div>
-    </div>
-</main>
-@endsection

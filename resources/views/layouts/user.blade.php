@@ -146,10 +146,10 @@
             position: relative;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
-            padding: 8px 15px;
-            border-radius: 25px;
+            padding: 5px 12px;
+            border-radius: 20px;
             transition: background-color 0.3s;
         }
 
@@ -222,15 +222,19 @@
         }
 
         .profile-avatar {
-            width: 40px;
-            height: 40px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background-color: #4CAF50;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 600;
+            font-weight: 500;
+        }
+        
+        .profile-avatar i {
+            font-size: 11px;
         }
 
         .profile-info {
@@ -239,8 +243,8 @@
         }
 
         .profile-name {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 500;
             color: #333;
         }
 

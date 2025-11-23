@@ -122,17 +122,17 @@
     }
 
     .card-icon {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.8em;
+        font-size: 2em;
         margin-bottom: 15px;
-        position: absolute;
-        top: -25px;
-        left: 20px;
+        position: relative;
+        top: 0;
+        left: 0;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
@@ -147,8 +147,8 @@
     }
 
     .card-choice h3 {
-        margin-top: 25px;
-        margin-bottom: 10px;
+        margin-top: 0;
+        margin-bottom: 12px;
         font-size: 1.4em;
     }
     

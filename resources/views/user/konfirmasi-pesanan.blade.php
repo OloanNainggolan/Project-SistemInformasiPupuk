@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konfirmasi Pesanan - Pupuk & Bibit Subsidi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+@extends('layouts.user')
+
+@section('title', 'Konfirmasi Pesanan - Pupuk & Bibit Subsidi')
+
+@push('styles')
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -366,10 +364,9 @@
             }
         }
     </style>
-</head>
-<body>
-    @include('partials.header')
+@endpush
 
+@section('content')
     <div class="main-container">
         <!-- Back Button -->
         <div class="back-button">
@@ -520,9 +517,9 @@
             </div>
         </div>
     </div>
+@endsection
 
-    @include('partials.footer')
-
+@push('scripts')
     <script>
         function konfirmasiPesanan() {
             if (confirm('Apakah Anda yakin ingin mengkonfirmasi pesanan ini?')) {
@@ -532,5 +529,4 @@
             }
         }
     </script>
-</body>
-</html>
+@endpush

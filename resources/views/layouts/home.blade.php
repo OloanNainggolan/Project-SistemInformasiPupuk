@@ -23,9 +23,9 @@
     @yield('content')
 
     <!-- Simple Footer for Home Page -->
-    <footer style="background: #065f46; color: white; text-align: center; padding: 30px 20px; margin-top: 50px;">
-        <p style="font-size: 14px;">&copy; {{ date('Y') }} Pupuk & Bibit Subsidi - Sistem Informasi Pemerintah. Semua hak cipta dilindungi.</p>
-        <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">INFORMATION SYSTEMS - Del Institute of Technology</p>
+    <footer style="background: #065f46; color: white; text-align: center; padding: 35px 20px; margin-top: 0;">
+        <p style="font-size: 14px; margin: 0 0 8px 0;">&copy; {{ date('Y') }} Pupuk & Bibit Subsidi - Sistem Informasi Pemerintah. Semua hak cipta dilindungi.</p>
+        <p style="font-size: 12px; margin: 0; opacity: 0.8;">INFORMATION SYSTEMS - Del Institute of Technology</p>
     </footer>
 </body>
 </html>

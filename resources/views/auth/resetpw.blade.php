@@ -117,6 +117,7 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
       max-width: 520px;
       width: 100%;
+      margin: 0 auto;
       text-align: center;
       color: var(--text-color);
       position: relative;

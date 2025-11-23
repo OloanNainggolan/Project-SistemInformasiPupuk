@@ -38,51 +38,51 @@
     <h2 style="font-size:2.2rem; font-weight:bold; color:#2d7a3e; margin-bottom:15px;">Pupuk dan Bibit Bersubsidi Pemerintah</h2>
     <p style="color:#555; margin-bottom:50px; font-size:1.05rem; max-width:800px; margin-left:auto; margin-right:auto;">Platform terpercaya untuk mendapatkan pupuk dan bibit bersubsidi dengan mudah dan transparan</p>
 
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:35px; max-width:1300px; margin:0 auto;">
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:35px; max-width:1300px; margin:0 auto;">
         
         <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #ffb74d;">
-            <div style="width:90px; height:90px; margin:0 auto 20px; background:linear-gradient(135deg, #ffe0b2, #ffb74d); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_box.png') }}" alt="Pemesanan Mudah" style="width:50px; height:50px; object-fit:contain;">
+            <div style="width:70px; height:70px; margin:0 auto 20px; background:#e8c4c4; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <img src="{{ asset('images/logo_box.png') }}" alt="Pemesanan Mudah" style="width:35px; height:35px; object-fit:contain;">
             </div>
             <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Pemesanan Mudah</h3>
             <p style="color:#666; line-height:1.6; font-size:0.95rem;">Pesan pupuk dan bibit subsidi secara online, ambil di Balai Desa terdekat.</p>
         </div>
 
         <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #64b5f6;">
-            <div style="width:90px; height:90px; margin:0 auto 20px; background:linear-gradient(135deg, #bbdefb, #64b5f6); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_notif.png') }}" alt="Notifikasi" style="width:50px; height:50px; object-fit:contain;">
+            <div style="width:70px; height:70px; margin:0 auto 20px; background:#c4dff5; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <img src="{{ asset('images/logo_notif.png') }}" alt="Notifikasi" style="width:35px; height:35px; object-fit:contain;">
             </div>
             <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Notifikasi Langsung</h3>
             <p style="color:#666; line-height:1.6; font-size:0.95rem;">Dapatkan update status pesanan langsung melalui notifikasi real-time.</p>
         </div>
 
         <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #ba68c8;">
-            <div style="width:90px; height:90px; margin:0 auto 20px; background:linear-gradient(135deg, #e1bee7, #ba68c8); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_ambil.png') }}" alt="Ambil" style="width:50px; height:50px; object-fit:contain;">
+            <div style="width:70px; height:70px; margin:0 auto 20px; background:#dcc8e8; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <img src="{{ asset('images/logo_ambil.png') }}" alt="Ambil" style="width:35px; height:35px; object-fit:contain;">
             </div>
             <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Ambil di Balai Desa</h3>
             <p style="color:#666; line-height:1.6; font-size:0.95rem;">Pilih Balai Desa terdekat untuk mengambil pesanan Anda dengan mudah.</p>
         </div>
 
         <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #ffb74d;">
-            <div style="width:90px; height:90px; margin:0 auto 20px; background:linear-gradient(135deg, #ffe0b2, #ffb74d); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_harga.png') }}" alt="Harga" style="width:50px; height:50px; object-fit:contain;">
+            <div style="width:70px; height:70px; margin:0 auto 20px; background:#f5eac8; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <img src="{{ asset('images/logo_harga.png') }}" alt="Harga" style="width:35px; height:35px; object-fit:contain;">
             </div>
             <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Harga Subsidi</h3>
             <p style="color:#666; line-height:1.6; font-size:0.95rem;">Dapatkan pupuk dan bibit dengan harga terjangkau berkat subsidi pemerintah.</p>
         </div>
 
         <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #81c784;">
-            <div style="width:90px; height:90px; margin:0 auto 20px; background:linear-gradient(135deg, #c8e6c9, #81c784); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_kualitas.png') }}" alt="Kualitas" style="width:50px; height:50px; object-fit:contain;">
+            <div style="width:70px; height:70px; margin:0 auto 20px; background:#d0ecd0; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <img src="{{ asset('images/logo_kualitas.png') }}" alt="Kualitas" style="width:35px; height:35px; object-fit:contain;">
             </div>
             <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Kualitas Terjamin</h3>
             <p style="color:#666; line-height:1.6; font-size:0.95rem;">Semua produk sudah tersertifikasi dan terjamin kualitasnya.</p>
         </div>
 
         <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #a1887f;">
-            <div style="width:90px; height:90px; margin:0 auto 20px; background:linear-gradient(135deg, #d7ccc8, #a1887f); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_parapetani.png') }}" alt="Petani" style="width:50px; height:50px; object-fit:contain;">
+            <div style="width:70px; height:70px; margin:0 auto 20px; background:#dcccc4; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <img src="{{ asset('images/logo_parapetani.png') }}" alt="Petani" style="width:35px; height:35px; object-fit:contain;">
             </div>
             <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Para Petani</h3>
             <p style="color:#666; line-height:1.6; font-size:0.95rem;">Dirancang khusus untuk membantu petani Indonesia meningkatkan hasil panen.</p>
@@ -91,10 +91,10 @@
 </section>
 
 <!-- ====== CTA SECTION ====== -->
-<section style="text-align:center; padding:70px 60px; background:linear-gradient(135deg, #e8f5e9, #c8e6c9);">
-    <h3 style="font-size:2rem; font-weight:bold; color:#2d7a3e; margin-bottom:15px;">Siap Meningkatkan Hasil Panen?</h3>
-    <p style="color:#555; margin-bottom:30px; font-size:1.05rem;">Bergabunglah dengan ribuan petani Indonesia yang sudah merasakan manfaatnya</p>
-    <a href="{{ route('register') }}" style="padding:15px 40px; background:#2d7a3e; color:white; text-decoration:none; border-radius:10px; font-weight:600; font-size:1.05rem; display:inline-block; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(45,122,62,0.3);">Mulai Sekarang</a>
+<section style="text-align:center; padding:70px 60px 50px; background:linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-bottom:0;">
+    <h3 style="font-size:2rem; font-weight:bold; color:#2d7a3e; margin-bottom:20px;">Siap Meningkatkan Hasil Panen?</h3>
+    <p style="color:#555; margin-bottom:35px; font-size:1.05rem; max-width:700px; margin-left:auto; margin-right:auto;">Bergabunglah dengan ribuan petani Indonesia yang sudah merasakan manfaatnya</p>
+    <a href="{{ route('register') }}" style="padding:16px 45px; background:#2d7a3e; color:white; text-decoration:none; border-radius:12px; font-weight:600; font-size:1.05rem; display:inline-block; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(45,122,62,0.3);">Mulai Sekarang</a>
 </section>
 
 <style>
@@ -304,8 +304,12 @@
         animation: rotate 20s linear infinite;
     }
 
-    /* Feature Cards Hover */
-    section > div > div:hover {
+    /* Feature Cards Hover - Only for feature cards, not hero section */
+    section:not(.hero-section) > div > div[style*="background:white"] {
+        cursor: pointer;
+    }
+    
+    section:not(.hero-section) > div > div[style*="background:white"]:hover {
         transform: translateY(-10px);
         box-shadow: 0 10px 35px rgba(0,0,0,0.15) !important;
     }
