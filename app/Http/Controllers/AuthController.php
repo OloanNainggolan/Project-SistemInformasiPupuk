@@ -25,7 +25,8 @@ class AuthController extends Controller
             'password' => 'required|min:3|confirmed',
         ]);
         
-        User::create([
+        $user = User::create([
+            'name' => $request->nama_lengkap, // Tambahkan field name untuk Laravel Auth
             'nama_lengkap' => $request->nama_lengkap,
             'alamat' => $request->alamat,
             'alamat_balai_desa' => $request->alamat_balai_desa,
@@ -34,7 +35,11 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
+        // Auto login setelah registrasi
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil! Selamat datang, ' . $user->nama_lengkap);
     }
 
     public function showLogin()
@@ -91,42 +96,46 @@ class AuthController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
 
-        // Add password validation only if user wants to change it
-        if ($request->filled('current_password')) {
+        // Only validate password if user fills in the password field
+        if ($request->filled('password')) {
             $rules['current_password'] = 'required';
             $rules['password'] = 'required|min:3|confirmed';
-
-            // Verify current password
-            if (!Hash::check($request->current_password, $user->password)) {
-                return back()->withErrors(['current_password' => 'Sandi saat ini tidak sesuai.'])->withInput();
-            }
         }
 
         $validated = $request->validate($rules);
 
+        // Check password if user wants to change it
+        if ($request->filled('password')) {
+            // Verify current password
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'Sandi saat ini tidak sesuai.'])->withInput();
+            }
+            // Update with new password
+            $validated['password'] = Hash::make($request->password);
+        }
+
         // Handle file upload
         if ($request->hasFile('foto')) {
             // Delete old photo if exists
-            if ($user->foto && file_exists(public_path('images/profiles/' . $user->foto))) {
-                unlink(public_path('images/profiles/' . $user->foto));
+            if ($user->foto && file_exists(public_path($user->foto))) {
+                unlink(public_path($user->foto));
             }
 
             $file = $request->file('foto');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('images/profiles'), $filename);
-            $validated['foto'] = $filename;
+            $validated['foto'] = 'images/profiles/' . $filename;
         }
 
-        // Update password if provided
-        if ($request->filled('password')) {
-            $validated['password'] = Hash::make($request->password);
-        } else {
+        // Remove password fields if not changing password
+        if (!$request->filled('password')) {
             unset($validated['password']);
         }
-
-        // Remove password confirmation field
         unset($validated['current_password']);
         unset($validated['password_confirmation']);
+
+        // Update name field as well for Laravel auth compatibility
+        $validated['name'] = $validated['nama_lengkap'];
 
         // Update user data
         $user->update($validated);

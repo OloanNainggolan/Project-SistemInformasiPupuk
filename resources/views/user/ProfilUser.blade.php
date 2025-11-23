@@ -9,7 +9,7 @@
         max-width: 1300px;
         margin: 0 auto;
         padding: 2rem;
-        margin-top: 80px;
+        margin-top: 100px;
     }
 
     .dashboard-title {
