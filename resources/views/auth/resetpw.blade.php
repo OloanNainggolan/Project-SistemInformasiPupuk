@@ -474,4 +474,42 @@
   </script>
 
 </body>
+</html>.display = 'block';
+          newPasswordInput.focus();
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          e.preventDefault();
+          errorMessage.textContent = 'Password tidak cocok. Silakan coba lagi.';
+          errorMessage.style.display = 'block';
+          confirmPasswordInput.focus();
+          return;
+        }
+
+        // if here, allow form to submit to server
+      });
+    })();
+  </script>
+
+</body>
+</html>.display = 'block';
+          newPasswordInput.focus();
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          e.preventDefault();
+          errorMessage.textContent = 'Password tidak cocok. Silakan coba lagi.';
+          errorMessage.style.display = 'block';
+          confirmPasswordInput.focus();
+          return;
+        }
+
+        // if here, allow form to submit to server
+      });
+    })();
+  </script>
+
+</body>
 </html>

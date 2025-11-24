@@ -1,32 +1,17 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Produk - Pupuk & Bibit Subsidi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+@extends('layouts.admin')
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+@section('title', 'Daftar Produk')
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+@push('styles')
+<style>
+    .container {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
 
-        /* Header */
-        .page-header {
+    /* Header */
+    .page-header {
             background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: white;
             padding: 25px 30px;
@@ -334,12 +319,13 @@
                 justify-content: space-around;
             }
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="page-header">
+</style>
+@endpush
+
+@section('content')
+<div class="container">
+    <!-- Header -->
+    <div class="page-header">
             <h1>
                 <i class="fas fa-box"></i>
                 Daftar Produk
@@ -472,5 +458,4 @@
             @endif
         </div>
     </div>
-</body>
-</html>
+@endsection

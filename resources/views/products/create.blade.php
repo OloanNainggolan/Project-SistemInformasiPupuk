@@ -1,33 +1,17 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Produk - Pupuk & Bibit Subsidi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* Reset & Global */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+@extends('layouts.admin')
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+@section('title', 'Tambah Produk')
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+@push('styles')
+<style>
+    .container {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
 
-        /* Header */
-        .page-header {
+    /* Header */
+    .page-header {
             background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: white;
             padding: 25px 30px;
@@ -350,12 +334,13 @@
                 justify-content: center;
             }
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="page-header">
+</style>
+@endpush
+
+@section('content')
+<div class="container">
+    <!-- Header -->
+    <div class="page-header">
             <h1>
                 <i class="fas fa-plus-circle"></i>
                 Tambah Produk Baru
@@ -597,8 +582,10 @@
             </form>
         </div>
     </div>
+@endsection
 
-    <script>
+@push('scripts')
+<script>
         // Auto-fill kategori berdasarkan tipe produk
         document.getElementById('tipe_produk').addEventListener('change', function() {
             const kategoriInput = document.getElementById('kategori');
@@ -733,6 +720,5 @@
                 }
             }
         });
-    </script>
-</body>
-</html>
+</script>
+@endpush
