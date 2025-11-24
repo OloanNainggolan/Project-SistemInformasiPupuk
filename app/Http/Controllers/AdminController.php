@@ -19,11 +19,8 @@ class AdminController extends Controller
      */
     public function showLogin()
     {
-        // Jika sudah login sebagai admin, redirect ke dashboard
-        if (session('admin_logged_in')) {
-            return redirect()->route('admin.dashboard');
-        }
-
+        // Tampilkan halaman login tanpa cek session
+        // CATATAN: Ini menghilangkan fitur keamanan redirect otomatis
         return view('auth.admin-login');
     }
 
@@ -67,15 +64,6 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        // Redirect ke overview
-        return redirect()->route('admin.overview');
-    }
-
-    /**
-     * Halaman Overview Admin dengan statistik dinamis
-     */
-    public function overview()
-    {
         // Statistik dinamis dari database
         $totalPesanan = Order::confirmed()->count();
         $totalPendapatan = Order::confirmed()
@@ -98,7 +86,55 @@ class AdminController extends Controller
         $completedCount = Order::confirmed()->where('status', 'Completed')->count();
         $rejectedCount = Order::confirmed()->where('status', 'Rejected')->count();
 
-        return view('admin.overview', compact(
+        return view('admin.dashboard', compact(
+            'totalPesanan',
+            'totalPendapatan',
+            'totalPetani',
+            'totalProduk',
+            'recentOrders',
+            'pendingCount',
+            'processingCount',
+            'readyCount',
+            'completedCount',
+            'rejectedCount'
+        ));
+    }
+
+    /**
+     * Halaman Overview Admin dengan statistik dinamis (sama dengan dashboard)
+     */
+    public function overview()
+    {
+        // Redirect ke dashboard agar tidak duplikat
+        return redirect()->route('admin.dashboard');
+    }
+
+    /**
+     * Halaman profil admin
+     */
+    public function profil()
+    {
+        // Statistik untuk profil admin
+        $totalPesanan = Order::confirmed()->count();
+        $totalPendapatan = Order::confirmed()->where('status', 'Completed')->sum('total_amount');
+        $totalPetani = User::count();
+        $totalProduk = Product::count();
+
+        // Pesanan terbaru untuk ditampilkan di profil
+        $recentOrders = Order::with('user')
+            ->confirmed()
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Status counts
+        $pendingCount = Order::confirmed()->where('status', 'Pending')->count();
+        $processingCount = Order::confirmed()->where('status', 'Processing')->count();
+        $readyCount = Order::confirmed()->where('status', 'Ready')->count();
+        $completedCount = Order::confirmed()->where('status', 'Completed')->count();
+        $rejectedCount = Order::where('status', 'Rejected')->count();
+
+        return view('admin.profil', compact(
             'totalPesanan',
             'totalPendapatan',
             'totalPetani',

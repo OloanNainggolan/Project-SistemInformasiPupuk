@@ -103,6 +103,11 @@ Route::get('/forgot-password-test', function () {
     return view('auth.forgot-password');
 });
 
+// Route untuk halaman Lihat Detail & Pesan (statik ke view sementara)
+Route::get('/lihat-detail-pesanan', function () {
+    return view('user.lihat-detail-pesan');
+})->name('lihat-detail-pesanan');
+
 // Routes untuk Admin
 Route::prefix('admin')->group(function () {
     // Halaman login (tidak perlu auth)
@@ -113,6 +118,7 @@ Route::prefix('admin')->group(function () {
     Route::middleware('admin.auth')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/overview', [AdminController::class, 'overview'])->name('admin.overview');
+        Route::get('/profil', [AdminController::class, 'profil'])->name('admin.profil');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         
         // Notifikasi

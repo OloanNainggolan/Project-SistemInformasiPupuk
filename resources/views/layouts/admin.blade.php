@@ -260,7 +260,12 @@
     <!-- Header -->
     <header class="admin-header">
         <div class="header-logo">
-            <i class="fas fa-leaf            <a href="{{ route('admin.overview') }}" class="{{ request()->routeIs('admin.overview') ? 'active' : '' }}">
+            <i class="fas fa-leaf"></i>
+            <h1>Pupuk & Bibit Subsidi</h1>
+        </div>
+        
+        <nav class="header-nav" id="headerNav">
+            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard', 'admin.overview') ? 'active' : '' }}">
                 Overview
             </a>
             <a href="{{ route('admin.orders') }}" class="{{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
@@ -294,12 +299,10 @@
             <div class="footer-section">
                 <h3>Menu Utama</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('admin.overview') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ route('admin.orders') }}"><i class="fas fa-shopping-cart"></i> Pesanan</a></li>
                     <li><a href="{{ route('products.index') }}"><i class="fas fa-box"></i> Produk</a></li>
                     <li><a href="{{ route('admin.notifications') }}"><i class="fas fa-bell"></i> Notifikasi</a></li>
-                    <li><a href="{{ route('admin.orders') }}"><i class="fas fa-shopping-cart"></i> Pesanan</a></li>
-                    <li><a href="{{ route('products.index') }}"><i class="fas fa-box"></i> Produk</a></li>
                     <li><a href="#"><i class="fas fa-cog"></i> Pengaturan</a></li>
                 </ul>
             </div>
