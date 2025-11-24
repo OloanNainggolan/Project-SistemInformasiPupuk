@@ -12,6 +12,7 @@ class AdminController extends Controller
 {
     // Kredensial admin yang sudah ditentukan (hardcoded)
     private const ADMIN_USERNAME = 'admin';
+    private const ADMIN_EMAIL = 'admin@pupuksubsidi.id';
     private const ADMIN_PASSWORD = 'admin123';
 
     /**
@@ -21,6 +22,8 @@ class AdminController extends Controller
     {
         // Tampilkan halaman login tanpa cek session
         // CATATAN: Ini menghilangkan fitur keamanan redirect otomatis
+        // Jika sudah login sebagai admin, tampilkan info dan tombol ke dashboard
+        // Tidak auto-redirect agar user bisa logout jika perlu
         return view('auth.admin-login');
     }
 
@@ -34,19 +37,23 @@ class AdminController extends Controller
             'username' => 'required|string',
             'password' => 'required|string',
         ], [
-            'username.required' => 'Username harus diisi',
+            'username.required' => 'Username/Email harus diisi',
             'password.required' => 'Password harus diisi',
         ]);
 
-        $username = $request->input('username');
+        $identifier = $request->input('username'); // bisa username atau email
         $password = $request->input('password');
 
-        // Validasi kredensial admin
-        if ($username === self::ADMIN_USERNAME && $password === self::ADMIN_PASSWORD) {
+        // Validasi kredensial admin - support username atau email
+        $isValidUsername = ($identifier === self::ADMIN_USERNAME && $password === self::ADMIN_PASSWORD);
+        $isValidEmail = ($identifier === self::ADMIN_EMAIL && $password === self::ADMIN_PASSWORD);
+
+        if ($isValidUsername || $isValidEmail) {
             // Login berhasil - simpan status login di session
             session([
                 'admin_logged_in' => true,
-                'admin_username' => $username,
+                'admin_username' => self::ADMIN_USERNAME,
+                'admin_email' => self::ADMIN_EMAIL,
                 'admin_login_time' => now()
             ]);
 
@@ -55,7 +62,7 @@ class AdminController extends Controller
             // Login gagal
             return back()
                 ->withInput($request->only('username'))
-                ->with('error', 'Username atau password salah!');
+                ->with('error', 'Username/Email atau password salah!');
         }
     }
 

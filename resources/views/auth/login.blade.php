@@ -419,27 +419,42 @@
                 </div>
                 @endif
 
+                @if(session('info'))
+                <div class="alert alert-info show" style="background:#dbeafe; color:#1e40af; border-left:4px solid #3b82f6;">
+                    <i class="fas fa-info-circle"></i>
+                    {{ session('info') }}
+                </div>
+                @endif
+
                 <div id="clientError" class="alert alert-error"></div>
+
+                <!-- Info Box untuk Login Admin -->
+                <div class="info-box" style="background:#fef3c7; border:1px solid #fbbf24; border-radius:8px; padding:12px; margin-bottom:20px; font-size:13px; color:#92400e;">
+                    <i class="fas fa-info-circle" style="color:#f59e0b; margin-right:8px;"></i>
+                    <strong>Informasi:</strong> Login user biasa menggunakan halaman ini. 
+                    <strong style="color:#065f46;">Admin</strong> silakan gunakan 
+                    <a href="{{ route('admin.login') }}" style="color:#065f46; font-weight:600; text-decoration:underline;">halaman login admin</a>.
+                </div>
 
                 <!-- Form -->
                 <form id="loginForm" action="{{ route('login') }}" method="POST" autocomplete="on">
                     @csrf
 
                     <div class="input-group">
-                        <label for="email">Alamat Email</label>
+                        <label for="login">Username atau Email</label>
                         <div class="input-wrapper">
-                            <i class="fas fa-envelope input-icon"></i>
+                            <i class="fas fa-user input-icon"></i>
                             <input 
                                 class="field" 
-                                id="email" 
-                                name="email" 
-                                type="email" 
-                                placeholder="nama@email.com" 
-                                value="{{ old('email') }}"
+                                id="login" 
+                                name="login" 
+                                type="text" 
+                                placeholder="username atau email@example.com" 
+                                value="{{ old('login') }}"
                                 required 
                             />
                         </div>
-                        <div class="field-error-msg" id="emailError"></div>
+                        <div class="field-error-msg" id="loginError"></div>
                     </div>
 
                     <div class="input-group">
@@ -496,8 +511,8 @@
 
         // Form validation
         const loginForm = document.getElementById('loginForm');
-        const emailField = document.getElementById('email');
-        const emailError = document.getElementById('emailError');
+        const loginField = document.getElementById('login');
+        const loginError = document.getElementById('loginError');
         const passwordError = document.getElementById('passwordError');
         const clientError = document.getElementById('clientError');
         const submitBtn = document.getElementById('submitBtn');
@@ -508,25 +523,19 @@
             let isValid = true;
             
             // Reset errors
-            emailField.classList.remove('error');
+            loginField.classList.remove('error');
             passwordField.classList.remove('error');
-            emailError.classList.remove('show');
+            loginError.classList.remove('show');
             passwordError.classList.remove('show');
             clientError.classList.remove('show');
 
-            // Validate email
-            const emailValue = emailField.value.trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // Validate login (username or email)
+            const loginValue = loginField.value.trim();
             
-            if (!emailValue) {
-                emailField.classList.add('error');
-                emailError.textContent = 'Email wajib diisi';
-                emailError.classList.add('show');
-                isValid = false;
-            } else if (!emailRegex.test(emailValue)) {
-                emailField.classList.add('error');
-                emailError.textContent = 'Format email tidak valid';
-                emailError.classList.add('show');
+            if (!loginValue) {
+                loginField.classList.add('error');
+                loginError.textContent = 'Username atau Email wajib diisi';
+                loginError.classList.add('show');
                 isValid = false;
             }
 
