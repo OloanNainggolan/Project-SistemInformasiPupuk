@@ -493,6 +493,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-circle"></i>
+                        <input type="text" name="username" value="{{ old('username') }}" required placeholder="username (huruf, angka, underscore, dash)" pattern="[a-zA-Z0-9_-]+" title="Username hanya boleh mengandung huruf, angka, underscore (_), dan dash (-)">
+                    </div>
+                    <small style="color: #666; font-size: 0.85rem; margin-top: 4px; display: block;">
+                        <i class="fas fa-info-circle"></i> Username akan digunakan untuk login
+                    </small>
+                </div>
+
+                <div class="form-group">
                     <label>Email</label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope"></i>

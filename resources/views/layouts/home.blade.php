@@ -47,7 +47,7 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr;
             gap: 40px;
             margin-bottom: 40px;
         }
@@ -272,17 +272,6 @@
                     <li><a href="/"><i class="fas fa-home"></i>Beranda</a></li>
                     <li><a href="/login"><i class="fas fa-sign-in-alt"></i>Login</a></li>
                     <li><a href="/register"><i class="fas fa-user-plus"></i>Daftar</a></li>
-                </ul>
-            </div>
-
-            <!-- Information Links -->
-            <div class="home-footer-section">
-                <h3>Informasi</h3>
-                <ul class="home-footer-links">
-                    <li><a href="#"><i class="fa-solid fa-circle-info"></i>Tentang Kami</a></li>
-                    <li><a href="#"><i class="fa-solid fa-file-shield"></i>Kebijakan Privasi</a></li>
-                    <li><a href="#"><i class="fa-solid fa-file-contract"></i>Syarat & Ketentuan</a></li>
-                    <li><a href="#"><i class="fa-solid fa-circle-question"></i>FAQ</a></li>
                 </ul>
             </div>
 

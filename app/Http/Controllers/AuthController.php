@@ -18,16 +18,22 @@ class AuthController extends Controller
     {
         $request->validate([
             'nama_lengkap' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username|alpha_dash',
             'alamat' => 'required|string|max:255',
             'alamat_balai_desa' => 'required|string|max:255',
             'no_telp' => 'required|string|max:20',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:3|confirmed',
+        ], [
+            'username.required' => 'Username wajib diisi',
+            'username.unique' => 'Username sudah digunakan',
+            'username.alpha_dash' => 'Username hanya boleh berisi huruf, angka, dash dan underscore',
         ]);
         
         $user = User::create([
             'name' => $request->nama_lengkap, // Tambahkan field name untuk Laravel Auth
             'nama_lengkap' => $request->nama_lengkap,
+            'username' => $request->username,
             'alamat' => $request->alamat,
             'alamat_balai_desa' => $request->alamat_balai_desa,
             'no_telp' => $request->no_telp,
@@ -49,17 +55,53 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $request->validate([
+            'login' => 'required|string',
             'password' => 'required',
+        ], [
+            'login.required' => 'Username atau Email wajib diisi',
+            'password.required' => 'Password wajib diisi',
         ]);
 
+        $login = $request->input('login');
+        $password = $request->input('password');
+
+        // Cek apakah ini login admin berdasarkan username atau email
+        if ($login === 'admin' || $login === 'admin@pupuksubsidi.id') {
+            // Redirect ke halaman login admin
+            return redirect()->route('admin.login')
+                ->withInput(['username' => 'admin'])
+                ->with('info', 'Silakan gunakan halaman login admin.');
+        }
+
+        // Tentukan apakah login menggunakan email atau username
+        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        
+        // Attempt login dengan email atau username
+        $credentials = [
+            $fieldType => $login,
+            'password' => $password
+        ];
+
+        // Login untuk user biasa
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            
+            // Cek apakah user ini adalah admin (jika ada field role)
+            $user = Auth::user();
+            
+            // Double check: pastikan bukan admin
+            if (isset($user->role) && $user->role === 'admin') {
+                Auth::logout();
+                return redirect()->route('admin.login')
+                    ->with('info', 'Silakan gunakan halaman login admin.');
+            }
+            
             return redirect()->route('dashboard');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah.']);
+        return back()->withInput(['login' => $login])
+            ->withErrors(['login' => 'Username/Email atau password salah.']);
     }
 
     public function logout(Request $request)

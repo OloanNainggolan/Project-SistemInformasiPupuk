@@ -34,7 +34,7 @@
     
     .footer-grid {
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr 1fr;
+        grid-template-columns: 2fr 1fr 1fr;
         gap: 50px;
         margin-bottom: 40px;
     }
@@ -331,16 +331,6 @@
                         <li><a href="{{ route('login') }}"><i class="fa-solid fa-sign-in-alt"></i>Masuk</a></li>
                     @endauth
                     <li><a href="{{ route('kontak') }}"><i class="fa-solid fa-envelope"></i>Kontak</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Informasi</h3>
-                <ul class="footer-menu-list">
-                    <li><a href="#"><i class="fa-solid fa-circle-info"></i>Tentang Kami</a></li>
-                    <li><a href="#"><i class="fa-solid fa-file-shield"></i>Kebijakan Privasi</a></li>
-                    <li><a href="#"><i class="fa-solid fa-file-contract"></i>Syarat & Ketentuan</a></li>
-                    <li><a href="#"><i class="fa-solid fa-circle-question"></i>FAQ</a></li>
                 </ul>
             </div>
 

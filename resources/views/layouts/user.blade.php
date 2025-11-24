@@ -380,16 +380,14 @@
             100% { background-position: 200% 0; }
         }
 
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 50px;
-            margin-bottom: 40px;
-        }
-
-        .footer-logo {
+    .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 50px;
+        margin-bottom: 40px;
+    }        .footer-logo {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -746,17 +744,6 @@
                     <li><a href="{{ route('pupuk.bibit') }}"><i class="fas fa-seedling"></i>Pupuk & Bibit</a></li>
                     <li><a href="{{ route('profil.user') }}"><i class="fas fa-user"></i>Profil</a></li>
                     <li><a href="{{ route('kontak') }}"><i class="fas fa-envelope"></i>Kontak</a></li>
-                </ul>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer-section">
-                <h3>Informasi</h3>
-                <ul class="footer-links">
-                    <li><a href="#"><i class="fa-solid fa-circle-info"></i>Tentang Kami</a></li>
-                    <li><a href="#"><i class="fa-solid fa-file-shield"></i>Kebijakan Privasi</a></li>
-                    <li><a href="#"><i class="fa-solid fa-file-contract"></i>Syarat & Ketentuan</a></li>
-                    <li><a href="#"><i class="fa-solid fa-circle-question"></i>FAQ</a></li>
                 </ul>
             </div>
 
