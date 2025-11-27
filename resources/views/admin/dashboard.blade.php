@@ -6,106 +6,392 @@
 <style>
     :root {
         --color-primary: #065f46;
-        --color-primary-light: #d4edda;
+        --color-primary-light: #d1fae5;
         --color-text-dark: #1f2937;
         --color-text-grey: #6b7280;
         --color-bg-light: #f0f4f0;
         --color-border: #e5e7eb;
         --color-success: #10b981;
         --color-danger: #ef4444;
-        --color-warning: #fbbf24;
+        --color-warning: #f59e0b;
         --color-processing: #8b5cf6;
     }
 
-    .dashboard-wrapper {
-        display: grid;
-        grid-template-columns: 280px 1fr;
-        gap: 30px;
-        margin: 30px auto;
-        max-width: 1400px;
-        padding: 0 20px;
+    /* Page Header */
+    .page-header {
+        margin-bottom: 30px;
     }
 
-    /* Sidebar Profile */
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #065f46;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .page-title i {
+        color: #10b981;
+    }
+
+    .page-subtitle {
+        font-size: 15px;
+        color: #6b7280;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 30px;
+    }
+
+    /* Main Content Area */
+    .dashboard-main {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(16, 185, 129, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+    }
+
+    .stat-left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        color: var(--color-text-grey);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--color-text-dark);
+        line-height: 1;
+    }
+
+    .stat-change {
+        font-size: 13px;
+        color: var(--color-success);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: #d1fae5;
+        padding: 4px 10px;
+        border-radius: 20px;
+        margin-top: 5px;
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #dcfce7, #d1fae5);
+    }
+
+    .stat-icon i {
+        color: #059669;
+    }
+
+    /* Orders Section */
+    .orders-section {
+        background: white;
+        padding: 28px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-text-dark);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-title i {
+        color: #10b981;
+        font-size: 20px;
+    }
+
+    .view-all-btn {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .view-all-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Orders Table */
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .orders-table thead th {
+        text-align: left;
+        padding: 14px 12px;
+        background: linear-gradient(135deg, #f8faf8, #f0f4f0);
+        color: var(--color-text-grey);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .orders-table tbody td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 14px;
+        color: var(--color-text-dark);
+    }
+
+    .orders-table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .orders-table tbody tr:hover {
+        background: linear-gradient(135deg, #f8faf8, #f0f4f0);
+    }
+
+    .order-id {
+        font-weight: 700;
+        color: #065f46;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .status-completed {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        color: #065f46;
+    }
+
+    .status-processing {
+        background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+        color: #5b21b6;
+    }
+
+    .status-rejected {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+    }
+
+    .status-ready {
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        color: #1e40af;
+    }
+
+    /* Profile Sidebar */
     .profile-sidebar {
         display: flex;
         flex-direction: column;
         gap: 20px;
     }
 
-    .page-title-green {
-        background: linear-gradient(135deg, #d4edda, #c3e6cb);
-        padding: 15px 20px;
-        border-radius: 12px;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--color-primary);
-        text-align: center;
-    }
-
     .profile-card {
         background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 28px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: linear-gradient(135deg, #10b981, #059669);
     }
 
     .profile-avatar {
-        width: 90px;
-        height: 90px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         background: linear-gradient(135deg, #059669, #10b981);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 15px;
-        font-size: 50px;
+        margin: 0 auto 16px;
+        font-size: 45px;
+        color: white;
+        position: relative;
+        z-index: 1;
+        border: 5px solid white;
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .profile-badge {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 24px;
+        height: 24px;
+        background: #f59e0b;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid white;
+    }
+
+    .profile-badge i {
+        font-size: 10px;
         color: white;
     }
 
-    .profile-username {
-        font-size: 18px;
+    .profile-name {
+        font-size: 20px;
         font-weight: 700;
         color: var(--color-text-dark);
-        margin-bottom: 5px;
+        margin-bottom: 4px;
+        position: relative;
+        z-index: 1;
     }
 
-    .profile-handle {
-        font-size: 14px;
-        color: var(--color-text-grey);
+    .profile-role {
+        font-size: 13px;
+        color: #10b981;
+        font-weight: 600;
         margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+        background: #d1fae5;
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
     }
 
     .profile-info {
         text-align: left;
         margin: 20px 0;
         font-size: 13px;
-        line-height: 2;
+        line-height: 1.8;
+        position: relative;
+        z-index: 1;
     }
 
-    .profile-info p {
-        margin: 8px 0;
-        color: #4b5563;
+    .profile-info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f3f4f6;
     }
 
-    .profile-info i {
-        color: var(--color-primary);
+    .profile-info-item:last-child {
+        border-bottom: none;
+    }
+
+    .profile-info-item i {
+        color: #10b981;
         width: 20px;
-        margin-right: 8px;
+        margin-top: 2px;
+    }
+
+    .profile-info-item span {
+        color: #4b5563;
     }
 
     .profile-actions {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         margin-top: 20px;
+        position: relative;
+        z-index: 1;
     }
 
     .btn {
-        padding: 12px;
+        padding: 14px 20px;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
         font-weight: 600;
         text-align: center;
@@ -118,170 +404,132 @@
         font-size: 14px;
     }
 
-    .btn-edit {
-        background: var(--color-primary);
+    .btn-primary {
+        background: linear-gradient(135deg, #10b981, #059669);
         color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
     }
 
-    .btn-edit:hover {
-        background: #044e37;
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
     }
 
-    .btn-logout {
-        background: var(--color-danger);
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white;
         width: 100%;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
     }
 
-    .btn-logout:hover {
-        background: #dc2626;
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
     }
 
-    /* Main Dashboard Area */
-    .dashboard-main {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
-
-    /* Stats Row */
-    .stats-container {
+    /* Quick Actions Card */
+    .quick-actions {
         background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    .stat-card {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        border: 1px solid var(--color-border);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    .quick-actions h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--color-text-dark);
+        margin-bottom: 16px;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-    }
-
-    .stat-left {
-        display: flex;
-        flex-direction: column;
+        align-items: center;
         gap: 8px;
     }
 
-    .stat-label {
-        font-size: 12px;
-        color: var(--color-text-grey);
-        font-weight: 600;
-        text-transform: uppercase;
+    .quick-actions h3 i {
+        color: #10b981;
     }
 
-    .stat-value {
-        font-size: 28px;
-        font-weight: 700;
+    .quick-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        background: #f8faf8;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        text-decoration: none;
         color: var(--color-text-dark);
     }
 
-    .stat-change {
-        font-size: 12px;
-        color: var(--color-success);
-        font-weight: 600;
+    .quick-action-btn:hover {
+        background: linear-gradient(135deg, #dcfce7, #d1fae5);
+        transform: translateX(5px);
     }
 
-    .stat-icon {
-        width: 50px;
-        height: 50px;
+    .quick-action-btn i {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
-        border-radius: 8px;
-        background: #f3f4f6;
-    }
-
-    /* Orders Table */
-    .orders-section {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .orders-section h2 {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--color-text-dark);
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid var(--color-primary);
-    }
-
-    .orders-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .orders-table thead th {
-        text-align: left;
-        padding: 12px;
-        background: #f9fafb;
-        color: var(--color-text-grey);
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        border-bottom: 2px solid var(--color-border);
-    }
-
-    .orders-table tbody td {
-        padding: 15px 12px;
-        border-bottom: 1px solid #f3f4f6;
         font-size: 14px;
-        color: var(--color-text-dark);
     }
 
-    .orders-table tbody tr:hover {
-        background: #f9fafb;
-    }
-
-    .status-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 11px;
+    .quick-action-btn span {
         font-weight: 600;
-        text-transform: uppercase;
+        font-size: 14px;
     }
 
-    .status-completed {
-        background: #d1fae5;
+    /* Alert Messages */
+    .alert {
+        padding: 16px 20px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        border: 1px solid #6ee7b7;
         color: #065f46;
     }
 
-    .status-processing {
-        background: #e0e7ff;
-        color: #5b21b6;
+    .alert i {
+        font-size: 20px;
     }
 
-    .status-rejected {
-        background: #fee2e2;
-        color: #991b1b;
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #9ca3af;
     }
 
-    .status-pending {
-        background: #fef3c7;
-        color: #92400e;
+    .empty-state i {
+        font-size: 60px;
+        color: #d1d5db;
+        margin-bottom: 16px;
+    }
+
+    .empty-state p {
+        font-size: 16px;
+        color: #6b7280;
     }
 
     /* Responsive */
-    @media (max-width: 1024px) {
-        .dashboard-wrapper {
+    @media (max-width: 1200px) {
+        .dashboard-grid {
             grid-template-columns: 1fr;
+        }
+
+        .profile-sidebar {
+            order: -1;
         }
 
         .stats-grid {
@@ -294,126 +542,119 @@
             grid-template-columns: 1fr;
         }
 
+        .page-title {
+            font-size: 24px;
+        }
+
         .orders-table {
             font-size: 12px;
         }
 
         .orders-table thead th,
         .orders-table tbody td {
-            padding: 10px 8px;
+            padding: 12px 8px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
         }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="dashboard-wrapper">
-    <!-- Left Sidebar: Profile -->
-    <aside class="profile-sidebar">
-        <div class="page-title-green">
-            Admin Dashboard
-        </div>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-tachometer-alt"></i>
+        Dashboard Admin
+    </h1>
+    <p class="page-subtitle">Selamat datang kembali! Kelola sistem distribusi pupuk dan bibit subsidi.</p>
+</div>
 
-        <div class="profile-card">
-            <div class="profile-avatar">
-                <i class="fas fa-user-circle"></i>
-            </div>
-            <div class="profile-username">adminabc</div>
-            <div class="profile-handle">@admin23</div>
+<!-- Alert Messages -->
+@if(session('success'))
+<div class="alert alert-success">
+    <i class="fas fa-check-circle"></i>
+    <span>{{ session('success') }}</span>
+</div>
+@endif
 
-            <div class="profile-info">
-                <p><i class="fas fa-envelope"></i> Nupi.Sianturi@gmail.com</p>
-                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
-                <p><i class="fas fa-map-marker-alt"></i> Desa Situlama, Kec. Silaiang, Kab. Sidama, Jawa Barat</p>
-                <p><i class="fas fa-calendar"></i> Bergabung Sejak Januari 2020</p>
-            </div>
-
-            <div class="profile-actions">
-                <a href="#" class="btn btn-edit">
-                    <i class="fas fa-edit"></i> Edit Profil
-                </a>
-                <form action="{{ route('admin.logout') }}" method="POST" style="width: 100%;">
-                    @csrf
-                    <button type="submit" class="btn btn-logout">
-                        <i class="fas fa-sign-out-alt"></i> Keluar
-                    </button>
-                </form>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Right: Main Dashboard Area -->
-    <main class="dashboard-main">
-        <!-- Alert Messages -->
-        @if(session('success'))
-        <div style="padding: 12px 20px; background: #d1fae5; border: 1px solid #a7f3d0; border-radius: 8px; color: #065f46; display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-check-circle"></i>
-            <span>{{ session('success') }}</span>
-        </div>
-        @endif
-
+<div class="dashboard-grid">
+    <!-- Main Dashboard Area -->
+    <div class="dashboard-main">
         <!-- Statistics Cards -->
-        <div class="stats-container">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-left">
-                        <div class="stat-label">Total Pesanan</div>
-                        <div class="stat-value">{{ $totalPesanan }}</div>
-                        <div class="stat-change">
-                            <i class="fas fa-arrow-up"></i> +35%
-                        </div>
-                    </div>
-                    <div class="stat-icon">
-                        <i class="fas fa-handshake" style="color: #059669;"></i>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-left">
+                    <div class="stat-label">Total Pesanan</div>
+                    <div class="stat-value">{{ $totalPesanan }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-up"></i> +35%
                     </div>
                 </div>
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+            </div>
 
-                <div class="stat-card">
-                    <div class="stat-left">
-                        <div class="stat-label">Total Petani</div>
-                        <div class="stat-value">{{ $totalPetani }}</div>
-                        <div class="stat-change">
-                            <i class="fas fa-arrow-up"></i> +10%
-                        </div>
-                    </div>
-                    <div class="stat-icon">
-                        <i class="fas fa-users" style="color: #059669;"></i>
+            <div class="stat-card">
+                <div class="stat-left">
+                    <div class="stat-label">Total Petani</div>
+                    <div class="stat-value">{{ $totalPetani }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-up"></i> +10%
                     </div>
                 </div>
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
 
-                <div class="stat-card">
-                    <div class="stat-left">
-                        <div class="stat-label">Total Pendapatan</div>
-                        <div class="stat-value">Rp. {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
-                        <div class="stat-change">
-                            <i class="fas fa-arrow-up"></i> +8%
-                        </div>
+            <div class="stat-card">
+                <div class="stat-left">
+                    <div class="stat-label">Total Pendapatan</div>
+                    <div class="stat-value" style="font-size: 24px;">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-up"></i> +8%
                     </div>
-                    <div class="stat-icon">
-                        <i class="fas fa-chart-line" style="color: #059669;"></i>
-                    </div>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
                 </div>
             </div>
         </div>
 
-        <!-- Orders Table -->
+        <!-- Recent Orders -->
         <div class="orders-section">
-            <h2><i class="fas fa-shopping-cart"></i> Daftar Pesanan Terbaru</h2>
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-list-alt"></i>
+                    Pesanan Terbaru
+                </h2>
+                <a href="{{ route('admin.orders') }}" class="view-all-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    Lihat Semua
+                </a>
+            </div>
+
             <table class="orders-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nama</th>
+                        <th>ID Pesanan</th>
+                        <th>Nama Petani</th>
                         <th>Balai Desa</th>
                         <th>Tanggal</th>
                         <th>Jenis</th>
-                        <th>STATUS</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($recentOrders as $order)
                     <tr>
-                        <td>{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
+                        <td><span class="order-id">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span></td>
                         <td>{{ $order->user->name ?? 'N/A' }}</td>
                         <td>{{ $order->village_office }}</td>
                         <td>{{ $order->created_at->format('d M Y') }}</td>
@@ -439,21 +680,84 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 30px; color: #6b7280;">
-                            <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
-                            Belum ada pesanan
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Belum ada pesanan yang masuk</p>
+                            </div>
                         </td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-<<<<<<< Updated upstream
-    </main>
+    </div>
+
+    <!-- Profile Sidebar -->
+    <aside class="profile-sidebar">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-avatar">
+                <i class="fas fa-user-shield"></i>
+                <div class="profile-badge">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            <div class="profile-name">Administrator</div>
+            <div class="profile-role">Super Admin</div>
+
+            <div class="profile-info">
+                <div class="profile-info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>admin@pupukbibit.com</span>
+                </div>
+                <div class="profile-info-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+62 812-3456-7890</span>
+                </div>
+                <div class="profile-info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Sitoluama, Laguboti, Toba</span>
+                </div>
+                <div class="profile-info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Bergabung sejak Januari 2020</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <form action="{{ route('admin.logout') }}" method="POST" style="width: 100%;">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> Keluar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3>
+                <i class="fas fa-bolt"></i>
+                Aksi Cepat
+            </h3>
+            <a href="{{ route('admin.orders') }}" class="quick-action-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Kelola Pesanan</span>
+            </a>
+            <a href="{{ route('products.index') }}" class="quick-action-btn">
+                <i class="fas fa-box"></i>
+                <span>Kelola Produk</span>
+            </a>
+            <a href="{{ route('products.create') }}" class="quick-action-btn">
+                <i class="fas fa-plus"></i>
+                <span>Tambah Produk Baru</span>
+            </a>
+            <a href="{{ route('admin.notifications') }}" class="quick-action-btn">
+                <i class="fas fa-bell"></i>
+                <span>Kirim Notifikasi</span>
+            </a>
+        </div>
+    </aside>
 </div>
 @endsection
-=======
-    </div>
-</body>
-</html>
->>>>>>> Stashed changes
