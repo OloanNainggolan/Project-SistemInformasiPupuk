@@ -101,15 +101,58 @@
                             @enderror
                         </div>
 
+                        <!-- Manfaat -->
                         <div class="mb-3">
-                            <label for="deskripsi" class="form-label">Deskripsi</label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                      id="deskripsi" name="deskripsi" rows="3" required>{{ old('deskripsi', $product->deskripsi) }}</textarea>
-                            @error('deskripsi')
+                            <label for="manfaat" class="form-label">
+                                <i class="fas fa-leaf"></i> Manfaat <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control @error('manfaat') is-invalid @enderror" 
+                                      id="manfaat" name="manfaat" rows="5" required 
+                                      placeholder="Contoh: Meningkatkan produktivitas tanaman, Mempercepat pertumbuhan akar...">{{ old('manfaat', $product->manfaat ?? '') }}</textarea>
+                            @error('manfaat')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> Jelaskan manfaat atau kegunaan produk
+                            </small>
+                        </div>
+
+                        <!-- Bahan/Komposisi -->
+                        <div class="mb-3">
+                            <label for="bahan" class="form-label">
+                                <i class="fas fa-flask"></i> Bahan/Komposisi <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control @error('bahan') is-invalid @enderror" 
+                                      id="bahan" name="bahan" rows="5" required 
+                                      placeholder="Contoh: Nitrogen (N) 15%, Fosfor (P) 10%, Kalium (K) 15%...">{{ old('bahan', $product->bahan ?? '') }}</textarea>
+                            @error('bahan')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> Sebutkan kandungan atau komposisi bahan
+                            </small>
+                        </div>
+
+                        <!-- Cara Penggunaan -->
+                        <div class="mb-3">
+                            <label for="cara_penggunaan" class="form-label">
+                                <i class="fas fa-tasks"></i> Cara Penggunaan <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control @error('cara_penggunaan') is-invalid @enderror" 
+                                      id="cara_penggunaan" name="cara_penggunaan" rows="6" required 
+                                      placeholder="Contoh: 1. Larutkan 100 gram pupuk dalam 10 liter air, 2. Aduk hingga merata...">{{ old('cara_penggunaan', $product->cara_penggunaan ?? '') }}</textarea>
+                            @error('cara_penggunaan')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> Berikan petunjuk langkah demi langkah
+                            </small>
                         </div>
 
                         <div class="mb-3">

@@ -130,9 +130,10 @@ class AuthController extends Controller
         $rules = [
             'nama_lengkap' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
+            'alamat_balai_desa' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'no_telp' => 'required|string|max:20',
-            'username' => 'nullable|string|max:255',
+            'username' => 'nullable|string|max:255|unique:users,username,' . $user->id,
             'kabupaten' => 'nullable|string|max:255',
             'kode_pos' => 'nullable|string|max:10',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -144,7 +145,13 @@ class AuthController extends Controller
             $rules['password'] = 'required|min:3|confirmed';
         }
 
-        $validated = $request->validate($rules);
+        $validated = $request->validate($rules, [
+            'username.unique' => 'Username sudah digunakan oleh user lain',
+            'email.unique' => 'Email sudah digunakan oleh user lain',
+            'foto.image' => 'File harus berupa gambar',
+            'foto.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
+            'foto.max' => 'Ukuran gambar maksimal 2MB',
+        ]);
 
         // Check password if user wants to change it
         if ($request->filled('password')) {
@@ -152,8 +159,6 @@ class AuthController extends Controller
             if (!Hash::check($request->current_password, $user->password)) {
                 return back()->withErrors(['current_password' => 'Sandi saat ini tidak sesuai.'])->withInput();
             }
-            // Update with new password
-            $validated['password'] = Hash::make($request->password);
         }
 
         // Handle file upload
@@ -169,12 +174,12 @@ class AuthController extends Controller
             $validated['foto'] = 'images/profiles/' . $filename;
         }
 
-        // Remove password fields if not changing password
-        if (!$request->filled('password')) {
-            unset($validated['password']);
-        }
-        unset($validated['current_password']);
-        unset($validated['password_confirmation']);
+        // Update user data field by field to avoid SQL issues
+        $user->name = $validated['nama_lengkap'];
+        $user->nama_lengkap = $validated['nama_lengkap'];
+        $user->alamat = $validated['alamat'];
+        $user->email = $validated['email'];
+        $user->no_telp = $validated['no_telp'];
 
         // Prepare data for update
         $updateData = [

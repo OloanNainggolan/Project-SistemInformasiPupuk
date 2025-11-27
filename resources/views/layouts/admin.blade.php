@@ -260,27 +260,27 @@
     <!-- Header -->
     <header class="admin-header">
         <div class="header-logo">
-            <i class="fas fa-leaf"></i>
-            <h1>Pupuk & Bibit Subsidi</h1>
+            <a href="{{ route('home') }}" style="display:flex;align-items:center;text-decoration:none;color:inherit;">
+                <i class="fas fa-seedling" style="font-size:28px;color:#10b981;margin-right:10px"></i>
+                <div>
+                    <h1 style="font-size:18px;margin:0;">Pupuk & Bibit Subsidi</h1>
+                    <div style="font-size:12px;color:#6b7280;margin-top:2px;">Sistem Informasi Pemerintah</div>
+                </div>
+            </a>
         </div>
-        
-        <nav class="header-nav" id="headerNav">
-            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard', 'admin.overview') ? 'active' : '' }}">
-                Overview
-            </a>
-            <a href="{{ route('admin.orders') }}" class="{{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
-                Pesanan
-            </a>
-            <a href="{{ route('products.index') }}" class="{{ request()->is('products*') ? 'active' : '' }}">
-                Produk
-            </a>
-        </nav>
-        
+
+        @include('admin.partials.nav')
+
         <div class="header-icons">
-            <a href="{{ route('admin.notifications') }}" class="notification-icon" title="Notifikasi" style="text-decoration: none;">
+            <a href="{{ route('admin.notifications') }}" class="notification-icon" title="Notifikasi" aria-label="Notifikasi">
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge">0</span>
+                <span class="notification-badge">{{ session('admin_notifications_count', 0) }}</span>
             </a>
+
+            <div class="admin-user" style="display:flex;align-items:center;gap:10px;">
+                <img src="{{ asset('images/profiles/default.png') }}" alt="avatar" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:2px solid rgba(16,185,129,0.08)">
+                <div style="font-size:14px;color:#374151">{{ auth()->user()->name ?? session('admin_name', 'Admin') }}</div>
+            </div>
         </div>
     </header>
 
@@ -299,10 +299,12 @@
             <div class="footer-section">
                 <h3>Menu Utama</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{{ route('admin.overview') }}"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ route('admin.orders') }}"><i class="fas fa-shopping-cart"></i> Pesanan</a></li>
                     <li><a href="{{ route('products.index') }}"><i class="fas fa-box"></i> Produk</a></li>
                     <li><a href="{{ route('admin.notifications') }}"><i class="fas fa-bell"></i> Notifikasi</a></li>
+                    <li><a href="{{ route('admin.orders') }}"><i class="fas fa-shopping-cart"></i> Pesanan</a></li>
+                    <li><a href="{{ route('products.index') }}"><i class="fas fa-box"></i> Produk</a></li>
                     <li><a href="#"><i class="fas fa-cog"></i> Pengaturan</a></li>
                 </ul>
             </div>
