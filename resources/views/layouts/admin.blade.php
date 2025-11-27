@@ -323,6 +323,21 @@
             background-color: #fee2e2;
         }
 
+        .dropdown-logout-form {
+            width: 100%;
+            margin: 0;
+        }
+
+        .dropdown-logout-btn {
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
         /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
@@ -635,9 +650,9 @@
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
                         </a>
-                        <form action="{{ route('admin.logout') }}" method="POST" style="margin: 0;">
+                        <form action="{{ route('admin.logout') }}" method="POST" class="dropdown-logout-form">
                             @csrf
-                            <button type="submit" class="dropdown-item logout" style="width: 100%; border: none; background: none; text-align: left; cursor: pointer; font-family: inherit; font-size: inherit;">
+                            <button type="submit" class="dropdown-item logout dropdown-logout-btn">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Keluar</span>
                             </button>
@@ -659,7 +674,7 @@
             <!-- Branding Section -->
             <div class="footer-logo">
                 <div class="footer-logo-icon">
-                    <i class="fa-solid fa-seedling"></i>
+                    <i class="fas fa-seedling"></i>
                 </div>
                 <h2>Pupuk Subsidi Indonesia</h2>
                 <p>Platform resmi pemerintah untuk distribusi pupuk dan bibit bersubsidi kepada petani Indonesia. Mendukung ketahanan pangan nasional melalui program subsidi berkelanjutan.</p>

@@ -522,6 +522,14 @@
         color: #6b7280;
     }
 
+    .stat-value-small {
+        font-size: 24px;
+    }
+
+    .full-width-form {
+        width: 100%;
+    }
+
     /* Responsive */
     @media (max-width: 1200px) {
         .dashboard-grid {
@@ -616,7 +624,7 @@
             <div class="stat-card">
                 <div class="stat-left">
                     <div class="stat-label">Total Pendapatan</div>
-                    <div class="stat-value" style="font-size: 24px;">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
+                    <div class="stat-value stat-value-small">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
                     <div class="stat-change">
                         <i class="fas fa-arrow-up"></i> +8%
                     </div>
@@ -726,7 +734,7 @@
             </div>
 
             <div class="profile-actions">
-                <form action="{{ route('admin.logout') }}" method="POST" style="width: 100%;">
+                <form action="{{ route('admin.logout') }}" method="POST" class="full-width-form">
                     @csrf
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-sign-out-alt"></i> Keluar
