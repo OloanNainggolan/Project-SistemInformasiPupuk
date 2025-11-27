@@ -219,9 +219,9 @@
             position: relative;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
-            padding: 8px 12px;
+            padding: 5px 12px;
             border-radius: 10px;
             background: white;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -299,8 +299,8 @@
         }
 
         .profile-avatar {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             background: linear-gradient(135deg, #10b981, #059669);
             display: flex;
@@ -309,12 +309,19 @@
             color: white;
             font-weight: 500;
             box-shadow: 0 2px 8px rgba(16,185,129,0.3);
-            border: 2px solid white;
             flex-shrink: 0;
+            overflow: hidden;
         }
         
         .profile-avatar i {
-            font-size: 15px;
+            font-size: 16px;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .profile-info {
@@ -323,11 +330,11 @@
         }
 
         .profile-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #065f46;
             white-space: nowrap;
-            line-height: 1;
+            line-height: 1.2;
         }
 
         .profile-role {
@@ -545,9 +552,72 @@
         }
 
         /* ========== RESPONSIVE ========== */
+        /* Responsive - Large Tablet / Small Desktop */
+        @media (max-width: 1200px) {
+            .header-container {
+                padding: 15px 40px;
+            }
+            
+            .logo-text h1 {
+                font-size: 16px;
+            }
+            
+            .logo-text p {
+                font-size: 11px;
+            }
+            
+            .nav-menu a {
+                font-size: 13px;
+                padding: 9px 14px;
+            }
+        }
+
         @media (max-width: 1024px) {
             .header-container {
-                padding: 15px 30px;
+                padding: 12px 25px;
+            }
+
+            .logo {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .logo i {
+                font-size: 20px;
+            }
+
+            .logo-text h1 {
+                font-size: 15px;
+            }
+
+            .logo-text p {
+                font-size: 10px;
+            }
+
+            .nav-menu {
+                gap: 6px;
+            }
+
+            .nav-menu a {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            .nav-menu a i {
+                font-size: 14px;
+            }
+
+            .header-right {
+                gap: 6px;
+            }
+
+            .notification-icon,
+            .profile-section {
+                padding: 8px 10px;
+            }
+
+            .profile-name {
+                font-size: 12px;
             }
 
             .footer-content {
@@ -564,18 +634,66 @@
             }
         }
 
+        /* Responsive - Tablet */
+        @media (max-width: 900px) {
+            .header-container {
+                padding: 12px 20px;
+            }
+
+            .nav-menu a span {
+                display: none;
+            }
+
+            .nav-menu a {
+                padding: 8px;
+                min-width: 36px;
+                justify-content: center;
+            }
+
+            .profile-section {
+                gap: 6px;
+                padding: 6px 10px;
+            }
+
+            .profile-avatar {
+                width: 30px;
+                height: 30px;
+            }
+
+            .profile-avatar i {
+                font-size: 14px;
+            }
+        }
+
         @media (max-width: 768px) {
             .mobile-menu-toggle {
                 display: block;
             }
 
             .header-container {
-                padding: 15px 20px;
+                padding: 12px 15px;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo i {
+                font-size: 18px;
+            }
+
+            .logo-text h1 {
+                font-size: 14px;
+            }
+
+            .logo-text p {
+                font-size: 9px;
             }
 
             .nav-menu {
                 position: fixed;
-                top: 80px;
+                top: 70px;
                 left: -100%;
                 width: 100%;
                 background-color: white;
@@ -583,7 +701,9 @@
                 padding: 20px;
                 box-shadow: 0 5px 10px rgba(0,0,0,0.1);
                 transition: left 0.3s;
-                gap: 15px;
+                gap: 12px;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
             }
 
             .nav-menu.active {
@@ -592,12 +712,35 @@
 
             .nav-menu a {
                 width: 100%;
-                padding: 10px;
+                padding: 12px 15px;
                 border-bottom: 1px solid #f0f0f0;
+                justify-content: flex-start;
+                gap: 10px;
+            }
+
+            .nav-menu a span {
+                display: inline;
+            }
+
+            .header-right {
+                gap: 5px;
+            }
+
+            .notification-icon {
+                padding: 8px;
+            }
+
+            .profile-section {
+                padding: 6px 8px;
             }
 
             .profile-info {
                 display: none;
+            }
+
+            .profile-avatar {
+                width: 32px;
+                height: 32px;
             }
 
             .footer-content {
@@ -618,7 +761,60 @@
             }
 
             .content-wrapper {
-                margin-top: 80px;
+                margin-top: 70px;
+                padding: 15px;
+            }
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 10px 12px;
+            }
+
+            .logo-section {
+                gap: 10px;
+            }
+
+            .logo {
+                width: 36px;
+                height: 36px;
+            }
+
+            .logo i {
+                font-size: 16px;
+            }
+
+            .logo-text h1 {
+                font-size: 13px;
+            }
+
+            .logo-text p {
+                display: none;
+            }
+
+            .notification-icon,
+            .profile-section {
+                padding: 6px;
+                border-radius: 8px;
+            }
+
+            .profile-avatar {
+                width: 28px;
+                height: 28px;
+            }
+
+            .profile-avatar i {
+                font-size: 12px;
+            }
+
+            .content-wrapper {
+                margin-top: 60px;
+                padding: 10px;
+            }
+
+            footer {
+                padding: 30px 15px 0;
             }
         }
     </style>
@@ -681,7 +877,7 @@
                 <div class="profile-section">
                     <div class="profile-avatar">
                         @if(auth()->user()->foto)
-                            <img src="{{ asset(auth()->user()->foto) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            <img src="{{ asset(auth()->user()->foto) }}" alt="Profile">
                         @else
                             <i class="fas fa-user"></i>
                         @endif

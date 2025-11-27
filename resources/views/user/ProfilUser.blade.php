@@ -1,4 +1,4 @@
-@extends('layouts.user')
+ @extends('layouts.user')
 
 @section('title', 'Profil User')
 
@@ -40,7 +40,7 @@
         border: 1px solid #f0f0f0;
     }
 
-    .profile-avatar {
+    .profile-card .profile-avatar {
         width: 110px;
         height: 110px;
         border-radius: 50%;
@@ -53,7 +53,7 @@
         justify-content: center;
     }
 
-    .profile-avatar img {
+    .profile-card .profile-avatar img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -415,23 +415,97 @@
     }
 
     /* Responsive Design */
+    @media (max-width: 1200px) {
+        .container {
+            max-width: 100%;
+            padding: 1.5rem;
+        }
+
+        .dashboard-content {
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+    }
+
     @media (max-width: 1024px) {
+        .container {
+            margin-top: 90px;
+            padding: 1.5rem;
+        }
+
         .dashboard-content {
             grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .profile-card {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            width: 100%;
         }
     }
 
     @media (max-width: 768px) {
         .container {
-            padding: 0 1rem;
+            padding: 1rem;
+            margin-top: 80px;
+        }
+
+        .dashboard-title {
+            font-size: 1.4rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-card {
+            padding: 1.5rem;
+            max-width: 100%;
+        }
+
+        .profile-card .profile-avatar {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 1rem;
+        }
+
+        .profile-name h2 {
+            font-size: 1.1rem;
+        }
+
+        .info-item {
+            font-size: 0.85rem;
+            gap: 0.7rem;
+        }
+
+        .btn {
+            padding: 0.75rem 0.9rem;
+            font-size: 0.9rem;
         }
 
         .stats-grid {
             grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .land-info {
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
 
         table {
@@ -441,20 +515,72 @@
         th, td {
             padding: 0.8rem 0.5rem;
         }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .action-buttons .btn {
+            width: 100%;
+        }
     }
 
     @media (max-width: 480px) {
+        .container {
+            padding: 0.75rem;
+        }
+
         .dashboard-title {
-            font-size: 1.4rem;
-            padding: 1rem 1.5rem;
+            font-size: 1.2rem;
+            padding: 0.9rem 1.2rem;
+        }
+
+        .profile-card {
+            padding: 1.2rem;
+        }
+
+        .profile-card .profile-avatar {
+            width: 80px;
+            height: 80px;
+        }
+
+        .profile-name h2 {
+            font-size: 1rem;
+        }
+
+        .info-item {
+            font-size: 0.8rem;
         }
 
         .stats-grid {
             grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+
+        .stat-card {
+            padding: 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
         }
 
         .land-details {
             flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        table {
+            font-size: 0.8rem;
+        }
+
+        th, td {
+            padding: 0.6rem 0.4rem;
+        }
+
+        .order-number {
+            font-size: 0.75rem;
         }
     }
 </style>
