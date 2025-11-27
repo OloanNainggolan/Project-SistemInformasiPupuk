@@ -119,6 +119,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/overview', [AdminController::class, 'overview'])->name('admin.overview');
         Route::get('/profil', [AdminController::class, 'profil'])->name('admin.profil');
+        Route::get('/profil/edit', [AdminController::class, 'editProfil'])->name('admin.profil.edit');
+        Route::put('/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         
         // Notifikasi

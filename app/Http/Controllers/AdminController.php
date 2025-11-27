@@ -6,24 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    // Kredensial admin yang sudah ditentukan (hardcoded)
-    private const ADMIN_USERNAME = 'admin';
-    private const ADMIN_EMAIL = 'admin@pupuksubsidi.id';
-    private const ADMIN_PASSWORD = 'admin123';
-
     /**
      * Menampilkan halaman login admin
      */
     public function showLogin()
     {
-        // Tampilkan halaman login tanpa cek session
-        // CATATAN: Ini menghilangkan fitur keamanan redirect otomatis
-        // Jika sudah login sebagai admin, tampilkan info dan tombol ke dashboard
-        // Tidak auto-redirect agar user bisa logout jika perlu
         return view('auth.admin-login');
     }
 
@@ -41,23 +34,29 @@ class AdminController extends Controller
             'password.required' => 'Password harus diisi',
         ]);
 
-        $identifier = $request->input('username'); // bisa username atau email
+        $identifier = $request->input('username');
         $password = $request->input('password');
 
-        // Validasi kredensial admin - support username atau email
-        $isValidUsername = ($identifier === self::ADMIN_USERNAME && $password === self::ADMIN_PASSWORD);
-        $isValidEmail = ($identifier === self::ADMIN_EMAIL && $password === self::ADMIN_PASSWORD);
+        // Cari admin berdasarkan username atau email
+        $admin = Admin::where('username', $identifier)
+                      ->orWhere('email', $identifier)
+                      ->first();
 
-        if ($isValidUsername || $isValidEmail) {
-            // Login berhasil - simpan status login di session
+        if ($admin && Hash::check($password, $admin->password)) {
+            // Login berhasil - simpan data admin di session
             session([
                 'admin_logged_in' => true,
-                'admin_username' => self::ADMIN_USERNAME,
-                'admin_email' => self::ADMIN_EMAIL,
+                'admin_id' => $admin->id,
+                'admin_username' => $admin->username,
+                'admin_name' => $admin->name,
+                'admin_email' => $admin->email,
+                'admin_phone' => $admin->phone,
+                'admin_address' => $admin->address,
+                'admin_avatar' => $admin->avatar,
                 'admin_login_time' => now()
             ]);
 
-            return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, Admin!');
+            return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, ' . $admin->name . '!');
         } else {
             // Login gagal
             return back()
@@ -208,12 +207,116 @@ class AdminController extends Controller
     }
 
     /**
+     * Halaman edit profil admin
+     */
+    public function editProfil()
+    {
+        // Get admin data from database
+        $adminId = session('admin_id');
+        $admin = Admin::find($adminId);
+        
+        if (!$admin) {
+            return redirect()->route('admin.login')->with('error', 'Session expired. Please login again.');
+        }
+
+        return view('admin.profil-edit', compact('admin'));
+    }
+
+    /**
+     * Update profil admin
+     */
+    public function updateProfil(Request $request)
+    {
+        $adminId = session('admin_id');
+        $admin = Admin::find($adminId);
+
+        if (!$admin) {
+            return redirect()->route('admin.login')->with('error', 'Session expired. Please login again.');
+        }
+
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:admins,email,' . $admin->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+            'password' => 'nullable|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'name.required' => 'Nama lengkap harus diisi',
+            'email.required' => 'Email harus diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'password.min' => 'Password minimal 8 karakter',
+            'password.confirmed' => 'Konfirmasi password tidak cocok',
+            'avatar.image' => 'File harus berupa gambar',
+            'avatar.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
+            'avatar.max' => 'Ukuran gambar maksimal 2MB'
+        ]);
+
+        // Update data admin
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+        
+        if ($request->filled('phone')) {
+            $admin->phone = $request->phone;
+        }
+        
+        if ($request->filled('address')) {
+            $admin->address = $request->address;
+        }
+
+        // Handle avatar upload
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($admin->avatar && file_exists(public_path($admin->avatar))) {
+                unlink(public_path($admin->avatar));
+            }
+
+            $avatarFile = $request->file('avatar');
+            $avatarName = 'admin_' . time() . '_' . uniqid() . '.' . $avatarFile->getClientOriginalExtension();
+            $avatarFile->move(public_path('images/profiles'), $avatarName);
+            $admin->avatar = 'images/profiles/' . $avatarName;
+        }
+
+        // Update password if provided
+        if ($request->filled('password')) {
+            $admin->password = Hash::make($request->password);
+        }
+
+        // Save to database
+        $admin->save();
+
+        // Update session data
+        session([
+            'admin_name' => $admin->name,
+            'admin_email' => $admin->email,
+            'admin_phone' => $admin->phone,
+            'admin_address' => $admin->address,
+            'admin_avatar' => $admin->avatar,
+        ]);
+
+        return redirect()->route('admin.profil')
+            ->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
      * Logout admin
      */
     public function logout()
     {
         // Hapus semua session admin
-        session()->forget(['admin_logged_in', 'admin_username', 'admin_login_time']);
+        session()->forget([
+            'admin_logged_in',
+            'admin_id',
+            'admin_username',
+            'admin_name',
+            'admin_email',
+            'admin_phone',
+            'admin_address',
+            'admin_avatar',
+            'admin_login_time'
+        ]);
         
         return redirect()->route('admin.login')->with('success', 'Anda telah logout');
     }
