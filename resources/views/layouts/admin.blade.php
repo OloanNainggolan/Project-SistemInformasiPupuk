@@ -682,10 +682,10 @@
             <div class="footer-section">
                 <h3>Menu Admin</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                    <li><a href="{{ route('admin.orders') }}"><i class="fas fa-shopping-cart"></i>Pesanan</a></li>
-                    <li><a href="{{ route('products.index') }}"><i class="fas fa-box"></i>Produk</a></li>
-                    <li><a href="{{ route('admin.notifications') }}"><i class="fas fa-bell"></i>Notifikasi</a></li>
+                    <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="{{ route('admin.orders') }}"><i class="fas fa-shopping-cart"></i> Pesanan</a></li>
+                    <li><a href="{{ route('products.index') }}"><i class="fas fa-box"></i> Produk</a></li>
+                    <li><a href="{{ route('admin.notifications') }}"><i class="fas fa-bell"></i> Notifikasi</a></li>
                 </ul>
             </div>
             <div class="footer-section">
