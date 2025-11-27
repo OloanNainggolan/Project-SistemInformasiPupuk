@@ -181,30 +181,36 @@ class AuthController extends Controller
         $user->email = $validated['email'];
         $user->no_telp = $validated['no_telp'];
 
-        // Update optional fields if present
-        if (isset($validated['alamat_balai_desa'])) {
-            $user->alamat_balai_desa = $validated['alamat_balai_desa'];
-        }
+        // Prepare data for update
+        $updateData = [
+            'name' => $validated['nama_lengkap'],
+            'nama_lengkap' => $validated['nama_lengkap'],
+            'alamat' => $validated['alamat'],
+            'email' => $validated['email'],
+            'no_telp' => $validated['no_telp'],
+        ];
+
+        // Add optional fields
         if (isset($validated['username'])) {
-            $user->username = $validated['username'];
+            $updateData['username'] = $validated['username'];
         }
         if (isset($validated['kabupaten'])) {
-            $user->kabupaten = $validated['kabupaten'];
+            $updateData['kabupaten'] = $validated['kabupaten'];
         }
         if (isset($validated['kode_pos'])) {
-            $user->kode_pos = $validated['kode_pos'];
+            $updateData['kode_pos'] = $validated['kode_pos'];
         }
         if (isset($validated['foto'])) {
-            $user->foto = $validated['foto'];
+            $updateData['foto'] = $validated['foto'];
         }
-        
-        // Update password if being changed
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+        if (isset($validated['password'])) {
+            $updateData['password'] = $validated['password'];
         }
 
-        // Save the changes
-        $user->save();
+        // Update using query builder for better control
+        \DB::table('users')
+            ->where('id', $user->id)
+            ->update($updateData);
 
         return redirect()->route('profil.user')->with('success', 'Profil berhasil diperbarui!');
     }
