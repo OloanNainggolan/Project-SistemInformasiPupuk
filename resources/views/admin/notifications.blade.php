@@ -7,15 +7,16 @@
     /* Page Header */
     .notification-header {
         background: white;
-        padding: 25px 30px;
-        border-radius: 12px;
+        padding: 28px 32px;
+        border-radius: 16px;
         margin-bottom: 30px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
     .notification-header h1 {
-        color: #1b5e20;
-        font-size: 1.8em;
+        color: #065f46;
+        font-size: 28px;
+        font-weight: 700;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -23,20 +24,20 @@
     }
 
     .notification-header h1 i {
-        color: #4CAF50;
+        color: #10b981;
     }
 
     .notification-header p {
-        color: #666;
-        font-size: 0.95em;
+        color: #6b7280;
+        font-size: 15px;
     }
 
     /* Notification Form */
     .notification-form {
         background: white;
         padding: 35px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         max-width: 900px;
     }
 
@@ -47,30 +48,30 @@
     .form-group label {
         display: block;
         font-weight: 600;
-        color: #333;
+        color: #1f2937;
         margin-bottom: 10px;
-        font-size: 0.95em;
+        font-size: 14px;
     }
 
     .form-group label i {
         margin-right: 8px;
-        color: #4CAF50;
+        color: #10b981;
     }
 
     .form-control {
         width: 100%;
-        padding: 12px 15px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 0.95em;
+        padding: 14px 18px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 14px;
         font-family: inherit;
         transition: all 0.3s;
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #4CAF50;
-        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
 
     textarea.form-control {
@@ -88,26 +89,27 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 20px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
+        padding: 14px 22px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
         cursor: pointer;
         transition: all 0.3s;
     }
 
     .radio-option:hover {
-        border-color: #4CAF50;
-        background: #f1f8f1;
+        border-color: #10b981;
+        background: linear-gradient(135deg, #dcfce7, #d1fae5);
     }
 
     .radio-option input[type="radio"] {
         width: 18px;
         height: 18px;
         cursor: pointer;
+        accent-color: #10b981;
     }
 
     .radio-option input[type="radio"]:checked + label {
-        color: #2e7d32;
+        color: #065f46;
         font-weight: 600;
     }
 
@@ -126,8 +128,8 @@
     .btn {
         padding: 14px 30px;
         border: none;
-        border-radius: 8px;
-        font-size: 1em;
+        border-radius: 10px;
+        font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
@@ -137,28 +139,29 @@
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #4CAF50, #2e7d32);
+        background: linear-gradient(135deg, #10b981, #059669);
         color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
     }
 
     .btn-secondary {
-        background: #f5f5f5;
-        color: #666;
+        background: #f3f4f6;
+        color: #4b5563;
     }
 
     .btn-secondary:hover {
-        background: #e0e0e0;
+        background: #e5e7eb;
     }
 
     /* Alert */
     .alert {
-        padding: 15px 20px;
-        border-radius: 10px;
+        padding: 16px 20px;
+        border-radius: 12px;
         margin-bottom: 25px;
         display: flex;
         align-items: center;
@@ -167,53 +170,61 @@
     }
 
     .alert-success {
-        background: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        border: 1px solid #6ee7b7;
+        color: #065f46;
     }
 
     .alert-error {
-        background: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        border: 1px solid #fca5a5;
+        color: #991b1b;
     }
 
     .alert i {
-        font-size: 1.3em;
+        font-size: 20px;
     }
 
     /* Stats Cards */
     .stats-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 20px;
         margin-bottom: 30px;
     }
 
     .stat-box {
         background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(16, 185, 129, 0.1);
+    }
+
+    .stat-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
     }
 
     .stat-box .icon {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-        color: #4CAF50;
+        font-size: 48px;
+        margin-bottom: 12px;
+        color: #10b981;
     }
 
     .stat-box .value {
-        font-size: 2em;
-        font-weight: 700;
-        color: #1b5e20;
-        margin-bottom: 5px;
+        font-size: 36px;
+        font-weight: 800;
+        color: #065f46;
+        margin-bottom: 8px;
     }
 
     .stat-box .label {
-        color: #666;
-        font-size: 0.9em;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 500;
     }
 
     /* Responsive */

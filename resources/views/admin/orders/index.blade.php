@@ -12,21 +12,28 @@
     .page-title {
         font-size: 28px;
         font-weight: 700;
-        color: #2d5016;
-        margin-bottom: 5px;
+        color: #065f46;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .page-title i {
+        color: #10b981;
     }
 
     .page-subtitle {
-        font-size: 14px;
-        color: #666;
+        font-size: 15px;
+        color: #6b7280;
     }
 
     /* Controls Section */
     .controls-section {
         background: white;
-        padding: 20px 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         margin-bottom: 25px;
         display: flex;
         gap: 15px;
@@ -42,42 +49,44 @@
 
     .search-box input {
         width: 100%;
-        padding: 12px 45px 12px 15px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
+        padding: 14px 45px 14px 18px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
         font-size: 14px;
         transition: all 0.3s;
     }
 
     .search-box input:focus {
         outline: none;
-        border-color: #4CAF50;
-        box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
     }
 
     .search-box i {
         position: absolute;
-        right: 15px;
+        right: 18px;
         top: 50%;
         transform: translateY(-50%);
-        color: #999;
+        color: #10b981;
+        font-size: 16px;
     }
 
     .filter-select {
-        padding: 12px 15px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
+        padding: 14px 18px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
         font-size: 14px;
         cursor: pointer;
         background: white;
         transition: all 0.3s;
         min-width: 180px;
+        font-weight: 500;
     }
 
     .filter-select:focus {
         outline: none;
-        border-color: #4CAF50;
-        box-shadow: 0 0 0 3px rgba(76,175,80,0.1);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
     }
 
     /* Orders List */
@@ -89,29 +98,31 @@
 
     .order-card {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         overflow: hidden;
         transition: all 0.3s;
+        border: 1px solid rgba(16, 185, 129, 0.1);
     }
 
     .order-card:hover {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 25px rgba(16,185,129,0.15);
+        transform: translateY(-2px);
     }
 
     .order-header {
-        background: #f8f9fa;
-        padding: 15px 20px;
+        background: linear-gradient(135deg, #f8faf8, #f0f4f0);
+        padding: 18px 24px;
         display: grid;
         grid-template-columns: 1.5fr 2fr 2fr 1.5fr auto;
         gap: 15px;
         align-items: center;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 2px solid #e5e7eb;
     }
 
     .order-id {
         font-weight: 700;
-        color: #2d5016;
+        color: #065f46;
         font-size: 15px;
     }
 
@@ -123,37 +134,37 @@
 
     .customer-name {
         font-weight: 600;
-        color: #333;
+        color: #1f2937;
         font-size: 14px;
     }
 
     .customer-phone {
         font-size: 13px;
-        color: #666;
+        color: #6b7280;
     }
 
     .customer-phone i {
-        color: #4CAF50;
+        color: #10b981;
         margin-right: 5px;
     }
 
     .order-village {
         font-size: 14px;
-        color: #555;
+        color: #4b5563;
     }
 
     .order-village i {
-        color: #4CAF50;
+        color: #10b981;
         margin-right: 5px;
     }
 
     .order-date {
         font-size: 13px;
-        color: #666;
+        color: #6b7280;
     }
 
     .order-date i {
-        color: #4CAF50;
+        color: #10b981;
         margin-right: 5px;
     }
 
@@ -256,55 +267,57 @@
 
     .status-dropdown:focus {
         outline: none;
-        border-color: #4CAF50;
+        border-color: #10b981;
     }
 
     .status-badge {
         padding: 8px 16px;
         border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 700;
         text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
 
     .status-badge.pending {
-        background: #e0e0e0;
-        color: #666;
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
     }
 
     .status-badge.processing {
-        background: #e1bee7;
-        color: #6a1b9a;
+        background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+        color: #5b21b6;
     }
 
     .status-badge.ready {
-        background: #c8e6c9;
-        color: #2e7d32;
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        color: #1e40af;
     }
 
     .status-badge.completed {
-        background: #a5d6a7;
-        color: #1b5e20;
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        color: #065f46;
     }
 
     .status-badge.rejected {
-        background: #ffcdd2;
-        color: #c62828;
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
     }
 
     /* Loading */
     .loading-container {
         text-align: center;
         padding: 60px 20px;
-        color: #666;
+        color: #6b7280;
     }
 
     .loading-spinner {
         display: inline-block;
         width: 50px;
         height: 50px;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #4CAF50;
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #10b981;
         border-radius: 50%;
         animation: spin 1s linear infinite;
         margin-bottom: 15px;
@@ -576,7 +589,10 @@
 
 @section('content')
 <div class="page-header">
-    <h1 class="page-title">Manajemen Pesanan</h1>
+    <h1 class="page-title">
+        <i class="fas fa-shopping-cart"></i>
+        Manajemen Pesanan
+    </h1>
     <p class="page-subtitle">Kelola dan monitor semua pesanan yang masuk dari petani</p>
 </div>
 
