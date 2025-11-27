@@ -420,7 +420,7 @@
                         <td>
                             @php
                                 $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
-                                $types = [];
+                                        $types = [];
                                 if (is_array($items)) {
                                     foreach ($items as $item) {
                                         if (isset($item['type'])) {

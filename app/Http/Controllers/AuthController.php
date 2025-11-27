@@ -176,11 +176,36 @@ class AuthController extends Controller
         unset($validated['current_password']);
         unset($validated['password_confirmation']);
 
-        // Update name field as well for Laravel auth compatibility
-        $validated['name'] = $validated['nama_lengkap'];
+        // Prepare data for update
+        $updateData = [
+            'name' => $validated['nama_lengkap'],
+            'nama_lengkap' => $validated['nama_lengkap'],
+            'alamat' => $validated['alamat'],
+            'email' => $validated['email'],
+            'no_telp' => $validated['no_telp'],
+        ];
 
-        // Update user data
-        $user->update($validated);
+        // Add optional fields
+        if (isset($validated['username'])) {
+            $updateData['username'] = $validated['username'];
+        }
+        if (isset($validated['kabupaten'])) {
+            $updateData['kabupaten'] = $validated['kabupaten'];
+        }
+        if (isset($validated['kode_pos'])) {
+            $updateData['kode_pos'] = $validated['kode_pos'];
+        }
+        if (isset($validated['foto'])) {
+            $updateData['foto'] = $validated['foto'];
+        }
+        if (isset($validated['password'])) {
+            $updateData['password'] = $validated['password'];
+        }
+
+        // Update using query builder for better control
+        \DB::table('users')
+            ->where('id', $user->id)
+            ->update($updateData);
 
         return redirect()->route('profil.user')->with('success', 'Profil berhasil diperbarui!');
     }
