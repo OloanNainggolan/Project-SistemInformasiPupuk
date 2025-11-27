@@ -155,13 +155,11 @@
         border-color: #2d7a4f;
     }
 
-    /* Product Image Container - Fixed Aspect Ratio */
     .product-image {
         position: relative;
         width: 100%;
         height: 250px;
         overflow: hidden;
-        position: relative;
         background: linear-gradient(135deg, #f0fdf4, #d1fae5);
     }
 
