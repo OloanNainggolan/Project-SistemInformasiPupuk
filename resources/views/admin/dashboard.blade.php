@@ -448,6 +448,12 @@
                 </tbody>
             </table>
         </div>
+<<<<<<< Updated upstream
     </main>
 </div>
 @endsection
+=======
+    </div>
+</body>
+</html>
+>>>>>>> Stashed changes
