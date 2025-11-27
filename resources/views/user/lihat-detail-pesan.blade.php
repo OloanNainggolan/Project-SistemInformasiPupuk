@@ -419,54 +419,6 @@
         line-height: 1.5;
     }
 
-    .farmer-notes {
-        background: white;
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-
-    .notes-textarea {
-        width: 100%;
-        min-height: 150px;
-        padding: 15px;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 14px;
-        font-family: inherit;
-        resize: vertical;
-        transition: all 0.3s ease;
-    }
-
-    .notes-textarea:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-    }
-
-    .notes-hint {
-        font-size: 13px;
-        color: #6b7280;
-        margin-top: 8px;
-    }
-
-    .btn-send-notes {
-        margin-top: 15px;
-        padding: 12px 30px;
-        border: none;
-        border-radius: 10px;
-        background: #10b981;
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-send-notes:hover {
-        background: #059669;
-        transform: translateY(-2px);
-    }
-
     @media (max-width: 1024px) {
         .product-detail-grid {
             grid-template-columns: 1fr;
@@ -617,86 +569,57 @@
             Informasi Produk
         </h2>
 
-        <h3 style="font-size: 18px; color: #065f46; margin-bottom: 15px;">Deskripsi Produk</h3>
-        <p class="description-text">
-            {{ $produk->deskripsi ?? 'Pupuk NPK Phonska adalah pupuk majemuk lengkap yang mengandung unsur hara Nitrogen (N), Fosfat (P), dan Kalium (K). Faktor (P), dan Kalium (K) dalam komposisi seimbang 15-15-15. Diracik khusus untuk meningkatkan produktivitas tanaman padi, jagung, dan palawija dengan hasil maksimal.' }}
-        </p>
-
-        <h3 style="font-size: 18px; color: #065f46; margin-bottom: 15px;">Manfaat & Keunggulan</h3>
-        <div class="benefits-grid">
-            <div class="benefit-item">
-                <i class="fas fa-check-circle benefit-icon"></i>
-                <span class="benefit-text">Meningkatkan hasil panen hingga 30%</span>
-            </div>
-            <div class="benefit-item">
-                <i class="fas fa-check-circle benefit-icon"></i>
-                <span class="benefit-text">Mempercepat fase & daun tanaman</span>
-            </div>
-            <div class="benefit-item">
-                <i class="fas fa-check-circle benefit-icon"></i>
-                <span class="benefit-text">Mempercepat pertumbuhan vegetatif</span>
-            </div>
-            <div class="benefit-item">
-                <i class="fas fa-check-circle benefit-icon"></i>
-                <span class="benefit-text">Memperkukut batang & akar tanaman</span>
-            </div>
+        <!-- Deskripsi Umum -->
+        @if($produk->deskripsi)
+        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 12px; border-left: 4px solid #6b7280;">
+            <h3 style="font-size: 18px; color: #374151; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-align-left" style="color: #6b7280;"></i>
+                Deskripsi Produk
+            </h3>
+            <p style="color: #4b5563; line-height: 1.8; font-size: 15px;">
+                {{ $produk->deskripsi }}
+            </p>
         </div>
+        @endif
 
-        <div class="usage-section">
-            <h3 class="usage-title">Panduan Penggunaan</h3>
-            <div class="usage-grid">
-                <div class="usage-card">
-                    <div class="usage-number">1</div>
-                    <h4>Waktu Penggunaan</h4>
-                    <p>Gunakan NPK saat: Tanam awal tulir, dan pindah tanam</p>
-                </div>
-                <div class="usage-card">
-                    <div class="usage-number">2</div>
-                    <h4>Pupuk Cair</h4>
-                    <p>Campur 1 tutup botol NPK cair dengan 1 liter air</p>
-                </div>
-                <div class="usage-card">
-                    <div class="usage-number">3</div>
-                    <h4>Pupuk Padat</h4>
-                    <p>Gunakan secukupnya, 'dengan taburan tepat sasaran sesuai</p>
-                </div>
-            </div>
-            <div class="usage-grid" style="margin-top: 20px;">
-                <div class="usage-card">
-                    <h4 style="margin-bottom: 10px;">Cara Pakai:</h4>
-                    <ul style="text-align: left; font-size: 13px; color: #6b7280; line-height: 1.8;">
-                        <li>Taburkan di permukaan tanaman (sebagai = 10 cm dari tanaman)</li>
-                        <li>Tutup biji di permuting tanaman (sebaikir = 10 cm dari tanaman)</li>
-                        <li>Siram dengan air secukupnya</li>
-                    </ul>
-                </div>
-                <div class="usage-card">
-                    <h4 style="margin-bottom: 10px;">Dosis Aplikasi:</h4>
-                    <ul style="text-align: left; font-size: 13px; color: #6b7280; line-height: 1.8;">
-                        <li>Gunakan secara merata pada pangsan</li>
-                        <li>Letakkan ampir tansi, untuk benih</li>
-                        <li>Untuk pengecam cap = 2 minggu</li>
-                    </ul>
-                </div>
-            </div>
+        <!-- Manfaat -->
+        @if($produk->manfaat)
+        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-radius: 12px; border-left: 4px solid #10b981;">
+            <h3 style="font-size: 18px; color: #065f46; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-leaf" style="color: #10b981;"></i>
+                Manfaat & Keunggulan
+            </h3>
+            <p style="color: #047857; line-height: 1.8; font-size: 15px; white-space: pre-line;">
+                {{ $produk->manfaat }}
+            </p>
         </div>
-    </div>
+        @endif
 
-    <!-- Farmer Notes -->
-    <div class="farmer-notes">
-        <h2 class="section-title">
-            <i class="fas fa-comment-alt"></i>
-            Ulasan Petani
-        </h2>
-        <p style="color: #6b7280; margin-bottom: 15px; font-size: 14px;">
-            Tulis Ulasan Anda
-        </p>
-        <textarea class="notes-textarea" id="notesTextarea" placeholder="Tulis ulasan atau catatan khusus Anda di sini..."></textarea>
-        <p class="notes-hint">Catatan ini akan membantu kami memberikan pelayanan terbaik untuk Anda</p>
-        <button class="btn-send-notes" onclick="saveNotes()">
-            <i class="fas fa-paper-plane"></i>
-            Kirim Ulasan
-        </button>
+        <!-- Bahan/Komposisi -->
+        @if($produk->bahan)
+        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 12px; border-left: 4px solid #3b82f6;">
+            <h3 style="font-size: 18px; color: #1e40af; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-flask" style="color: #3b82f6;"></i>
+                Bahan/Komposisi
+            </h3>
+            <p style="color: #1e40af; line-height: 1.8; font-size: 15px; white-space: pre-line;">
+                {{ $produk->bahan }}
+            </p>
+        </div>
+        @endif
+
+        <!-- Cara Penggunaan -->
+        @if($produk->cara_penggunaan)
+        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+            <h3 style="font-size: 18px; color: #92400e; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-tasks" style="color: #f59e0b;"></i>
+                Cara Penggunaan
+            </h3>
+            <p style="color: #92400e; line-height: 1.8; font-size: 15px; white-space: pre-line;">
+                {{ $produk->cara_penggunaan }}
+            </p>
+        </div>
+        @endif
     </div>
 </div>
 @endsection
@@ -734,12 +657,6 @@
         
         document.getElementById('subtotal').textContent = 'Rp. ' + subtotal.toLocaleString('id-ID');
         document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
-    }
-
-    function saveNotes() {
-        const notes = document.getElementById('notesTextarea').value;
-        document.getElementById('catatanInput').value = notes;
-        alert('Ulasan Anda telah disimpan!');
     }
 </script>
 @endpush

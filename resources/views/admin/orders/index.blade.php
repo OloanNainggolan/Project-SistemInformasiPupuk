@@ -4,13 +4,20 @@
 
 @push('styles')
 <style>
+    /* Reset & Base */
+    .admin-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
     /* Page Header */
     .page-header {
-        margin-bottom: 30px;
+        margin-bottom: 25px;
     }
 
     .page-title {
-        font-size: 28px;
+        font-size: 26px;
         font-weight: 700;
         color: #2d5016;
         margin-bottom: 5px;
@@ -24,25 +31,25 @@
     /* Controls Section */
     .controls-section {
         background: white;
-        padding: 20px 25px;
+        padding: 18px 20px;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         display: flex;
-        gap: 15px;
+        gap: 12px;
         flex-wrap: wrap;
         align-items: center;
     }
 
     .search-box {
         flex: 1;
-        min-width: 300px;
+        min-width: 280px;
         position: relative;
     }
 
     .search-box input {
         width: 100%;
-        padding: 12px 45px 12px 15px;
+        padding: 10px 40px 10px 12px;
         border: 1px solid #e0e0e0;
         border-radius: 8px;
         font-size: 14px;
@@ -57,21 +64,21 @@
 
     .search-box i {
         position: absolute;
-        right: 15px;
+        right: 12px;
         top: 50%;
         transform: translateY(-50%);
         color: #999;
     }
 
     .filter-select {
-        padding: 12px 15px;
+        padding: 10px 12px;
         border: 1px solid #e0e0e0;
         border-radius: 8px;
         font-size: 14px;
         cursor: pointer;
         background: white;
         transition: all 0.3s;
-        min-width: 180px;
+        min-width: 160px;
     }
 
     .filter-select:focus {
@@ -84,84 +91,87 @@
     .orders-list {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 16px;
     }
 
     .order-card {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         overflow: hidden;
         transition: all 0.3s;
     }
 
     .order-card:hover {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
 
     .order-header {
-        background: #f8f9fa;
-        padding: 15px 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 12px 18px;
         display: grid;
-        grid-template-columns: 1.5fr 2fr 2fr 1.5fr auto;
-        gap: 15px;
+        grid-template-columns: minmax(120px, 1.2fr) minmax(180px, 2fr) minmax(150px, 1.5fr) minmax(120px, 1fr) auto;
+        gap: 12px;
         align-items: center;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid #dee2e6;
     }
 
     .order-id {
         font-weight: 700;
         color: #2d5016;
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .order-customer {
         display: flex;
         flex-direction: column;
-        gap: 3px;
+        gap: 2px;
     }
 
     .customer-name {
         font-weight: 600;
         color: #333;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .customer-phone {
-        font-size: 13px;
+        font-size: 12px;
         color: #666;
     }
 
     .customer-phone i {
         color: #4CAF50;
-        margin-right: 5px;
+        margin-right: 4px;
+        font-size: 11px;
     }
 
     .order-village {
-        font-size: 14px;
+        font-size: 13px;
         color: #555;
     }
 
     .order-village i {
         color: #4CAF50;
-        margin-right: 5px;
+        margin-right: 4px;
+        font-size: 12px;
     }
 
     .order-date {
-        font-size: 13px;
+        font-size: 12px;
         color: #666;
     }
 
     .order-date i {
         color: #4CAF50;
-        margin-right: 5px;
+        margin-right: 4px;
+        font-size: 11px;
     }
 
     .order-body {
-        padding: 20px;
+        padding: 16px 18px;
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 25px;
+        gap: 20px;
         align-items: start;
     }
 
@@ -170,25 +180,25 @@
     }
 
     .items-title {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         color: #666;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     .item-list {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
 
     .item-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0;
+        padding: 8px 0;
         border-bottom: 1px solid #f0f0f0;
     }
 
@@ -197,31 +207,31 @@
     }
 
     .item-name {
-        font-size: 14px;
+        font-size: 13px;
         color: #333;
         font-weight: 500;
     }
 
     .item-details {
-        font-size: 13px;
+        font-size: 12px;
         color: #666;
     }
 
     .order-total-section {
-        background: #f8f9fa;
-        padding: 15px 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 12px 16px;
         border-radius: 8px;
-        min-width: 200px;
+        min-width: 180px;
     }
 
     .total-label {
-        font-size: 13px;
+        font-size: 12px;
         color: #666;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
 
     .total-amount {
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 700;
         color: #2d5016;
     }
@@ -229,13 +239,13 @@
     .order-status-section {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
         align-items: flex-end;
-        min-width: 220px;
+        min-width: 200px;
     }
 
     .status-label {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         color: #666;
         text-transform: uppercase;
@@ -244,10 +254,10 @@
 
     .status-dropdown {
         width: 100%;
-        padding: 10px 15px;
+        padding: 9px 12px;
         border: 2px solid #e0e0e0;
         border-radius: 8px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;

@@ -1,17 +1,33 @@
-@extends('layouts.admin')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Produk - Pupuk & Bibit Subsidi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Reset & Global */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-@section('title', 'Tambah Produk')
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-@push('styles')
-<style>
-    .container {
-        max-width: 900px;
-        margin: 30px auto;
-        padding: 0 20px;
-    }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-    /* Header */
-    .page-header {
+        /* Header */
+        .page-header {
             background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: white;
             padding: 25px 30px;
@@ -334,13 +350,12 @@
                 justify-content: center;
             }
         }
-</style>
-@endpush
-
-@section('content')
-<div class="container">
-    <!-- Header -->
-    <div class="page-header">
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
             <h1>
                 <i class="fas fa-plus-circle"></i>
                 Tambah Produk Baru
@@ -549,23 +564,73 @@
                     </small>
                 </div>
 
-                <!-- Deskripsi -->
+                <!-- Manfaat -->
                 <div class="form-group">
-                    <label for="deskripsi">
-                        Deskripsi
+                    <label for="manfaat">
+                        <i class="fas fa-leaf"></i> Manfaat
                         <span class="required">*</span>
                     </label>
                     <textarea 
-                        class="form-control @error('deskripsi') is-invalid @enderror" 
-                        id="deskripsi" 
-                        name="deskripsi" 
+                        class="form-control @error('manfaat') is-invalid @enderror" 
+                        id="manfaat" 
+                        name="manfaat" 
                         rows="5"
-                        placeholder="Masukkan deskripsi detail produk..."
+                        placeholder="Contoh: Meningkatkan produktivitas tanaman hingga 30%, Mempercepat pertumbuhan akar, Meningkatkan daya tahan terhadap hama..."
                         required
-                    >{{ old('deskripsi') }}</textarea>
-                    @error('deskripsi')
+                    >{{ old('manfaat') }}</textarea>
+                    @error('manfaat')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
+                    <small class="help-text">
+                        <i class="fas fa-info-circle"></i>
+                        Jelaskan manfaat atau kegunaan produk untuk tanaman
+                    </small>
+                </div>
+
+                <!-- Bahan/Komposisi -->
+                <div class="form-group">
+                    <label for="bahan">
+                        <i class="fas fa-flask"></i> Bahan/Komposisi
+                        <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        class="form-control @error('bahan') is-invalid @enderror" 
+                        id="bahan" 
+                        name="bahan" 
+                        rows="5"
+                        placeholder="Contoh: Nitrogen (N) 15%, Fosfor (P) 10%, Kalium (K) 15%, Bahan organik 50%..."
+                        required
+                    >{{ old('bahan') }}</textarea>
+                    @error('bahan')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                    <small class="help-text">
+                        <i class="fas fa-info-circle"></i>
+                        Sebutkan kandungan atau komposisi bahan produk
+                    </small>
+                </div>
+
+                <!-- Cara Penggunaan -->
+                <div class="form-group">
+                    <label for="cara_penggunaan">
+                        <i class="fas fa-tasks"></i> Cara Penggunaan
+                        <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        class="form-control @error('cara_penggunaan') is-invalid @enderror" 
+                        id="cara_penggunaan" 
+                        name="cara_penggunaan" 
+                        rows="6"
+                        placeholder="Contoh: 1. Larutkan 100 gram pupuk dalam 10 liter air, 2. Aduk hingga merata, 3. Siram pada tanaman setiap 2 minggu sekali..."
+                        required
+                    >{{ old('cara_penggunaan') }}</textarea>
+                    @error('cara_penggunaan')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                    <small class="help-text">
+                        <i class="fas fa-info-circle"></i>
+                        Berikan petunjuk langkah demi langkah cara menggunakan produk
+                    </small>
                 </div>
 
                 <!-- Buttons -->
@@ -582,10 +647,8 @@
             </form>
         </div>
     </div>
-@endsection
 
-@push('scripts')
-<script>
+    <script>
         // Auto-fill kategori berdasarkan tipe produk
         document.getElementById('tipe_produk').addEventListener('change', function() {
             const kategoriInput = document.getElementById('kategori');
@@ -720,5 +783,6 @@
                 }
             }
         });
-</script>
-@endpush
+    </script>
+</body>
+</html>

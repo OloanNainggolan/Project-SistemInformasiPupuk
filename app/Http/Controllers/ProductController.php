@@ -41,7 +41,9 @@ class ProductController extends Controller
             'stok_produk' => 'required|integer|min:0',
             'gambar' => 'required|array|min:1|max:5',
             'gambar.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'deskripsi' => 'required|string'
+            'manfaat' => 'required|string',
+            'bahan' => 'required|string',
+            'cara_penggunaan' => 'required|string'
         ], [
             'nama_produk.required' => 'Nama produk wajib diisi',
             'tipe_produk.required' => 'Tipe produk wajib dipilih',
@@ -64,7 +66,9 @@ class ProductController extends Controller
             'gambar.*.image' => 'File harus berupa gambar',
             'gambar.*.mimes' => 'Format gambar harus: jpeg, png, jpg, atau gif',
             'gambar.*.max' => 'Ukuran setiap gambar maksimal 2MB',
-            'deskripsi.required' => 'Deskripsi wajib diisi'
+            'manfaat.required' => 'Manfaat wajib diisi',
+            'bahan.required' => 'Bahan wajib diisi',
+            'cara_penggunaan.required' => 'Cara penggunaan wajib diisi'
         ]);
 
         // Validasi tambahan: harga subsidi harus lebih kecil dari harga normal
@@ -92,7 +96,9 @@ class ProductController extends Controller
                 'harga_normal' => $validated['harga_normal'],
                 'stok_produk' => $validated['stok_produk'],
                 'gambar' => '', // Field ini akan deprecated, pakai relasi images
-                'deskripsi' => $validated['deskripsi']
+                'manfaat' => $validated['manfaat'],
+                'bahan' => $validated['bahan'],
+                'cara_penggunaan' => $validated['cara_penggunaan']
             ]);
 
             // Upload dan simpan gambar-gambar
@@ -159,7 +165,9 @@ class ProductController extends Controller
             'harga_normal' => 'required|numeric',
             'stok_produk' => 'required|integer',
             'gambar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'deskripsi' => 'required'
+            'manfaat' => 'required|string',
+            'bahan' => 'required|string',
+            'cara_penggunaan' => 'required|string'
         ]);
 
         $data = $request->except('gambar');
