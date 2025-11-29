@@ -10,74 +10,157 @@
         box-sizing: border-box;
     }
 
-    main {
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f7f9fc;
+    }
+
+    /* Hero Banner Section - Enhanced Version */
+    .hero-banner {
+        background: linear-gradient(135deg, #1a5f3a 0%, #2d7a4f 50%, #1a5f3a 100%);
+        padding: 80px 50px;
+        margin-bottom: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .hero-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
         max-width: 1400px;
-        margin: 40px auto;
-        padding: 0 30px;
+        margin: 0 auto;
+        text-align: center;
     }
 
-    /* Section Header */
-    .section-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 35px;
-        padding: 20px 25px;
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
-    }
-
-    .section-icon {
-        width: 50px;
-        height: 50px;
-        background: #10b981;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
-    }
-
-    .section-header h2 {
-        font-size: 28px;
+    .hero-title {
+        font-size: 3em;
         font-weight: 700;
-        color: #065f46;
+        color: white;
+        margin-bottom: 18px;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        animation: fadeInUp 0.8s ease-out;
         letter-spacing: -0.5px;
     }
 
-    /* Card Grid - Responsive */
+    .hero-subtitle {
+        font-size: 1.2em;
+        color: rgba(255, 255, 255, 0.95);
+        line-height: 1.6;
+        max-width: 750px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease-out;
+        font-weight: 400;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Main Content */
+    main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 50px 50px 70px;
+        background: #f7f9fc;
+    }
+
+    /* Section Styles */
+    .product-section {
+        margin-bottom: 55px;
+    }
+
+    .product-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-header {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .section-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1a5f3a;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+    }
+
+    .section-divider {
+        width: 70px;
+        height: 4px;
+        background: linear-gradient(90deg, #2d7a4f, #1a5f3a);
+        border-radius: 2px;
+        margin: 0 auto;
+    }
+
+    /* Card Grid Layout */
     .card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 25px;
-        margin-bottom: 80px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
     }
 
     .product-card {
         background: white;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        flex-direction: column;
-        height: 100%;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
+        position: relative;
+        opacity: 0;
+        transform: translateY(20px);
     }
 
     .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+        transform: translateY(-8px) !important;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        border-color: #2d7a4f;
     }
 
-    /* Product Image Container - Fixed Aspect Ratio */
     .product-image {
         position: relative;
         width: 100%;
-        padding-bottom: 75%; /* 4:3 Aspect Ratio */
+        height: 250px;
         overflow: hidden;
-        background: #f3f4f6;
+        background: linear-gradient(135deg, #f0fdf4, #d1fae5);
     }
 
     .product-image img {
@@ -87,66 +170,71 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.4s ease;
+        transition: transform 0.5s ease;
     }
 
     .product-card:hover .product-image img {
         transform: scale(1.08);
     }
 
-    /* Product Info */
+    .subsidy-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        z-index: 1;
+    }
+
     .product-info {
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
+        padding: 24px;
     }
 
     .product-info h3 {
         font-size: 19px;
+        color: #1a5f3a;
+        margin-bottom: 12px;
         font-weight: 700;
-        color: #065f46;
-        margin-bottom: 10px;
         line-height: 1.4;
-        min-height: 54px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
     }
 
     .product-info p {
         font-size: 14px;
-        line-height: 1.6;
+        line-height: 1.7;
         color: #6b7280;
-        margin-bottom: 15px;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        margin-bottom: 16px;
     }
 
-    .product-category {
+    .category-badge {
         display: inline-block;
-        padding: 6px 14px;
-        background: #d1fae5;
-        color: #065f46;
-        border-radius: 20px;
+        padding: 6px 12px;
+        background: #f0fdf4;
+        color: #1a5f3a;
+        border-radius: 8px;
         font-size: 12px;
         font-weight: 600;
-        margin-bottom: 12px;
-        letter-spacing: 0.3px;
+        margin-bottom: 16px;
+        border: 1px solid #d1fae5;
     }
 
     /* Price Section */
     .price-section {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        padding: 15px;
-        background: #f9fafb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        padding: 18px 20px;
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
         border-radius: 12px;
-        margin-bottom: 12px;
+        border: 2px solid #d1fae5;
+        gap: 20px;
     }
 
     .price-item {
@@ -154,18 +242,40 @@
     }
 
     .price-label {
-        font-size: 11px;
-        color: #9ca3af;
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 8px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 4px;
+        letter-spacing: 0.8px;
+        line-height: 1.2;
     }
 
     .price-value {
-        font-size: 17px;
+        font-size: 19px;
         font-weight: 700;
-        color: #065f46;
+        color: #374151;
+        line-height: 1.3;
+    }
+
+    .price-value.subsidy-price {
+        color: #1a5f3a;
+        font-size: 20px;
+    }
+
+    .stock-info {
+        margin-bottom: 18px;
+        padding: 12px;
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid #d1fae5;
+    }
+
+    .stock-info span {
+        font-size: 13px;
+        color: #1a5f3a;
+        font-weight: 600;
     }
 
     .price-subsidi {
@@ -198,169 +308,210 @@
     /* Button */
     .btn-detail {
         width: 100%;
-        padding: 14px 20px;
+        padding: 13px;
         border: none;
         border-radius: 10px;
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 14px;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-top: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .btn-green {
-        background: linear-gradient(135deg, #10b981, #059669);
+        background: linear-gradient(135deg, #2d7a4f, #1a5f3a);
         color: white;
+        box-shadow: 0 4px 15px rgba(45, 122, 79, 0.3);
     }
 
     .btn-green:hover {
-        background: linear-gradient(135deg, #059669, #047857);
+        background: linear-gradient(135deg, #1a5f3a, #0d4d2a);
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 6px 20px rgba(45, 122, 79, 0.4);
     }
 
     .btn-blue {
-        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        background: linear-gradient(135deg, #1e40af, #1e3a8a);
         color: white;
+        box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
     }
 
     .btn-blue:hover {
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        background: linear-gradient(135deg, #1e3a8a, #1e3a8a);
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
     }
 
     /* Empty State */
     .empty-state {
         text-align: center;
-        padding: 80px 30px;
+        padding: 70px 30px;
         background: white;
-        border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border: 2px dashed #e5e7eb;
     }
 
-    .empty-state .icon {
-        font-size: 64px;
-        margin-bottom: 20px;
-        opacity: 0.6;
+    .empty-state-icon {
+        font-size: 56px;
+        margin-bottom: 18px;
+        opacity: 0.4;
     }
 
     .empty-state h3 {
-        font-size: 22px;
         color: #374151;
-        margin-bottom: 12px;
-        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 20px;
+        font-weight: 700;
     }
 
     .empty-state p {
         color: #9ca3af;
-        font-size: 15px;
-        line-height: 1.6;
-    }
-
-    /* Bibit Section (Blue Theme) */
-    #bibit-subsidi .section-header {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-    }
-
-    #bibit-subsidi .section-icon {
-        background: #3b82f6;
-        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
-    }
-
-    #bibit-subsidi .section-header h2 {
-        color: #1e40af;
-    }
-
-    #bibit-subsidi .product-category {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    #bibit-subsidi .price-value {
-        color: #1e40af;
-    }
-
-    #bibit-subsidi .price-subsidi {
-        color: #2563eb !important;
-    }
-
-    #bibit-subsidi .stock-badge {
-        background: linear-gradient(135deg, #eff6ff, #dbeafe);
-        border-color: #bfdbfe;
-    }
-
-    #bibit-subsidi .stock-badge span {
-        color: #1e40af;
+        font-size: 14px;
     }
 
     /* Responsive Design */
     @media (max-width: 1200px) {
         .card-grid {
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .hero-banner {
+            padding: 60px 30px;
+        }
+
+        .hero-title {
+            font-size: 2.3em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05em;
+        }
+
+        main {
+            padding: 40px 30px 50px;
+        }
+
+        .section-header h2 {
+            font-size: 26px;
+        }
+
+        .section-divider {
+            width: 50px;
         }
     }
 
     @media (max-width: 768px) {
+        .hero-banner {
+            padding: 50px 25px;
+        }
+
+        .hero-title {
+            font-size: 2em;
+        }
+
+        .hero-subtitle {
+            font-size: 1em;
+        }
+
         main {
-            padding: 0 20px;
-            margin: 20px auto;
+            padding: 35px 25px 45px;
         }
 
-        .section-header {
-            padding: 16px 20px;
-            margin-bottom: 25px;
+        .card-grid {
+            grid-template-columns: 1fr;
+            gap: 22px;
         }
 
-        .section-icon {
-            width: 42px;
-            height: 42px;
-            font-size: 20px;
+        .section-header h2 {
+            font-size: 24px;
+        }
+
+        .product-image {
+            height: 220px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-banner {
+            padding: 40px 20px;
+        }
+
+        .hero-title {
+            font-size: 1.7em;
+        }
+
+        .hero-subtitle {
+            font-size: 0.95em;
+        }
+
+        main {
+            padding: 30px 20px 40px;
         }
 
         .section-header h2 {
             font-size: 22px;
         }
 
-        .card-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 50px;
+        .section-divider {
+            width: 40px;
+            height: 3px;
         }
 
-        .product-image {
-            padding-bottom: 65%; /* Slightly shorter on mobile */
+        .card-grid {
+            gap: 20px;
+        }
+
+        .product-info {
+            padding: 20px;
         }
 
         .product-info h3 {
             font-size: 17px;
-            min-height: auto;
         }
 
-        .empty-state {
-            padding: 60px 20px;
-        }
-    }
-
-    @media (max-width: 480px) {
         .price-section {
-            grid-template-columns: 1fr;
-            gap: 10px;
+            flex-direction: column;
+            gap: 14px;
+            padding: 16px;
         }
 
         .price-item {
-            padding: 8px 0;
+            text-align: center;
+        }
+
+        .price-label {
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .price-value {
+            font-size: 18px;
+        }
+
+        .price-value.subsidy-price {
+            font-size: 19px;
         }
     }
 </style>
 @endpush
 
 @section('content')
+<!-- Hero Banner -->
+<div class="hero-banner">
+    <div class="hero-content">
+        <h1 class="hero-title">Pupuk & Bibit Subsidi</h1>
+        <p class="hero-subtitle">
+            Dapatkan pupuk dan bibit berkualitas tinggi dengan harga subsidi dari pemerintah. 
+            Tingkatkan hasil panen Anda dengan produk terpercaya dan terjangkau.
+        </p>
+    </div>
+</div>
+
 <main>
     @php
         $pupukProducts = $products->where('tipe_produk', 'pupuk');
@@ -368,17 +519,20 @@
     @endphp
 
     <!-- Pupuk Subsidi Section -->
-    <section id="pupuk-subsidi">
+    <section id="pupuk-subsidi" class="product-section">
         <div class="section-header">
-            <div class="section-icon">🌿</div>
-            <h2>Pupuk Subsidi</h2>
+            <div>
+                <h2>Pupuk Subsidi</h2>
+                <div class="section-divider"></div>
+            </div>
         </div>
 
         @if($pupukProducts->count() > 0)
             <div class="card-grid">
                 @foreach($pupukProducts as $product)
-                    <div class="product-card" data-product-id="{{ $product->id_produk }}">
+                    <div class="product-card">
                         <div class="product-image">
+                            <div class="subsidy-badge">SUBSIDI</div>
                             @if($product->primaryImage)
                                 <img src="{{ asset($product->primaryImage->image_path) }}" alt="{{ $product->nama_produk }}">
                             @elseif($product->gambar)
@@ -389,15 +543,12 @@
                         </div>
                         <div class="product-info">
                             <h3>{{ $product->nama_produk }}</h3>
+                            <p>{{ Str::limit($product->deskripsi, 120) }}</p>
                             
                             @if($product->kategori)
-                                <span class="product-category">
+                                <div class="category-badge">
                                     {{ $product->kategori }}
-                                </span>
-                            @endif
-
-                            @if($product->manfaat)
-                                <p>{{ Str::limit($product->manfaat, 100) }}</p>
+                                </div>
                             @endif
 
                             <div class="price-section">
@@ -407,12 +558,12 @@
                                 </div>
                                 <div class="price-item">
                                     <div class="price-label">Harga Subsidi</div>
-                                    <div class="price-value price-subsidi">Rp {{ number_format($product->harga_subsidi, 0, ',', '.') }}</div>
+                                    <div class="price-value subsidy-price">Rp {{ number_format($product->harga_subsidi, 0, ',', '.') }}</div>
                                 </div>
                             </div>
 
-                            <div class="stock-badge">
-                                <span><i class="fas fa-box"></i> Stok: {{ number_format($product->stok_produk) }} unit</span>
+                            <div class="stock-info">
+                                <span>Stok: {{ number_format($product->stok_produk) }} unit</span>
                             </div>
 
                             <button class="btn-detail btn-green" onclick="window.location.href='/user/pupuk-bibit/{{ $product->id_produk }}/detail'">
@@ -424,7 +575,7 @@
             </div>
         @else
             <div class="empty-state">
-                <div class="icon">🌿</div>
+                <div class="empty-state-icon">—</div>
                 <h3>Belum Ada Pupuk Tersedia</h3>
                 <p>Produk pupuk subsidi akan segera ditambahkan oleh admin.</p>
             </div>
@@ -432,17 +583,20 @@
     </section>
 
     <!-- Bibit Subsidi Section -->
-    <section id="bibit-subsidi">
+    <section id="bibit-subsidi" class="product-section">
         <div class="section-header">
-            <div class="section-icon">🌱</div>
-            <h2>Bibit Subsidi</h2>
+            <div>
+                <h2>Bibit Subsidi</h2>
+                <div class="section-divider"></div>
+            </div>
         </div>
 
         @if($bibitProducts->count() > 0)
             <div class="card-grid">
                 @foreach($bibitProducts as $product)
-                    <div class="product-card" data-product-id="{{ $product->id_produk }}">
+                    <div class="product-card">
                         <div class="product-image">
+                            <div class="subsidy-badge">SUBSIDI</div>
                             @if($product->primaryImage)
                                 <img src="{{ asset($product->primaryImage->image_path) }}" alt="{{ $product->nama_produk }}">
                             @elseif($product->gambar)
@@ -453,30 +607,27 @@
                         </div>
                         <div class="product-info">
                             <h3>{{ $product->nama_produk }}</h3>
+                            <p>{{ Str::limit($product->deskripsi, 120) }}</p>
                             
                             @if($product->kategori)
-                                <span class="product-category">
+                                <div class="category-badge">
                                     {{ $product->kategori }}
-                                </span>
-                            @endif
-
-                            @if($product->manfaat)
-                                <p>{{ Str::limit($product->manfaat, 100) }}</p>
+                                </div>
                             @endif
 
                             <div class="price-section">
                                 <div class="price-item">
                                     <div class="price-label">Harga Normal</div>
-                                    <div class="price-value price-normal">Rp {{ number_format($product->harga_normal, 0, ',', '.') }}</div>
+                                    <div class="price-value">Rp {{ number_format($product->harga_normal, 0, ',', '.') }}</div>
                                 </div>
                                 <div class="price-item">
                                     <div class="price-label">Harga Subsidi</div>
-                                    <div class="price-value price-subsidi">Rp {{ number_format($product->harga_subsidi, 0, ',', '.') }}</div>
+                                    <div class="price-value subsidy-price">Rp {{ number_format($product->harga_subsidi, 0, ',', '.') }}</div>
                                 </div>
                             </div>
 
-                            <div class="stock-badge">
-                                <span><i class="fas fa-box"></i> Stok: {{ number_format($product->stok_produk) }} unit</span>
+                            <div class="stock-info">
+                                <span>Stok: {{ number_format($product->stok_produk) }} unit</span>
                             </div>
 
                             <button class="btn-detail btn-blue" onclick="window.location.href='/user/pupuk-bibit/{{ $product->id_produk }}/detail'">
@@ -488,7 +639,7 @@
             </div>
         @else
             <div class="empty-state">
-                <div class="icon">🌱</div>
+                <div class="empty-state-icon">—</div>
                 <h3>Belum Ada Bibit Tersedia</h3>
                 <p>Produk bibit subsidi akan segera ditambahkan oleh admin.</p>
             </div>
@@ -499,40 +650,15 @@
 
 @push('scripts')
 <script>
-    // Smooth scroll effect for all anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const section = document.getElementById(targetId);
-            if (section) {
-                section.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+    // Smooth scroll animation for cards on load
+    window.addEventListener('load', function() {
+        const cards = document.querySelectorAll('.product-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
         });
-    });
-
-    // Card animation on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.product-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        observer.observe(card);
     });
 </script>
 @endpush
