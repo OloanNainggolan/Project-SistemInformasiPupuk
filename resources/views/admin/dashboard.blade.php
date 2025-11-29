@@ -1,292 +1,252 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard - Overview')
+@section('title', 'Admin Dashboard')
 
 @push('styles')
 <style>
     :root {
-        --green-dark: #065f46;
-        --green: #059669;
-        --green-light: #10b981;
-        --mint: #ecfdf5;
-        --gold: #fbbf24;
-        --blue: #3b82f6;
-        --purple: #8b5cf6;
-        --red: #ef4444;
+        --color-primary: #065f46;
+        --color-primary-light: #d4edda;
+        --color-text-dark: #1f2937;
+        --color-text-grey: #6b7280;
+        --color-bg-light: #f0f4f0;
+        --color-border: #e5e7eb;
+        --color-success: #10b981;
+        --color-danger: #ef4444;
+        --color-warning: #fbbf24;
+        --color-processing: #8b5cf6;
     }
 
-    .dashboard-page {
+    .dashboard-wrapper {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        margin: 30px auto;
         max-width: 1400px;
-        margin: 0 auto;
-        padding: 20px;
+        padding: 0 20px;
     }
 
-    /* Page Header */
-    .page-header {
-        margin-bottom: 30px;
+    /* Sidebar Profile */
+    .profile-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .page-title-green {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-primary);
         text-align: center;
     }
 
-    .page-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--green-dark);
+    .profile-card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #059669, #10b981);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 12px;
-        margin-bottom: 8px;
+        margin: 0 auto 15px;
+        font-size: 50px;
+        color: white;
     }
 
-    .page-title i {
-        font-size: 28px;
-        color: var(--green);
+    .profile-username {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-text-dark);
+        margin-bottom: 5px;
     }
 
-    .welcome-text {
-        color: #6b7280;
+    .profile-handle {
         font-size: 14px;
+        color: var(--color-text-grey);
+        margin-bottom: 20px;
+    }
+
+    .profile-info {
+        text-align: left;
+        margin: 20px 0;
+        font-size: 13px;
+        line-height: 2;
+    }
+
+    .profile-info p {
+        margin: 8px 0;
+        color: #4b5563;
+    }
+
+    .profile-info i {
+        color: var(--color-primary);
+        width: 20px;
+        margin-right: 8px;
+    }
+
+    .profile-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
+        font-size: 14px;
     }
 
-    .welcome-text .admin-name {
-        color: var(--green);
-        font-weight: 600;
+    .btn-edit {
+        background: var(--color-primary);
+        color: white;
     }
 
-    .welcome-text .date {
-        color: #9ca3af;
+    .btn-edit:hover {
+        background: #044e37;
     }
 
-    /* Stats Grid */
+    .btn-logout {
+        background: var(--color-danger);
+        color: white;
+        width: 100%;
+    }
+
+    .btn-logout:hover {
+        background: #dc2626;
+    }
+
+    /* Main Dashboard Area */
+    .dashboard-main {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Stats Row */
+    .stats-container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 20px;
-        margin-bottom: 30px;
     }
 
     .stat-card {
         background: white;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e5e7eb;
-        transition: all 0.2s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
-        border-color: var(--green);
-    }
-
-    .stat-header {
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 16px;
+    }
+
+    .stat-left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: var(--color-text-grey);
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--color-text-dark);
+    }
+
+    .stat-change {
+        font-size: 12px;
+        color: var(--color-success);
+        font-weight: 600;
     }
 
     .stat-icon {
         width: 50px;
         height: 50px;
-        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 24px;
-        transition: transform 0.2s ease;
+        border-radius: 8px;
+        background: #f3f4f6;
     }
 
-    .stat-card:hover .stat-icon {
-        transform: scale(1.05);
-    }
-
-    .stat-card:nth-child(1) .stat-icon {
-        background: var(--green);
-        color: white;
-    }
-
-    .stat-card:nth-child(2) .stat-icon {
-        background: var(--blue);
-        color: white;
-    }
-
-    .stat-card:nth-child(3) .stat-icon {
-        background: var(--gold);
-        color: white;
-    }
-
-    .stat-card:nth-child(4) .stat-icon {
-        background: var(--purple);
-        color: white;
-    }
-
-    .stat-body {
-        position: relative;
-    }
-
-    .stat-label {
-        font-size: 12px;
-        color: #6b7280;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-    }
-
-    .stat-value {
-        font-size: 32px;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 6px;
-        line-height: 1;
-    }
-
-    .stat-description {
-        font-size: 12px;
-        color: #9ca3af;
-        margin-bottom: 8px;
-    }
-
-    .stat-trend {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .stat-trend.up {
-        color: var(--green);
-    }
-
-    .stat-trend.down {
-        color: #ef4444;
-    }
-
-    .stat-trend i {
-        font-size: 12px;
-    }
-
-    /* Quick Actions */
-    .quick-actions {
-        background: white;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e5e7eb;
-        margin-bottom: 30px;
-    }
-
-    .section-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .section-title i {
-        color: var(--green);
-        font-size: 20px;
-    }
-
-    .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-    }
-
-    .action-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        padding: 16px;
-        background: #f9fafb;
-        border: 2px solid #e5e7eb;
-        border-radius: 10px;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        color: #4b5563;
-        font-weight: 600;
-        font-size: 13px;
-    }
-
-    .action-btn:hover {
-        border-color: var(--green);
-        background: var(--mint);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.1);
-        color: var(--green-dark);
-    }
-
-    .action-btn i {
-        font-size: 28px;
-        color: var(--green);
-    }
-
-    /* Recent Orders Table */
+    /* Orders Table */
     .orders-section {
         background: white;
-        padding: 24px;
+        padding: 25px;
         border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e5e7eb;
-        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .orders-section h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-text-dark);
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--color-primary);
     }
 
     .orders-table {
         width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
+        border-collapse: collapse;
     }
 
     .orders-table thead th {
         text-align: left;
-        padding: 12px 16px;
+        padding: 12px;
         background: #f9fafb;
-        color: #374151;
+        color: var(--color-text-grey);
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-bottom: 2px solid var(--green);
-    }
-
-    .orders-table thead th:first-child {
-        border-radius: 8px 0 0 0;
-    }
-
-    .orders-table thead th:last-child {
-        border-radius: 0 8px 0 0;
+        border-bottom: 2px solid var(--color-border);
     }
 
     .orders-table tbody td {
-        padding: 14px 16px;
+        padding: 15px 12px;
         border-bottom: 1px solid #f3f4f6;
         font-size: 14px;
-        color: #1f2937;
-    }
-
-    .orders-table tbody tr {
-        transition: all 0.2s ease;
+        color: var(--color-text-dark);
     }
 
     .orders-table tbody tr:hover {
-        background: var(--mint);
-    }
-
-    .order-id {
-        font-weight: 600;
-        color: var(--green);
+        background: #f9fafb;
     }
 
     .status-badge {
@@ -296,7 +256,6 @@
         font-size: 11px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.3px;
     }
 
     .status-completed {
@@ -305,18 +264,8 @@
     }
 
     .status-processing {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .status-ready {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .status-pending {
-        background: #fce7f3;
-        color: #831843;
+        background: #e0e7ff;
+        color: #5b21b6;
     }
 
     .status-rejected {
@@ -324,79 +273,25 @@
         color: #991b1b;
     }
 
-    .empty-state {
-        text-align: center;
-        padding: 50px 30px;
-        color: #9ca3af;
-    }
-
-    .empty-state i {
-        font-size: 48px;
-        margin-bottom: 16px;
-        display: block;
-        opacity: 0.3;
-    }
-
-    .empty-state p {
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    /* Alert Messages */
-    .alert-success {
-        padding: 14px 20px;
-        background: #d1fae5;
-        border: 1px solid var(--green-light);
-        border-radius: 8px;
-        color: var(--green-dark);
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 600;
-        font-size: 14px;
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
     }
 
     /* Responsive */
-    @media (max-width: 1200px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
+    @media (max-width: 1024px) {
+        .dashboard-wrapper {
+            grid-template-columns: 1fr;
         }
 
-        .actions-grid {
+        .stats-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media (max-width: 768px) {
-        .dashboard-page {
-            padding: 16px;
-        }
-
-        .page-title {
-            font-size: 24px;
-        }
-
-        .page-title i {
-            font-size: 24px;
-        }
-
         .stats-grid {
             grid-template-columns: 1fr;
-        }
-
-        .actions-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
-        }
-
-        .stat-value {
-            font-size: 24px;
         }
 
         .orders-table {
@@ -405,207 +300,160 @@
 
         .orders-table thead th,
         .orders-table tbody td {
-            padding: 10px;
+            padding: 10px 8px;
         }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="dashboard-page">
-<!-- Page Header -->
-<div class="page-header">
-    <div>
-        <h1 class="page-title">
-            <i class="fas fa-tachometer-alt"></i>
-            Dashboard Overview
-        </h1>
-        <p class="welcome-text">
-            <span>Selamat datang kembali,</span>
-            <span class="admin-name">Admin</span>
-            <span class="separator">|</span>
-            <i class="far fa-calendar-alt" style="color: var(--green);"></i>
-            <span class="date">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</span>
-        </p>
-    </div>
-</div>
+<div class="dashboard-wrapper">
+    <!-- Left Sidebar: Profile -->
+    <aside class="profile-sidebar">
+        <div class="page-title-green">
+            Admin Dashboard
+        </div>
 
-<!-- Alert Messages -->
-@if(session('success'))
-<div class="alert-success">
-    <i class="fas fa-check-circle"></i>
-    <span>{{ session('success') }}</span>
-</div>
-@endif
+        <div class="profile-card">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-username">adminabc</div>
+            <div class="profile-handle">@admin23</div>
 
-<!-- Statistics Cards -->
-<div class="stats-grid">
-    <!-- Card 1: Total Pesanan -->
-    <div class="stat-card">
-        <div class="stat-header">
-            <div class="stat-icon">
-                <i class="fas fa-clipboard-list"></i>
+            <div class="profile-info">
+                <p><i class="fas fa-envelope"></i> Nupi.Sianturi@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
+                <p><i class="fas fa-map-marker-alt"></i> Desa Situlama, Kec. Silaiang, Kab. Sidama, Jawa Barat</p>
+                <p><i class="fas fa-calendar"></i> Bergabung Sejak Januari 2020</p>
             </div>
-        </div>
-        <div class="stat-body">
-            <div class="stat-label">
-                <i class="fas fa-shopping-bag"></i>
-                Pesanan Masuk
-            </div>
-            <div class="stat-value">{{ $totalPesanan }}</div>
-            <div class="stat-description">Total pesanan yang dikonfirmasi</div>
-            <div class="stat-trend {{ $pertumbuhanPesanan >= 0 ? 'up' : 'down' }}">
-                <i class="fas fa-arrow-{{ $pertumbuhanPesanan >= 0 ? 'up' : 'down' }}"></i>
-                <span>{{ $pertumbuhanPesanan >= 0 ? '+' : '' }}{{ $pertumbuhanPesanan }}% dari bulan lalu</span>
-            </div>
-        </div>
-    </div>
 
-    <!-- Card 2: Total Petani -->
-    <div class="stat-card">
-        <div class="stat-header">
-            <div class="stat-icon">
-                <i class="fas fa-user-friends"></i>
+            <div class="profile-actions">
+                <a href="#" class="btn btn-edit">
+                    <i class="fas fa-edit"></i> Edit Profil
+                </a>
+                <form action="{{ route('admin.logout') }}" method="POST" style="width: 100%;">
+                    @csrf
+                    <button type="submit" class="btn btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Keluar
+                    </button>
+                </form>
             </div>
         </div>
-        <div class="stat-body">
-            <div class="stat-label">
-                <i class="fas fa-users"></i>
-                Petani Terdaftar
-            </div>
-            <div class="stat-value">{{ $totalPetani }}</div>
-            <div class="stat-description">Pengguna yang telah mendaftar</div>
-            <div class="stat-trend {{ $pertumbuhanPetani >= 0 ? 'up' : 'down' }}">
-                <i class="fas fa-arrow-{{ $pertumbuhanPetani >= 0 ? 'up' : 'down' }}"></i>
-                <span>{{ $pertumbuhanPetani >= 0 ? '+' : '' }}{{ $pertumbuhanPetani }}% dari bulan lalu</span>
-            </div>
-        </div>
-    </div>
+    </aside>
 
-    <!-- Card 3: Pendapatan -->
-    <div class="stat-card">
-        <div class="stat-header">
-            <div class="stat-icon">
-                <i class="fas fa-wallet"></i>
-            </div>
+    <!-- Right: Main Dashboard Area -->
+    <main class="dashboard-main">
+        <!-- Alert Messages -->
+        @if(session('success'))
+        <div style="padding: 12px 20px; background: #d1fae5; border: 1px solid #a7f3d0; border-radius: 8px; color: #065f46; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ session('success') }}</span>
         </div>
-        <div class="stat-body">
-            <div class="stat-label">
-                <i class="fas fa-money-bill-wave"></i>
-                Total Pendapatan
-            </div>
-            <div class="stat-value">Rp {{ number_format($totalPendapatan / 1000000, 1) }}M</div>
-            <div class="stat-description">Pendapatan dari semua pesanan</div>
-            <div class="stat-trend {{ $pertumbuhanPendapatan >= 0 ? 'up' : 'down' }}">
-                <i class="fas fa-arrow-{{ $pertumbuhanPendapatan >= 0 ? 'up' : 'down' }}"></i>
-                <span>{{ $pertumbuhanPendapatan >= 0 ? '+' : '' }}{{ $pertumbuhanPendapatan }}% dari bulan lalu</span>
-            </div>
-        </div>
-    </div>
+        @endif
 
-    <!-- Card 4: Total Produk -->
-    <div class="stat-card">
-        <div class="stat-header">
-            <div class="stat-icon">
-                <i class="fas fa-boxes"></i>
-            </div>
-        </div>
-        <div class="stat-body">
-            <div class="stat-label">
-                <i class="fas fa-seedling"></i>
-                Produk Tersedia
-            </div>
-            <div class="stat-value">{{ $totalProduk }}</div>
-            <div class="stat-description">Pupuk & bibit yang dijual</div>
-            <div class="stat-trend {{ $pertumbuhanProduk >= 0 ? 'up' : 'down' }}">
-                <i class="fas fa-arrow-{{ $pertumbuhanProduk >= 0 ? 'up' : 'down' }}"></i>
-                <span>{{ $pertumbuhanProduk >= 0 ? '+' : '' }}{{ $pertumbuhanProduk }}% dari bulan lalu</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="quick-actions">
-    <h2 class="section-title">
-        <i class="fas fa-bolt"></i>
-        Aksi Cepat
-    </h2>
-    <div class="actions-grid">
-        <a href="{{ route('admin.orders') }}" class="action-btn">
-            <i class="fas fa-shopping-cart"></i>
-            <span>Lihat Pesanan</span>
-        </a>
-        <a href="{{ route('admin.products.create') }}" class="action-btn">
-            <i class="fas fa-plus-circle"></i>
-            <span>Tambah Produk</span>
-        </a>
-        <a href="{{ route('admin.notifications') }}" class="action-btn">
-            <i class="fas fa-paper-plane"></i>
-            <span>Kirim Notifikasi</span>
-        </a>
-        <a href="{{ route('admin.products.index') }}" class="action-btn">
-            <i class="fas fa-boxes"></i>
-            <span>Kelola Produk</span>
-        </a>
-    </div>
-</div>
-
-<!-- Recent Orders -->
-<div class="orders-section">
-    <h2 class="section-title">
-        <i class="fas fa-history"></i>
-        Pesanan Terbaru
-    </h2>
-    <table class="orders-table">
-        <thead>
-            <tr>
-                <th>ID PESANAN</th>
-                <th>NAMA PETANI</th>
-                <th>BALAI DESA</th>
-                <th>TANGGAL</th>
-                <th>JENIS PRODUK</th>
-                <th>STATUS</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($recentOrders as $order)
-            <tr>
-                <td><span class="order-id">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span></td>
-                <td>{{ $order->user->name ?? 'N/A' }}</td>
-                <td>{{ $order->village_office }}</td>
-                <td>{{ $order->created_at->format('d M Y') }}</td>
-                <td>
-                    @php
-                        $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
-                        $types = [];
-                        if (is_array($items)) {
-                            foreach ($items as $item) {
-                                if (isset($item['type'])) {
-                                    $types[] = ucfirst($item['type']);
-                                }
-                            }
-                        }
-                        echo implode(', ', array_unique($types)) ?: 'N/A';
-                    @endphp
-                </td>
-                <td>
-                    <span class="status-badge status-{{ strtolower($order->status) }}">
-                        {{ $order->status }}
-                    </span>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6">
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p>Belum ada pesanan terbaru</p>
+        <!-- Statistics Cards -->
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-left">
+                        <div class="stat-label">Total Pesanan</div>
+                        <div class="stat-value">{{ $totalPesanan }}</div>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i> +35%
+                        </div>
                     </div>
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                    <div class="stat-icon">
+                        <i class="fas fa-handshake" style="color: #059669;"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-left">
+                        <div class="stat-label">Total Petani</div>
+                        <div class="stat-value">{{ $totalPetani }}</div>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i> +10%
+                        </div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-users" style="color: #059669;"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-left">
+                        <div class="stat-label">Total Pendapatan</div>
+                        <div class="stat-value">Rp. {{ number_format($totalPendapatan, 0, ',', '.') }}</div>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i> +8%
+                        </div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line" style="color: #059669;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="orders-section">
+            <h2><i class="fas fa-shopping-cart"></i> Daftar Pesanan Terbaru</h2>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Balai Desa</th>
+                        <th>Tanggal</th>
+                        <th>Jenis</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recentOrders as $order)
+                    <tr>
+                        <td>{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
+                        <td>{{ $order->user->name ?? 'N/A' }}</td>
+                        <td>{{ $order->village_office }}</td>
+                        <td>{{ $order->created_at->format('d M Y') }}</td>
+                        <td>
+                            @php
+                                $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
+                                $types = [];
+                                if (is_array($items)) {
+                                    foreach ($items as $item) {
+                                        if (isset($item['type'])) {
+                                            $types[] = ucfirst($item['type']);
+                                        }
+                                    }
+                                }
+                                echo implode(', ', array_unique($types)) ?: 'N/A';
+                            @endphp
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ strtolower($order->status) }}">
+                                {{ $order->status }}
+                            </span>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 30px; color: #6b7280;">
+                            <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
+                            Belum ada pesanan
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+<<<<<<< Updated upstream
+    </main>
 </div>
 @endsection
+=======
+    </div>
+</body>
+</html>
+>>>>>>> Stashed changes
