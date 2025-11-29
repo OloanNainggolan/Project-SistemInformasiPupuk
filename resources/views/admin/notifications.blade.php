@@ -4,73 +4,89 @@
 
 @push('styles')
 <style>
+    :root {
+        --green-dark: #065f46;
+        --green: #059669;
+        --green-light: #10b981;
+        --mint: #ecfdf5;
+    }
+
+    .notification-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
     /* Page Header */
     .notification-header {
-        background: white;
-        padding: 25px 30px;
-        border-radius: 12px;
         margin-bottom: 30px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        text-align: center;
     }
 
     .notification-header h1 {
-        color: #1b5e20;
-        font-size: 1.8em;
+        color: var(--green-dark);
+        font-size: 28px;
+        font-weight: 700;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 12px;
         margin-bottom: 8px;
     }
 
     .notification-header h1 i {
-        color: #4CAF50;
+        color: var(--green);
+        font-size: 28px;
     }
 
     .notification-header p {
-        color: #666;
-        font-size: 0.95em;
+        color: #6b7280;
+        font-size: 14px;
     }
 
     /* Notification Form */
     .notification-form {
         background: white;
-        padding: 35px;
+        padding: 32px;
         border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        max-width: 900px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
     }
 
     .form-group {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
     .form-group label {
         display: block;
         font-weight: 600;
-        color: #333;
-        margin-bottom: 10px;
-        font-size: 0.95em;
+        color: #374151;
+        margin-bottom: 8px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
 
     .form-group label i {
-        margin-right: 8px;
-        color: #4CAF50;
+        margin-right: 6px;
+        color: var(--green);
+        font-size: 14px;
     }
 
     .form-control {
         width: 100%;
-        padding: 12px 15px;
-        border: 2px solid #e0e0e0;
+        padding: 12px 16px;
+        border: 2px solid #e5e7eb;
         border-radius: 8px;
-        font-size: 0.95em;
+        font-size: 14px;
         font-family: inherit;
-        transition: all 0.3s;
+        transition: all 0.2s;
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #4CAF50;
-        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
     }
 
     textarea.form-control {
@@ -80,24 +96,30 @@
 
     .recipient-options {
         display: flex;
-        gap: 20px;
-        margin-top: 10px;
+        gap: 16px;
+        margin-top: 12px;
     }
 
     .radio-option {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 20px;
-        border: 2px solid #e0e0e0;
+        padding: 12px 18px;
+        border: 2px solid #e5e7eb;
         border-radius: 8px;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all 0.2s;
+        flex: 1;
     }
 
     .radio-option:hover {
-        border-color: #4CAF50;
-        background: #f1f8f1;
+        border-color: var(--green);
+        background: var(--mint);
+    }
+
+    .radio-option input[type="radio"]:checked ~ label {
+        color: var(--green-dark);
+        font-weight: 600;
     }
 
     .radio-option input[type="radio"] {
@@ -106,120 +128,137 @@
         cursor: pointer;
     }
 
-    .radio-option input[type="radio"]:checked + label {
-        color: #2e7d32;
-        font-weight: 600;
-    }
-
     .radio-option label {
         margin: 0;
         cursor: pointer;
+        font-size: 14px;
     }
 
     /* Buttons */
     .form-actions {
         display: flex;
-        gap: 15px;
-        margin-top: 30px;
+        gap: 12px;
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 2px solid #f3f4f6;
     }
 
     .btn {
-        padding: 14px 30px;
+        padding: 12px 24px;
         border: none;
         border-radius: 8px;
-        font-size: 1em;
+        font-size: 14px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all 0.2s;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #4CAF50, #2e7d32);
+        background: var(--green);
         color: white;
+        flex: 1;
     }
 
     .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
+        background: var(--green-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
     }
 
     .btn-secondary {
-        background: #f5f5f5;
-        color: #666;
+        background: white;
+        color: #6b7280;
+        border: 2px solid #e5e7eb;
     }
 
     .btn-secondary:hover {
-        background: #e0e0e0;
+        background: #f9fafb;
+        border-color: #d1d5db;
     }
 
     /* Alert */
     .alert {
-        padding: 15px 20px;
-        border-radius: 10px;
-        margin-bottom: 25px;
+        padding: 14px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        font-weight: 500;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 14px;
     }
 
     .alert-success {
-        background: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
+        background: #d1fae5;
+        border: 1px solid var(--green-light);
+        color: var(--green-dark);
     }
 
     .alert-error {
-        background: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
+        background: #fee2e2;
+        border: 1px solid #f87171;
+        color: #991b1b;
     }
 
     .alert i {
-        font-size: 1.3em;
+        font-size: 18px;
     }
 
     /* Stats Cards */
     .stats-row {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        gap: 16px;
+        margin-bottom: 24px;
     }
 
     .stat-box {
         background: white;
         padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
         text-align: center;
     }
 
     .stat-box .icon {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-        color: #4CAF50;
+        font-size: 32px;
+        margin-bottom: 12px;
+        color: var(--green);
     }
 
     .stat-box .value {
-        font-size: 2em;
+        font-size: 28px;
         font-weight: 700;
-        color: #1b5e20;
-        margin-bottom: 5px;
+        color: var(--green-dark);
+        margin-bottom: 4px;
     }
 
     .stat-box .label {
-        color: #666;
-        font-size: 0.9em;
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 500;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
+        .notification-page {
+            padding: 16px;
+        }
+
         .notification-form {
-            padding: 25px 20px;
+            padding: 24px;
+        }
+
+        .notification-header h1 {
+            font-size: 24px;
+        }
+
+        .notification-header h1 i {
+            font-size: 24px;
         }
 
         .recipient-options {
@@ -234,21 +273,26 @@
             width: 100%;
             justify-content: center;
         }
+
+        .stats-row {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 @endpush
 
 @section('content')
-<!-- Page Header -->
-<div class="notification-header">
-    <h1>
-        <i class="fas fa-paper-plane"></i>
-        Kirim Notifikasi
-    </h1>
-    <p>Kirim pemberitahuan kepada semua petani terdaftar</p>
-</div>
+<div class="notification-page">
+    <!-- Page Header -->
+    <div class="notification-header">
+        <h1>
+            <i class="fas fa-paper-plane"></i>
+            Kirim Notifikasi
+        </h1>
+        <p>Kirim pemberitahuan kepada semua petani terdaftar</p>
+    </div>
 
-<!-- Success/Error Messages -->
+    <!-- Success/Error Messages -->
 @if(session('success'))
 <div class="alert alert-success">
     <i class="fas fa-check-circle"></i>
