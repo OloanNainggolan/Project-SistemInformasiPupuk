@@ -145,6 +145,6 @@ Route::prefix('admin')->group(function () {
 });
 
 // Routes untuk Manajemen Produk (Admin only - dilindungi middleware)
-Route::middleware('admin.auth')->group(function () {
+Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductController::class);
 });

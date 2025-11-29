@@ -70,13 +70,59 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        // Statistik dinamis dari database
+        // Tanggal untuk perbandingan (bulan ini vs bulan lalu)
+        $now = now();
+        $startOfThisMonth = $now->copy()->startOfMonth();
+        $endOfThisMonth = $now->copy()->endOfMonth();
+        $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
+        $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
+
+        // Statistik bulan ini
         $totalPesanan = Order::confirmed()->count();
         $totalPendapatan = Order::confirmed()
             ->whereIn('status', ['Completed'])
             ->sum('total_amount');
         $totalPetani = User::count();
         $totalProduk = Product::count();
+
+        // Statistik bulan lalu untuk perbandingan
+        $pesananBulanLalu = Order::confirmed()
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+            ->count();
+        $pendapatanBulanLalu = Order::confirmed()
+            ->whereIn('status', ['Completed'])
+            ->whereBetween('updated_at', [$startOfLastMonth, $endOfLastMonth])
+            ->sum('total_amount');
+        $petaniBulanLalu = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $produkBulanLalu = Product::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+
+        // Statistik bulan ini untuk perbandingan
+        $pesananBulanIni = Order::confirmed()
+            ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+            ->count();
+        $pendapatanBulanIni = Order::confirmed()
+            ->whereIn('status', ['Completed'])
+            ->whereBetween('updated_at', [$startOfThisMonth, $endOfThisMonth])
+            ->sum('total_amount');
+        $petaniBulanIni = User::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
+        $produkBulanIni = Product::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
+
+        // Hitung persentase pertumbuhan real
+        $pertumbuhanPesanan = $pesananBulanLalu > 0 
+            ? round((($pesananBulanIni - $pesananBulanLalu) / $pesananBulanLalu) * 100, 1)
+            : ($pesananBulanIni > 0 ? 100 : 0);
+
+        $pertumbuhanPendapatan = $pendapatanBulanLalu > 0 
+            ? round((($pendapatanBulanIni - $pendapatanBulanLalu) / $pendapatanBulanLalu) * 100, 1)
+            : ($pendapatanBulanIni > 0 ? 100 : 0);
+
+        $pertumbuhanPetani = $petaniBulanLalu > 0 
+            ? round((($petaniBulanIni - $petaniBulanLalu) / $petaniBulanLalu) * 100, 1)
+            : ($petaniBulanIni > 0 ? 100 : 0);
+
+        $pertumbuhanProduk = $produkBulanLalu > 0 
+            ? round((($produkBulanIni - $produkBulanLalu) / $produkBulanLalu) * 100, 1)
+            : ($produkBulanIni > 0 ? 100 : 0);
 
         // Pesanan terbaru (limit 10)
         $recentOrders = Order::with('user')
@@ -97,6 +143,10 @@ class AdminController extends Controller
             'totalPendapatan',
             'totalPetani',
             'totalProduk',
+            'pertumbuhanPesanan',
+            'pertumbuhanPendapatan',
+            'pertumbuhanPetani',
+            'pertumbuhanProduk',
             'recentOrders',
             'pendingCount',
             'processingCount',
