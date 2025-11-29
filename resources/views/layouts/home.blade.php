@@ -21,7 +21,7 @@
             background: linear-gradient(135deg, #065f46 0%, #047857 100%);
             color: white;
             padding: 50px 20px 0;
-            margin-top: 60px;
+            margin-top: 0;
             position: relative;
             overflow: hidden;
         }

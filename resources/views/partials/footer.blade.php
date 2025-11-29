@@ -4,7 +4,7 @@
         background: linear-gradient(135deg, #065f46 0%, #047857 100%);
         color: white;
         padding: 60px 0 0;
-        margin-top: 50px;
+        margin-top: 0;
         position: relative;
         overflow: hidden;
     }
