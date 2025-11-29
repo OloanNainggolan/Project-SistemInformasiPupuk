@@ -66,8 +66,8 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(circle at 20% 50%, rgba(212, 165, 116, 0.15) 0%, transparent 60%),
-                    radial-gradient(circle at 80% 50%, rgba(76, 175, 80, 0.15) 0%, transparent 60%);
+        background: radial-gradient(circle at 20% 50%, rgba(76, 175, 80, 0.1) 0%, transparent 60%),
+                    radial-gradient(circle at 80% 50%, rgba(212, 165, 116, 0.1) 0%, transparent 60%);
         pointer-events: none;
     }
 
@@ -87,15 +87,17 @@
     .hero-image {
         width: 52%;
         background-image: url("{{ asset('images/teh.png') }}");
-        background-size: cover;
+        background-size: contain;
+        background-repeat: no-repeat;
         background-position: center;
-        height: 380px;
+        height: 400px;
         border-radius: 24px;
-        box-shadow: 0 25px 70px rgba(0,0,0,0.5), 
-                    0 15px 35px rgba(0,0,0,0.3),
-                    inset 0 0 0 2px rgba(255,255,255,0.2);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3), 
+                    0 10px 30px rgba(0,0,0,0.2);
         position: relative;
         overflow: hidden;
+        border: 3px solid rgba(255,255,255,0.15);
+        background-color: rgba(0, 0, 0, 0.05);
     }
 
     .hero-image::after {
@@ -105,26 +107,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.2) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
-    }
-
-    /* Subtle highlight effect tanpa interaksi */
-    .hero-image::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-        animation: gentleGlow 8s ease-in-out infinite;
-        pointer-events: none;
-    }
-
-    @keyframes gentleGlow {
-        0%, 100% { opacity: 0.3; transform: translate(0, 0); }
-        50% { opacity: 0.5; transform: translate(10px, 10px); }
+        background: linear-gradient(to top, rgba(0,0,0,0.15) 0%, transparent 50%);
     }
 
     .hero-text {
@@ -135,11 +118,10 @@
     .welcome-text {
         font-size: 3.8em;
         font-weight: 900;
-        color: var(--yellow-gold); 
+        color: #ffd700; 
         margin-bottom: 20px;
-        line-height: 1.05;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.3),
-                     0 0 30px rgba(255, 215, 0, 0.2);
+        line-height: 1.1;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.3);
         letter-spacing: -1.5px;
         animation: fadeInUp 0.8s ease-out;
     }
@@ -147,7 +129,7 @@
     @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px);
         }
         to {
             opacity: 1;
@@ -156,18 +138,18 @@
     }
 
     .hero-text p {
-        font-size: 1.2em;
-        margin-bottom: 32px;
-        line-height: 1.75;
-        color: rgba(255, 255, 255, 0.97);
+        font-size: 1.25em;
+        margin-bottom: 35px;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.98);
         font-weight: 400;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        text-shadow: 1px 2px 4px rgba(0,0,0,0.3);
         animation: fadeInUp 0.8s ease-out 0.2s backwards;
     }
 
     .cta-button {
         background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-        color: var(--white);
+        color: white;
         padding: 17px 45px;
         border: none;
         border-radius: 12px;
@@ -175,9 +157,8 @@
         font-weight: 700;
         font-size: 1.1em;
         letter-spacing: 0.5px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.45),
-                    0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
         position: relative;
         overflow: hidden;
         animation: fadeInUp 0.8s ease-out 0.4s backwards;
@@ -186,110 +167,133 @@
     .cta-button::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: left 0.6s ease;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.4);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
     }
 
     .cta-button:hover::before {
-        left: 100%;
+        width: 400px;
+        height: 400px;
     }
     
     .cta-button:hover {
-        background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
-        transform: translateY(-4px);
-        box-shadow: 0 15px 40px rgba(76, 175, 80, 0.6),
-                    0 8px 20px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(135deg, #388e3c 0%, #2d6f30 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(76, 175, 80, 0.5);
     }
 
     .cta-button:active {
-        transform: translateY(-2px);
+        background: linear-gradient(135deg, #1b5e20 0%, #0d4d2a 100%);
+        transform: translateY(-1px) scale(0.98);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        transition: all 0.1s ease;
     }
 
     /* Mengapa Memilih */
     .why-choose-us {
-        padding: 50px 0;
+        padding: 60px 0;
         text-align: center;
-        background-color: var(--white);
+        background-color: #f9fafb;
     }
 
     .why-choose-us h2 {
-        font-size: 2em;
+        font-size: 2.2em;
         margin-bottom: 15px;
+        color: #1a5f3a;
+        font-weight: 700;
     }
 
     .subtitle-text {
-        max-width: 800px;
-        margin: 0 auto 40px;
-        color: #666;
-        font-size: 1.05em;
+        max-width: 850px;
+        margin: 0 auto 50px;
+        color: #4b5563;
+        font-size: 1.15em;
+        line-height: 1.8;
     }
 
     .cards-container {
         display: flex;
         justify-content: center;
-        gap: 30px;
+        gap: 35px;
         flex-wrap: wrap;
     }
 
     .card-choice {
-        background-color: var(--white);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        padding: 30px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 35px 30px;
         max-width: 45%;
         text-align: left;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        position: relative;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+    .card-choice:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        border-color: #10b981;
     }
 
     .card-icon {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 2em;
-        margin-bottom: 15px;
-        position: relative;
-        top: 0;
-        left: 0;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-bottom: 18px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .card-choice:hover .card-icon {
+        transform: scale(1.1);
     }
     
     .card-icon.pupuk {
-        color: var(--primary-green);
-        background-color: rgba(76, 175, 80, 0.1); 
+        color: white;
+        background: #10b981;
     }
     
     .card-icon.bibit {
-        color: var(--secondary-blue);
-        background-color: rgba(92, 107, 192, 0.1);
+        color: white;
+        background: #3b82f6;
     }
 
     .card-choice h3 {
         margin-top: 0;
-        margin-bottom: 12px;
-        font-size: 1.4em;
+        margin-bottom: 15px;
+        font-size: 1.6em;
+        color: #1f2937;
+        font-weight: 800;
     }
     
-    .card-choice p { color: #555; }
+    .card-choice p { 
+        color: #6b7280;
+        line-height: 1.8;
+        font-size: 1.05em;
+    }
 
     /* Visi & Misi */
     .vm-section {
-        background-color: var(--medium-green);
-        color: var(--white);
-        padding: 50px 0;
+        background: #1a4d1a;
+        color: white;
+        padding: 60px 0;
     }
 
     .vm-section h2 {
         font-size: 2.5em;
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        font-weight: 700;
     }
 
     .vm-content {
@@ -300,33 +304,57 @@
 
     .vm-vision, .vm-mission {
         width: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 35px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .vm-vision:hover, .vm-mission:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-5px);
     }
 
     .vm-vision h3, .vm-mission h3 {
-        font-size: 1.8em;
-        color: var(--light-green);
-        margin-bottom: 15px;
+        font-size: 2em;
+        color: #fbbf24;
+        margin-bottom: 20px;
+        font-weight: 800;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .vm-vision p, .vm-mission ul {
+        line-height: 1.9;
+        font-size: 1.05em;
     }
 
     .vm-mission ul {
-        padding-left: 20px;
+        padding-left: 25px;
     }
     
     .vm-mission li {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         list-style: disc;
+        position: relative;
+        padding-left: 10px;
+    }
+
+    .vm-mission li::marker {
+        color: #34d399;
+        font-size: 1.3em;
     }
 
     /* Fitur Keunggulan */
     .feature-cards-section {
-        padding: 50px 0 30px;
-        background-color: var(--light-gray-bg);
+        padding: 60px 0 40px;
+        background: white;
     }
 
     .feature-grid {
         display: flex;
         justify-content: space-around;
-        gap: 20px;
+        gap: 25px;
         margin-bottom: 40px;
         flex-wrap: wrap;
     }
@@ -334,31 +362,63 @@
     .feature-card {
         text-align: center;
         max-width: 200px;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
     }
     
     .feature-icon-circle {
-        width: 70px;
-        height: 70px;
+        width: 75px;
+        height: 75px;
         border-radius: 50%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         font-size: 2.2em;
-        margin-bottom: 10px;
+        margin: 0 auto 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon-circle {
+        transform: scale(1.1);
     }
     
-    .feature-icon-circle.green { background-color: #e8f5e9; color: var(--primary-green); }
-    .feature-icon-circle.purple { background-color: #ede7f6; color: #7e57c2; }
-    .feature-icon-circle.blue { background-color: #e3f2fd; color: #42a5f5; }
-    .feature-icon-circle.yellow { background-color: #fffde7; color: var(--yellow-gold); }
+    .feature-icon-circle.green { 
+        background: #e8f5e9;
+        color: #4CAF50;
+    }
+    .feature-icon-circle.purple { 
+        background: #ede7f6;
+        color: #7e57c2;
+    }
+    .feature-icon-circle.blue { 
+        background: #e3f2fd;
+        color: #42a5f5;
+    }
+    .feature-icon-circle.yellow { 
+        background: #fffde7;
+        color: #ffd700;
+    }
 
-    .feature-card h4 { font-size: 1.1em; margin-bottom: 5px; color: #444; }
-    .feature-card p { font-size: 0.9em; color: #777; }
+    .feature-card h4 { 
+        font-size: 1.2em; 
+        margin-bottom: 8px; 
+        color: #1f2937;
+        font-weight: 700;
+    }
+    .feature-card p { 
+        font-size: 0.95em; 
+        color: #6b7280;
+        font-weight: 500;
+    }
 
     /* Product Cards Detail */
     .product-cards-detail {
-        padding: 0 0 50px;
-        background-color: var(--light-gray-bg);
+        padding: 0 0 60px;
+        background: #f7f9fc;
     }
     
     .product-grid-detail {
@@ -368,12 +428,17 @@
     }
 
     .product-card-detail {
-        background-color: var(--white);
-        border-radius: 15px;
+        background: white;
+        border-radius: 16px;
         overflow: hidden;
         max-width: 500px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        position: relative;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .product-card-detail:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
     }
 
     .detail-image {
@@ -381,39 +446,51 @@
         width: 100%;
         background-size: cover;
         background-position: center;
+        position: relative;
+    }
+
+    .detail-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40%;
+        background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
     }
 
     .pupuk-detail .detail-image {
-        background-image: url('product-pupuk-greenhouse.jpg'); 
+        background-image: url('product-pupuk-greenhouse.jpg');
     }
 
     .bibit-detail .detail-image {
-        background-image: url('product-bibit-seedling.jpg'); 
+        background-image: url('product-bibit-seedling.jpg');
     }
 
     .detail-icon-overlay {
         position: absolute;
         top: 20px;
         right: 20px;
-        width: 50px;
-        height: 50px;
-        border-radius: 10px; 
+        width: 55px;
+        height: 55px;
+        border-radius: 12px; 
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--white);
+        color: white;
         font-size: 1.8em;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .detail-body {
-        padding: 30px;
+        padding: 40px 35px;
     }
 
     .detail-body h3 {
-        font-size: 1.6em;
-        margin-bottom: 15px;
-        color: var(--text-color);
+        font-size: 1.8em;
+        margin-bottom: 18px;
+        color: #1f2937;
+        font-weight: 800;
     }
 
     .jenis-pupuk-list, .jenis-bibit-list {
@@ -452,14 +529,20 @@
 
     .action-button-detail {
         width: 100%;
-        padding: 12px;
+        padding: 14px;
         border: none;
-        color: var(--white);
-        font-weight: bold;
+        color: white;
+        font-weight: 700;
         font-size: 1.1em;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
-        transition: opacity 0.3s;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-button-detail:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     }
 
     /* Media Queries */

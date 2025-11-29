@@ -427,10 +427,9 @@
       </div>
     </div>
   </section>
-  @include('partials.footer')
 
   <script>
-    // Script validasi password konfirmasi and redirect to login on success
+    // Script validasi password konfirmasi
     (function(){
       const form = document.getElementById("reset-form");
       const newPasswordInput = document.getElementById("new-password");
@@ -456,44 +455,6 @@
           e.preventDefault();
           errorMessage.textContent = 'Password harus mengandung huruf dan angka, minimal 4 karakter.';
           errorMessage.style.display = 'block';
-          newPasswordInput.focus();
-          return;
-        }
-
-        if (newPassword !== confirmPassword) {
-          e.preventDefault();
-          errorMessage.textContent = 'Password tidak cocok. Silakan coba lagi.';
-          errorMessage.style.display = 'block';
-          confirmPasswordInput.focus();
-          return;
-        }
-
-        // if here, allow form to submit to server
-      });
-    })();
-  </script>
-
-</body>
-</html>.display = 'block';
-          newPasswordInput.focus();
-          return;
-        }
-
-        if (newPassword !== confirmPassword) {
-          e.preventDefault();
-          errorMessage.textContent = 'Password tidak cocok. Silakan coba lagi.';
-          errorMessage.style.display = 'block';
-          confirmPasswordInput.focus();
-          return;
-        }
-
-        // if here, allow form to submit to server
-      });
-    })();
-  </script>
-
-</body>
-</html>.display = 'block';
           newPasswordInput.focus();
           return;
         }
