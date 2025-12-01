@@ -87,7 +87,7 @@
     .hero-image {
         width: 52%;
         background-image: url("{{ asset('images/teh.png') }}");
-        background-size: contain;
+        background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
         height: 400px;
