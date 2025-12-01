@@ -42,7 +42,7 @@ Route::get('/pupuk-bibit', function () {
     return view('user.pupukdanbibit');
 })->name('pupuk.bibit');
 
-// Route untuk halaman Kontak
+// Route untuk halaman Kontak (dapat diakses tanpa login)
 Route::get('/kontak', function () {
     return view('user.kontak');
 })->name('kontak');
@@ -74,12 +74,6 @@ Route::middleware('auth')->group(function () {
     
     // Route untuk halaman Pupuk & Bibit (gabungan) - backward compatibility
     Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupuk.bibit');
-    
-    // Route untuk halaman Kontak
-    Route::get('/kontak', function () {
-        return view('user.kontak');
-    })->name('kontak');
-    Route::post('/kontak/send', [AuthController::class, 'sendKontak'])->name('kontak.send');
     
     // Route untuk halaman Profil User
     Route::get('/profil', function () {
