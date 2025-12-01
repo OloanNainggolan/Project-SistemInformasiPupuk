@@ -170,10 +170,7 @@
 
     <a href="{{ route('notifikasi.detail') }}" class="notification-item" role="alert" aria-label="Verifikasi Akun Pengguna Berhasil 2 September 2025">
       <div class="notif-header">
-        <span><i class="fa-check-circle"></i> Verifikasi Akun Pengguna Berhasil</span>
-        <span class="date">02/09/2025</span>
-      </div>
-      <p>"Selamat datang secara resmi di [Nama Platform/Web Kamu]! 🎉 Kami senang sekali mengumumkan bahwa proses verifikasi akun.....</p>
+        <span><i class="fa-check-circle"></i> Verifikasi Akun Pengguna Berhanang sekali mengumumkan bahwa proses verifikasi akun.....</p>
     </a>
 
     <div class="no-notifs" aria-live="polite" aria-atomic="true">
@@ -182,3 +179,7 @@
   </section>
 </main>
 @endsection
+sil</span>
+        <span class="date">02/09/2025</span>
+      </div>
+      <p>"Selamat datang secara resmi di [Nama Platform/Web Kamu]! 🎉 Kami se

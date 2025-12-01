@@ -13,26 +13,30 @@
     }
 
     .profile-page {
-        max-width: 1200px;
+        max-width: 900px;
         margin: 0 auto;
+        padding: 20px;
     }
 
     /* Page Header */
     .page-header {
         margin-bottom: 30px;
+        text-align: center;
     }
 
     .page-title {
         font-size: 28px;
-        font-weight: 800;
+        font-weight: 700;
         color: var(--green-dark);
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 12px;
         margin-bottom: 8px;
     }
 
     .page-title i {
+        font-size: 28px;
         color: var(--green);
     }
 
@@ -44,195 +48,147 @@
     /* Profile Grid */
     .profile-grid {
         display: grid;
-        grid-template-columns: 350px 1fr;
-        gap: 30px;
-        margin-bottom: 30px;
+        gap: 24px;
     }
 
     /* Profile Card */
     .profile-card {
         background: white;
-        padding: 35px;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        padding: 32px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         text-align: center;
-        border: 1px solid rgba(5, 150, 105, 0.1);
+        border: 1px solid #e5e7eb;
     }
 
     .profile-avatar-large {
-        width: 150px;
-        height: 150px;
+        width: 120px;
+        height: 120px;
         background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
         border-radius: 50%;
         margin: 0 auto 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 65px;
+        font-size: 48px;
         color: white;
-        box-shadow: 0 8px 30px rgba(5, 150, 105, 0.3);
-        position: relative;
-    }
-
-    .profile-avatar-large::after {
-        content: '';
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 30px;
-        height: 30px;
-        background: linear-gradient(135deg, var(--gold) 0%, #f59e0b 100%);
-        border-radius: 50%;
-        border: 4px solid white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
     }
 
     .profile-name {
         font-size: 24px;
-        font-weight: 800;
+        font-weight: 700;
         color: var(--green-dark);
-        margin-bottom: 5px;
+        margin-bottom: 6px;
     }
 
     .profile-username {
-        font-size: 15px;
-        color: #6b7280;
-        margin-bottom: 8px;
+        font-size: 14px;
+        color: #9ca3af;
+        margin-bottom: 12px;
     }
 
     .profile-badge {
         display: inline-block;
-        background: linear-gradient(135deg, var(--gold) 0%, #f59e0b 100%);
+        background: var(--green);
         color: white;
         padding: 6px 16px;
         border-radius: 20px;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
-    }
-
-    .profile-stats {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        margin: 25px 0;
-    }
-
-    .stat-item {
-        background: var(--mint);
-        padding: 15px;
-        border-radius: 12px;
-        border: 2px solid rgba(5, 150, 105, 0.1);
-    }
-
-    .stat-value {
-        font-size: 24px;
-        font-weight: 800;
-        color: var(--green-dark);
-        display: block;
-    }
-
-    .stat-label {
-        font-size: 12px;
-        color: #6b7280;
-        text-transform: uppercase;
-        font-weight: 600;
-        margin-top: 5px;
     }
 
     .profile-actions {
         display: flex;
-        flex-direction: column;
         gap: 12px;
-        margin-top: 25px;
+        margin-top: 24px;
+        justify-content: center;
     }
 
     .btn {
-        padding: 14px 20px;
-        border-radius: 10px;
+        padding: 12px 24px;
+        border-radius: 8px;
         font-weight: 600;
         font-size: 14px;
         border: none;
         cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
+        transition: all 0.2s ease;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 8px;
         text-decoration: none;
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+        background: var(--green);
         color: white;
-        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
     }
 
     .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        background: var(--green-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(5, 150, 105, 0.2);
     }
 
     .btn-outline {
         background: white;
-        color: var(--green-dark);
+        color: var(--green);
         border: 2px solid var(--green);
     }
 
     .btn-outline:hover {
         background: var(--mint);
         border-color: var(--green-dark);
+        color: var(--green-dark);
     }
 
     /* Info Card */
     .info-card {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(5, 150, 105, 0.1);
+        padding: 28px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
     }
 
     .info-card-title {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
         color: var(--green-dark);
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
         gap: 10px;
-        padding-bottom: 15px;
+        padding-bottom: 12px;
         border-bottom: 2px solid var(--mint);
     }
 
     .info-card-title i {
         color: var(--green);
-        font-size: 22px;
+        font-size: 20px;
     }
 
     .info-grid {
         display: grid;
-        gap: 20px;
+        gap: 16px;
     }
 
     .info-item {
         display: grid;
-        grid-template-columns: 180px 1fr;
-        gap: 15px;
-        padding: 15px;
+        grid-template-columns: 160px 1fr;
+        gap: 16px;
+        padding: 14px;
         background: #f9fafb;
-        border-radius: 10px;
-        border-left: 4px solid var(--green);
+        border-radius: 8px;
+        border-left: 3px solid var(--green);
     }
 
     .info-label {
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 600;
         color: #6b7280;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -243,12 +199,13 @@
 
     .info-label i {
         color: var(--green);
-        width: 20px;
+        width: 18px;
+        font-size: 14px;
     }
 
     .info-value {
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 14px;
+        font-weight: 500;
         color: #1f2937;
         display: flex;
         align-items: center;
@@ -257,22 +214,22 @@
     /* Activity Card */
     .activity-card {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        margin-top: 30px;
-        border: 1px solid rgba(5, 150, 105, 0.1);
+        padding: 28px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-top: 24px;
+        border: 1px solid #e5e7eb;
     }
 
     .activity-item {
         display: flex;
         align-items: center;
-        gap: 15px;
-        padding: 15px;
+        gap: 14px;
+        padding: 14px;
         background: #f9fafb;
-        border-radius: 10px;
-        margin-bottom: 12px;
-        border-left: 4px solid var(--green);
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border-left: 3px solid var(--green-light);
     }
 
     .activity-item:last-child {
@@ -280,15 +237,19 @@
     }
 
     .activity-icon {
-        width: 45px;
-        height: 45px;
-        background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
-        border-radius: 10px;
+        width: 40px;
+        height: 40px;
+        background: var(--mint);
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .activity-icon i {
+        color: var(--green);
+        font-size: 16px;
     }
 
     .activity-content {
@@ -297,31 +258,63 @@
 
     .activity-text {
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
         color: #1f2937;
-        margin-bottom: 3px;
+        margin-bottom: 4px;
     }
 
     .activity-time {
         font-size: 12px;
-        color: #6b7280;
+        color: #9ca3af;
     }
 
     /* Responsive */
-    @media (max-width: 1024px) {
-        .profile-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
     @media (max-width: 768px) {
+        .profile-page {
+            padding: 16px;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+
+        .page-title i {
+            font-size: 24px;
+        }
+
+        .profile-card {
+            padding: 24px;
+        }
+
+        .profile-avatar-large {
+            width: 100px;
+            height: 100px;
+            font-size: 40px;
+        }
+
+        .profile-name {
+            font-size: 20px;
+        }
+
+        .profile-actions {
+            flex-direction: column;
+        }
+
+        .info-card, .activity-card {
+            padding: 20px;
+        }
+
         .info-item {
             grid-template-columns: 1fr;
             gap: 8px;
         }
 
-        .page-title {
-            font-size: 22px;
+        .info-label {
+            font-size: 12px;
+        }
+
+        .info-value {
+            font-size: 13px;
         }
     }
 </style>
@@ -332,10 +325,10 @@
     <!-- Page Header -->
     <div class="page-header">
         <h1 class="page-title">
-            <i class="fas fa-user-shield"></i>
+            <i class="fas fa-user-circle"></i>
             Profil Administrator
         </h1>
-        <p class="page-subtitle">Kelola informasi profil dan aktivitas admin</p>
+        <p class="page-subtitle">Kelola informasi akun administrator</p>
     </div>
 
     <!-- Profile Grid -->
@@ -350,26 +343,8 @@
                 @endif
             </div>
             <h2 class="profile-name">{{ session('admin_name', 'Administrator') }}</h2>
+            <p class="profile-username">@{{ session('admin_username', 'admin') }}</p>
             <span class="profile-badge">Super Administrator</span>
-
-            <div class="profile-stats">
-                <div class="stat-item">
-                    <span class="stat-value">{{ $totalPesanan ?? 0 }}</span>
-                    <span class="stat-label">Pesanan</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{ $totalProduk ?? 0 }}</span>
-                    <span class="stat-label">Produk</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{ $totalPetani ?? 0 }}</span>
-                    <span class="stat-label">Petani</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">100%</span>
-                    <span class="stat-label">Akses</span>
-                </div>
-            </div>
 
             <div class="profile-actions">
                 <a href="{{ route('admin.profil.edit') }}" class="btn btn-primary">

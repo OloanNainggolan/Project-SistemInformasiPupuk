@@ -494,6 +494,123 @@
             box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
 
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            color: #065f46;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: #10b981;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            background: white;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            background: #f9fafb;
+        }
+
+        .form-input:hover {
+            border-color: #10b981;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Quantity Control */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .quantity-label {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .quantity-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #10b981;
+            background: white;
+            color: #10b981;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .quantity-btn:active {
+            transform: scale(0.95);
+        }
+
+        .quantity-input {
+            width: 70px;
+            padding: 8px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #065f46;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .quantity-unit {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .content-grid {
@@ -537,6 +654,28 @@
 
             .product-price {
                 text-align: center;
+                font-size: 20px;
+                margin-top: 10px;
+            }
+
+            .quantity-control {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .quantity-input-group {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-input {
+                font-size: 16px; /* Prevent zoom on iOS */
             }
         }
     </style>
@@ -577,22 +716,24 @@
                         </div>
                         <h2 class="card-title">Informasi Pesanan</h2>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label"><i class="fas fa-user-circle"></i> Nama</span>
-                        <span class="info-value">{{ auth()->user()->name }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label"><i class="fas fa-phone"></i> HP</span>
-                        <span class="info-value">{{ auth()->user()->no_hp ?? '08123456789' }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label"><i class="fas fa-map-marker-alt"></i> Alamat</span>
-                        <span class="info-value">{{ auth()->user()->alamat ?? 'Jl. Jalan-jalan, balai desa sukamaju' }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label"><i class="fas fa-comment-dots"></i> Catatan</span>
-                        <span class="info-value">{{ $catatan ?? 'bagus yaa...' }}</span>
-                    </div>
+                    <form id="formInfoPesanan">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-user-circle"></i> Nama Lengkap</label>
+                            <input type="text" class="form-input" id="nama" name="nama" value="{{ auth()->user()->name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-phone"></i> Nomor HP</label>
+                            <input type="tel" class="form-input" id="no_hp" name="no_hp" value="{{ auth()->user()->no_hp ?? '08123456789' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Alamat Lengkap</label>
+                            <textarea class="form-input" id="alamat" name="alamat" rows="3" required>{{ auth()->user()->alamat ?? 'Jl. Jalan-jalan, balai desa sukamaju' }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-comment-dots"></i> Catatan (Opsional)</label>
+                            <textarea class="form-input" id="catatan" name="catatan" rows="2" placeholder="Tambahkan catatan untuk pesanan...">{{ $catatan ?? '' }}</textarea>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- Informasi Pembayaran -->
@@ -658,12 +799,28 @@
                             }
                         @endphp
                         <img src="{{ $imageSrc }}" alt="{{ $produk->nama_produk }}" class="product-image">
-                        <div class="product-details">
-                            <div class="product-name">Ringkasan pesanan</div>
-                            <div class="product-sku">NPK 16-16-16</div>
-                            <div class="product-quantity">{{ $quantity ?? 1 }} kg x Rp. {{ number_format($produk->harga_subsidi, 0, ',', '.') }}</div>
+                        <div class="product-details" style="flex: 1;">
+                            <div class="product-name">{{ $produk->nama_produk }}</div>
+                            <div class="product-sku">{{ $produk->kategori ?? 'NPK 16-16-16' }}</div>
+                            
+                            <div class="quantity-control">
+                                <span class="quantity-label">Jumlah:</span>
+                                <div class="quantity-input-group">
+                                    <button type="button" class="quantity-btn" onclick="updateQuantity(-1)">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" id="quantityInput" class="quantity-input" value="{{ $quantity ?? 1 }}" min="1" max="100" onchange="updateTotal()">
+                                    <button type="button" class="quantity-btn" onclick="updateQuantity(1)">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <span class="quantity-unit">kg</span>
+                                </div>
+                            </div>
+                            <div class="product-quantity" style="margin-top: 10px;">
+                                <span id="pricePerUnit">Rp. {{ number_format($produk->harga_subsidi, 0, ',', '.') }}</span> / kg
+                            </div>
                         </div>
-                        <div class="product-price">
+                        <div class="product-price" id="productTotalPrice">
                             Rp. {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}
                         </div>
                     </div>
@@ -672,7 +829,7 @@
                     <div class="price-summary">
                         <div class="price-row">
                             <span class="price-label">Subtotal</span>
-                            <span class="price-value">Rp. {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}</span>
+                            <span class="price-value" id="subtotalValue">Rp. {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}</span>
                         </div>
                         <div class="price-row">
                             <span class="price-label">Ongkos Kirim</span>
@@ -680,7 +837,7 @@
                         </div>
                         <div class="total-row">
                             <span class="total-label">Total</span>
-                            <span class="total-value">Rp {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}</span>
+                            <span class="total-value" id="totalValue">Rp {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}</span>
                         </div>
                     </div>
 
@@ -701,12 +858,102 @@
 
 @push('scripts')
     <script>
+        // Harga per unit dari backend
+        const hargaPerUnit = {{ $produk->harga_subsidi }};
+        
+        // Update quantity
+        function updateQuantity(change) {
+            const quantityInput = document.getElementById('quantityInput');
+            let currentValue = parseInt(quantityInput.value) || 1;
+            let newValue = currentValue + change;
+            
+            // Validasi min max
+            if (newValue < 1) newValue = 1;
+            if (newValue > 100) newValue = 100;
+            
+            quantityInput.value = newValue;
+            updateTotal();
+        }
+        
+        // Update total harga
+        function updateTotal() {
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+            const subtotal = hargaPerUnit * quantity;
+            
+            // Update product total price
+            document.getElementById('productTotalPrice').textContent = 
+                'Rp. ' + subtotal.toLocaleString('id-ID');
+            
+            // Update subtotal
+            document.getElementById('subtotalValue').textContent = 
+                'Rp. ' + subtotal.toLocaleString('id-ID');
+            
+            // Update total (subtotal + ongkir)
+            document.getElementById('totalValue').textContent = 
+                'Rp ' + subtotal.toLocaleString('id-ID');
+        }
+        
+        // Konfirmasi pesanan dengan validasi form
         function konfirmasiPesanan() {
-            if (confirm('Apakah Anda yakin ingin mengkonfirmasi pesanan ini?')) {
-                alert('Pesanan Anda telah dikonfirmasi!\n\nNomor Pesanan: #' + Math.random().toString(36).substr(2, 9).toUpperCase() + '\n\nSilakan lakukan pembayaran di lokasi yang telah ditentukan.\n\nTerima kasih!');
-                // Redirect ke halaman dashboard atau riwayat pesanan
+            // Ambil data dari form
+            const nama = document.getElementById('nama').value.trim();
+            const noHp = document.getElementById('no_hp').value.trim();
+            const alamat = document.getElementById('alamat').value.trim();
+            const catatan = document.getElementById('catatan').value.trim();
+            const quantity = parseInt(document.getElementById('quantityInput').value);
+            
+            // Validasi form
+            if (!nama || !noHp || !alamat) {
+                alert('Mohon lengkapi semua data yang diperlukan (Nama, HP, dan Alamat)!');
+                return;
+            }
+            
+            if (quantity < 1 || quantity > 100) {
+                alert('Jumlah pesanan harus antara 1-100 kg!');
+                return;
+            }
+            
+            // Hitung total
+            const total = hargaPerUnit * quantity;
+            
+            // Konfirmasi
+            const confirmMessage = `Konfirmasi Pesanan Anda:\n\n` +
+                `Nama: ${nama}\n` +
+                `HP: ${noHp}\n` +
+                `Alamat: ${alamat}\n` +
+                `${catatan ? 'Catatan: ' + catatan + '\n' : ''}` +
+                `\nProduk: {{ $produk->nama_produk }}\n` +
+                `Jumlah: ${quantity} kg\n` +
+                `Total: Rp ${total.toLocaleString('id-ID')}\n\n` +
+                `Apakah data sudah benar?`;
+            
+            if (confirm(confirmMessage)) {
+                // Generate nomor pesanan
+                const nomorPesanan = '#' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                
+                alert(`✅ Pesanan Berhasil Dikonfirmasi!\n\n` +
+                    `Nomor Pesanan: ${nomorPesanan}\n` +
+                    `Total Pembayaran: Rp ${total.toLocaleString('id-ID')}\n\n` +
+                    `Silakan lakukan pembayaran di:\n` +
+                    `• Balai Desa setempat\n` +
+                    `• Dinas Pertanian Kabupaten/Kota\n` +
+                    `• Kantor Penyuluhan Pertanian (BP3K)\n\n` +
+                    `Bawa nomor pesanan dan identitas diri.\n` +
+                    `Maksimal pembayaran: 3 hari\n\n` +
+                    `Terima kasih!`);
+                
+                // Redirect ke halaman dashboard
                 window.location.href = "{{ route('dashboard') }}";
             }
         }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update total saat halaman dimuat
+            updateTotal();
+            
+            // Event listener untuk input quantity manual
+            document.getElementById('quantityInput').addEventListener('input', updateTotal);
+        });
     </script>
 @endpush

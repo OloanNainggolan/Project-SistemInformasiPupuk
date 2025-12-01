@@ -67,6 +67,11 @@ Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
     
     // Halaman Konfirmasi Pesanan
     Route::post('/pupuk-bibit/{id}/konfirmasi', [PupukBibitController::class, 'confirmOrder'])->name('pupukbibit.konfirmasi');
+    
+    // Halaman Pesan Berhasil
+    Route::get('/pesan-berhasil', function () {
+        return view('user.pesan-berhasil');
+    })->name('pesan-berhasil');
 });
 
 Route::middleware('auth')->group(function () {
@@ -134,6 +139,6 @@ Route::prefix('admin')->group(function () {
 });
 
 // Routes untuk Manajemen Produk (Admin only - dilindungi middleware)
-Route::middleware('admin.auth')->group(function () {
+Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductController::class);
 });

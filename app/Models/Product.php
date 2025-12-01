@@ -19,7 +19,10 @@ class Product extends Model
         'harga_normal',
         'stok_produk',
         'gambar',
-        'deskripsi'
+        'deskripsi',
+        'manfaat',
+        'bahan',
+        'cara_penggunaan'
     ];
 
     /**

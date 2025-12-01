@@ -29,7 +29,7 @@
     }
 
     .nav-link:hover {
-        background: linear-gradient(135deg, #059669, #047857) !important;
+        background: linear-gradient(135deg, #004d00, #047857) !important;
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(16,185,129,0.4) !important;
     }

@@ -11,87 +11,105 @@
     }
 
     body {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f8fafc;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
     }
 
     .container-detail {
-        max-width: 1200px;
+        max-width: 1280px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 32px 24px 60px;
     }
 
     .back-link {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         color: #065f46;
         text-decoration: none;
-        font-weight: 600;
-        margin-bottom: 20px;
-        padding: 8px 16px;
+        font-weight: 700;
+        margin-bottom: 28px;
+        padding: 12px 24px;
         background: white;
-        border-radius: 10px;
+        border-radius: 14px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(0,0,0,0.04);
     }
 
     .back-link:hover {
-        transform: translateX(-5px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transform: translateX(-8px);
+        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.2);
     }
 
     .product-detail-grid {
         display: grid;
-        grid-template-columns: 400px 1fr;
-        gap: 30px;
+        grid-template-columns: 460px 1fr;
+        gap: 36px;
         margin-bottom: 40px;
     }
 
     .product-images {
         background: white;
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.04);
+        position: sticky;
+        top: 24px;
+        height: fit-content;
     }
 
     .main-image {
         width: 100%;
-        height: 350px;
-        border-radius: 15px;
+        height: 420px;
+        border-radius: 18px;
         overflow: hidden;
-        margin-bottom: 15px;
-        background: #f9fafb;
+        margin-bottom: 18px;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
         display: flex;
         align-items: center;
         justify-content: center;
+        border: 2px solid rgba(0,0,0,0.04);
     }
 
     .main-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .main-image:hover img {
+        transform: scale(1.05);
     }
 
     .thumbnail-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
+        gap: 12px;
     }
 
     .thumbnail {
         width: 100%;
-        height: 80px;
-        border-radius: 10px;
+        height: 92px;
+        border-radius: 12px;
         overflow: hidden;
         cursor: pointer;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
+        border: 3px solid transparent;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: #f3f4f6;
     }
 
     .thumbnail:hover {
         border-color: #10b981;
-        transform: scale(1.05);
+        transform: scale(1.08);
+    }
+
+    .thumbnail.active {
+        border-color: #10b981;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
     }
 
     .thumbnail img {
@@ -102,121 +120,146 @@
 
     .product-info-card {
         background: white;
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border-radius: 24px;
+        padding: 36px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.04);
     }
 
     .product-title {
-        font-size: 32px;
-        font-weight: 700;
-        color: #065f46;
-        margin-bottom: 15px;
+        font-size: 36px;
+        font-weight: 800;
+        color: #1f2937;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        letter-spacing: -0.8px;
     }
 
     .price-section {
-        background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 25px;
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border-radius: 18px;
+        padding: 24px;
+        margin-bottom: 28px;
+        border: 2px solid rgba(16, 185, 129, 0.2);
     }
 
     .price-row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .price-row:last-child {
+        margin-bottom: 0;
+        padding-top: 12px;
+        border-top: 2px dashed rgba(16, 185, 129, 0.3);
     }
 
     .price-label {
         color: #065f46;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .price-value {
-        font-size: 24px;
-        font-weight: 700;
-        color: #047857;
+        font-size: 28px;
+        font-weight: 800;
+        color: #059669;
+        letter-spacing: -0.5px;
     }
 
     .price-normal {
         text-decoration: line-through;
-        color: #6b7280;
-        font-size: 16px;
+        color: #9ca3af;
+        font-size: 18px;
+        font-weight: 600;
     }
 
     .badge {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        padding: 6px 12px;
-        border-radius: 20px;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 24px;
         font-size: 13px;
-        font-weight: 600;
-        margin-right: 8px;
-        margin-bottom: 8px;
+        font-weight: 700;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        letter-spacing: 0.3px;
     }
 
     .badge-subsidi {
-        background: #10b981;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
 
     .order-section {
-        margin-top: 25px;
-        padding-top: 25px;
-        border-top: 2px solid #f3f4f6;
+        margin-top: 28px;
+        padding-top: 28px;
+        border-top: 3px solid #f3f4f6;
     }
 
     .quantity-control {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
     }
 
     .quantity-label {
-        font-weight: 600;
+        font-weight: 700;
         color: #374151;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
+        font-size: 15px;
     }
 
     .quantity-buttons {
         display: flex;
         align-items: center;
-        gap: 12px;
-        background: #f3f4f6;
-        padding: 8px 12px;
-        border-radius: 10px;
+        gap: 14px;
+        background: #f9fafb;
+        padding: 10px 16px;
+        border-radius: 14px;
+        border: 2px solid #e5e7eb;
     }
 
     .qty-btn {
-        width: 32px;
-        height: 32px;
+        width: 38px;
+        height: 38px;
         border: none;
         background: white;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
         font-size: 18px;
-        font-weight: 600;
-        color: #047857;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        font-weight: 700;
+        color: #10b981;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
     .qty-btn:hover {
         background: #10b981;
         color: white;
-        transform: scale(1.1);
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .qty-btn:active {
+        transform: scale(0.95);
     }
 
     .qty-display {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 20px;
+        font-weight: 800;
         color: #065f46;
-        min-width: 40px;
+        min-width: 50px;
         text-align: center;
     }
 
@@ -224,199 +267,161 @@
         font-size: 13px;
         color: #6b7280;
         margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
     }
 
     .summary-box {
-        background: #f9fafb;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
+        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.04);
+        border: 2px solid #f3f4f6;
     }
 
     .summary-row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 12px;
+        align-items: center;
+        margin-bottom: 14px;
         font-size: 15px;
     }
 
     .summary-label {
         color: #6b7280;
+        font-weight: 600;
     }
 
     .summary-value {
-        font-weight: 600;
+        font-weight: 700;
         color: #1f2937;
     }
 
     .summary-total {
-        border-top: 2px solid #e5e7eb;
-        padding-top: 15px;
-        margin-top: 15px;
+        border-top: 3px solid #e5e7eb;
+        padding-top: 18px;
+        margin-top: 18px;
     }
 
     .summary-total .summary-label {
-        font-size: 16px;
-        font-weight: 600;
+        font-size: 18px;
+        font-weight: 700;
         color: #065f46;
     }
 
     .summary-total .summary-value {
-        font-size: 22px;
-        font-weight: 700;
-        color: #047857;
+        font-size: 26px;
+        font-weight: 800;
+        color: #10b981;
+        letter-spacing: -0.5px;
     }
 
     .btn-order {
         width: 100%;
-        padding: 16px;
+        padding: 18px;
         border: none;
-        border-radius: 12px;
+        border-radius: 16px;
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white;
-        font-size: 16px;
-        font-weight: 700;
+        font-size: 17px;
+        font-weight: 800;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        gap: 12px;
+        transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.3px;
+    }
+
+    .btn-order::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-order:hover::before {
+        width: 400px;
+        height: 400px;
     }
 
     .btn-order:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-order:active {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
     }
 
     .info-notice {
-        background: #eff6ff;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         border-left: 4px solid #3b82f6;
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 20px;
+        padding: 18px 20px;
+        border-radius: 12px;
+        margin-top: 24px;
         font-size: 14px;
         color: #1e40af;
+        line-height: 1.6;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+
+    .info-notice i {
+        font-size: 18px;
+        margin-top: 2px;
     }
 
     .product-info-section {
         background: white;
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        margin-bottom: 30px;
+        border-radius: 24px;
+        padding: 36px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        margin-bottom: 32px;
+        border: 1px solid rgba(0,0,0,0.04);
     }
 
     .section-title {
         display: flex;
         align-items: center;
-        gap: 10px;
-        font-size: 22px;
-        font-weight: 700;
-        color: #065f46;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
+        gap: 12px;
+        font-size: 26px;
+        font-weight: 800;
+        color: #1f2937;
+        margin-bottom: 24px;
+        padding-bottom: 18px;
         border-bottom: 3px solid #10b981;
+        letter-spacing: -0.5px;
+    }
+
+    .section-title i {
+        color: #10b981;
+        font-size: 24px;
     }
 
     .description-text {
         color: #4b5563;
-        line-height: 1.8;
+        line-height: 1.9;
         font-size: 15px;
-        margin-bottom: 20px;
-    }
-
-    .benefits-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-
-    .benefit-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 12px;
-        background: #f0fdf4;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-    }
-
-    .benefit-item:hover {
-        background: #dcfce7;
-        transform: translateX(5px);
-    }
-
-    .benefit-icon {
-        color: #10b981;
-        font-size: 18px;
-        margin-top: 2px;
-    }
-
-    .benefit-text {
-        color: #374151;
-        font-size: 14px;
-        line-height: 1.6;
-    }
-
-    .usage-section {
-        margin-top: 25px;
-    }
-
-    .usage-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #065f46;
-        margin-bottom: 15px;
-    }
-
-    .usage-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    .usage-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .usage-card:hover {
-        border-color: #10b981;
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
-    }
-
-    .usage-number {
-        width: 40px;
-        height: 40px;
-        background: #10b981;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 18px;
-        margin: 0 auto 15px;
-    }
-
-    .usage-card h4 {
-        font-size: 16px;
-        color: #065f46;
-        margin-bottom: 8px;
-    }
-
-    .usage-card p {
-        font-size: 13px;
-        color: #6b7280;
-        line-height: 1.5;
+        margin-bottom: 24px;
     }
 
     @media (max-width: 1024px) {
@@ -424,26 +429,42 @@
             grid-template-columns: 1fr;
         }
 
-        .benefits-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .usage-grid {
-            grid-template-columns: 1fr;
+        .product-images {
+            position: relative;
+            top: 0;
         }
     }
 
     @media (max-width: 768px) {
         .container-detail {
-            padding: 15px;
+            padding: 20px 16px 40px;
         }
 
         .product-title {
-            font-size: 24px;
+            font-size: 26px;
+        }
+
+        .main-image {
+            height: 320px;
         }
 
         .thumbnail-grid {
             grid-template-columns: repeat(3, 1fr);
+        }
+
+        .product-info-card,
+        .product-info-section {
+            padding: 24px;
+        }
+
+        .quantity-control {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .stock-info {
+            margin-left: 0;
+            width: 100%;
         }
     }
 </style>
@@ -478,17 +499,17 @@
                 <img id="mainProductImage" src="{{ $imageSrc }}" alt="{{ $produk->nama_produk ?? 'Pupuk Urea' }}">
             </div>
             <div class="thumbnail-grid">
-                <div class="thumbnail">
-                    <img src="{{ $imageSrc }}" alt="Thumbnail 1" onclick="changeImage(this.src)">
+                <div class="thumbnail" onclick="changeImage('{{ $imageSrc }}', this)">
+                    <img src="{{ $imageSrc }}" alt="Thumbnail 1">
                 </div>
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=150&h=150&fit=crop" alt="Thumbnail 2" onclick="changeImage(this.src)">
+                <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=400&fit=crop', this)">
+                    <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=150&h=150&fit=crop" alt="Thumbnail 2">
                 </div>
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=150&h=150&fit=crop" alt="Thumbnail 3" onclick="changeImage(this.src)">
+                <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=400&fit=crop', this)">
+                    <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=150&h=150&fit=crop" alt="Thumbnail 3">
                 </div>
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=150&h=150&fit=crop" alt="Thumbnail 4" onclick="changeImage(this.src)">
+                <div class="thumbnail" onclick="changeImage('{{ $imageSrc }}', this)">
+                    <img src="{{ $imageSrc }}" alt="Thumbnail 4">
                 </div>
             </div>
         </div>
@@ -526,7 +547,10 @@
                         <span class="qty-display" id="qtyDisplay">1</span>
                         <button class="qty-btn" onclick="increaseQty()"><i class="fas fa-plus"></i></button>
                     </div>
-                    <span class="stock-info">Tersedia {{ $produk->stok_produk ?? 85 }}</span>
+                    <span class="stock-info">
+                        <i class="fas fa-warehouse"></i>
+                        Tersedia {{ $produk->stok_produk ?? 85 }} unit
+                    </span>
                 </div>
 
                 <div class="summary-box">
@@ -571,9 +595,8 @@
 
         <!-- Deskripsi Umum -->
         @if($produk->deskripsi)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 12px; border-left: 4px solid #6b7280;">
-            <h3 style="font-size: 18px; color: #374151; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-align-left" style="color: #6b7280;"></i>
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Deskripsi Produk
             </h3>
             <p style="color: #4b5563; line-height: 1.8; font-size: 15px;">
@@ -584,39 +607,99 @@
 
         <!-- Manfaat -->
         @if($produk->manfaat)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-radius: 12px; border-left: 4px solid #10b981;">
-            <h3 style="font-size: 18px; color: #065f46; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-leaf" style="color: #10b981;"></i>
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Manfaat & Keunggulan
             </h3>
-            <p style="color: #047857; line-height: 1.8; font-size: 15px; white-space: pre-line;">
-                {{ $produk->manfaat }}
-            </p>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                @foreach(explode("\n", $produk->manfaat) as $manfaatItem)
+                    @if(trim($manfaatItem))
+                    <li style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; color: #4b5563; line-height: 1.7; font-size: 15px;">
+                        <i class="fas fa-check" style="color: #10b981; margin-top: 4px; flex-shrink: 0;"></i>
+                        <span>{{ trim($manfaatItem) }}</span>
+                    </li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <!-- Panduan Penggunaan -->
+        @if($produk->cara_penggunaan)
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 16px; font-weight: 700;">
+                Panduan Penggunaan
+            </h3>
+            
+            @php
+                // Split cara_penggunaan by common section patterns
+                $sections = [];
+                $lines = explode("\n", $produk->cara_penggunaan);
+                $currentSection = null;
+                $currentContent = [];
+                
+                foreach($lines as $line) {
+                    $trimmedLine = trim($line);
+                    
+                    // Check if line is a section header (e.g., "1. Waktu Pemupukan", "2. Pupuk Cair")
+                    if(preg_match('/^(\d+)\.\s*(.+)$/', $trimmedLine, $matches)) {
+                        // Save previous section
+                        if($currentSection) {
+                            $sections[] = [
+                                'title' => $currentSection,
+                                'content' => $currentContent
+                            ];
+                        }
+                        
+                        // Start new section
+                        $currentSection = $matches[2];
+                        $currentContent = [];
+                    } else if($trimmedLine && $currentSection) {
+                        $currentContent[] = $trimmedLine;
+                    }
+                }
+                
+                // Save last section
+                if($currentSection) {
+                    $sections[] = [
+                        'title' => $currentSection,
+                        'content' => $currentContent
+                    ];
+                }
+            @endphp
+            
+            @if(count($sections) > 0)
+                @foreach($sections as $index => $section)
+                <div style="margin-bottom: 18px;">
+                    <h4 style="font-size: 16px; color: #065f46; margin-bottom: 10px; font-weight: 700;">
+                        {{ $index + 1 }}. {{ $section['title'] }}
+                    </h4>
+                    <ul style="list-style: none; padding: 0; margin: 0; padding-left: 20px;">
+                        @foreach($section['content'] as $item)
+                        <li style="color: #4b5563; line-height: 1.7; font-size: 14px; margin-bottom: 6px; position: relative; padding-left: 20px;">
+                            <span style="position: absolute; left: 0; color: #6b7280;">•</span>
+                            {{ $item }}
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endforeach
+            @else
+                <p style="color: #4b5563; line-height: 1.8; font-size: 15px; white-space: pre-line;">
+                    {{ $produk->cara_penggunaan }}
+                </p>
+            @endif
         </div>
         @endif
 
         <!-- Bahan/Komposisi -->
         @if($produk->bahan)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 12px; border-left: 4px solid #3b82f6;">
-            <h3 style="font-size: 18px; color: #1e40af; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-flask" style="color: #3b82f6;"></i>
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Bahan/Komposisi
             </h3>
-            <p style="color: #1e40af; line-height: 1.8; font-size: 15px; white-space: pre-line;">
+            <p style="color: #4b5563; line-height: 1.8; font-size: 15px; white-space: pre-line;">
                 {{ $produk->bahan }}
-            </p>
-        </div>
-        @endif
-
-        <!-- Cara Penggunaan -->
-        @if($produk->cara_penggunaan)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
-            <h3 style="font-size: 18px; color: #92400e; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-tasks" style="color: #f59e0b;"></i>
-                Cara Penggunaan
-            </h3>
-            <p style="color: #92400e; line-height: 1.8; font-size: 15px; white-space: pre-line;">
-                {{ $produk->cara_penggunaan }}
             </p>
         </div>
         @endif
@@ -629,8 +712,22 @@
     const basePrice = {{ $produk->harga_subsidi ?? 2800 }};
     let quantity = 1;
 
-    function changeImage(src) {
-        document.getElementById('mainProductImage').src = src;
+    function changeImage(src, element) {
+        const mainImage = document.getElementById('mainProductImage');
+        mainImage.style.opacity = '0.5';
+        
+        setTimeout(() => {
+            mainImage.src = src;
+            mainImage.style.opacity = '1';
+        }, 150);
+
+        // Update active thumbnail
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.classList.remove('active');
+        });
+        if (element) {
+            element.classList.add('active');
+        }
     }
 
     function increaseQty() {
@@ -658,5 +755,13 @@
         document.getElementById('subtotal').textContent = 'Rp. ' + subtotal.toLocaleString('id-ID');
         document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
     }
+
+    // Set first thumbnail as active on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstThumbnail = document.querySelector('.thumbnail');
+        if (firstThumbnail) {
+            firstThumbnail.classList.add('active');
+        }
+    });
 </script>
 @endpush
