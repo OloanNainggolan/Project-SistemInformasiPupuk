@@ -89,7 +89,6 @@
         background-image: url("{{ asset('images/teh.png') }}");
         background-size: cover;
         background-repeat: no-repeat;
-        background-position: center;
         height: 400px;
         border-radius: 24px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.3), 
@@ -97,7 +96,7 @@
         position: relative;
         overflow: hidden;
         border: 3px solid rgba(255,255,255,0.15);
-        background-color: rgba(0, 0, 0, 0.05);
+        display: block;
     }
 
     .hero-image::after {
@@ -556,6 +555,8 @@
         .hero-image {
             height: 340px;
             border-radius: 20px;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
@@ -606,6 +607,8 @@
             height: 320px;
             border-radius: 18px;
             margin-bottom: 0;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
@@ -678,6 +681,8 @@
         .hero-image {
             height: 260px;
             border-radius: 16px;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
@@ -761,6 +766,8 @@
         .hero-image {
             height: 220px;
             border-radius: 14px;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
