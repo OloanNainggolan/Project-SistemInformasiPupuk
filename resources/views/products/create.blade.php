@@ -525,6 +525,88 @@
                     @enderror
                 </div>
 
+                <!-- Deskripsi Produk -->
+                <div class="form-group">
+                    <label for="deskripsi">
+                        Deskripsi Produk
+                    </label>
+                    <textarea 
+                        class="form-control @error('deskripsi') is-invalid @enderror" 
+                        id="deskripsi" 
+                        name="deskripsi" 
+                        rows="4" 
+                        placeholder="Masukkan deskripsi lengkap produk..."
+                    >{{ old('deskripsi') }}</textarea>
+                    <small class="help-text">Deskripsi umum tentang produk (opsional)</small>
+                    @error('deskripsi')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Manfaat & Keunggulan -->
+                <div class="form-group">
+                    <label for="manfaat">
+                        Manfaat & Keunggulan
+                    </label>
+                    <textarea 
+                        class="form-control @error('manfaat') is-invalid @enderror" 
+                        id="manfaat" 
+                        name="manfaat" 
+                        rows="5" 
+                        placeholder="Masukkan setiap manfaat per baris. Contoh:
+Meningkatkan hasil panen hingga 30%
+Memperbaiki tekstur tanaman
+Tahan terhadap hama"
+                    >{{ old('manfaat') }}</textarea>
+                    <small class="help-text">Setiap baris akan ditampilkan sebagai poin manfaat (opsional)</small>
+                    @error('manfaat')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Bahan/Komposisi -->
+                <div class="form-group">
+                    <label for="bahan">
+                        Bahan/Komposisi
+                    </label>
+                    <textarea 
+                        class="form-control @error('bahan') is-invalid @enderror" 
+                        id="bahan" 
+                        name="bahan" 
+                        rows="4" 
+                        placeholder="Masukkan komposisi atau bahan yang terkandung dalam produk..."
+                    >{{ old('bahan') }}</textarea>
+                    <small class="help-text">Informasi bahan atau komposisi produk (opsional)</small>
+                    @error('bahan')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Cara Penggunaan -->
+                <div class="form-group">
+                    <label for="cara_penggunaan">
+                        Panduan Penggunaan
+                    </label>
+                    <textarea 
+                        class="form-control @error('cara_penggunaan') is-invalid @enderror" 
+                        id="cara_penggunaan" 
+                        name="cara_penggunaan" 
+                        rows="8" 
+                        placeholder="Masukkan panduan penggunaan dengan format terstruktur. Contoh:
+1. Waktu Pemupukan
+- Gunakan saat tanaman baru tumbuh
+- Ulangi setiap 2 minggu
+
+2. Pupuk Cair
+- Campur 1 tutup botol dengan 1 liter air
+- Semprotkan pada daun"
+                    >{{ old('cara_penggunaan') }}</textarea>
+                    <small class="help-text">Format: gunakan "1. Judul Section" untuk membuat section, dan "-" untuk poin detail (opsional)</small>
+                    @error('cara_penggunaan')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 <!-- Upload Gambar (Multiple) -->
                 <div class="form-group">
                     <label for="gambar">

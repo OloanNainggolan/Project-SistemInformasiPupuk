@@ -595,9 +595,8 @@
 
         <!-- Deskripsi Umum -->
         @if($produk->deskripsi)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 12px; border-left: 4px solid #6b7280;">
-            <h3 style="font-size: 18px; color: #374151; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-align-left" style="color: #6b7280;"></i>
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Deskripsi Produk
             </h3>
             <p style="color: #4b5563; line-height: 1.8; font-size: 15px;">
@@ -608,39 +607,99 @@
 
         <!-- Manfaat -->
         @if($produk->manfaat)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-radius: 12px; border-left: 4px solid #10b981;">
-            <h3 style="font-size: 18px; color: #065f46; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-leaf" style="color: #10b981;"></i>
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Manfaat & Keunggulan
             </h3>
-            <p style="color: #047857; line-height: 1.8; font-size: 15px; white-space: pre-line;">
-                {{ $produk->manfaat }}
-            </p>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                @foreach(explode("\n", $produk->manfaat) as $manfaatItem)
+                    @if(trim($manfaatItem))
+                    <li style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; color: #4b5563; line-height: 1.7; font-size: 15px;">
+                        <i class="fas fa-check" style="color: #10b981; margin-top: 4px; flex-shrink: 0;"></i>
+                        <span>{{ trim($manfaatItem) }}</span>
+                    </li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <!-- Panduan Penggunaan -->
+        @if($produk->cara_penggunaan)
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 16px; font-weight: 700;">
+                Panduan Penggunaan
+            </h3>
+            
+            @php
+                // Split cara_penggunaan by common section patterns
+                $sections = [];
+                $lines = explode("\n", $produk->cara_penggunaan);
+                $currentSection = null;
+                $currentContent = [];
+                
+                foreach($lines as $line) {
+                    $trimmedLine = trim($line);
+                    
+                    // Check if line is a section header (e.g., "1. Waktu Pemupukan", "2. Pupuk Cair")
+                    if(preg_match('/^(\d+)\.\s*(.+)$/', $trimmedLine, $matches)) {
+                        // Save previous section
+                        if($currentSection) {
+                            $sections[] = [
+                                'title' => $currentSection,
+                                'content' => $currentContent
+                            ];
+                        }
+                        
+                        // Start new section
+                        $currentSection = $matches[2];
+                        $currentContent = [];
+                    } else if($trimmedLine && $currentSection) {
+                        $currentContent[] = $trimmedLine;
+                    }
+                }
+                
+                // Save last section
+                if($currentSection) {
+                    $sections[] = [
+                        'title' => $currentSection,
+                        'content' => $currentContent
+                    ];
+                }
+            @endphp
+            
+            @if(count($sections) > 0)
+                @foreach($sections as $index => $section)
+                <div style="margin-bottom: 18px;">
+                    <h4 style="font-size: 16px; color: #065f46; margin-bottom: 10px; font-weight: 700;">
+                        {{ $index + 1 }}. {{ $section['title'] }}
+                    </h4>
+                    <ul style="list-style: none; padding: 0; margin: 0; padding-left: 20px;">
+                        @foreach($section['content'] as $item)
+                        <li style="color: #4b5563; line-height: 1.7; font-size: 14px; margin-bottom: 6px; position: relative; padding-left: 20px;">
+                            <span style="position: absolute; left: 0; color: #6b7280;">•</span>
+                            {{ $item }}
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endforeach
+            @else
+                <p style="color: #4b5563; line-height: 1.8; font-size: 15px; white-space: pre-line;">
+                    {{ $produk->cara_penggunaan }}
+                </p>
+            @endif
         </div>
         @endif
 
         <!-- Bahan/Komposisi -->
         @if($produk->bahan)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 12px; border-left: 4px solid #3b82f6;">
-            <h3 style="font-size: 18px; color: #1e40af; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-flask" style="color: #3b82f6;"></i>
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Bahan/Komposisi
             </h3>
-            <p style="color: #1e40af; line-height: 1.8; font-size: 15px; white-space: pre-line;">
+            <p style="color: #4b5563; line-height: 1.8; font-size: 15px; white-space: pre-line;">
                 {{ $produk->bahan }}
-            </p>
-        </div>
-        @endif
-
-        <!-- Cara Penggunaan -->
-        @if($produk->cara_penggunaan)
-        <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
-            <h3 style="font-size: 18px; color: #92400e; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-tasks" style="color: #f59e0b;"></i>
-                Cara Penggunaan
-            </h3>
-            <p style="color: #92400e; line-height: 1.8; font-size: 15px; white-space: pre-line;">
-                {{ $produk->cara_penggunaan }}
             </p>
         </div>
         @endif
