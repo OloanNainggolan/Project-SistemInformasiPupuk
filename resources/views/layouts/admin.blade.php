@@ -177,10 +177,10 @@
         .profile-button {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 4px;
+            padding: 2px 6px;
             background: white;
-            border: 2px solid #e5e7eb;
+            border: 1.5px solid #e5e7eb;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -192,8 +192,8 @@
         }
 
         .profile-avatar {
-            width: 36px;
-            height: 36px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--green), var(--green-light));
             display: flex;
@@ -201,30 +201,42 @@
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 10px;
         }
 
         .profile-info {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            flex-direction: row;
+            align-items: center;
+            gap: 0;
         }
 
         .profile-name {
-            font-size: 13px;
+            font-size: 8.5px;
             font-weight: 600;
             color: var(--green-dark);
-            line-height: 1.2;
+            line-height: 1;
         }
 
         .profile-role {
-            font-size: 11px;
-            color: #6b7280;
+            font-size: 8.5px;
+            color: var(--green-dark);
+            font-weight: 400;
+        }
+        
+        .profile-name::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 7px;
+            background: #d1d5db;
+            margin: 0 3px;
+            vertical-align: middle;
         }
 
         .profile-chevron {
             color: #6b7280;
-            font-size: 12px;
+            font-size: 7px;
             transition: transform 0.2s ease;
         }
 
@@ -508,9 +520,9 @@
             </a>
 
             <!-- Navigation -->
-            <nav class="nav-menu" id="navMenu">
+            <nav class="nav-menu">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-tachometer-alt"></i>
+                    <i class="fas fa-chart-pie"></i>
                     <span>Dashboard</span>
                 </a>
                 <a href="{{ route('admin.orders') }}" class="nav-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
