@@ -45,65 +45,77 @@
 
     .profile-card {
         background: white;
-        padding: 25px;
+        padding: 20px;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         text-align: center;
     }
 
     .profile-avatar {
-        width: 90px;
-        height: 90px;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
         background: linear-gradient(135deg, #059669, #10b981);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 15px;
-        font-size: 50px;
+        margin: 0 auto 12px;
+        font-size: 32px;
         color: white;
+        font-weight: 700;
     }
 
     .profile-username {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 700;
         color: var(--color-text-dark);
-        margin-bottom: 5px;
+        margin-bottom: 4px;
     }
 
     .profile-handle {
-        font-size: 14px;
+        font-size: 12px;
         color: var(--color-text-grey);
-        margin-bottom: 20px;
+        margin-bottom: 16px;
     }
 
     .profile-info {
         text-align: left;
-        margin: 20px 0;
-        font-size: 13px;
-        line-height: 2;
+        margin: 16px 0;
+        font-size: 11px;
+        line-height: 1.5;
     }
 
     .profile-info p {
         margin: 8px 0;
         color: #4b5563;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        word-break: break-word;
     }
 
     .profile-info i {
         color: var(--color-primary);
-        width: 20px;
-        margin-right: 8px;
+        width: 14px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 12px;
+    }
+    
+    .profile-info p span {
+        flex: 1;
+        line-height: 1.4;
     }
 
     .profile-actions {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-top: 20px;
+        gap: 8px;
+        margin-top: 16px;
     }
 
     .btn {
-        padding: 12px;
+        padding: 10px;
         border: none;
         border-radius: 8px;
         cursor: pointer;
@@ -114,8 +126,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        font-size: 14px;
+        gap: 6px;
+        font-size: 13px;
     }
 
     .btn-edit {
@@ -316,20 +328,32 @@
 
         <div class="profile-card">
             <div class="profile-avatar">
-                <i class="fas fa-user-circle"></i>
+                {{ strtoupper(substr(session('admin_name', 'A'), 0, 1)) }}
             </div>
-            <div class="profile-username">adminabc</div>
-            <div class="profile-handle">@admin23</div>
+            <div class="profile-username">{{ session('admin_name', 'Administrator Sistem') }}</div>
+            <div class="profile-handle">@{{ session('admin_username', 'admin') }}</div>
 
             <div class="profile-info">
-                <p><i class="fas fa-envelope"></i> Nupi.Sianturi@gmail.com</p>
-                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
-                <p><i class="fas fa-map-marker-alt"></i> Desa Situlama, Kec. Silaiang, Kab. Sidama, Jawa Barat</p>
-                <p><i class="fas fa-calendar"></i> Bergabung Sejak Januari 2020</p>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ session('admin_email', 'Nupi.Sianturi@gmail.com') }}</span>
+                </p>
+                <p>
+                    <i class="fas fa-phone"></i>
+                    <span>{{ session('admin_phone', '+62 812-3456-7890') }}</span>
+                </p>
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ session('admin_address', 'Desa Situlama, Kec. Silaiang, Kab. Sidama, Jawa Barat') }}</span>
+                </p>
+                <p>
+                    <i class="fas fa-calendar"></i>
+                    <span>Bergabung Sejak Januari 2020</span>
+                </p>
             </div>
 
             <div class="profile-actions">
-                <a href="#" class="btn btn-edit">
+                <a href="{{ route('admin.profil.edit') }}" class="btn btn-edit">
                     <i class="fas fa-edit"></i> Edit Profil
                 </a>
                 <form action="{{ route('admin.logout') }}" method="POST" style="width: 100%;">
