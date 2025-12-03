@@ -88,8 +88,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifikasi', function () {
         return view('user.Notifikasi');
     })->name('notifikasi');
-    Route::get('/notifikasi/detail', function () {
-        return view('user.DetailNotif');
+    Route::get('/notifikasi/detail/{type?}', function ($type = 'verifikasi') {
+        return view('user.DetailNotif', ['type' => $type]);
     })->name('notifikasi.detail');
 });
 

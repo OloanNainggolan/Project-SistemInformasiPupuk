@@ -565,9 +565,9 @@
         });
 
         // Clear error on input
-        emailField.addEventListener('input', function() {
+        loginField.addEventListener('input', function() {
             this.classList.remove('error');
-            emailError.classList.remove('show');
+            loginError.classList.remove('show');
         });
 
         passwordField.addEventListener('input', function() {
