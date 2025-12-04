@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Contact;
 use App\Models\Notification;
@@ -57,53 +57,59 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
+        // Validasi input
+        $credentials = $request->validate([
             'login' => 'required|string',
-            'password' => 'required',
+            'password' => 'required|string',
         ], [
             'login.required' => 'Username atau Email wajib diisi',
             'password.required' => 'Password wajib diisi',
         ]);
 
-        $login = $request->input('login');
-        $password = $request->input('password');
-
-        // Cek apakah ini login admin berdasarkan username atau email
-        if ($login === 'admin' || $login === 'admin@pupuksubsidi.id') {
-            // Redirect ke halaman login admin
-            return redirect()->route('admin.login')
-                ->withInput(['username' => 'admin'])
-                ->with('info', 'Silakan gunakan halaman login admin.');
-        }
-
         // Tentukan apakah login menggunakan email atau username
-        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        
-        // Attempt login dengan email atau username
-        $credentials = [
-            $fieldType => $login,
-            'password' => $password
-        ];
+        $loginType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        // Login untuk user biasa
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            // Cek apakah user ini adalah admin (jika ada field role)
-            $user = Auth::user();
-            
-            // Double check: pastikan bukan admin
-            if (isset($user->role) && $user->role === 'admin') {
-                Auth::logout();
-                return redirect()->route('admin.login')
-                    ->with('info', 'Silakan gunakan halaman login admin.');
-            }
-            
-            return redirect()->route('dashboard');
+        // Cari user berdasarkan email atau username
+        $user = User::where($loginType, $credentials['login'])->first();
+
+        if (!$user) {
+            return back()
+                ->withInput($request->only('login'))
+                ->withErrors(['login' => 'Username atau Email tidak ditemukan']);
         }
 
-        return back()->withInput(['login' => $login])
-            ->withErrors(['login' => 'Username/Email atau password salah.']);
+        // Cek apakah password di-hash atau plain text
+        $passwordMatch = false;
+        
+        // Cek jika password sudah di-hash dengan bcrypt
+        if (str_starts_with($user->password, '$2y$')) {
+            // Password sudah di-hash, gunakan Hash::check
+            $passwordMatch = Hash::check($credentials['password'], $user->password);
+        } else {
+            // Password masih plain text (backward compatibility)
+            $passwordMatch = ($credentials['password'] === $user->password);
+            
+            // Jika match, hash password untuk keamanan di masa depan
+            if ($passwordMatch) {
+                $user->password = Hash::make($credentials['password']);
+                $user->save();
+            }
+        }
+
+        if (!$passwordMatch) {
+            return back()
+                ->withInput($request->only('login'))
+                ->withErrors(['password' => 'Password yang Anda masukkan salah']);
+        }
+
+        // Login user
+        Auth::login($user, $request->filled('remember'));
+
+        // Regenerate session untuk keamanan
+        $request->session()->regenerate();
+
+        // Redirect ke dashboard
+        return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
     }
 
     public function logout(Request $request)

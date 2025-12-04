@@ -16,137 +16,107 @@ Route::get('/', function () {
     return view('user.HOME');
 })->name('home');
 
+// User Registration Routes
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process')->middleware('guest');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.process');
-
+// User Login Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process')->middleware('guest');
 
+// Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
 
-// Halaman reset password (view statis sementara)
+// Password Reset Routes
 Route::get('/reset-password', function () {
     return view('auth.resetpw');
 })->name('password.reset');
-
-// Proses reset password (POST)
 Route::post('/reset-password', [AuthController::class, 'processReset'])->name('password.reset.post');
 
-Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
-
-// Route untuk halaman Pupuk & Bibit (gabungan)
-Route::get('/pupuk-bibit', function () {
-    return view('user.pupukdanbibit');
-})->name('pupuk.bibit');
-
-// Route untuk halaman Kontak (dapat diakses tanpa login)
+// Public Routes
+Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupuk.bibit');
 Route::get('/kontak', function () {
     return view('user.kontak');
 })->name('kontak');
 Route::post('/kontak/send', [AuthController::class, 'sendKontak'])->name('kontak.send');
 
-// Route untuk halaman Profil User
-Route::get('/profil', [AuthController::class, 'showProfil'])->name('profil.user')->middleware('auth');
-
-// Route untuk Edit Profil
-Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit')->middleware('auth');
-Route::put('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update')->middleware('auth');
-
-// Routes yang memerlukan autentikasi
-Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
-    // Halaman Pupuk & Bibit
-    Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupukbibit');
-    
-    // Halaman Detail & Pesan Produk
-    Route::get('/pupuk-bibit/{id}/detail', [PupukBibitController::class, 'detail'])->name('pupukbibit.detail');
-    
-    // Halaman Konfirmasi Pesanan
-    Route::post('/pupuk-bibit/{id}/konfirmasi', [PupukBibitController::class, 'confirmOrder'])->name('pupukbibit.konfirmasi');
-    
-    // Simpan Pesanan ke Database
-    Route::post('/pupuk-bibit/{id}/store-order', [PupukBibitController::class, 'storeOrder'])->name('pupukbibit.store');
-    
-    // Halaman Pesan Berhasil
-    Route::get('/pesan-berhasil', function () {
-        return view('user.pesan-berhasil');
-    })->name('pesan-berhasil');
-});
-
+// Protected User Routes (Require Authentication)
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     
-    // Route untuk halaman Pupuk & Bibit (gabungan) - backward compatibility
-    Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupuk.bibit');
-    
-    // Route untuk halaman Kontak
-    Route::get('/kontak', function () {
-        return view('user.kontak');
-    })->name('kontak');
-    Route::post('/kontak/send', [AuthController::class, 'sendKontak'])->name('kontak.send');
-    
-    // Route untuk Edit Profil (Route /profil sudah ada di atas pada line 52)
+    // Profile Routes
+    Route::get('/profil', function () {
+        return view('user.ProfilUser');
+    })->name('profil.user');
     Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit');
     Route::put('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update');
     
-    // Route untuk halaman Notifikasi
+    // Notification Routes
     Route::get('/notifikasi', function () {
         return view('user.Notifikasi');
     })->name('notifikasi');
     Route::get('/notifikasi/detail/{type?}', function ($type = 'verifikasi') {
         return view('user.DetailNotif', ['type' => $type]);
     })->name('notifikasi.detail');
-});
-
-Route::get('/forgot-password-test', function () {
-    return view('auth.forgot-password');
-});
-
-// Route untuk halaman Lihat Detail & Pesan (statik ke view sementara)
-Route::get('/lihat-detail-pesanan', function () {
-    return view('user.lihat-detail-pesan');
-})->name('lihat-detail-pesanan');
-
-// Routes untuk Admin
-Route::prefix('admin')->group(function () {
-    // Halaman login (tidak perlu auth)
-    Route::get('/login', [AdminController::class, 'showLogin'])->name('admin.login');
-    Route::post('/login', [AdminController::class, 'login'])->name('admin.login.process');
     
-    // Halaman yang memerlukan auth
+    // Product Order Routes
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupukbibit');
+        Route::get('/pupuk-bibit/{id}/detail', [PupukBibitController::class, 'detail'])->name('pupukbibit.detail');
+        Route::post('/pupuk-bibit/{id}/konfirmasi', [PupukBibitController::class, 'confirmOrder'])->name('pupukbibit.konfirmasi');
+        Route::get('/pesan-berhasil', function () {
+            return view('user.pesan-berhasil');
+        })->name('pesan-berhasil');
+    });
+    
+    // Static route for order detail
+    Route::get('/lihat-detail-pesanan', function () {
+        return view('user.lihat-detail-pesan');
+    })->name('lihat-detail-pesanan');
+});
+
+// Admin Routes
+Route::prefix('admin')->group(function () {
+    // Guest routes (tidak bisa diakses jika sudah login)
+    Route::middleware('admin.guest')->group(function () {
+        Route::get('/login', [AdminController::class, 'showLogin'])->name('admin.login');
+        Route::post('/login', [AdminController::class, 'login'])->name('admin.login.post');
+    });
+
+    // Protected routes (harus login)
     Route::middleware('admin.auth')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/overview', [AdminController::class, 'overview'])->name('admin.overview');
-        Route::get('/profil', [AdminController::class, 'profil'])->name('admin.profil');
-        Route::get('/profil/edit', [AdminController::class, 'editProfil'])->name('admin.profil.edit');
-        Route::put('/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         
-        // Notifikasi
+        // Profile Routes
+        Route::get('/profil', [AdminController::class, 'profil'])->name('admin.profil');
+        Route::get('/profil/edit', [AdminController::class, 'editProfil'])->name('admin.profil.edit');
+        Route::post('/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
+        
+        // Notification Routes
         Route::get('/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');
         Route::post('/notifications/send', [AdminController::class, 'sendNotification'])->name('admin.notifications.send');
         
-        // Contact Management
-        Route::patch('/contact/{id}/mark-read', [AdminController::class, 'markContactAsRead'])->name('admin.contact.mark-read');
-        Route::delete('/contact/{id}', [AdminController::class, 'deleteContact'])->name('admin.contact.delete');
-        Route::patch('/notification/{id}/mark-read', [AdminController::class, 'markNotificationAsRead'])->name('admin.notification.mark-read');
-        
-        // Manajemen Pesanan
+        // Order Management Routes
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
         Route::get('/orders/{orderNumber}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
         
-        // API Routes untuk Orders
-        Route::prefix('api')->group(function () {
-            Route::get('/orders', [AdminOrderController::class, 'getOrders'])->name('admin.api.orders');
-            Route::get('/orders/stats', [AdminOrderController::class, 'getStats'])->name('admin.api.orders.stats');
-            Route::patch('/orders/{orderId}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.api.orders.status');
+        // API Routes for Orders (Admin)
+        Route::prefix('api')->name('api.')->group(function () {
+            Route::get('/orders', [AdminOrderController::class, 'getOrders'])->name('orders');
+            Route::get('/orders/stats', [AdminOrderController::class, 'getStats'])->name('orders.stats');
+            Route::patch('/orders/{orderId}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
         });
+        
+        // Product Management Routes - PERBAIKAN: Tambah name untuk resource
+        Route::resource('products', ProductController::class)->names([
+            'index' => 'admin.products.index',
+            'create' => 'admin.products.create',
+            'store' => 'admin.products.store',
+            'show' => 'admin.products.show',
+            'edit' => 'admin.products.edit',
+            'update' => 'admin.products.update',
+            'destroy' => 'admin.products.destroy',
+        ]);
     });
-});
-
-// Routes untuk Manajemen Produk (Admin only - dilindungi middleware)
-Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('products', ProductController::class);
 });
