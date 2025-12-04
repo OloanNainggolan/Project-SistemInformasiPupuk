@@ -195,25 +195,33 @@
 
         .notification-badge {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 3px;
+            right: 3px;
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
-            border-radius: 50%;
-            width: 8px;
-            height: 8px;
-            font-size: 10px;
+            border-radius: 12px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
             border: 2px solid white;
-            animation: pulse 2s infinite;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            animation: pulse-badge 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
+        @keyframes pulse-badge {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            }
+            50% { 
+                transform: scale(1.15); 
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.6);
+            }
         }
 
         .profile-section {
@@ -711,7 +719,7 @@
                             ->count();
                     @endphp
                     @if($unreadMessages > 0)
-                        <span class="notification-badge">{{ $unreadMessages }}</span>
+                        <span class="notification-badge">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}</span>
                     @endif
                 </a>
 

@@ -16,16 +16,23 @@
         <div class="thread-message original">
             <div class="message-header">
                 <div class="sender-info">
-                    <div class="sender-avatar {{ $message->sender_type === 'admin' ? 'admin' : 'user' }}">
-                        @if($message->sender_type === 'admin')
-                            A
-                        @else
-                            {{ strtoupper(substr($message->user->name ?? 'U', 0, 1)) }}
+                    @if($message->sender_type === 'admin')
+                        <img src="{{ asset('images/admin-avatar.png') }}" alt="Admin" class="sender-avatar-img admin" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="sender-avatar admin" style="display:none;">A</div>
+                    @else
+                        @if($message->user && $message->user->photo_profile)
+                            <img src="{{ asset('images/profiles/' . $message->user->photo_profile) }}" alt="{{ $message->user->name }}" class="sender-avatar-img user" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         @endif
-                    </div>
+                        <div class="sender-avatar user" style="{{ $message->user && $message->user->photo_profile ? 'display:none;' : '' }}">
+                            {{ strtoupper(substr($message->user->name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
                     <div>
                         <div class="sender-name">
-                            {{ $message->sender_type === 'admin' ? 'Admin' : $message->user->name }}
+                            {{ $message->sender_type === 'admin' ? 'Admin' : 'Anda' }}
+                            <span class="sender-badge {{ $message->sender_type }}">
+                                {{ $message->sender_type === 'admin' ? 'Pengirim' : 'Anda' }}
+                            </span>
                         </div>
                         <div class="sender-meta">
                             @if($message->sender_type !== 'admin')
@@ -52,16 +59,23 @@
         <div class="thread-message reply">
             <div class="message-header">
                 <div class="sender-info">
-                    <div class="sender-avatar {{ $reply->sender_type === 'admin' ? 'admin' : 'user' }}">
-                        @if($reply->sender_type === 'admin')
-                            A
-                        @else
-                            {{ strtoupper(substr($reply->user->name ?? 'U', 0, 1)) }}
+                    @if($reply->sender_type === 'admin')
+                        <img src="{{ asset('images/admin-avatar.png') }}" alt="Admin" class="sender-avatar-img admin" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="sender-avatar admin" style="display:none;">A</div>
+                    @else
+                        @if($reply->user && $reply->user->photo_profile)
+                            <img src="{{ asset('images/profiles/' . $reply->user->photo_profile) }}" alt="{{ $reply->user->name }}" class="sender-avatar-img user" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         @endif
-                    </div>
+                        <div class="sender-avatar user" style="{{ $reply->user && $reply->user->photo_profile ? 'display:none;' : '' }}">
+                            {{ strtoupper(substr($reply->user->name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
                     <div>
                         <div class="sender-name">
-                            {{ $reply->sender_type === 'admin' ? 'Admin' : $reply->user->name }}
+                            {{ $reply->sender_type === 'admin' ? 'Admin' : 'Anda' }}
+                            <span class="sender-badge {{ $reply->sender_type }}">
+                                {{ $reply->sender_type === 'admin' ? 'Pengirim' : 'Anda' }}
+                            </span>
                         </div>
                         <div class="sender-meta">
                             <span><i class="fas fa-clock"></i> {{ $reply->created_at->format('d M Y, H:i') }}</span>
@@ -75,6 +89,51 @@
             </div>
         </div>
         @endforeach
+    </div>
+
+    <!-- Reply Form -->
+    <div class="reply-form-container">
+        <h3 class="reply-title">
+            <i class="fas fa-reply"></i>
+            Balas Pesan
+        </h3>
+        
+        @if(session('success'))
+        <div class="alert-success">
+            <i class="fas fa-check-circle"></i>
+            {{ session('success') }}
+        </div>
+        @endif
+        
+        <form action="{{ route('notifikasi.reply', $message->id) }}" method="POST" class="reply-form">
+            @csrf
+            <div class="form-group">
+                <label for="replyMessage">Pesan Anda</label>
+                <textarea 
+                    name="message" 
+                    id="replyMessage" 
+                    rows="5" 
+                    class="form-control @error('message') is-invalid @enderror" 
+                    placeholder="Tulis balasan Anda di sini..."
+                    required>{{ old('message') }}</textarea>
+                @error('message')
+                    <div class="invalid-feedback">
+                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i>
+                    Kirim Balasan
+                </button>
+                <button type="button" class="btn-cancel" onclick="document.getElementById('replyMessage').value = '';">
+                    <i class="fas fa-eraser"></i>
+                    Bersihkan
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -161,6 +220,25 @@
     color: white;
     font-weight: 700;
     font-size: 18px;
+    flex-shrink: 0;
+}
+
+.sender-avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.sender-avatar-img.user {
+    border: 3px solid #10b981;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+}
+
+.sender-avatar-img.admin {
+    border: 3px solid #6366f1;
+    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
 }
 
 .sender-avatar.user {
@@ -178,6 +256,30 @@
     font-weight: 700;
     color: #065f46;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sender-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sender-badge.admin {
+    background: linear-gradient(135deg, #eef2ff, #ddd6fe);
+    color: #6366f1;
+    border: 1px solid #c7d2fe;
+}
+
+.sender-badge.user {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #059669;
+    border: 1px solid #6ee7b7;
 }
 
 .sender-meta {
@@ -222,6 +324,146 @@
     white-space: pre-wrap;
 }
 
+/* Reply Form */
+.reply-form-container {
+    background: white;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 4px solid #10b981;
+}
+
+.reply-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #065f46;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reply-title i {
+    color: #10b981;
+    font-size: 16px;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    border: 2px solid #10b981;
+    color: #065f46;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.alert-success i {
+    color: #10b981;
+    font-size: 18px;
+}
+
+.reply-form .form-group {
+    margin-bottom: 20px;
+}
+
+.reply-form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.reply-form .form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1f2937;
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+.reply-form .form-control:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.reply-form .form-control.is-invalid {
+    border-color: #ef4444;
+}
+
+.invalid-feedback {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #ef4444;
+}
+
+.invalid-feedback i {
+    margin-right: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .thread-message.reply {
@@ -236,6 +478,15 @@
     .sender-meta {
         flex-direction: column;
         gap: 4px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit, .btn-cancel {
+        width: 100%;
+        justify-content: center;
     }
 }
 </style>
