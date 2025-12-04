@@ -8,7 +8,7 @@
     <style>
         :root{
             --green-dark:#065f46;
-            --green:#059669;
+            --green:#004d00;
             --green-2:#047857;
             --green-light:#10b981;
             --mint:#ecfdf5;
@@ -48,7 +48,7 @@
 
         /* Kolom kiri */
         .left{
-            background:linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+            background:linear-gradient(135deg, #004d00 0%, #004d00 50%, #004d00 100%);
             color:#fff;
             display:flex;
             align-items:center;
@@ -149,7 +149,7 @@
             color:white;
             border-color:var(--green);
             transform:translateY(-2px);
-            box-shadow:0 8px 25px rgba(5,150,105,0.3);
+            box-shadow:0 8px 25px #004d00;
         }
         .back svg{
             width:16px;
@@ -287,12 +287,12 @@
         .btn-primary{
             background:linear-gradient(135deg, var(--green) 0%, var(--green-2) 100%);
             color:white;
-            box-shadow:0 6px 20px rgba(5,150,105,0.4);
+            box-shadow:0 6px 20px #004d00;
             margin-bottom:15px;
         }
         .btn-primary:hover{
             background:linear-gradient(135deg, var(--green-2) 0%, var(--green-dark) 100%);
-            box-shadow:0 8px 25px rgba(5,150,105,0.5);
+            box-shadow:0 8px 25px #004d00;
         }
         .btn-primary:disabled{
             background:#9ca3af;

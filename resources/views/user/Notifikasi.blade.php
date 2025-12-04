@@ -341,15 +341,7 @@
 
     <a href="{{ route('notifikasi.detail', ['type' => 'verifikasi']) }}" class="notification-item" role="alert" aria-label="Verifikasi Akun Pengguna Berhasil 2 September 2025">
       <div class="notif-header">
-        <div class="notif-title">
-          <div class="notif-icon info">
-            <i class="fas fa-user-check"></i>
-          </div>
-          <span class="notif-title-text">Verifikasi Akun Pengguna Berhasil</span>
-        </div>
-        <span class="date">02/09/2025</span>
-      </div>
-      <p>Selamat datang secara resmi di Pupuk & Bibit Subsidi! Kami senang sekali mengumumkan bahwa proses verifikasi akun Anda telah berhasil dan Anda dapat mulai menggunakan layanan kami.</p>
+        <span><i class="fa-check-circle"></i> Verifikasi Akun Pengguna Berhanang sekali mengumumkan bahwa proses verifikasi akun.....</p>
     </a>
 
     <div class="no-notifs" aria-live="polite" aria-atomic="true">
@@ -358,3 +350,7 @@
   </section>
 </main>
 @endsection
+sil</span>
+        <span class="date">02/09/2025</span>
+      </div>
+      <p>"Selamat datang secara resmi di [Nama Platform/Web Kamu]! 🎉 Kami se

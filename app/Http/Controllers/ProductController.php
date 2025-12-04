@@ -14,8 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return view('products.index', compact('products'));
+        $products = Product::with('primaryImage')->get();
+        return view('admin.products.index', compact('products'));
     }
 
     /**
@@ -23,7 +23,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        return view('admin.products.create');
     }
 
     /**
@@ -41,9 +41,10 @@ class ProductController extends Controller
             'stok_produk' => 'required|integer|min:0',
             'gambar' => 'required|array|min:1|max:5',
             'gambar.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'manfaat' => 'required|string',
-            'bahan' => 'required|string',
-            'cara_penggunaan' => 'required|string'
+            'deskripsi' => 'nullable|string',
+            'manfaat' => 'nullable|string',
+            'bahan' => 'nullable|string',
+            'cara_penggunaan' => 'nullable|string'
         ], [
             'nama_produk.required' => 'Nama produk wajib diisi',
             'tipe_produk.required' => 'Tipe produk wajib dipilih',
@@ -65,10 +66,7 @@ class ProductController extends Controller
             'gambar.*.required' => 'Setiap gambar wajib diisi',
             'gambar.*.image' => 'File harus berupa gambar',
             'gambar.*.mimes' => 'Format gambar harus: jpeg, png, jpg, atau gif',
-            'gambar.*.max' => 'Ukuran setiap gambar maksimal 2MB',
-            'manfaat.required' => 'Manfaat wajib diisi',
-            'bahan.required' => 'Bahan wajib diisi',
-            'cara_penggunaan.required' => 'Cara penggunaan wajib diisi'
+            'gambar.*.max' => 'Ukuran setiap gambar maksimal 2MB'
         ]);
 
         // Validasi tambahan: harga subsidi harus lebih kecil dari harga normal
@@ -96,9 +94,10 @@ class ProductController extends Controller
                 'harga_normal' => $validated['harga_normal'],
                 'stok_produk' => $validated['stok_produk'],
                 'gambar' => '', // Field ini akan deprecated, pakai relasi images
-                'manfaat' => $validated['manfaat'],
-                'bahan' => $validated['bahan'],
-                'cara_penggunaan' => $validated['cara_penggunaan']
+                'deskripsi' => $validated['deskripsi'] ?? null,
+                'manfaat' => $validated['manfaat'] ?? null,
+                'bahan' => $validated['bahan'] ?? null,
+                'cara_penggunaan' => $validated['cara_penggunaan'] ?? null
             ]);
 
             // Upload dan simpan gambar-gambar
@@ -149,7 +148,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        return view('admin.products.edit', compact('product'));
     }
 
     /**

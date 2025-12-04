@@ -25,7 +25,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pr
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process')->middleware('guest');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
 
 // Halaman reset password (view statis sementara)
 Route::get('/reset-password', function () {
@@ -67,6 +67,11 @@ Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
     
     // Halaman Konfirmasi Pesanan
     Route::post('/pupuk-bibit/{id}/konfirmasi', [PupukBibitController::class, 'confirmOrder'])->name('pupukbibit.konfirmasi');
+    
+    // Halaman Pesan Berhasil
+    Route::get('/pesan-berhasil', function () {
+        return view('user.pesan-berhasil');
+    })->name('pesan-berhasil');
 });
 
 Route::middleware('auth')->group(function () {
@@ -134,6 +139,6 @@ Route::prefix('admin')->group(function () {
 });
 
 // Routes untuk Manajemen Produk (Admin only - dilindungi middleware)
-Route::middleware('admin.auth')->group(function () {
+Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductController::class);
 });

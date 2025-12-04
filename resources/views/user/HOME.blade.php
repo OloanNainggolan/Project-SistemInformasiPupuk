@@ -107,7 +107,7 @@
 <style>
     /* Hero Section Styles */
     .hero-section {
-        background: linear-gradient(135deg, #065f46 0%, #059669 50%, #10b981 100%);
+        background: linear-gradient(135deg, #004d00 0%, #004d00 50%, #004d00 100%);
         color: white;
         padding: 100px 60px;
         min-height: 600px;
@@ -242,9 +242,9 @@
     
     .btn-secondary:hover {
         background: white;
-        color: #065f46;
-        box-shadow: 0 6px 20px rgba(255,255,255,0.25);
-        transform: translateY(-2px);
+        color: #004d00 50%;
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 40px rgba(255,255,255,0.4);
     }
     
     .btn-secondary:active {

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Pupuk & Bibit Subsidi')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
@@ -30,7 +31,7 @@
             right: 0;
             z-index: 1000;
             padding: 0;
-            border-bottom: 3px solid #10b981;
+            border-bottom: 3px solid #004d00;
         }
 
         .header-container {
@@ -57,13 +58,13 @@
         .logo {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+            box-shadow: 0 4px 15px #004d00;
         }
 
         .logo i {
@@ -73,7 +74,7 @@
 
         .logo-text h1 {
             font-size: 17px;
-            color: #065f46;
+            color: #004d00;
             font-weight: 700;
             margin: 0;
             letter-spacing: 0.3px;
@@ -81,7 +82,7 @@
 
         .logo-text p {
             font-size: 12px;
-            color: #059669;
+            color: #004d00;
             font-weight: 500;
             margin: 0;
         }
@@ -122,7 +123,7 @@
             left: 0;
             width: 0;
             height: 3px;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             transition: width 0.3s ease;
             border-radius: 10px 10px 0 0;
         }
@@ -140,11 +141,11 @@
 
         .nav-menu a:hover i {
             transform: scale(1.2);
-            color: #059669;
+            color: #047857;
         }
 
         .nav-menu a.active {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             color: white;
             box-shadow: 0 4px 15px rgba(16,185,129,0.3);
         }
@@ -178,7 +179,7 @@
         }
 
         .notification-icon i {
-            color: #10b981;
+            color: #004d00;
         }
 
         .notification-icon:hover {
@@ -189,7 +190,7 @@
 
         .notification-icon:hover i {
             transform: scale(1.2);
-            color: #059669;
+            color: #047857;
         }
 
         .notification-badge {
@@ -282,7 +283,7 @@
 
         .dropdown-item i {
             width: 20px;
-            color: #10b981;
+            color: #004d00;
             font-size: 16px;
         }
 
@@ -302,7 +303,7 @@
             width: 34px;
             height: 34px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -339,7 +340,7 @@
 
         .profile-role {
             font-size: 11px;
-            color: #059669;
+            color: #047857;
             font-weight: 500;
         }
 
@@ -377,7 +378,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981);
+            background: linear-gradient(90deg, #004d00, #047857, #065f46, #047857, #004d00);
             background-size: 200% 100%;
             animation: shimmer 3s linear infinite;
         }
@@ -453,9 +454,9 @@
         }
 
         .footer-social a:hover {
-            background: #10b981;
+            background: #004d00;
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 77, 0, 0.4);
         }
 
         .footer-section h3 {
@@ -474,7 +475,7 @@
             left: 0;
             width: 40px;
             height: 3px;
-            background: linear-gradient(90deg, #10b981, #34d399);
+            background: linear-gradient(90deg, #004d00, #047857);
             border-radius: 2px;
         }
 
@@ -503,7 +504,7 @@
 
         .footer-links i {
             width: 20px;
-            color: #10b981;
+            color: #004d00;
             font-size: 16px;
         }
 
@@ -518,7 +519,7 @@
         }
 
         .footer-contact-item i {
-            color: #10b981;
+            color: #004d00;
             font-size: 18px;
             margin-top: 2px;
             min-width: 20px;
@@ -541,14 +542,14 @@
         }
 
         .footer-bottom a {
-            color: #10b981;
+            color: #004d00;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s;
         }
 
         .footer-bottom a:hover {
-            color: #34d399;
+            color: #047857;
         }
 
         /* ========== RESPONSIVE ========== */

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
     .main-footer {
-        background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+        background: linear-gradient(135deg, #004d00);
         color: white;
         padding: 60px 0 0;
         margin-top: 0;
@@ -16,7 +16,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981);
+        background: linear-gradient(90deg, #004d00);
         background-size: 200% 100%;
         animation: shimmer 3s linear infinite;
     }
@@ -48,14 +48,14 @@
     .footer-logo-icon {
         width: 60px;
         height: 60px;
-        background: linear-gradient(135deg, #10b981, #059669);
+        background: linear-gradient(135deg, #004d00);
         border-radius: 15px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 8px 20px #004d00;
         margin-bottom: 10px;
-    }
+        }
 
     .footer-logo-icon i {
         font-size: 30px;
@@ -112,9 +112,9 @@
     }
     
     .footer-social-links a:hover {
-        background: #10b981;
+        background: #004d00;
         transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        box-shadow: 0 5px 15px #004d00;
     }
     
     .footer-section h3 {
@@ -133,7 +133,7 @@
         left: 0;
         width: 40px;
         height: 3px;
-        background: linear-gradient(90deg, #10b981, #34d399);
+        background: linear-gradient(90deg, #004d00);
         border-radius: 2px;
     }
     
@@ -164,7 +164,7 @@
 
     .footer-menu-list i {
         width: 20px;
-        color: #10b981;
+        color: #004d00;
         font-size: 16px;
     }
     
@@ -179,7 +179,7 @@
     }
     
     .footer-contact-icon {
-        color: #10b981;
+        color: #004d00;
         font-size: 18px;
         margin-top: 2px;
         min-width: 20px;
@@ -240,14 +240,14 @@
     }
 
     .footer-badge-text a {
-        color: #10b981;
+        color: #004d00;
         text-decoration: none;
         font-weight: 600;
         transition: color 0.3s;
     }
 
     .footer-badge-text a:hover {
-        color: #34d399;
+        color: #004d00;
     }
     
     @media (max-width: 1024px) {

@@ -88,7 +88,6 @@
         width: 52%;
         background-image: url("{{ asset('images/teh.png') }}");
         background-size: cover;
-        background-position: center center;
         background-repeat: no-repeat;
         height: 400px;
         border-radius: 24px;
