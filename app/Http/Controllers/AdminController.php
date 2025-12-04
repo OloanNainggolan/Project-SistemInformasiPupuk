@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Admin;
+use App\Models\Contact;
+use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -206,14 +208,29 @@ class AdminController extends Controller
     }
 
     /**
-     * Halaman kirim notifikasi
+     * Halaman kirim notifikasi & lihat pesan kontak
      */
     public function notifications()
     {
         $totalUsers = User::count();
-        $notificationsSent = 0; // Nanti bisa diambil dari database jika ada tabel notifications
         
-        return view('admin.notifications', compact('totalUsers', 'notificationsSent'));
+        // Ambil semua notifikasi (termasuk dari kontak)
+        $notifications = Notification::latest()->paginate(10);
+        
+        // Ambil pesan kontak terbaru
+        $contacts = Contact::with('user')->latest()->paginate(10);
+        
+        // Hitung notifikasi yang belum dibaca
+        $unreadCount = Notification::unread()->count();
+        $unreadContactsCount = Contact::where('status', 'unread')->count();
+        
+        return view('admin.notifications', compact(
+            'totalUsers', 
+            'notifications', 
+            'contacts',
+            'unreadCount',
+            'unreadContactsCount'
+        ));
     }
 
     /**
@@ -370,5 +387,50 @@ class AdminController extends Controller
         ]);
         
         return redirect()->route('admin.login')->with('success', 'Anda telah logout');
+    }
+
+    /**
+     * Tandai pesan kontak sebagai sudah dibaca
+     */
+    public function markContactAsRead($id)
+    {
+        $contact = Contact::findOrFail($id);
+        $contact->status = 'read';
+        $contact->save();
+
+        return redirect()->route('admin.notifications')
+            ->with('success', 'Pesan ditandai sudah dibaca!');
+    }
+
+    /**
+     * Hapus pesan kontak
+     */
+    public function deleteContact($id)
+    {
+        $contact = Contact::findOrFail($id);
+        
+        // Hapus notifikasi terkait jika ada
+        Notification::where('related_id', $contact->id)
+            ->where('type', 'contact')
+            ->delete();
+        
+        // Hapus contact
+        $contact->delete();
+
+        return redirect()->route('admin.notifications')
+            ->with('success', 'Pesan berhasil dihapus!');
+    }
+
+    /**
+     * Tandai notifikasi sebagai sudah dibaca
+     */
+    public function markNotificationAsRead($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->status = 'read';
+        $notification->save();
+
+        return redirect()->route('admin.notifications')
+            ->with('success', 'Notifikasi ditandai sudah dibaca!');
     }
 }

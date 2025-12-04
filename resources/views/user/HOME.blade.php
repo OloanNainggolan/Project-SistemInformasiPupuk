@@ -34,67 +34,74 @@
 </section>
 
 <!-- ====== FITUR SECTION ====== -->
-<section style="text-align:center; padding:80px 60px; background-color:#f8fdf8;">
-    <h2 style="font-size:2.2rem; font-weight:bold; color:#2d7a3e; margin-bottom:15px;">Pupuk dan Bibit Bersubsidi Pemerintah</h2>
-    <p style="color:#555; margin-bottom:50px; font-size:1.05rem; max-width:800px; margin-left:auto; margin-right:auto;">Platform terpercaya untuk mendapatkan pupuk dan bibit bersubsidi dengan mudah dan transparan</p>
-
-    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:35px; max-width:1300px; margin:0 auto;">
-        
-        <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #ffb74d;">
-            <div style="width:70px; height:70px; margin:0 auto 20px; background:#e8c4c4; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_box.png') }}" alt="Pemesanan Mudah" style="width:35px; height:35px; object-fit:contain;">
-            </div>
-            <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Pemesanan Mudah</h3>
-            <p style="color:#666; line-height:1.6; font-size:0.95rem;">Pesan pupuk dan bibit subsidi secara online, ambil di Balai Desa terdekat.</p>
+<section class="features-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Pupuk dan Bibit Bersubsidi Pemerintah</h2>
+            <p>Platform terpercaya untuk mendapatkan pupuk dan bibit bersubsidi dengan mudah dan transparan</p>
         </div>
 
-        <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #64b5f6;">
-            <div style="width:70px; height:70px; margin:0 auto 20px; background:#c4dff5; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_notif.png') }}" alt="Notifikasi" style="width:35px; height:35px; object-fit:contain;">
+        <div class="features-grid">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="feature-icon" style="background:#ffe6e6;">
+                    <img src="{{ asset('images/logo_box.png') }}" alt="Pemesanan Mudah">
+                </div>
+                <h3>Pemesanan Mudah</h3>
+                <p>Pesan pupuk dan bibit subsidi secara online, ambil di Balai Desa terdekat.</p>
             </div>
-            <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Notifikasi Langsung</h3>
-            <p style="color:#666; line-height:1.6; font-size:0.95rem;">Dapatkan update status pesanan langsung melalui notifikasi real-time.</p>
-        </div>
 
-        <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #ba68c8;">
-            <div style="width:70px; height:70px; margin:0 auto 20px; background:#dcc8e8; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_ambil.png') }}" alt="Ambil" style="width:35px; height:35px; object-fit:contain;">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-icon" style="background:#e3f2fd;">
+                    <img src="{{ asset('images/logo_notif.png') }}" alt="Notifikasi">
+                </div>
+                <h3>Notifikasi Langsung</h3>
+                <p>Dapatkan update status pesanan langsung melalui notifikasi real-time.</p>
             </div>
-            <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Ambil di Balai Desa</h3>
-            <p style="color:#666; line-height:1.6; font-size:0.95rem;">Pilih Balai Desa terdekat untuk mengambil pesanan Anda dengan mudah.</p>
-        </div>
 
-        <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #ffb74d;">
-            <div style="width:70px; height:70px; margin:0 auto 20px; background:#f5eac8; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_harga.png') }}" alt="Harga" style="width:35px; height:35px; object-fit:contain;">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-icon" style="background:#f3e5f5;">
+                    <img src="{{ asset('images/logo_ambil.png') }}" alt="Ambil">
+                </div>
+                <h3>Ambil di Balai Desa</h3>
+                <p>Pilih Balai Desa terdekat untuk mengambil pesanan Anda dengan mudah.</p>
             </div>
-            <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Harga Subsidi</h3>
-            <p style="color:#666; line-height:1.6; font-size:0.95rem;">Dapatkan pupuk dan bibit dengan harga terjangkau berkat subsidi pemerintah.</p>
-        </div>
 
-        <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #81c784;">
-            <div style="width:70px; height:70px; margin:0 auto 20px; background:#d0ecd0; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_kualitas.png') }}" alt="Kualitas" style="width:35px; height:35px; object-fit:contain;">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-icon" style="background:#fff8e1;">
+                    <img src="{{ asset('images/logo_harga.png') }}" alt="Harga">
+                </div>
+                <h3>Harga Subsidi</h3>
+                <p>Dapatkan pupuk dan bibit dengan harga terjangkau berkat subsidi pemerintah.</p>
             </div>
-            <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Kualitas Terjamin</h3>
-            <p style="color:#666; line-height:1.6; font-size:0.95rem;">Semua produk sudah tersertifikasi dan terjamin kualitasnya.</p>
-        </div>
 
-        <div style="background:white; padding:35px 25px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; border-top:4px solid #a1887f;">
-            <div style="width:70px; height:70px; margin:0 auto 20px; background:#dcccc4; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo_parapetani.png') }}" alt="Petani" style="width:35px; height:35px; object-fit:contain;">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-icon" style="background:#e8f5e9;">
+                    <img src="{{ asset('images/logo_kualitas.png') }}" alt="Kualitas">
+                </div>
+                <h3>Kualitas Terjamin</h3>
+                <p>Semua produk sudah tersertifikasi dan terjamin kualitasnya.</p>
             </div>
-            <h3 style="color:#2d7a3e; font-weight:600; margin-bottom:12px; font-size:1.2rem;">Para Petani</h3>
-            <p style="color:#666; line-height:1.6; font-size:0.95rem;">Dirancang khusus untuk membantu petani Indonesia meningkatkan hasil panen.</p>
+
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                <div class="feature-icon" style="background:#efebe9;">
+                    <img src="{{ asset('images/logo_parapetani.png') }}" alt="Petani">
+                </div>
+                <h3>Para Petani</h3>
+                <p>Dirancang khusus untuk membantu petani Indonesia meningkatkan hasil panen.</p>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ====== CTA SECTION ====== -->
-<section style="text-align:center; padding:70px 60px 70px; background:linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-bottom:0;">
-    <h3 style="font-size:2rem; font-weight:bold; color:#2d7a3e; margin-bottom:20px;">Siap Meningkatkan Hasil Panen?</h3>
-    <p style="color:#555; margin-bottom:35px; font-size:1.05rem; max-width:700px; margin-left:auto; margin-right:auto;">Bergabunglah dengan ribuan petani Indonesia yang sudah merasakan manfaatnya</p>
-    <a href="{{ route('register') }}" style="padding:16px 45px; background:#2d7a3e; color:white; text-decoration:none; border-radius:12px; font-weight:600; font-size:1.05rem; display:inline-block; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(45,122,62,0.3);">Mulai Sekarang</a>
+<section class="cta-section">
+    <div class="cta-content">
+        <h3>Siap Meningkatkan Hasil Panen?</h3>
+        <p>Bergabunglah dengan ribuan petani Indonesia yang sudah merasakan manfaatnya</p>
+        <a href="{{ route('register') }}" class="cta-btn">
+            Mulai Sekarang
+        </a>
+    </div>
 </section>
 
 <style>
@@ -196,64 +203,41 @@
         align-items: center;
         gap: 10px;
         padding: 16px 36px;
-        border-radius: 50px;
+        border-radius: 12px;
         text-decoration: none;
-        font-weight: 700;
+        font-weight: 600;
         font-size: 16px;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
-        overflow: hidden;
-        letter-spacing: 0.5px;
-    }
-    
-    .btn::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-    }
-    
-    .btn:hover::before {
-        width: 300px;
-        height: 300px;
+        transition: all 0.3s ease;
+        letter-spacing: 0.3px;
     }
     
     .btn i {
-        font-size: 18px;
-        transition: transform 0.3s ease;
-    }
-    
-    .btn:hover i {
-        transform: translateX(5px);
+        font-size: 16px;
     }
     
     .btn-primary {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        background: #fbbf24;
         color: #000;
-        box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5);
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
         border: none;
     }
     
     .btn-primary:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 15px 40px rgba(251, 191, 36, 0.7);
+        background: #f59e0b;
+        box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+        transform: translateY(-2px);
     }
     
     .btn-primary:active {
-        transform: translateY(-2px) scale(1.02);
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
     }
     
     .btn-secondary {
         background: transparent;
         color: white;
-        border: 3px solid white;
-        box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        border: 2px solid white;
+        box-shadow: 0 4px 15px rgba(255,255,255,0.15);
     }
     
     .btn-secondary:hover {
@@ -264,7 +248,8 @@
     }
     
     .btn-secondary:active {
-        transform: translateY(-2px) scale(1.02);
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(255,255,255,0.2);
     }
     
     .hero-image {
@@ -304,14 +289,172 @@
         animation: rotate 20s linear infinite;
     }
 
-    /* Feature Cards Hover - Only for feature cards, not hero section */
-    section:not(.hero-section) > div > div[style*="background:white"] {
-        cursor: pointer;
+    /* Features Section */
+    .features-section {
+        background: #f8fdf8;
+        padding: 90px 60px;
     }
     
-    section:not(.hero-section) > div > div[style*="background:white"]:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 35px rgba(0,0,0,0.15) !important;
+    .container {
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+    
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #065f46;
+        margin-bottom: 18px;
+        letter-spacing: -0.5px;
+    }
+    
+    .section-header p {
+        font-size: 1.15rem;
+        color: #6b7280;
+        max-width: 850px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 35px;
+    }
+    
+    .feature-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-top: 4px solid transparent;
+        cursor: pointer;
+        text-align: center;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        border-top-color: #059669;
+    }
+    
+    .feature-card:nth-child(1) { border-top-color: #ffb74d; }
+    .feature-card:nth-child(2) { border-top-color: #64b5f6; }
+    .feature-card:nth-child(3) { border-top-color: #ba68c8; }
+    .feature-card:nth-child(4) { border-top-color: #ffb74d; }
+    .feature-card:nth-child(5) { border-top-color: #81c784; }
+    .feature-card:nth-child(6) { border-top-color: #a1887f; }
+    
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: scale(1.15) rotate(5deg);
+    }
+    
+    .feature-icon img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #065f46;
+        margin-bottom: 14px;
+        line-height: 1.3;
+    }
+    
+    .feature-card p {
+        font-size: 1rem;
+        color: #6b7280;
+        line-height: 1.7;
+        margin: 0;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        padding: 90px 60px;
+        margin: 0;
+    }
+    
+    .cta-content {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .cta-content h3 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #065f46;
+        margin-bottom: 22px;
+        letter-spacing: -0.5px;
+    }
+    
+    .cta-content p {
+        font-size: 1.2rem;
+        color: #374151;
+        margin-bottom: 40px;
+        line-height: 1.8;
+    }
+    
+    .cta-btn {
+        display: inline-block;
+        padding: 18px 50px;
+        background: #065f46;
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 15px rgba(6, 95, 70, 0.25);
+        transition: all 0.3s ease;
+        letter-spacing: 0.3px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cta-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        transition: left 0.5s ease;
+    }
+    
+    .cta-btn:hover {
+        background: #047857;
+        box-shadow: 0 6px 20px rgba(6, 95, 70, 0.35);
+        transform: translateY(-2px);
+    }
+    
+    .cta-btn:hover::before {
+        left: 100%;
+    }
+    
+    .cta-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(6, 95, 70, 0.3);
     }
     
     /* Responsive */
@@ -319,6 +462,8 @@
         .hero-content {
             flex-direction: column;
             text-align: center;
+            gap: 50px;
+            padding: 80px 40px 50px;
         }
         
         .hero-text {
@@ -333,11 +478,20 @@
             width: 380px;
             height: 380px;
         }
+        
+        .features-section, .cta-section {
+            padding: 70px 40px;
+        }
+        
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
     }
     
     @media (max-width: 768px) {
         .hero-section {
-            padding: 60px 30px;
+            padding: 50px 30px;
             min-height: auto;
         }
         
@@ -358,26 +512,82 @@
             padding: 14px 28px;
             font-size: 15px;
         }
+        
+        .section-header h2 {
+            font-size: 2rem;
+        }
+        
+        .section-header p {
+            font-size: 1rem;
+        }
+        
+        .features-section, .cta-section {
+            padding: 60px 30px;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        .cta-content h3 {
+            font-size: 2rem;
+        }
+        
+        .cta-content p {
+            font-size: 1.05rem;
+        }
     }
     
     @media (max-width: 480px) {
+        .hero-section {
+            padding: 40px 20px;
+        }
+        
+        .hero-content {
+            padding: 60px 20px 40px;
+        }
+        
         .hero-title {
             font-size: 2.2rem;
+        }
+        
+        .hero-description {
+            font-size: 0.95rem;
         }
         
         .hero-buttons {
             flex-direction: column;
             width: 100%;
+            gap: 15px;
         }
         
         .btn {
             width: 100%;
             justify-content: center;
+            padding: 16px 24px;
         }
         
         .image-wrapper {
-            width: 280px;
-            height: 280px;
+            width: 260px;
+            height: 260px;
+        }
+        
+        .features-section, .cta-section {
+            padding: 50px 20px;
+        }
+        
+        .feature-card {
+            padding: 30px 20px;
+        }
+        
+        .cta-content h3 {
+            font-size: 1.75rem;
+        }
+        
+        .cta-btn {
+            padding: 16px 36px;
+            font-size: 1rem;
         }
     }
 </style>

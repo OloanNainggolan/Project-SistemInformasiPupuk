@@ -89,7 +89,6 @@
         background-image: url("{{ asset('images/teh.png') }}");
         background-size: cover;
         background-repeat: no-repeat;
-        background-position: center;
         height: 400px;
         border-radius: 24px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.3), 
@@ -97,7 +96,7 @@
         position: relative;
         overflow: hidden;
         border: 3px solid rgba(255,255,255,0.15);
-        background-color: rgba(0, 0, 0, 0.05);
+        display: block;
     }
 
     .hero-image::after {
@@ -197,123 +196,131 @@
 
     /* Mengapa Memilih */
     .why-choose-us {
-        padding: 60px 0;
+        padding: 90px 60px;
         text-align: center;
         background-color: #f9fafb;
     }
 
     .why-choose-us h2 {
-        font-size: 2.2em;
-        margin-bottom: 15px;
-        color: #1a5f3a;
-        font-weight: 700;
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #065f46;
+        font-weight: 800;
+        letter-spacing: -0.5px;
     }
 
     .subtitle-text {
         max-width: 850px;
-        margin: 0 auto 50px;
-        color: #4b5563;
-        font-size: 1.15em;
+        margin: 0 auto 60px;
+        color: #6b7280;
+        font-size: 1.2em;
         line-height: 1.8;
     }
 
     .cards-container {
-        display: flex;
-        justify-content: center;
-        gap: 35px;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
     .card-choice {
         background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 35px 30px;
-        max-width: 45%;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 40px 35px;
         text-align: left;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card-choice:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        border-color: #10b981;
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        border-color: #059669;
     }
 
     .card-icon {
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2em;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        font-size: 2.2em;
+        margin-bottom: 24px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         transition: all 0.3s ease;
     }
 
     .card-choice:hover .card-icon {
-        transform: scale(1.1);
+        transform: scale(1.15) rotate(5deg);
     }
     
     .card-icon.pupuk {
         color: white;
-        background: #10b981;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     }
     
     .card-icon.bibit {
         color: white;
-        background: #3b82f6;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     }
 
     .card-choice h3 {
         margin-top: 0;
-        margin-bottom: 15px;
-        font-size: 1.6em;
-        color: #1f2937;
+        margin-bottom: 18px;
+        font-size: 1.75em;
+        color: #065f46;
         font-weight: 800;
+        letter-spacing: -0.3px;
     }
     
     .card-choice p { 
         color: #6b7280;
-        line-height: 1.8;
-        font-size: 1.05em;
+        line-height: 1.9;
+        font-size: 1.08em;
+        margin: 0;
     }
 
     /* Visi & Misi */
     .vm-section {
-        background: #1a4d1a;
+        background: linear-gradient(135deg, #065f46 0%, #047857 100%);
         color: white;
-        padding: 60px 0;
+        padding: 90px 60px;
     }
 
     .vm-section h2 {
-        font-size: 2.5em;
+        font-size: 2.8em;
         text-align: center;
-        margin-bottom: 40px;
-        font-weight: 700;
+        margin-bottom: 60px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
     }
 
     .vm-content {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
         gap: 50px;
-        padding: 0 50px;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
     .vm-vision, .vm-mission {
-        width: 50%;
-        background: rgba(255, 255, 255, 0.08);
-        padding: 35px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        border-radius: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
     }
 
     .vm-vision:hover, .vm-mission:hover {
-        background: rgba(255, 255, 255, 0.12);
-        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
     }
 
     .vm-vision h3, .vm-mission h3 {
@@ -347,43 +354,45 @@
 
     /* Fitur Keunggulan */
     .feature-cards-section {
-        padding: 60px 0 40px;
+        padding: 90px 60px;
         background: white;
     }
 
     .feature-grid {
-        display: flex;
-        justify-content: space-around;
-        gap: 25px;
-        margin-bottom: 40px;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto 50px;
     }
 
     .feature-card {
         text-align: center;
-        max-width: 200px;
         transition: all 0.3s ease;
+        padding: 20px;
+        border-radius: 12px;
     }
 
     .feature-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-10px);
+        background: #f9fafb;
     }
     
     .feature-icon-circle {
-        width: 75px;
-        height: 75px;
+        width: 85px;
+        height: 85px;
         border-radius: 50%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.2em;
-        margin: 0 auto 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-size: 2.4em;
+        margin: 0 auto 18px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
         transition: all 0.3s ease;
     }
 
     .feature-card:hover .feature-icon-circle {
-        transform: scale(1.1);
+        transform: scale(1.15) rotate(5deg);
     }
     
     .feature-icon-circle.green { 
@@ -404,41 +413,46 @@
     }
 
     .feature-card h4 { 
-        font-size: 1.2em; 
-        margin-bottom: 8px; 
-        color: #1f2937;
-        font-weight: 700;
+        font-size: 1.25em; 
+        margin-bottom: 12px; 
+        color: #065f46;
+        font-weight: 800;
+        letter-spacing: -0.3px;
     }
     .feature-card p { 
-        font-size: 0.95em; 
+        font-size: 1em; 
         color: #6b7280;
         font-weight: 500;
+        line-height: 1.6;
     }
 
     /* Product Cards Detail */
     .product-cards-detail {
-        padding: 0 0 60px;
+        padding: 90px 60px;
         background: #f7f9fc;
     }
     
     .product-grid-detail {
-        display: flex;
-        gap: 40px;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 50px;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
     .product-card-detail {
         background: white;
-        border-radius: 16px;
+        border-radius: 20px;
         overflow: hidden;
-        max-width: 500px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
     }
 
     .product-card-detail:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        border-color: #059669;
     }
 
     .detail-image {
@@ -556,6 +570,8 @@
         .hero-image {
             height: 340px;
             border-radius: 20px;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
@@ -606,6 +622,8 @@
             height: 320px;
             border-radius: 18px;
             margin-bottom: 0;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
@@ -678,6 +696,8 @@
         .hero-image {
             height: 260px;
             border-radius: 16px;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
@@ -761,6 +781,8 @@
         .hero-image {
             height: 220px;
             border-radius: 14px;
+            background-size: cover;
+            background-position: center center;
         }
 
         .welcome-text {
