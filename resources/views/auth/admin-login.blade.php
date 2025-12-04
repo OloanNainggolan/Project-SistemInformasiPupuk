@@ -1,59 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login Admin - Pupuk & Bibit Subsidi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CSS Variables - Mengikuti tema user login */
-        :root {
-            --green-dark: #065f46;
-            --green: #059669;
-            --green-2: #047857;
-            --green-light: #10b981;
-            --mint: #ecfdf5;
-            --line: #d1d5db;
-            --text: #111827;
-            --muted: #6b7280;
-            --white: #ffffff;
-            --error: #ef4444;
-            --success: #10b981;
-            --gold: #fbbf24;
-        }
-
-        /* Reset & Global Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html, body {
-            height: 100%;
-        }
-
         body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Animations */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Animated Background Particles */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 137, 123, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 15s ease-in-out infinite;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 105, 92, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -200px;
+            animation: float 12s ease-in-out infinite reverse;
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         @keyframes pulse {
@@ -61,964 +75,721 @@
             50% { transform: scale(1.05); }
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
-
-        /* Main Container - Grid Layout seperti user login */
-        .wrap {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            animation: fadeIn 0.5s ease;
-        }
-
-        /* Left Column - Admin Branding */
-        .left {
-            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 48px 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .left::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        /* Floating particles animation */
-        .left::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.15) 2px, transparent 2px),
-                radial-gradient(circle at 60% 30%, rgba(255,255,255,0.1) 3px, transparent 3px),
-                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.12) 2px, transparent 2px),
-                radial-gradient(circle at 40% 80%, rgba(255,255,255,0.08) 4px, transparent 4px);
-            background-size: 200% 200%;
-            animation: floatParticles 15s ease-in-out infinite;
-        }
-
-        @keyframes floatParticles {
+        @keyframes glowPulse {
             0%, 100% { 
-                background-position: 0% 0%, 100% 100%, 50% 50%, 75% 25%; 
-            }
-            25% { 
-                background-position: 100% 0%, 0% 100%, 25% 75%, 50% 50%; 
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
+                            0 0 40px rgba(0, 137, 123, 0.3);
             }
             50% { 
-                background-position: 100% 100%, 0% 0%, 75% 25%, 25% 75%; 
-            }
-            75% { 
-                background-position: 0% 100%, 100% 0%, 50% 50%, 75% 75%; 
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3),
+                            0 0 60px rgba(0, 137, 123, 0.5);
             }
         }
 
-        .left-inner {
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        /* Left Side - Green Theme for Admin */
+        .left-side {
+            background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .left-side::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            top: -150px;
+            right: -100px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .left-side::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -80px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        .logo-section {
             text-align: center;
-            max-width: 420px;
             position: relative;
             z-index: 1;
         }
 
-        /* Admin Shield Icon with glow effect */
-        .admin-shield-wrapper {
-            width: 140px;
-            height: 140px;
+        .logo-circle {
+            width: 150px;
+            height: 150px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 25px auto;
-            background: white;
-            box-shadow: 
-                0 10px 30px rgba(0,0,0,0.3),
-                0 0 40px rgba(251, 191, 36, 0.3);
-            animation: slideIn 0.8s ease, glowPulse 3s ease-in-out infinite;
+            margin: 0 auto 30px;
+            animation: pulse 3s ease-in-out infinite, glowPulse 3s ease-in-out infinite;
             position: relative;
+            overflow: hidden;
+            padding: 0;
         }
 
-        .admin-shield-wrapper::before {
+        .logo-circle::before {
             content: '';
             position: absolute;
-            inset: -3px;
+            inset: -5px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--gold), #f59e0b, var(--gold));
-            background-size: 200% 200%;
-            animation: rotateBorder 3s linear infinite;
-            z-index: -1;
-            opacity: 0.6;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 137, 123, 0.5), transparent);
+            animation: rotate 3s linear infinite;
         }
 
-        @keyframes glowPulse {
-            0%, 100% { 
-                box-shadow: 
-                    0 10px 30px rgba(0,0,0,0.3),
-                    0 0 40px rgba(251, 191, 36, 0.3);
-            }
-            50% { 
-                box-shadow: 
-                    0 15px 40px rgba(0,0,0,0.4),
-                    0 0 60px rgba(251, 191, 36, 0.5);
-            }
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 1;
+            border-radius: 50%;
         }
 
-        @keyframes rotateBorder {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .admin-shield {
+        .logo-circle i {
             font-size: 70px;
-            background: linear-gradient(135deg, var(--gold) 0%, #f59e0b 50%, var(--gold) 100%);
+            background: linear-gradient(135deg, #00897b 0%, #26a69a 50%, #00897b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: pulse 2s ease-in-out infinite;
-            filter: drop-shadow(0 2px 8px rgba(251, 191, 36, 0.4));
-        }
-
-        .brand-title {
-            font-size: 28px;
-            line-height: 1.4;
-            letter-spacing: 0.5px;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            animation: slideIn 1s ease;
-            background: linear-gradient(to right, #ffffff, #f0fdf4, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% auto;
-            animation: slideIn 1s ease, shimmerText 3s linear infinite;
-        }
-
-        @keyframes shimmerText {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        .brand-subtitle {
-            margin-top: 15px;
-            font-size: 16px;
-            opacity: 0.9;
-            font-weight: 400;
-            animation: slideIn 1.2s ease;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 2px 8px rgba(0, 137, 123, 0.3));
         }
 
         .admin-badge {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px 24px;
-            background: rgba(251, 191, 36, 0.15);
-            border: 2px solid var(--gold);
-            border-radius: 50px;
-            font-size: 13px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 25px;
+            font-size: 12px;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            animation: slideIn 1.4s ease, badgeGlow 2s ease-in-out infinite;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+            margin-bottom: 20px;
+            animation: slideInLeft 1s ease-out 0.2s both;
+            box-shadow: 0 4px 15px rgba(0, 137, 123, 0.2);
         }
 
-        @keyframes badgeGlow {
-            0%, 100% { 
-                box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
-                border-color: var(--gold);
-            }
-            50% { 
-                box-shadow: 0 6px 25px rgba(251, 191, 36, 0.4);
-                border-color: #fbbf24;
-            }
+        .left-side h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            animation: slideInLeft 1s ease-out 0.4s both;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        /* Decorative elements on left */
-        .deco-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: float 6s ease-in-out infinite;
+        .left-side p {
+            font-size: 16px;
+            text-align: center;
+            opacity: 0.95;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            animation: slideInLeft 1s ease-out 0.6s both;
         }
 
-        .deco-circle:nth-child(1) {
-            width: 60px;
-            height: 60px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
+        .features {
+            width: 100%;
+            max-width: 350px;
         }
 
-        .deco-circle:nth-child(2) {
-            width: 40px;
-            height: 40px;
-            top: 70%;
-            left: 15%;
-            animation-delay: 1s;
-        }
-
-        .deco-circle:nth-child(3) {
-            width: 50px;
-            height: 50px;
-            top: 30%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .deco-circle:nth-child(4) {
-            width: 35px;
-            height: 35px;
-            bottom: 15%;
-            right: 20%;
-            animation-delay: 1.5s;
-        }
-
-        @keyframes float {
-            0%, 100% { 
-                transform: translateY(0) scale(1);
-                opacity: 0.3;
-            }
-            50% { 
-                transform: translateY(-20px) scale(1.1);
-                opacity: 0.6;
-            }
-        }
-
-        /* Right Column - Form */
-        .right {
-            background: transparent;
+        .feature-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 40px 24px;
-            position: relative;
-        }
-
-        /* Subtle background pattern */
-        .right::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(45deg, transparent 48%, rgba(6, 95, 70, 0.02) 49%, rgba(6, 95, 70, 0.02) 51%, transparent 52%),
-                linear-gradient(-45deg, transparent 48%, rgba(6, 95, 70, 0.02) 49%, rgba(6, 95, 70, 0.02) 51%, transparent 52%);
-            background-size: 40px 40px;
-            opacity: 0.5;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 460px;
-            background: white;
-            padding: 45px 40px;
-            border-radius: 20px;
-            box-shadow: 
-                0 20px 60px rgba(0,0,0,0.15),
-                0 0 0 1px rgba(6, 95, 70, 0.05) inset;
-            animation: slideIn 0.6s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--green-dark), var(--green), var(--gold), var(--green), var(--green-dark));
-            background-size: 200% 100%;
-            animation: gradientMove 3s ease infinite;
-        }
-
-        @keyframes gradientMove {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* Back Button */
-        .back {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            z-index: 9999;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-            border: 2px solid rgba(6, 95, 70, 0.2);
-            border-radius: 50px;
-            color: var(--green-dark);
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 700;
+            gap: 15px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,.1);
+            animation: slideInLeft 0.6s ease-out both;
         }
 
-        .back:hover {
-            background: linear-gradient(135deg, var(--green) 0%, var(--green-2) 100%);
-            color: white;
-            border-color: var(--green);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(5,150,105,0.3);
+        .feature-item:nth-child(1) { animation-delay: 0.8s; }
+        .feature-item:nth-child(2) { animation-delay: 0.95s; }
+        .feature-item:nth-child(3) { animation-delay: 1.1s; }
+        .feature-item:nth-child(4) { animation-delay: 1.25s; }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .back i {
+        .feature-item i {
+            font-size: 24px;
             transition: transform 0.3s ease;
         }
 
-        .back:hover i {
-            transform: translateX(-3px);
+        .feature-item:hover i {
+            transform: scale(1.2) rotate(5deg);
         }
 
-        /* Form Header */
-        .form-header {
-            text-align: center;
-            margin-bottom: 35px;
-            position: relative;
-        }
-
-        .form-header::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--green), transparent);
-            margin: 15px auto 0;
-            border-radius: 2px;
-        }
-
-        .form-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--green-dark);
-            margin-bottom: 8px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .form-title::before {
-            content: '🛡️';
-            margin-right: 10px;
-            font-size: 24px;
-            vertical-align: middle;
-        }
-
-        .form-desc {
-            font-size: 14px;
-            color: var(--muted);
-        }
-
-        /* Alert Messages - Konsisten dengan user login */
-        .alert {
-            padding: 14px 18px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            font-size: 14px;
+        .feature-item span {
+            font-size: 15px;
             font-weight: 500;
+        }
+
+        /* Right Side - Form */
+        .right-side {
+            background: white;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            color: #424242;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .back-button:hover {
+            background: #00897b;
+            color: white;
+            border-color: #00897b;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(0, 137, 123, 0.3);
+        }
+
+        .form-header {
+            margin-bottom: 35px;
+            animation: slideInRight 1s ease-out 0.3s both;
+        }
+
+        .form-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #212121;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 12px;
-            animation: slideIn 0.4s ease;
         }
 
-        .alert-danger {
-            background: #fee2e2;
-            color: #991b1b;
-            border-left: 4px solid var(--error);
+        .form-header h2 i {
+            color: #00897b;
+        }
+
+        .form-header p {
+            font-size: 15px;
+            color: #757575;
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
         }
 
         .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border-left: 4px solid var(--success);
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
         }
 
-        .alert-info {
-            background: #dbeafe;
-            color: #1e40af;
-            border-left: 4px solid #3b82f6;
+        .info-box {
+            background: #fff3e0;
+            border: 1px solid #ffb74d;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: #e65100;
+            animation: slideInRight 1s ease-out 0.5s both;
         }
 
-        .alert i {
-            font-size: 18px;
+        .info-box a {
+            color: #00897b;
+            font-weight: 600;
+            text-decoration: none;
         }
 
-        /* Form Elements - Sama seperti user login */
-        form label {
+        .info-box a:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            animation: slideInRight 0.6s ease-out both;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.7s; }
+        .form-group:nth-child(2) { animation-delay: 0.85s; }
+
+        .form-group label {
             display: block;
             font-size: 14px;
-            color: var(--text);
-            margin-bottom: 8px;
             font-weight: 600;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
+            color: #424242;
+            margin-bottom: 8px;
         }
 
         .input-wrapper {
             position: relative;
         }
 
-        .input-icon {
+        .input-wrapper input {
+            width: 100%;
+            height: 50px;
+            padding: 0 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #212121;
+            background: #fafafa;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            background: white;
+            border-color: #00897b;
+            box-shadow: 0 0 0 4px rgba(0, 137, 123, 0.1);
+        }
+
+        .input-wrapper input.error {
+            border-color: #ef5350;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .input-wrapper i {
             position: absolute;
-            left: 14px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--muted);
+            color: #9e9e9e;
             font-size: 18px;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper input:focus ~ i {
+            color: #00897b;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9e9e9e;
+            cursor: pointer;
+            font-size: 18px;
+            pointer-events: all;
             transition: all 0.3s ease;
         }
 
-        .field {
-            width: 100%;
-            height: 48px;
-            border: 2px solid var(--line);
-            border-radius: 10px;
-            background: white;
-            padding: 0 14px 0 44px;
-            font-size: 15px;
-            outline: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .field:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 4px rgba(5,150,105,0.1);
-            transform: translateY(-1px);
-        }
-
-        .field:focus + .input-icon {
-            color: var(--green);
+        .toggle-password:hover {
+            color: #00897b;
             transform: translateY(-50%) scale(1.1);
         }
 
-        .field.error {
-            border-color: var(--error);
-        }
-
-        .field-error-msg {
-            color: var(--error);
+        .error-msg {
+            color: #c62828;
             font-size: 13px;
-            margin-top: 6px;
+            margin-top: 5px;
             display: none;
             font-weight: 500;
         }
 
-        .field-error-msg.show {
+        .error-msg.show {
             display: block;
-            animation: slideIn 0.3s ease;
-        }
-
-        /* Buttons - Tema hijau */
-        .btn {
-            width: 100%;
-            height: 50px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn:active {
-            transform: translateY(2px);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--green) 0%, var(--green-2) 100%);
+            width: 100%;
+            height: 52px;
+            background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
             color: white;
-            box-shadow: 0 6px 20px rgba(5,150,105,0.4);
-            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(0, 137, 123, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: slideInRight 0.6s ease-out 1s both;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, var(--green-2) 0%, var(--green-dark) 100%);
-            box-shadow: 0 8px 25px rgba(5,150,105,0.5);
+            background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
+            box-shadow: 0 12px 30px rgba(0, 137, 123, 0.4);
             transform: translateY(-2px);
         }
 
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
         .btn-primary:disabled {
-            background: #9ca3af;
+            background: #bdbdbd;
             cursor: not-allowed;
             box-shadow: none;
         }
 
-        .btn-primary span,
-        .btn-primary i {
+        .links {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            animation: slideInRight 0.6s ease-out 1.1s both;
+        }
+
+        .links a {
+            color: #00897b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
             position: relative;
-            z-index: 1;
         }
 
-        /* Info Boxes */
-        .info-box {
-            padding: 14px 18px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: 500;
+        .links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00695c;
+            transition: width 0.3s ease;
         }
 
-        .credentials-info {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border: 2px solid #7dd3fc;
-            color: #0c4a6e;
+        .links a:hover {
+            color: #00695c;
         }
 
-        .credentials-info strong {
-            color: #075985;
+        .links a:hover::after {
+            width: 100%;
         }
 
-        .user-info {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 2px solid var(--gold);
-            color: #78350f;
-        }
-
-        .user-info a {
-            color: var(--green-dark);
-            font-weight: 700;
-            text-decoration: none;
-            border-bottom: 2px solid var(--green);
-            transition: all 0.3s;
-            padding-bottom: 1px;
-        }
-
-        .user-info a:hover {
-            color: var(--green-2);
-            border-bottom-color: var(--green-2);
-        }
-
-        /* Already Logged In Box */
-        .already-logged-in {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            border: 2px solid var(--green-light);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-
-        .already-logged-in h3 {
-            color: var(--green-dark);
-            font-size: 20px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .already-logged-in p {
-            color: var(--green-2);
-            font-size: 15px;
-            margin-bottom: 18px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-dashboard {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, var(--green) 0%, var(--green-2) 100%);
-            color: white;
-            border-radius: 10px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-dashboard:hover {
-            background: linear-gradient(135deg, var(--green-2) 0%, var(--green-dark) 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-logout {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            border-radius: 10px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-logout:hover {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
-        }
-
-        /* Divider */
-        .divider {
-            text-align: center;
-            margin: 28px 0;
-            padding-top: 24px;
-            border-top: 2px solid var(--line);
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .wrap {
+        @media (max-width: 968px) {
+            .container {
                 grid-template-columns: 1fr;
+                max-width: 500px;
             }
 
-            .left {
-                min-height: 300px;
-                padding: 36px 20px;
+            .left-side {
+                padding: 40px 30px;
             }
 
-            .brand-title {
-                font-size: 24px;
+            .features {
+                display: none;
             }
 
-            .card {
-                padding: 35px 30px;
-            }
-
-            .back {
-                top: 20px;
-                left: 20px;
-                padding: 10px 18px;
-                font-size: 14px;
+            .right-side {
+                padding: 40px 30px;
             }
         }
 
-        @media (max-width: 500px) {
-            .admin-shield-wrapper {
-                width: 100px;
-                height: 100px;
+        @media (max-width: 480px) {
+            .right-side {
+                padding: 30px 20px;
             }
 
-            .admin-shield {
-                font-size: 50px;
+            .form-header h2 {
+                font-size: 26px;
             }
 
-            .left {
-                min-height: 250px;
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 8px 15px;
             }
-
-            .card {
-                padding: 30px 25px;
-            }
-
-            .form-title {
-                font-size: 24px;
-            }
-
-            .btn {
-                height: 48px;
-                font-size: 15px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn-dashboard,
-            .btn-logout {
-                width: 100%;
-            }
-        }
-
-        /* Loading Animation */
-        .btn.loading {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        .btn.loading i {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <a href="{{ route('home') }}" class="back">
+    <a href="/" class="back-button">
         <i class="fas fa-arrow-left"></i>
-        <span>Kembali</span>
+        Kembali
     </a>
 
-    <div class="wrap">
-        <!-- Left Column - Admin Branding -->
-        <div class="left">
-            <!-- Decorative floating circles -->
-            <div class="deco-circle"></div>
-            <div class="deco-circle"></div>
-            <div class="deco-circle"></div>
-            <div class="deco-circle"></div>
-            
-            <div class="left-inner">
-                <div class="admin-shield-wrapper">
-                    <i class="fas fa-user-shield admin-shield"></i>
-                </div>
-                <h1 class="brand-title">Panel Admin</h1>
-                <p class="brand-subtitle">Sistem Informasi Pupuk & Bibit Subsidi Pemerintah</p>
+    <div class="container">
+        <!-- Left Side - Admin Branding -->
+        <div class="left-side">
+            <div class="logo-section">
                 <div class="admin-badge">
-                    <i class="fas fa-crown"></i> Administrator Access
+                    <i class="fas fa-crown"></i> Administrator
+                </div>
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Pupuk & Bibit" />
+                </div>
+                <h1>Panel Admin</h1>
+                <p>Sistem manajemen pupuk dan bibit bersubsidi. Akses khusus untuk administrator sistem</p>
+            </div>
+
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-cogs"></i>
+                    <span>Kelola Sistem Lengkap</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-users"></i>
+                    <span>Manajemen Pengguna</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Monitoring Real-time</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Akses Aman Terlindungi</span>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column - Form -->
-        <div class="right">
-            <div class="card">
-                <div class="form-header">
-                    <h2 class="form-title">Login Admin</h2>
-                    <p class="form-desc">Masukkan kredensial admin untuk melanjutkan</p>
-                </div>
-
-                @if(session('admin_logged_in'))
-                <!-- Already Logged In Notice -->
-                <div class="already-logged-in">
-                    <h3>
-                        <i class="fas fa-check-circle"></i>
-                        Anda Sudah Login!
-                    </h3>
-                    <p>
-                        <i class="fas fa-user"></i> <strong>{{ session('admin_username') }}</strong>
-                        <br>
-                        <small style="color: var(--green-2);">Login sejak: {{ session('admin_login_time') ? \Carbon\Carbon::parse(session('admin_login_time'))->locale('id')->diffForHumans() : 'Baru saja' }}</small>
-                    </p>
-                    <div class="action-buttons">
-                        <a href="{{ route('admin.overview') }}" class="btn-dashboard">
-                            <i class="fas fa-tachometer-alt"></i>
-                            Ke Dashboard
-                        </a>
-                        <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
-                            @csrf
-                            <button type="submit" class="btn-logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Logout
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                @endif
-
-                @if(session('error'))
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>{{ session('error') }}</span>
-                </div>
-                @endif
-
-                @if(session('success'))
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i>
-                    <span>{{ session('success') }}</span>
-                </div>
-                @endif
-
-                @if(session('info'))
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i>
-                    <span>{{ session('info') }}</span>
-                </div>
-                @endif
-
-                @if(!session('admin_logged_in'))
-                <!-- Info untuk User (tanpa kredensial admin) -->
-                <div class="info-box user-info">
-                    <i class="fas fa-user"></i>
-                    Bukan admin? Silakan login sebagai 
-                    <a href="{{ route('login') }}">user biasa di sini</a>.
-                </div>
-
-                <form action="{{ route('admin.login.process') }}" method="POST" id="loginForm">
-                    @csrf
-                    
-                    <!-- Username/Email -->
-                    <div class="input-group">
-                        <label for="username">
-                            <i class="fas fa-user-circle" style="margin-right: 6px;"></i>
-                            Username / Email
-                        </label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-user input-icon"></i>
-                            <input 
-                                type="text" 
-                                id="username" 
-                                name="username" 
-                                class="field" 
-                                placeholder="Masukkan username atau email"
-                                value="{{ old('username') }}"
-                                required
-                                autofocus
-                            >
-                        </div>
-                        @error('username')
-                            <div class="field-error-msg show">
-                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <!-- Password -->
-                    <div class="input-group">
-                        <label for="password">
-                            <i class="fas fa-lock" style="margin-right: 6px;"></i>
-                            Password
-                        </label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
-                                class="field" 
-                                placeholder="Masukkan password"
-                                required
-                            >
-                        </div>
-                        @error('password')
-                            <div class="field-error-msg show">
-                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Login Sekarang</span>
-                    </button>
-                </form>
-                @endif
-
+        <!-- Right Side - Admin Login Form -->
+        <div class="right-side">
+            <div class="form-header">
+                <h2>
+                    <i class="fas fa-lock"></i>
+                    Login Admin
+                </h2>
+                <p>Masukkan kredensial admin untuk mengakses panel</p>
             </div>
+
+            <!-- Alerts -->
+            @if($errors->any())
+            <div class="alert alert-error show">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ $errors->first() }}</span>
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div class="alert alert-error show">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+            @endif
+
+            @if(session('success'))
+            <div class="alert alert-success show">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+            @endif
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>Perhatian:</strong> Halaman ini khusus untuk admin. 
+                User biasa silakan ke <a href="/login">halaman login user</a>.
+            </div>
+
+            <!-- Admin Login Form -->
+            <form id="adminLoginForm" action="/admin/login" method="POST">
+                @csrf
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            placeholder="Masukkan username admin"
+                            value="{{ old('username') }}"
+                            required
+                        />
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="error-msg" id="usernameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Masukkan password admin"
+                            required
+                        />
+                        <i class="fas fa-key"></i>
+                        <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                    </div>
+                    <div class="error-msg" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span id="btnText">
+                        <i class="fas fa-sign-in-alt"></i> Login sebagai Admin
+                    </span>
+                    <span id="btnSpinner" style="display:none">
+                        <i class="fas fa-spinner fa-spin"></i> Memverifikasi...
+                    </span>
+                </button>
+
+                <div class="links">
+                    <a href="/login">
+                        <i class="fas fa-user"></i> Login sebagai User Biasa
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
-        // Form submission loading state (only if form exists)
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', function() {
-                const btn = document.getElementById('submitBtn');
-                btn.classList.add('loading');
-                const icon = btn.querySelector('i');
-                const text = btn.querySelector('span');
-                
-                icon.classList.remove('fa-sign-in-alt');
-                icon.classList.add('fa-spinner');
-                text.textContent = 'Memproses...';
-                
-                btn.disabled = true;
-            });
-        }
-
-        // Auto-hide alerts after 5 seconds
-        setTimeout(() => {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                alert.style.transition = 'opacity 0.5s, transform 0.5s';
-                alert.style.opacity = '0';
-                alert.style.transform = 'translateY(-10px)';
-                setTimeout(() => alert.remove(), 500);
-            });
-        }, 5000);
-
-        // Input field animations
-        document.querySelectorAll('.field').forEach(field => {
-            field.addEventListener('focus', function() {
-                this.parentElement.classList.add('focused');
-            });
-            
-            field.addEventListener('blur', function() {
-                this.parentElement.classList.remove('focused');
-            });
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordField = document.getElementById('password');
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
         });
 
-        // Ripple effect on button
-        const btn = document.querySelector('.btn-primary');
-        if (btn) {
-            btn.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
-                ripple.classList.add('ripple');
-                
-                this.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 600);
-            });
-        }
+        // Form validation
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const usernameField = document.getElementById('username');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+
+        adminLoginForm.addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Reset errors
+            usernameField.classList.remove('error');
+            passwordField.classList.remove('error');
+            usernameError.classList.remove('show');
+            passwordError.classList.remove('show');
+
+            // Validate username
+            if (!usernameField.value.trim()) {
+                usernameField.classList.add('error');
+                usernameError.textContent = 'Username admin wajib diisi';
+                usernameError.classList.add('show');
+                isValid = false;
+            }
+
+            // Validate password
+            if (!passwordField.value) {
+                passwordField.classList.add('error');
+                passwordError.textContent = 'Password admin wajib diisi';
+                passwordError.classList.add('show');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                return false;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-block';
+        });
+
+        // Clear errors on input
+        usernameField.addEventListener('input', function() {
+            this.classList.remove('error');
+            usernameError.classList.remove('show');
+        });
+
+        passwordField.addEventListener('input', function() {
+            this.classList.remove('error');
+            passwordError.classList.remove('show');
+        });
     </script>
 </body>
 </html>

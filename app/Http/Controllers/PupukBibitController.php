@@ -376,4 +376,61 @@ class PupukBibitController extends Controller
             ], 500);
         }
     }
+    
+    /**
+     * Simpan pesanan ke database
+     */
+    public function storeOrder(Request $request, $id)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:20',
+            'alamat' => 'required|string',
+            'quantity' => 'required|integer|min:1|max:100',
+            'catatan' => 'nullable|string',
+            'village_office' => 'nullable|string|max:255',
+        ]);
+        
+        // Cari produk
+        $produk = Product::find($id);
+        if (!$produk) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produk tidak ditemukan'
+            ], 404);
+        }
+        
+        // Hitung total
+        $total = $produk->harga_subsidi * $validated['quantity'];
+        
+        // Generate order number
+        $orderNumber = \App\Models\Order::generateOrderNumber();
+        
+        // Buat pesanan baru
+        $order = \App\Models\Order::create([
+            'order_number' => $orderNumber,
+            'user_id' => auth()->id(),
+            'village_office' => $validated['village_office'] ?? 'Balai Desa',
+            'items' => json_encode([[
+                'product_id' => $produk->id_produk,
+                'product_name' => $produk->nama_produk,
+                'type' => $produk->tipe_produk,
+                'category' => $produk->kategori,
+                'quantity' => $validated['quantity'],
+                'price' => $produk->harga_subsidi,
+                'subtotal' => $total,
+            ]]),
+            'total_amount' => $total,
+            'status' => 'Pending',
+            'confirmed_by_user' => true,
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Pesanan berhasil dibuat',
+            'order_number' => $orderNumber,
+            'total' => $total,
+        ]);
+    }
 }

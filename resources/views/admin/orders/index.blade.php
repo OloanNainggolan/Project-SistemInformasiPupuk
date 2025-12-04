@@ -602,6 +602,21 @@
         <i class="fas fa-search"></i>
     </div>
     
+    <select id="typeFilter" class="filter-select">
+        <option value="all">Semua Tipe</option>
+        <option value="pupuk">Pupuk</option>
+        <option value="bibit">Bibit</option>
+    </select>
+    
+    <select id="sortFilter" class="filter-select">
+        <option value="newest">Terbaru</option>
+        <option value="oldest">Terlama</option>
+        <option value="name_asc">Nama A-Z</option>
+        <option value="name_desc">Nama Z-A</option>
+        <option value="amount_low">Harga Terendah</option>
+        <option value="amount_high">Harga Tertinggi</option>
+    </select>
+    
     <select id="statusFilter" class="filter-select">
         <option value="all">Semua Status</option>
         <option value="Pending">Pending</option>
@@ -667,17 +682,24 @@
 
 @push('scripts')
 <script>
+    // CSRF Token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
     // State Management
     let currentPage = 1;
     let currentStatus = 'all';
     let currentSearch = '';
+    let currentSort = 'newest';
+    let currentType = 'all';
     let pendingStatusChange = null;
 
     // Load orders
-    async function loadOrders(page = 1, status = 'all', search = '') {
+    async function loadOrders(page = 1, status = 'all', search = '', sort = 'newest', type = 'all') {
         currentPage = page;
         currentStatus = status;
         currentSearch = search;
+        currentSort = sort;
+        currentType = type;
 
         const container = document.getElementById('ordersList');
         container.innerHTML = `
@@ -688,7 +710,7 @@
         `;
 
         try {
-            const url = `/admin/api/orders?page=${page}&limit=10&status=${status}&query=${encodeURIComponent(search)}`;
+            const url = `/admin/api/orders?page=${page}&limit=10&status=${status}&query=${encodeURIComponent(search)}&sort=${sort}&type=${type}`;
             const response = await fetch(url, {
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
@@ -880,7 +902,7 @@
             if (data.success) {
                 showToast('Status pesanan berhasil diupdate!', 'success');
                 // Reload orders to reflect changes
-                loadOrders(currentPage, currentStatus, currentSearch);
+                loadOrders(currentPage, currentStatus, currentSearch, currentSort, currentType);
             } else {
                 throw new Error(data.message || 'Update failed');
             }
@@ -930,12 +952,20 @@
     document.getElementById('searchInput').addEventListener('input', function(e) {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
-            loadOrders(1, currentStatus, e.target.value);
+            loadOrders(1, currentStatus, e.target.value, currentSort, currentType);
         }, 500);
     });
 
     document.getElementById('statusFilter').addEventListener('change', function(e) {
-        loadOrders(1, e.target.value, currentSearch);
+        loadOrders(1, e.target.value, currentSearch, currentSort, currentType);
+    });
+
+    document.getElementById('sortFilter').addEventListener('change', function(e) {
+        loadOrders(1, currentStatus, currentSearch, e.target.value, currentType);
+    });
+
+    document.getElementById('typeFilter').addEventListener('change', function(e) {
+        loadOrders(1, currentStatus, currentSearch, currentSort, e.target.value);
     });
 
     // Initial load

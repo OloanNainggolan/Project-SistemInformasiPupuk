@@ -26,13 +26,47 @@ class AdminOrderController extends Controller
         $status = $request->input('status', 'all');
         $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);
+        $sort = $request->input('sort', 'newest');
+        $type = $request->input('type', 'all');
 
         $orders = Order::with(['user', 'product']) // Eager load user dan product
             ->confirmed() // Hanya yang confirmed_by_user = true
             ->search($query)
-            ->byStatus($status)
-            ->orderBy('created_at', 'desc')
-            ->paginate($limit);
+            ->byStatus($status);
+
+        // Filter by product type (pupuk/bibit)
+        if ($type !== 'all') {
+            $ordersQuery->whereRaw("JSON_SEARCH(items, 'one', ?, NULL, '$[*].type') IS NOT NULL", [$type]);
+        }
+
+        // Apply sorting
+        switch ($sort) {
+            case 'oldest':
+                $ordersQuery->orderBy('created_at', 'asc');
+                break;
+            case 'name_asc':
+                $ordersQuery->join('users', 'orders.user_id', '=', 'users.id')
+                    ->orderBy('users.nama_lengkap', 'asc')
+                    ->select('orders.*');
+                break;
+            case 'name_desc':
+                $ordersQuery->join('users', 'orders.user_id', '=', 'users.id')
+                    ->orderBy('users.nama_lengkap', 'desc')
+                    ->select('orders.*');
+                break;
+            case 'amount_low':
+                $ordersQuery->orderBy('total_amount', 'asc');
+                break;
+            case 'amount_high':
+                $ordersQuery->orderBy('total_amount', 'desc');
+                break;
+            case 'newest':
+            default:
+                $ordersQuery->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $orders = $ordersQuery->paginate($limit);
 
         $formattedOrders = $orders->map(function ($order) {
             // Format items dari relasi product (real data dari database)
@@ -129,5 +163,17 @@ class AdminOrderController extends Controller
             'completed' => $completedOrders,
             'rejected' => $rejectedOrders,
         ]);
+    }
+    
+    /**
+     * Tampilkan detail pesanan
+     */
+    public function show($orderNumber)
+    {
+        $order = Order::with('user')
+            ->where('order_number', $orderNumber)
+            ->firstOrFail();
+        
+        return view('admin.orders.detail', compact('order'));
     }
 }
