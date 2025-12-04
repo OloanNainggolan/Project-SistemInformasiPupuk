@@ -7,20 +7,17 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
+    ->withMiddleware(function (Middleware $middleware) {
+        // Register middleware aliases
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\AdminAuth::class,
+            'admin.guest' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
         ]);
-        
-        // Redirect unauthenticated users to home page
-        $middleware->redirectGuestsTo(fn () => route('home'));
-        
-        // Redirect authenticated users to dashboard if they try to access login/register
-        $middleware->redirectUsersTo(fn () => route('dashboard'));
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
