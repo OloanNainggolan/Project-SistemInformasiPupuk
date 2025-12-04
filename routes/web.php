@@ -99,6 +99,7 @@ Route::prefix('admin')->group(function () {
         
         // Order Management Routes
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
+        Route::get('/orders/{orderNumber}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
         
         // API Routes for Orders (Admin)
         Route::prefix('api')->name('api.')->group(function () {

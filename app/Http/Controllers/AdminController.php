@@ -150,9 +150,10 @@ class AdminController extends Controller
             ? round((($produkBulanIni - $produkBulanLalu) / $produkBulanLalu) * 100, 1)
             : ($produkBulanIni > 0 ? 100 : 0);
 
-        // Pesanan terbaru (limit 10)
+        // Pesanan dalam proses (limit 10) - hanya yang belum selesai
         $recentOrders = Order::with('user')
             ->confirmed()
+            ->whereIn('status', ['Pending', 'Processing', 'Ready'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
@@ -231,14 +232,29 @@ class AdminController extends Controller
     }
 
     /**
-     * Halaman kirim notifikasi
+     * Halaman kirim notifikasi & lihat pesan kontak
      */
     public function notifications()
     {
         $totalUsers = User::count();
-        $notificationsSent = 0; // Nanti bisa diambil dari database jika ada tabel notifications
         
-        return view('admin.notifications', compact('totalUsers', 'notificationsSent'));
+        // Ambil semua notifikasi (termasuk dari kontak)
+        $notifications = Notification::latest()->paginate(10);
+        
+        // Ambil pesan kontak terbaru
+        $contacts = Contact::with('user')->latest()->paginate(10);
+        
+        // Hitung notifikasi yang belum dibaca
+        $unreadCount = Notification::unread()->count();
+        $unreadContactsCount = Contact::where('status', 'unread')->count();
+        
+        return view('admin.notifications', compact(
+            'totalUsers', 
+            'notifications', 
+            'contacts',
+            'unreadCount',
+            'unreadContactsCount'
+        ));
     }
 
     /**
