@@ -69,6 +69,7 @@ class AdminController extends Controller
 
     /**
      * Menampilkan dashboard admin
+     * SEMUA DATA DARI DATABASE - NO DUMMY DATA
      */
     public function dashboard()
     {
@@ -79,32 +80,50 @@ class AdminController extends Controller
         $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
         $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
 
-        // Statistik bulan ini
-        $totalPesanan = Order::confirmed()->count();
-        $totalPendapatan = Order::confirmed()
-            ->whereIn('status', ['Completed'])
+        // ==========================================
+        // 1. TOTAL PESANAN - Real dari database
+        // ==========================================
+        $totalPesanan = Order::where('confirmed_by_user', true)->count();
+
+        // ==========================================
+        // 2. TOTAL PENDAPATAN - Hanya order Completed
+        // ==========================================
+        $totalPendapatan = Order::where('confirmed_by_user', true)
+            ->where('status', 'Completed')
             ->sum('total_amount');
+
+        // ==========================================
+        // 3. TOTAL PETANI - Semua registered users
+        // ==========================================
         $totalPetani = User::count();
+
+        // ==========================================
+        // 4. TOTAL PRODUK - Dari tabel products
+        // ==========================================
         $totalProduk = Product::count();
 
-        // Statistik bulan lalu untuk perbandingan
-        $pesananBulanLalu = Order::confirmed()
+        // ==========================================
+        // STATISTIK BULAN LALU (untuk pertumbuhan)
+        // ==========================================
+        $pesananBulanLalu = Order::where('confirmed_by_user', true)
             ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
             ->count();
-        $pendapatanBulanLalu = Order::confirmed()
-            ->whereIn('status', ['Completed'])
-            ->whereBetween('updated_at', [$startOfLastMonth, $endOfLastMonth])
+        $pendapatanBulanLalu = Order::where('confirmed_by_user', true)
+            ->where('status', 'Completed')
+            ->whereBetween('completed_at', [$startOfLastMonth, $endOfLastMonth])
             ->sum('total_amount');
         $petaniBulanLalu = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
         $produkBulanLalu = Product::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
 
-        // Statistik bulan ini untuk perbandingan
-        $pesananBulanIni = Order::confirmed()
+        // ==========================================
+        // STATISTIK BULAN INI (untuk pertumbuhan)
+        // ==========================================
+        $pesananBulanIni = Order::where('confirmed_by_user', true)
             ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
             ->count();
-        $pendapatanBulanIni = Order::confirmed()
-            ->whereIn('status', ['Completed'])
-            ->whereBetween('updated_at', [$startOfThisMonth, $endOfThisMonth])
+        $pendapatanBulanIni = Order::where('confirmed_by_user', true)
+            ->where('status', 'Completed')
+            ->whereBetween('completed_at', [$startOfThisMonth, $endOfThisMonth])
             ->sum('total_amount');
         $petaniBulanIni = User::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
         $produkBulanIni = Product::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
@@ -126,19 +145,33 @@ class AdminController extends Controller
             ? round((($produkBulanIni - $produkBulanLalu) / $produkBulanLalu) * 100, 1)
             : ($produkBulanIni > 0 ? 100 : 0);
 
-        // Pesanan terbaru (limit 10)
-        $recentOrders = Order::with('user')
-            ->confirmed()
+        // ==========================================
+        // PESANAN TERBARU - Real order dari users
+        // ==========================================
+        $recentOrders = Order::with(['user', 'product'])
+            ->where('confirmed_by_user', true)
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 
-        // Statistik per status
-        $pendingCount = Order::confirmed()->where('status', 'Pending')->count();
-        $processingCount = Order::confirmed()->where('status', 'Processing')->count();
-        $readyCount = Order::confirmed()->where('status', 'Ready')->count();
-        $completedCount = Order::confirmed()->where('status', 'Completed')->count();
-        $rejectedCount = Order::confirmed()->where('status', 'Rejected')->count();
+        // ==========================================
+        // STATISTIK PER STATUS - Count real orders
+        // ==========================================
+        $pendingCount = Order::where('confirmed_by_user', true)
+            ->where('status', 'Pending')
+            ->count();
+        $processingCount = Order::where('confirmed_by_user', true)
+            ->where('status', 'Processing')
+            ->count();
+        $readyCount = Order::where('confirmed_by_user', true)
+            ->where('status', 'Ready')
+            ->count();
+        $completedCount = Order::where('confirmed_by_user', true)
+            ->where('status', 'Completed')
+            ->count();
+        $rejectedCount = Order::where('confirmed_by_user', true)
+            ->where('status', 'Rejected')
+            ->count();
 
         return view('admin.dashboard', compact(
             'totalPesanan',

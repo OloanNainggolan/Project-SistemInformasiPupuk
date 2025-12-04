@@ -32,4 +32,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Relasi ke Orders
+     * User bisa memiliki banyak pesanan
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get orders yang sudah dikonfirmasi
+     */
+    public function confirmedOrders()
+    {
+        return $this->hasMany(Order::class)->where('confirmed_by_user', true);
+    }
 }

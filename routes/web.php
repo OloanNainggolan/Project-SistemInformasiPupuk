@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminApiController;
 use App\Http\Controllers\PupukBibitController;
 use App\Http\Controllers\Admin\AdminOrderController;
 
@@ -67,6 +68,9 @@ Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
     
     // Halaman Konfirmasi Pesanan
     Route::post('/pupuk-bibit/{id}/konfirmasi', [PupukBibitController::class, 'confirmOrder'])->name('pupukbibit.konfirmasi');
+    
+    // Simpan Pesanan ke Database
+    Route::post('/pupuk-bibit/{id}/simpan-pesanan', [PupukBibitController::class, 'storeOrder'])->name('pupukbibit.store');
     
     // Halaman Pesan Berhasil
     Route::get('/pesan-berhasil', function () {
@@ -134,11 +138,19 @@ Route::prefix('admin')->group(function () {
         // Manajemen Pesanan
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
         
-        // API Routes untuk Orders
-        Route::prefix('api')->group(function () {
-            Route::get('/orders', [AdminOrderController::class, 'getOrders'])->name('admin.api.orders');
-            Route::get('/orders/stats', [AdminOrderController::class, 'getStats'])->name('admin.api.orders.stats');
-            Route::patch('/orders/{orderId}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.api.orders.status');
+        // API Routes untuk Metrics & Orders (Real Data dari Database)
+        Route::prefix('api')->name('api.')->group(function () {
+            // Dashboard Metrics
+            Route::get('/metrics', [AdminApiController::class, 'getMetrics'])->name('metrics');
+            Route::get('/revenue', [AdminApiController::class, 'getRevenue'])->name('revenue');
+            
+            // Orders Management
+            Route::get('/orders', [AdminApiController::class, 'getOrders'])->name('orders');
+            Route::get('/orders/{id}', [AdminApiController::class, 'getOrderDetail'])->name('orders.detail');
+            Route::patch('/orders/{id}/status', [AdminApiController::class, 'updateOrderStatus'])->name('orders.status');
+            
+            // Legacy routes (backward compatibility)
+            Route::get('/orders/stats', [AdminOrderController::class, 'getStats'])->name('orders.stats');
         });
     });
 });
