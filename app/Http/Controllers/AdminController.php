@@ -326,7 +326,7 @@ class AdminController extends Controller
         // Simpan ke session (untuk demo)
         session()->put('last_notification', $notificationData);
 
-        return redirect()->route('admin.notifications')
+        return redirect()->route('admin.notifications.index')
             ->with('success', "Notifikasi berhasil dikirim ke {$users->count()} petani!");
     }
 

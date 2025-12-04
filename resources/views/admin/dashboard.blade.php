@@ -195,7 +195,7 @@
                 <i class="fas fa-box-open"></i>
                 <span>Kelola Produk</span>
             </a>
-            <a href="{{ route('admin.notifications') }}" class="action-btn btn-warning">
+            <a href="{{ route('admin.notifications.index') }}" class="action-btn btn-warning">
                 <i class="fas fa-bell"></i>
                 <span>Kirim Notifikasi</span>
             </a>

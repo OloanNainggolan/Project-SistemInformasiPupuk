@@ -545,72 +545,205 @@
             min-height: 80px;
         }
 
-        /* Quantity Control */
-        .quantity-control {
+        /* Quantity Display (Read-only) */
+        .quantity-display {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: 10px;
+            border: 2px solid #10b981;
         }
 
         .quantity-label {
-            font-weight: 600;
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .quantity-input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quantity-btn {
-            width: 35px;
-            height: 35px;
-            border: 2px solid #10b981;
-            background: white;
-            color: #10b981;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quantity-btn:hover {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .quantity-btn:active {
-            transform: scale(0.95);
-        }
-
-        .quantity-input {
-            width: 70px;
-            padding: 8px;
-            text-align: center;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
             font-weight: 700;
             color: #065f46;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .quantity-input:focus {
-            outline: none;
-            border-color: #10b981;
+        .quantity-label i {
+            color: #10b981;
+            font-size: 16px;
+        }
+
+        .quantity-value-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+        }
+
+        .quantity-display-input {
+            width: 50px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #10b981;
+            pointer-events: none;
         }
 
         .quantity-unit {
-            font-weight: 600;
+            font-weight: 700;
+            color: #059669;
+            font-size: 14px;
+        }
+
+        /* Price per unit styling */
+        .product-quantity {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .price-per-unit-label {
             color: #6b7280;
             font-size: 14px;
+            font-weight: 500;
+        }
+
+        .price-per-unit-value {
+            color: #065f46;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Original Price Strikethrough */
+        .original-price {
+            text-decoration: line-through;
+            color: #9ca3af !important;
+            font-size: 14px;
+        }
+
+        /* Discount Rows */
+        .discount-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .subsidy-row {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+        }
+
+        .promo-row {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+        }
+
+        .discount-label {
+            color: #065f46;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .discount-label i {
+            font-size: 16px;
+        }
+
+        .subsidy-row .discount-label i {
+            color: #10b981;
+        }
+
+        .promo-row .discount-label i {
+            color: #f59e0b;
+        }
+
+        .promo-code {
+            background: white;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #f59e0b;
+            border: 1px solid #fbbf24;
+            margin-left: 6px;
+        }
+
+        .discount-value {
+            font-weight: 800;
+            color: #059669;
+        }
+
+        /* Savings Highlight */
+        .savings-highlight {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .savings-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .savings-content {
+            flex: 1;
+        }
+
+        .savings-label {
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .savings-amount {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .savings-percent {
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.85;
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* Divider */
+        .divider-dashed {
+            border-top: 2px dashed #d1d5db;
+            margin: 16px 0;
         }
 
         /* Responsive */
@@ -660,16 +793,23 @@
                 margin-top: 10px;
             }
 
-            .quantity-control {
+            .quantity-display {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
-                width: 100%;
             }
 
-            .quantity-input-group {
-                width: 100%;
-                justify-content: center;
+            .quantity-value-box {
+                width: auto;
+            }
+
+            .savings-highlight {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .savings-amount {
+                font-size: 24px;
             }
 
             .form-group {
@@ -814,21 +954,17 @@
                             <div class="product-name">{{ $produk->nama_produk }}</div>
                             <div class="product-sku">{{ $produk->kategori ?? 'NPK 16-16-16' }}</div>
                             
-                            <div class="quantity-control">
-                                <span class="quantity-label">Jumlah:</span>
-                                <div class="quantity-input-group">
-                                    <button type="button" class="quantity-btn" onclick="updateQuantity(-1)">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <input type="number" id="quantityInput" class="quantity-input" value="{{ $quantity ?? 1 }}" min="1" max="100" onchange="updateTotal()">
-                                    <button type="button" class="quantity-btn" onclick="updateQuantity(1)">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
+                            <div class="quantity-display">
+                                <span class="quantity-label"><i class="fas fa-box"></i> Jumlah Pesanan:</span>
+                                <div class="quantity-value-box">
+                                    <input type="number" id="quantityInput" class="quantity-display-input" value="{{ $quantity ?? 1 }}" readonly>
                                     <span class="quantity-unit">kg</span>
                                 </div>
                             </div>
-                            <div class="product-quantity" style="margin-top: 10px;">
-                                <span id="pricePerUnit">Rp. {{ number_format($produk->harga_subsidi, 0, ',', '.') }}</span> / kg
+                            <div class="product-quantity" style="margin-top: 12px;">
+                                <span class="price-per-unit-label">Harga:</span>
+                                <span id="pricePerUnit" class="price-per-unit-value">Rp {{ number_format($produk->harga_subsidi, 0, ',', '.') }}</span>
+                                <span class="price-per-unit-label">/ kg</span>
                             </div>
                         </div>
                         <div class="product-price" id="productTotalPrice">
@@ -838,31 +974,60 @@
 
                     <!-- Price Summary -->
                     <div class="price-summary">
+                        @php
+                            $calculatedSubsidy = ($produk->harga_normal - $produk->harga_subsidi) * ($quantity ?? 1);
+                            $totalDiscount = ($discountAmount ?? 0) + $calculatedSubsidy;
+                        @endphp
+                        
                         <div class="price-row">
-                            <span class="price-label">Subtotal</span>
-                            <span class="price-value" id="subtotalValue">Rp {{ number_format($subtotal ?? ($produk->harga_subsidi * ($quantity ?? 1)), 0, ',', '.') }}</span>
+                            <span class="price-label"><i class="fas fa-receipt" style="color: #6b7280;"></i> Harga Normal</span>
+                            <span class="price-value original-price">Rp {{ number_format($produk->harga_normal * ($quantity ?? 1), 0, ',', '.') }}</span>
                         </div>
+                        
+                        <!-- Subsidi Pemerintah -->
+                        @if($calculatedSubsidy > 0)
+                        <div class="discount-row subsidy-row">
+                            <span class="discount-label">
+                                <i class="fas fa-hand-holding-heart"></i> Subsidi Pemerintah
+                            </span>
+                            <span class="discount-value">- Rp {{ number_format($calculatedSubsidy, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+                        
+                        <!-- Potongan Tambahan -->
                         @if(($discountAmount ?? 0) > 0)
-                        <div class="price-row" style="color: #10b981;">
-                            <span class="price-label">
-                                <i class="fas fa-tag"></i> Potongan
+                        <div class="discount-row promo-row">
+                            <span class="discount-label">
+                                <i class="fas fa-tags"></i> Potongan Promo
                                 @if(isset($bestDiscount))
-                                    <small style="font-size: 12px; opacity: 0.8;">({{ $bestDiscount->code }})</small>
+                                    <span class="promo-code">{{ $bestDiscount->code }}</span>
                                 @endif
                             </span>
-                            <span class="price-value">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
+                            <span class="discount-value">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
                         </div>
                         @endif
-                        @if(($subsidyAmount ?? 0) > 0)
-                        <div class="price-row" style="color: #059669; font-size: 14px;">
-                            <span class="price-label">
-                                <i class="fas fa-gift"></i> Subsidi Pemerintah
-                            </span>
-                            <span class="price-value">Hemat Rp {{ number_format($subsidyAmount, 0, ',', '.') }}</span>
+                        
+                        <!-- Total Penghematan -->
+                        @if($totalDiscount > 0)
+                        <div class="savings-highlight">
+                            <div class="savings-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                            <div class="savings-content">
+                                <div class="savings-label">Total Penghematan Anda</div>
+                                <div class="savings-amount">Rp {{ number_format($totalDiscount, 0, ',', '.') }}</div>
+                                @php
+                                    $savingsPercent = ($produk->harga_normal > 0) ? round(($totalDiscount / ($produk->harga_normal * ($quantity ?? 1))) * 100) : 0;
+                                @endphp
+                                <div class="savings-percent">Hemat {{ $savingsPercent }}% dari harga normal!</div>
+                            </div>
                         </div>
                         @endif
+                        
+                        <div class="divider-dashed"></div>
+                        
                         <div class="total-row">
-                            <span class="total-label">Total</span>
+                            <span class="total-label"><i class="fas fa-wallet"></i> Total Bayar</span>
                             <span class="total-value" id="totalValue">Rp {{ number_format($total ?? ($produk->harga_subsidi * ($quantity ?? 1)), 0, ',', '.') }}</span>
                         </div>
                     </div>
@@ -907,37 +1072,7 @@
         @endphp
         const productImage = '{{ $popupImageSrc }}';
         
-        // Update quantity
-        function updateQuantity(change) {
-            const quantityInput = document.getElementById('quantityInput');
-            let currentValue = parseInt(quantityInput.value) || 1;
-            let newValue = currentValue + change;
-            
-            // Validasi min max
-            if (newValue < 1) newValue = 1;
-            if (newValue > 100) newValue = 100;
-            
-            quantityInput.value = newValue;
-            updateTotal();
-        }
-        
-        // Update total harga
-        function updateTotal() {
-            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
-            const subtotal = hargaPerUnit * quantity;
-            
-            // Update product total price
-            document.getElementById('productTotalPrice').textContent = 
-                'Rp. ' + subtotal.toLocaleString('id-ID');
-            
-            // Update subtotal
-            document.getElementById('subtotalValue').textContent = 
-                'Rp. ' + subtotal.toLocaleString('id-ID');
-            
-            // Update total (subtotal + ongkir)
-            document.getElementById('totalValue').textContent = 
-                'Rp ' + subtotal.toLocaleString('id-ID');
-        }
+        // Quantity is now readonly - no update functions needed
         
         // Konfirmasi pesanan dengan SweetAlert2
         function konfirmasiPesanan() {
@@ -1151,13 +1286,9 @@
             });
         }
         
-        // Initialize
+        // Initialize - quantity is fixed, no need for updates
         document.addEventListener('DOMContentLoaded', function() {
-            // Update total saat halaman dimuat
-            updateTotal();
-            
-            // Event listener untuk input quantity manual
-            document.getElementById('quantityInput').addEventListener('input', updateTotal);
+            console.log('Konfirmasi pesanan page loaded');
         });
     </script>
 @endpush

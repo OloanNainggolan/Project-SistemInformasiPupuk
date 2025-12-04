@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Contact;
 use App\Models\Notification;
+use App\Models\Message;
 
 class AuthController extends Controller
 {
@@ -129,43 +130,44 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         
-        // Ambil pesanan user dengan relasi
-        $orders = \App\Models\Order::with('user')
+        // Ambil pesanan user dengan relasi product
+        $orders = \App\Models\Order::with(['user', 'product'])
             ->where('user_id', $user->id)
+            ->where('confirmed_by_user', true)
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
-        // Hitung statistik
-        $totalPesanan = \App\Models\Order::where('user_id', $user->id)->count();
-        $completedOrders = \App\Models\Order::where('user_id', $user->id)
-            ->where('status', 'Completed')
             ->get();
         
-        $totalPupuk = 0;
-        $totalBibit = 0;
+        // Hitung statistik REAL dari database
+        $totalPesanan = $orders->count();
+        
+        // Hitung total pupuk yang diterima (status Completed atau Ready)
+        $pupukDiterima = 0;
+        $bibitDiterima = 0;
         $totalPenghematan = 0;
         
-        foreach ($completedOrders as $order) {
-            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    if (isset($item['type'])) {
-                        if ($item['type'] === 'pupuk') {
-                            $totalPupuk += $item['qty'] ?? 0;
-                        } else if ($item['type'] === 'bibit') {
-                            $totalBibit += $item['qty'] ?? 0;
-                        }
+        foreach ($orders as $order) {
+            // Hitung penghematan dari semua pesanan yang confirmed
+            $totalPenghematan += $order->savings ?? 0;
+            
+            // Hitung pupuk/bibit yang sudah diterima (status Completed atau Ready)
+            if (in_array($order->status, ['Completed', 'Ready for Pickup'])) {
+                if ($order->product) {
+                    $qty = $order->quantity ?? 0;
+                    
+                    if ($order->product->tipe_produk === 'pupuk') {
+                        $pupukDiterima += $qty;
+                    } elseif ($order->product->tipe_produk === 'bibit') {
+                        $bibitDiterima += $qty;
                     }
                 }
             }
-            $totalPenghematan += $order->total_amount;
         }
         
         return view('user.ProfilUser', compact(
             'orders',
             'totalPesanan',
-            'totalPupuk',
-            'totalBibit',
+            'pupukDiterima',
+            'bibitDiterima',
             'totalPenghematan'
         ));
     }
@@ -283,13 +285,26 @@ class AuthController extends Controller
             'pesan.required' => 'Pesan wajib diisi',
         ]);
 
-        // Simpan kontak ke database
+        // Jika user login, simpan ke tabel messages (sistem notifikasi baru)
+        if (Auth::check()) {
+            Message::create([
+                'user_id' => Auth::id(),
+                'sender_type' => 'user',
+                'subject' => 'Pesan dari ' . $validated['nama'],
+                'message' => $validated['pesan'],
+                'status' => 'unread',
+            ]);
+
+            return redirect()->route('kontak')->with('success', 'Pesan Anda telah terkirim! Admin akan segera membalasnya.');
+        }
+
+        // Jika user tidak login, simpan ke tabel contacts (sistem lama)
         $contact = Contact::create([
             'nama' => $validated['nama'],
             'no_telp' => $validated['no_telp'],
             'email' => $validated['email'],
             'pesan' => $validated['pesan'],
-            'user_id' => Auth::check() ? Auth::id() : null,
+            'user_id' => null,
             'status' => 'unread'
         ]);
 
@@ -298,7 +313,7 @@ class AuthController extends Controller
             'type' => 'contact',
             'title' => 'Pesan Baru dari ' . $validated['nama'],
             'message' => substr($validated['pesan'], 0, 100) . (strlen($validated['pesan']) > 100 ? '...' : ''),
-            'link' => route('admin.notifications'),
+            'link' => route('admin.notifications.index'),
             'status' => 'unread',
             'related_id' => $contact->id
         ]);

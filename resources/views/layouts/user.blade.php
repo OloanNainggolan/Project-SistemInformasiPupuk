@@ -704,7 +704,15 @@
                 <!-- Notification Icon -->
                 <a href="{{ route('notifikasi') }}" class="notification-icon" title="Notifikasi">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
+                    @php
+                        $unreadMessages = \App\Models\Message::where('user_id', Auth::id())
+                            ->fromAdmin()
+                            ->unread()
+                            ->count();
+                    @endphp
+                    @if($unreadMessages > 0)
+                        <span class="notification-badge">{{ $unreadMessages }}</span>
+                    @endif
                 </a>
 
                 <!-- Profile Section with Dropdown -->
@@ -713,7 +721,7 @@
                         @if(auth()->user()->foto)
                             <img src="{{ asset(auth()->user()->foto) }}" alt="Profile">
                         @else
-                            <i class="fas fa-user"></i>
+                            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                         @endif
                     </div>
                     <div class="profile-info">
