@@ -262,22 +262,33 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'new_password' => 'required|string|min:4|confirmed',
+            'new_password' => 'required|string|min:4|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d).+$/',
         ], [
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
             'new_password.required' => 'Password baru wajib diisi',
             'new_password.min' => 'Password minimal 4 karakter',
+            'new_password.regex' => 'Password harus mengandung huruf dan angka',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
+        // Cari user berdasarkan email
         $user = User::where('email', $validated['email'])->first();
+        
         if (!$user) {
-            return back()->withInput()->withErrors(['email' => 'Alamat email tidak terdaftar.']);
+            return back()
+                ->withInput(['email' => $validated['email']])
+                ->withErrors(['email' => 'Alamat email tidak terdaftar dalam sistem.']);
         }
 
-        // Update password
+        // Update password dengan hash
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
+        // Log informasi untuk debugging (optional, bisa dihapus di production)
+        \Log::info('Password reset successful for user: ' . $user->email);
+
+        return redirect()->route('login')
+            ->with('success', 'Password berhasil direset! Silakan login dengan password baru Anda.');
     }
 }

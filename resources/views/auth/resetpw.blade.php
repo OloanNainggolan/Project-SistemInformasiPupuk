@@ -364,6 +364,24 @@
         <p>
           Masukkan alamat email dan password baru Anda untuk mereset akun.
         </p>
+
+        <!-- Error Messages dari Server -->
+        @if($errors->any())
+        <div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px; margin-bottom: 20px; animation: fadeIn 0.3s ease;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <i class="fas fa-exclamation-circle" style="color: #ef4444; font-size: 20px; margin-top: 2px;"></i>
+            <div style="flex: 1;">
+              <strong style="color: #991b1b; display: block; margin-bottom: 5px;">Terdapat kesalahan:</strong>
+              <ul style="margin: 0; padding-left: 20px; color: #991b1b;">
+                @foreach($errors->all() as $error)
+                  <li style="margin: 3px 0;">{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+        </div>
+        @endif
+
         <form id="reset-form" action="{{ route('password.reset.post') }}" method="post" novalidate>
           @csrf
           <div class="form-group">
@@ -376,11 +394,18 @@
                 type="email"
                 id="email"
                 name="email"
+                value="{{ old('email') }}"
                 placeholder="contoh@email.com"
                 required
                 autocomplete="email"
+                class="@error('email') border-red-500 @enderror"
               />
             </div>
+            @error('email')
+            <div style="color: #ef4444; font-size: 14px; margin-top: 5px; font-weight: 600;">
+              <i class="fas fa-exclamation-circle"></i> {{ $message }}
+            </div>
+            @enderror
           </div>
           <div class="form-group">
             <label for="new-password">

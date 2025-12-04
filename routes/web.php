@@ -25,7 +25,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pr
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process')->middleware('guest');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
 
 // Halaman reset password (view statis sementara)
 Route::get('/reset-password', function () {

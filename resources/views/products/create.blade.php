@@ -394,7 +394,7 @@
             </div>
 
             <!-- Form -->
-            <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data" id="productForm">
+            <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" id="productForm">
                 @csrf
 
                 <!-- Nama Produk & Tipe -->
@@ -650,7 +650,6 @@ Tahan terhadap hama"
                 <div class="form-group">
                     <label for="manfaat">
                         <i class="fas fa-leaf"></i> Manfaat
-                        <span class="required">*</span>
                     </label>
                     <textarea 
                         class="form-control @error('manfaat') is-invalid @enderror" 
@@ -658,7 +657,6 @@ Tahan terhadap hama"
                         name="manfaat" 
                         rows="5"
                         placeholder="Contoh: Meningkatkan produktivitas tanaman hingga 30%, Mempercepat pertumbuhan akar, Meningkatkan daya tahan terhadap hama..."
-                        required
                     >{{ old('manfaat') }}</textarea>
                     @error('manfaat')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -673,15 +671,13 @@ Tahan terhadap hama"
                 <div class="form-group">
                     <label for="bahan">
                         <i class="fas fa-flask"></i> Bahan/Komposisi
-                        <span class="required">*</span>
                     </label>
                     <textarea 
                         class="form-control @error('bahan') is-invalid @enderror" 
                         id="bahan" 
                         name="bahan" 
-                        rows="5"
-                        placeholder="Contoh: Nitrogen (N) 15%, Fosfor (P) 10%, Kalium (K) 15%, Bahan organik 50%..."
-                        required
+                        rows="4"
+                        placeholder="Contoh: Nitrogen 15%, Fosfor 15%, Kalium 15%, Bahan organik 55%..."
                     >{{ old('bahan') }}</textarea>
                     @error('bahan')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -696,7 +692,6 @@ Tahan terhadap hama"
                 <div class="form-group">
                     <label for="cara_penggunaan">
                         <i class="fas fa-tasks"></i> Cara Penggunaan
-                        <span class="required">*</span>
                     </label>
                     <textarea 
                         class="form-control @error('cara_penggunaan') is-invalid @enderror" 
@@ -704,7 +699,6 @@ Tahan terhadap hama"
                         name="cara_penggunaan" 
                         rows="6"
                         placeholder="Contoh: 1. Larutkan 100 gram pupuk dalam 10 liter air, 2. Aduk hingga merata, 3. Siram pada tanaman setiap 2 minggu sekali..."
-                        required
                     >{{ old('cara_penggunaan') }}</textarea>
                     @error('cara_penggunaan')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -721,7 +715,7 @@ Tahan terhadap hama"
                         <i class="fas fa-save"></i>
                         Simpan Produk
                     </button>
-                    <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i>
                         Kembali
                     </a>

@@ -499,18 +499,17 @@
                 <img id="mainProductImage" src="{{ $imageSrc }}" alt="{{ $produk->nama_produk ?? 'Pupuk Urea' }}">
             </div>
             <div class="thumbnail-grid">
-                <div class="thumbnail" onclick="changeImage('{{ $imageSrc }}', this)">
-                    <img src="{{ $imageSrc }}" alt="Thumbnail 1">
-                </div>
-                <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=400&fit=crop', this)">
-                    <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=150&h=150&fit=crop" alt="Thumbnail 2">
-                </div>
-                <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=400&fit=crop', this)">
-                    <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=150&h=150&fit=crop" alt="Thumbnail 3">
-                </div>
-                <div class="thumbnail" onclick="changeImage('{{ $imageSrc }}', this)">
-                    <img src="{{ $imageSrc }}" alt="Thumbnail 4">
-                </div>
+                @if(isset($produk->images) && $produk->images->count() > 0)
+                    @foreach($produk->images as $index => $image)
+                        <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeImage('{{ asset($image->image_path) }}', this)">
+                            <img src="{{ asset($image->image_path) }}" alt="Thumbnail {{ $index + 1 }}">
+                        </div>
+                    @endforeach
+                @else
+                    <div class="thumbnail active" onclick="changeImage('{{ $imageSrc }}', this)">
+                        <img src="{{ $imageSrc }}" alt="Thumbnail 1">
+                    </div>
+                @endif
             </div>
         </div>
 
