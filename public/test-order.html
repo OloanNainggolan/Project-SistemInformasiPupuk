@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Order API</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Test Order API</h1>
+    <button onclick="testOrder()">Test Create Order</button>
+    <div id="result"></div>
+
+    <script>
+        function testOrder() {
+            const productId = 1; // Ganti dengan ID produk yang valid
+            const url = `http://127.0.0.1:8000/user/pupuk-bibit/${productId}/simpan-pesanan`;
+            
+            console.log('Sending request to:', url);
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    quantity: 1,
+                    customer_name: 'Test User',
+                    customer_phone: '08123456789',
+                    customer_address: 'Test Address 123',
+                    customer_notes: 'Test notes'
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                return response.text().then(text => {
+                    console.log('Response body:', text);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('Invalid JSON: ' + text);
+                    }
+                });
+            })
+            .then(data => {
+                console.log('Parsed data:', data);
+                document.getElementById('result').innerHTML = `
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Order Created!',
+                        html: `Order Number: <strong>${data.order_number}</strong><br>
+                               Total: Rp ${data.total_amount.toLocaleString('id-ID')}`
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                document.getElementById('result').innerHTML = `
+                    <div style="color: red;">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Request Failed',
+                    text: error.message
+                });
+            });
+        }
+    </script>
+</body>
+</html>

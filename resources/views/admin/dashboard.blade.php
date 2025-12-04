@@ -141,11 +141,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($recentOrders as $order)
-                        <tr class="table-row-animate">
-                            <td>
-                                <span class="order-id">#{{ $order->id }}</span>
-                            </td>
+                        @forelse($recentOrders as $order)
+                        <tr>
+                            <td><strong>#{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</strong></td>
+                            <td>{{ $order->customer_name ?? ($order->user->name ?? 'N/A') }}</td>
+                            <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
                             <td>
                                 <div class="user-cell">
                                     <div class="user-avatar">

@@ -29,7 +29,7 @@ class AdminOrderController extends Controller
         $sort = $request->input('sort', 'newest');
         $type = $request->input('type', 'all');
 
-        $ordersQuery = Order::with('user')
+        $orders = Order::with(['user', 'product']) // Eager load user dan product
             ->confirmed() // Hanya yang confirmed_by_user = true
             ->search($query)
             ->byStatus($status);
@@ -69,31 +69,26 @@ class AdminOrderController extends Controller
         $orders = $ordersQuery->paginate($limit);
 
         $formattedOrders = $orders->map(function ($order) {
-            // Parse items if it's a JSON string
-            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
-            
-            // Format items for frontend
-            $formattedItems = [];
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    $formattedItems[] = [
-                        'name' => $item['product_name'] ?? 'N/A',
-                        'qty' => $item['quantity'] ?? 0,
-                        'price' => $item['price'] ?? 0,
-                        'type' => $item['type'] ?? 'N/A',
-                    ];
-                }
+            // Format items dari relasi product (real data dari database)
+            $items = [];
+            if ($order->product) {
+                $items[] = [
+                    'name' => $order->product->nama_produk,
+                    'qty' => $order->quantity,
+                    'price' => $order->unit_price,
+                    'subtotal' => $order->subtotal,
+                ];
             }
 
             return [
                 'id' => $order->order_number,
                 'user_id' => $order->user_id,
-                'name' => $order->user->nama_lengkap ?? $order->user->name ?? 'Unknown User',
-                'phone' => $order->user->no_hp ?? $order->user->no_telp ?? '-',
-                'village_office' => $order->village_office ?? $order->user->alamat_balai_desa ?? '-',
+                'name' => $order->customer_name ?? ($order->user->name ?? 'Unknown User'),
+                'phone' => $order->customer_phone ?? ($order->user->no_telp ?? '-'),
+                'village_office' => $order->village_office ?? $order->customer_address ?? '-',
                 'date' => $order->created_at->toIso8601String(),
                 'date_formatted' => $order->created_at->format('d F Y'),
-                'items' => $formattedItems,
+                'items' => $items, // Data produk dari relasi database
                 'total_amount' => $order->total_amount,
                 'total_formatted' => $order->formatted_total,
                 'status' => $order->status,
