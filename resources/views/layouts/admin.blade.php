@@ -247,8 +247,8 @@
         .profile-button {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 6px;
+            padding: 4px 10px;
             background: white;
             border: 2px solid #e5e7eb;
             border-radius: 50px;
@@ -265,9 +265,8 @@
         }
 
         .profile-avatar {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--green), var(--green-light));
             display: flex;
@@ -276,15 +275,13 @@
             color: white;
             font-weight: 700;
             font-size: 14px;
-            flex-shrink: 0;
         }
 
         .profile-info {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            flex: 1;
-            min-width: 0;
+            gap: 0;
         }
 
         .profile-name {
@@ -292,24 +289,20 @@
             font-weight: 600;
             color: var(--green-dark);
             line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 110px;
         }
 
         .profile-role {
             font-size: 11px;
             color: #6b7280;
-            white-space: nowrap;
+            font-weight: 400;
+            line-height: 1.2;
         }
 
         .profile-chevron {
             color: #6b7280;
-            font-size: 12px;
+            font-size: 10px;
             transition: transform 0.2s ease;
-            flex-shrink: 0;
-            margin-left: auto;
+            margin-left: 4px;
         }
 
         .profile-dropdown.active .profile-chevron {

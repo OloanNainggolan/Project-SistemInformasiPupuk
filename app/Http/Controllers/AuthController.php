@@ -119,6 +119,51 @@ class AuthController extends Controller
         return view('user.dashboard');
     }
 
+    public function showProfil()
+    {
+        $user = auth()->user();
+        
+        // Ambil pesanan user dengan relasi
+        $orders = \App\Models\Order::with('user')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        
+        // Hitung statistik
+        $totalPesanan = \App\Models\Order::where('user_id', $user->id)->count();
+        $completedOrders = \App\Models\Order::where('user_id', $user->id)
+            ->where('status', 'Completed')
+            ->get();
+        
+        $totalPupuk = 0;
+        $totalBibit = 0;
+        $totalPenghematan = 0;
+        
+        foreach ($completedOrders as $order) {
+            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
+            if (is_array($items)) {
+                foreach ($items as $item) {
+                    if (isset($item['type'])) {
+                        if ($item['type'] === 'pupuk') {
+                            $totalPupuk += $item['qty'] ?? 0;
+                        } else if ($item['type'] === 'bibit') {
+                            $totalBibit += $item['qty'] ?? 0;
+                        }
+                    }
+                }
+            }
+            $totalPenghematan += $order->total_amount;
+        }
+        
+        return view('user.ProfilUser', compact(
+            'orders',
+            'totalPesanan',
+            'totalPupuk',
+            'totalBibit',
+            'totalPenghematan'
+        ));
+    }
+
     public function editProfil()
     {
         return view('user.EditProfil');

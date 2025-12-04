@@ -928,22 +928,48 @@
                 `Apakah data sudah benar?`;
             
             if (confirm(confirmMessage)) {
-                // Generate nomor pesanan
-                const nomorPesanan = '#' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                // Kirim data ke server
+                const formData = new FormData();
+                formData.append('nama', nama);
+                formData.append('no_hp', noHp);
+                formData.append('alamat', alamat);
+                formData.append('catatan', catatan);
+                formData.append('quantity', quantity);
+                formData.append('village_office', 'Balai Desa');
+                formData.append('_token', '{{ csrf_token() }}');
                 
-                alert(`✅ Pesanan Berhasil Dikonfirmasi!\n\n` +
-                    `Nomor Pesanan: ${nomorPesanan}\n` +
-                    `Total Pembayaran: Rp ${total.toLocaleString('id-ID')}\n\n` +
-                    `Silakan lakukan pembayaran di:\n` +
-                    `• Balai Desa setempat\n` +
-                    `• Dinas Pertanian Kabupaten/Kota\n` +
-                    `• Kantor Penyuluhan Pertanian (BP3K)\n\n` +
-                    `Bawa nomor pesanan dan identitas diri.\n` +
-                    `Maksimal pembayaran: 3 hari\n\n` +
-                    `Terima kasih!`);
-                
-                // Redirect ke halaman dashboard
-                window.location.href = "{{ route('dashboard') }}";
+                fetch('{{ route("user.pupukbibit.store", $produk->id_produk) }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`✅ Pesanan Berhasil Dikonfirmasi!\n\n` +
+                            `Nomor Pesanan: ${data.order_number}\n` +
+                            `Total Pembayaran: Rp ${data.total.toLocaleString('id-ID')}\n\n` +
+                            `Silakan lakukan pembayaran di:\n` +
+                            `• Balai Desa setempat\n` +
+                            `• Dinas Pertanian Kabupaten/Kota\n` +
+                            `• Kantor Penyuluhan Pertanian (BP3K)\n\n` +
+                            `Bawa nomor pesanan dan identitas diri.\n` +
+                            `Maksimal pembayaran: 3 hari\n\n` +
+                            `Terima kasih!`);
+                        
+                        // Redirect ke halaman dashboard
+                        window.location.href = "{{ route('dashboard') }}";
+                    } else {
+                        alert('❌ Gagal membuat pesanan: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('❌ Terjadi kesalahan saat membuat pesanan. Silakan coba lagi.');
+                });
             }
         }
         

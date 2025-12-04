@@ -126,9 +126,10 @@ class AdminController extends Controller
             ? round((($produkBulanIni - $produkBulanLalu) / $produkBulanLalu) * 100, 1)
             : ($produkBulanIni > 0 ? 100 : 0);
 
-        // Pesanan terbaru (limit 10)
+        // Pesanan dalam proses (limit 10) - hanya yang belum selesai
         $recentOrders = Order::with('user')
             ->confirmed()
+            ->whereIn('status', ['Pending', 'Processing', 'Ready'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();

@@ -38,6 +38,71 @@
     .page-subtitle {
         font-size: 14px;
         color: var(--color-text-grey);
+        margin-bottom: 16px;
+    }
+
+    .profile-info {
+        text-align: left;
+        margin: 16px 0;
+        font-size: 11px;
+        line-height: 1.5;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profile-info p {
+        margin: 0;
+        padding: 10px 12px;
+        color: #4b5563;
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        align-items: start;
+        gap: 10px;
+        word-break: break-word;
+        background: #f9fafb;
+        border-radius: 8px;
+        border-left: 3px solid var(--color-primary);
+    }
+
+    .profile-info i {
+        color: var(--color-primary);
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 13px;
+        text-align: center;
+    }
+    
+    .profile-info p span {
+        line-height: 1.5;
+    }
+
+    .profile-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .btn {
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 13px;
+    }
+
+    .btn-edit {
+        background: var(--color-primary);
+        color: white;
     }
 
     /* Stats Grid */
@@ -509,6 +574,63 @@
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- Orders Table - Pesanan dalam Proses -->
+        <div class="orders-section">
+            <h2><i class="fas fa-clock"></i> Pesanan dalam Pemrosesan</h2>
+            <p style="font-size: 13px; color: #6b7280; margin-top: -10px; margin-bottom: 15px;">
+                Pesanan yang memerlukan tindakan. Untuk melihat riwayat pesanan selesai, buka menu <a href="{{ route('admin.orders') }}" style="color: #10b981; font-weight: 600;">Pesanan</a>.
+            </p>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Balai Desa</th>
+                        <th>Tanggal</th>
+                        <th>Jenis</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recentOrders as $order)
+                    <tr style="cursor: pointer;" onclick="window.location='{{ route('admin.orders.show', $order->order_number) }}'">
+                        <td>{{ $order->order_number }}</td>
+                        <td>{{ $order->user->nama_lengkap ?? $order->user->name ?? 'N/A' }}</td>
+                        <td>{{ $order->village_office }}</td>
+                        <td>{{ $order->created_at->format('d M Y') }}</td>
+                        <td>
+                            @php
+                                $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
+                                $types = [];
+                                if (is_array($items)) {
+                                    foreach ($items as $item) {
+                                        if (isset($item['type'])) {
+                                            $types[] = ucfirst($item['type']);
+                                        }
+                                    }
+                                }
+                                echo implode(', ', array_unique($types)) ?: 'N/A';
+                            @endphp
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ strtolower($order->status) }}">
+                                {{ $order->status }}
+                            </span>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 30px; color: #6b7280;">
+                            <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 10px; display: block; color: #10b981;"></i>
+                            <strong>Semua pesanan sudah diproses!</strong><br>
+                            <small>Lihat riwayat pesanan di menu Pesanan</small>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </main>
 </div>
 @endsection

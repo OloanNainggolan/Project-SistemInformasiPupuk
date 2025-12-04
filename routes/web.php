@@ -49,9 +49,7 @@ Route::get('/kontak', function () {
 Route::post('/kontak/send', [AuthController::class, 'sendKontak'])->name('kontak.send');
 
 // Route untuk halaman Profil User
-Route::get('/profil', function () {
-    return view('user.ProfilUser');
-})->name('profil.user')->middleware('auth');
+Route::get('/profil', [AuthController::class, 'showProfil'])->name('profil.user')->middleware('auth');
 
 // Route untuk Edit Profil
 Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit')->middleware('auth');
@@ -68,6 +66,9 @@ Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
     // Halaman Konfirmasi Pesanan
     Route::post('/pupuk-bibit/{id}/konfirmasi', [PupukBibitController::class, 'confirmOrder'])->name('pupukbibit.konfirmasi');
     
+    // Simpan Pesanan ke Database
+    Route::post('/pupuk-bibit/{id}/store-order', [PupukBibitController::class, 'storeOrder'])->name('pupukbibit.store');
+    
     // Halaman Pesan Berhasil
     Route::get('/pesan-berhasil', function () {
         return view('user.pesan-berhasil');
@@ -80,12 +81,13 @@ Route::middleware('auth')->group(function () {
     // Route untuk halaman Pupuk & Bibit (gabungan) - backward compatibility
     Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupuk.bibit');
     
-    // Route untuk halaman Profil User
-    Route::get('/profil', function () {
-        return view('user.ProfilUser');
-    })->name('profil.user');
+    // Route untuk halaman Kontak
+    Route::get('/kontak', function () {
+        return view('user.kontak');
+    })->name('kontak');
+    Route::post('/kontak/send', [AuthController::class, 'sendKontak'])->name('kontak.send');
     
-    // Route untuk Edit Profil
+    // Route untuk Edit Profil (Route /profil sudah ada di atas pada line 52)
     Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit');
     Route::put('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update');
     
@@ -133,6 +135,7 @@ Route::prefix('admin')->group(function () {
         
         // Manajemen Pesanan
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
+        Route::get('/orders/{orderNumber}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
         
         // API Routes untuk Orders
         Route::prefix('api')->group(function () {

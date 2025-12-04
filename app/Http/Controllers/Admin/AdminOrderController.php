@@ -26,24 +26,74 @@ class AdminOrderController extends Controller
         $status = $request->input('status', 'all');
         $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);
+        $sort = $request->input('sort', 'newest');
+        $type = $request->input('type', 'all');
 
-        $orders = Order::with('user')
+        $ordersQuery = Order::with('user')
             ->confirmed() // Hanya yang confirmed_by_user = true
             ->search($query)
-            ->byStatus($status)
-            ->orderBy('created_at', 'desc')
-            ->paginate($limit);
+            ->byStatus($status);
+
+        // Filter by product type (pupuk/bibit)
+        if ($type !== 'all') {
+            $ordersQuery->whereRaw("JSON_SEARCH(items, 'one', ?, NULL, '$[*].type') IS NOT NULL", [$type]);
+        }
+
+        // Apply sorting
+        switch ($sort) {
+            case 'oldest':
+                $ordersQuery->orderBy('created_at', 'asc');
+                break;
+            case 'name_asc':
+                $ordersQuery->join('users', 'orders.user_id', '=', 'users.id')
+                    ->orderBy('users.nama_lengkap', 'asc')
+                    ->select('orders.*');
+                break;
+            case 'name_desc':
+                $ordersQuery->join('users', 'orders.user_id', '=', 'users.id')
+                    ->orderBy('users.nama_lengkap', 'desc')
+                    ->select('orders.*');
+                break;
+            case 'amount_low':
+                $ordersQuery->orderBy('total_amount', 'asc');
+                break;
+            case 'amount_high':
+                $ordersQuery->orderBy('total_amount', 'desc');
+                break;
+            case 'newest':
+            default:
+                $ordersQuery->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $orders = $ordersQuery->paginate($limit);
 
         $formattedOrders = $orders->map(function ($order) {
+            // Parse items if it's a JSON string
+            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
+            
+            // Format items for frontend
+            $formattedItems = [];
+            if (is_array($items)) {
+                foreach ($items as $item) {
+                    $formattedItems[] = [
+                        'name' => $item['product_name'] ?? 'N/A',
+                        'qty' => $item['quantity'] ?? 0,
+                        'price' => $item['price'] ?? 0,
+                        'type' => $item['type'] ?? 'N/A',
+                    ];
+                }
+            }
+
             return [
                 'id' => $order->order_number,
                 'user_id' => $order->user_id,
-                'name' => $order->user->nama_lengkap ?? 'Unknown User',
-                'phone' => $order->user->no_telp ?? '-',
+                'name' => $order->user->nama_lengkap ?? $order->user->name ?? 'Unknown User',
+                'phone' => $order->user->no_hp ?? $order->user->no_telp ?? '-',
                 'village_office' => $order->village_office ?? $order->user->alamat_balai_desa ?? '-',
                 'date' => $order->created_at->toIso8601String(),
                 'date_formatted' => $order->created_at->format('d F Y'),
-                'items' => $order->items,
+                'items' => $formattedItems,
                 'total_amount' => $order->total_amount,
                 'total_formatted' => $order->formatted_total,
                 'status' => $order->status,
@@ -118,5 +168,17 @@ class AdminOrderController extends Controller
             'completed' => $completedOrders,
             'rejected' => $rejectedOrders,
         ]);
+    }
+    
+    /**
+     * Tampilkan detail pesanan
+     */
+    public function show($orderNumber)
+    {
+        $order = Order::with('user')
+            ->where('order_number', $orderNumber)
+            ->firstOrFail();
+        
+        return view('admin.orders.detail', compact('order'));
     }
 }
