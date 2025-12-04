@@ -162,7 +162,7 @@
 
     /* Current Images Display */
     .current-images {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
     .current-images-title {
@@ -175,8 +175,8 @@
 
     .current-images-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 15px;
     }
 
     .current-image-item {
@@ -184,24 +184,77 @@
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .current-image-item:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .current-image-item.marked-delete {
+        opacity: 0.4;
+        border-color: #ef4444;
     }
 
     .current-image-item img {
         width: 100%;
-        height: 120px;
+        height: 140px;
         object-fit: cover;
+        display: block;
     }
 
     .current-image-badge {
         position: absolute;
-        top: 6px;
-        left: 6px;
+        top: 8px;
+        left: 8px;
         background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
         color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 5px 10px;
+        border-radius: 6px;
         font-size: 10px;
         font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .delete-image-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .delete-image-btn:hover {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        transform: scale(1.1);
+    }
+
+    .delete-image-btn.restore {
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+    }
+
+    .delete-image-btn.restore:hover {
+        background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+    }
+
+    .image-counter {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 5px;
+        font-weight: 600;
     }
 
     .file-upload-area {
@@ -486,17 +539,27 @@
         <!-- Current Images -->
         @if($product->images && $product->images->count() > 0)
         <div class="current-images">
-            <div class="current-images-title">Gambar Saat Ini:</div>
+            <div class="current-images-title">
+                Gambar Saat Ini: 
+                <span class="image-counter">(<span id="imageCount">{{ $product->images->count() }}</span> gambar)</span>
+            </div>
             <div class="current-images-grid">
                 @foreach($product->images as $image)
-                <div class="current-image-item">
+                <div class="current-image-item" data-image-id="{{ $image->id }}">
                     @if($image->is_primary)
                     <div class="current-image-badge">Utama</div>
                     @endif
+                    <button type="button" class="delete-image-btn" onclick="toggleDeleteImage(this, {{ $image->id }})">
+                        <i class="fas fa-times"></i>
+                    </button>
                     <img src="{{ asset($image->image_path) }}" alt="Product Image">
+                    <input type="hidden" name="existing_images[]" value="{{ $image->id }}" class="existing-image-input">
                 </div>
                 @endforeach
             </div>
+            <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">
+                <i class="fas fa-info-circle"></i> Klik tombol <i class="fas fa-times"></i> untuk menandai gambar yang akan dihapus
+            </p>
         </div>
         @endif
 
@@ -504,24 +567,33 @@
         <div class="form-group">
             <label class="form-label">
                 <i class="fas fa-images"></i>
-                Upload Gambar Baru (Opsional)
+                Upload Gambar Baru (Opsional - Maksimal 5 gambar total)
             </label>
             <div class="file-upload-area">
                 <input 
                     type="file" 
                     id="gambar" 
-                    name="gambar" 
+                    name="gambar[]" 
                     accept="image/*"
+                    multiple
+                    onchange="previewNewImages(this)"
                 >
                 <label for="gambar" class="file-upload-label">
                     <div class="file-upload-icon">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <div class="file-upload-text">Klik untuk upload gambar baru</div>
-                    <div class="file-upload-hint">JPG, PNG, GIF | Max 2MB | Biarkan kosong jika tidak ingin mengubah</div>
+                    <div class="file-upload-text">Klik untuk upload gambar baru (dapat pilih beberapa)</div>
+                    <div class="file-upload-hint">JPG, PNG, GIF | Max 2MB per gambar | Maksimal 5 gambar total</div>
                 </label>
             </div>
+            <div id="newImagePreview" style="display: none; margin-top: 15px;">
+                <div style="font-size: 13px; font-weight: 700; color: #6b7280; margin-bottom: 10px;">Preview Gambar Baru:</div>
+                <div id="previewGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;"></div>
+            </div>
             @error('gambar')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+            @error('gambar.*')
                 <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
@@ -597,6 +669,82 @@
 
 @push('scripts')
 <script>
+    // Toggle delete image
+    function toggleDeleteImage(button, imageId) {
+        const imageItem = button.closest('.current-image-item');
+        const hiddenInput = imageItem.querySelector('.existing-image-input');
+        
+        if (imageItem.classList.contains('marked-delete')) {
+            // Restore image
+            imageItem.classList.remove('marked-delete');
+            button.innerHTML = '<i class="fas fa-times"></i>';
+            button.classList.remove('restore');
+            hiddenInput.disabled = false;
+        } else {
+            // Mark for deletion
+            imageItem.classList.add('marked-delete');
+            button.innerHTML = '<i class="fas fa-undo"></i>';
+            button.classList.add('restore');
+            hiddenInput.disabled = true;
+        }
+        
+        updateImageCount();
+    }
+    
+    // Update image count
+    function updateImageCount() {
+        const existingImages = document.querySelectorAll('.current-image-item:not(.marked-delete)').length;
+        document.getElementById('imageCount').textContent = existingImages;
+    }
+    
+    // Preview new images
+    function previewNewImages(input) {
+        const previewContainer = document.getElementById('newImagePreview');
+        const previewGrid = document.getElementById('previewGrid');
+        
+        // Clear previous previews
+        previewGrid.innerHTML = '';
+        
+        if (input.files && input.files.length > 0) {
+            const existingCount = document.querySelectorAll('.current-image-item:not(.marked-delete)').length;
+            const totalImages = existingCount + input.files.length;
+            
+            if (totalImages > 5) {
+                alert(`Maksimal 5 gambar! Anda sudah memiliki ${existingCount} gambar. Silakan pilih maksimal ${5 - existingCount} gambar baru.`);
+                input.value = '';
+                previewContainer.style.display = 'none';
+                return;
+            }
+            
+            Array.from(input.files).forEach((file, index) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.style.cssText = 'position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.cssText = 'width: 100%; height: 140px; object-fit: cover;';
+                    
+                    const badge = document.createElement('div');
+                    badge.textContent = 'Baru';
+                    badge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase;';
+                    
+                    previewItem.appendChild(img);
+                    previewItem.appendChild(badge);
+                    previewGrid.appendChild(previewItem);
+                };
+                
+                reader.readAsDataURL(file);
+            });
+            
+            previewContainer.style.display = 'block';
+        } else {
+            previewContainer.style.display = 'none';
+        }
+    }
+
     // Auto-fill kategori berdasarkan tipe produk
     document.getElementById('tipe_produk').addEventListener('change', function() {
         const kategoriInput = document.getElementById('kategori');
@@ -634,6 +782,16 @@
         if (hargaSubsidi >= hargaNormal) {
             e.preventDefault();
             alert('Harga subsidi harus lebih kecil dari harga normal!');
+            return false;
+        }
+        
+        // Validasi total gambar
+        const existingCount = document.querySelectorAll('.current-image-item:not(.marked-delete)').length;
+        const newFiles = document.getElementById('gambar').files.length;
+        
+        if (existingCount === 0 && newFiles === 0) {
+            e.preventDefault();
+            alert('Produk harus memiliki minimal 1 gambar!');
             return false;
         }
     });

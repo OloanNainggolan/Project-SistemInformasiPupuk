@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Contact;
+use App\Models\Notification;
 
 class AuthController extends Controller
 {
@@ -222,11 +224,33 @@ class AuthController extends Controller
             'no_telp' => 'required|string|max:20',
             'email' => 'required|email',
             'pesan' => 'required|string',
+        ], [
+            'nama.required' => 'Nama wajib diisi',
+            'no_telp.required' => 'Nomor telepon wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'pesan.required' => 'Pesan wajib diisi',
         ]);
 
-        // Di sini Anda bisa menambahkan logika untuk menyimpan pesan ke database
-        // atau mengirim email ke admin
-        // Untuk sementara, kita hanya redirect dengan pesan sukses
+        // Simpan kontak ke database
+        $contact = Contact::create([
+            'nama' => $validated['nama'],
+            'no_telp' => $validated['no_telp'],
+            'email' => $validated['email'],
+            'pesan' => $validated['pesan'],
+            'user_id' => Auth::check() ? Auth::id() : null,
+            'status' => 'unread'
+        ]);
+
+        // Buat notifikasi untuk admin
+        Notification::create([
+            'type' => 'contact',
+            'title' => 'Pesan Baru dari ' . $validated['nama'],
+            'message' => substr($validated['pesan'], 0, 100) . (strlen($validated['pesan']) > 100 ? '...' : ''),
+            'link' => route('admin.notifications'),
+            'status' => 'unread',
+            'related_id' => $contact->id
+        ]);
 
         return redirect()->route('kontak')->with('success', 'Pesan Anda telah terkirim! Kami akan menghubungi Anda segera.');
     }

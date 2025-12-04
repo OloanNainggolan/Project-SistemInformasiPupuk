@@ -126,6 +126,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');
         Route::post('/notifications/send', [AdminController::class, 'sendNotification'])->name('admin.notifications.send');
         
+        // Contact Management
+        Route::patch('/contact/{id}/mark-read', [AdminController::class, 'markContactAsRead'])->name('admin.contact.mark-read');
+        Route::delete('/contact/{id}', [AdminController::class, 'deleteContact'])->name('admin.contact.delete');
+        Route::patch('/notification/{id}/mark-read', [AdminController::class, 'markNotificationAsRead'])->name('admin.notification.mark-read');
+        
         // Manajemen Pesanan
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
         

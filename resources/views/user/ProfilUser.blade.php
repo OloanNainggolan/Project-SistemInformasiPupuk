@@ -9,18 +9,18 @@
         max-width: 1300px;
         margin: 0 auto;
         padding: 2rem;
-        margin-top: 100px;
+        padding-top: 2rem; /* Jarak dari header yang sudah diatur content-wrapper */
     }
 
     .dashboard-title {
         background: linear-gradient(135deg, #4caf50, #45a049);
-        padding: 1.2rem 2rem;
-        border-radius: 15px;
+        padding: 1rem 1.8rem;
+        border-radius: 12px;
         display: inline-block;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         font-weight: 700;
         color: white;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
     }
 
@@ -41,10 +41,10 @@
     }
 
     .profile-card .profile-avatar {
-        width: 110px;
-        height: 110px;
+        width: 90px;
+        height: 90px;
         border-radius: 50%;
-        margin: 0 auto 1.2rem;
+        margin: 0 auto 1rem;
         overflow: hidden;
         border: 3px solid #4caf50;
         box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
@@ -65,7 +65,7 @@
     }
 
     .profile-name h2 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         color: #2e7d32;
         margin-bottom: 0.3rem;
         font-weight: 600;

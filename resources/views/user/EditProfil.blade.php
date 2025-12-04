@@ -19,7 +19,7 @@
         max-width: 900px;
         margin: 2rem auto;
         padding: 0 2rem;
-        margin-top: 120px;
+        padding-top: 0; /* Jarak dari header yang sudah diatur content-wrapper */
     }
 
     .edit-profile-card {
@@ -32,17 +32,17 @@
     .card-header {
         background: linear-gradient(135deg, var(--primary-green), #2e7d32);
         color: white;
-        padding: 2rem;
+        padding: 1.5rem;
         text-align: left;
     }
 
     .card-header h2 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         margin-bottom: 0.5rem;
     }
 
     .card-body {
-        padding: 2.5rem;
+        padding: 2rem;
     }
 
     .section-title {
@@ -65,8 +65,8 @@
     }
 
     .profile-avatar {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         overflow: hidden;
         border: 4px solid var(--primary-green);
