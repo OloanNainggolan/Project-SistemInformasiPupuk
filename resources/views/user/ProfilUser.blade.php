@@ -52,7 +52,7 @@
 
     <!-- Main Content -->
     <div class="main-content-area">
-        <!-- Statistics Overview -->
+        <!-- Statistics Overview - REAL DATA -->
         <div class="stats-section">
             <h2 class="section-title">
                 <i class="fas fa-chart-line"></i> Statistik Anda
@@ -63,11 +63,11 @@
                         <i class="fas fa-shopping-cart"></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">24</div>
+                        <div class="stat-number">{{ number_format($totalPesanan) }}</div>
                         <div class="stat-label">Total Pesanan</div>
                     </div>
                     <div class="stat-progress">
-                        <div class="progress-bar" style="width: 85%"></div>
+                        <div class="progress-bar" style="width: {{ min($totalPesanan * 5, 100) }}%"></div>
                     </div>
                 </div>
 
@@ -76,11 +76,11 @@
                         <i class="fas fa-box"></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">2,8 Ton</div>
-                        <div class="stat-label">Pupuk Diterima</div>
+                        <div class="stat-number">{{ number_format($pupukDiterima) }}</div>
+                        <div class="stat-label">Pesanan Pupuk Selesai</div>
                     </div>
                     <div class="stat-progress">
-                        <div class="progress-bar" style="width: 70%"></div>
+                        <div class="progress-bar" style="width: {{ min($pupukDiterima * 10, 100) }}%"></div>
                     </div>
                 </div>
 
@@ -89,11 +89,11 @@
                         <i class="fas fa-seedling"></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">125 Kg</div>
-                        <div class="stat-label">Bibit Diterima</div>
+                        <div class="stat-number">{{ number_format($bibitDiterima) }}</div>
+                        <div class="stat-label">Pesanan Bibit Selesai</div>
                     </div>
                     <div class="stat-progress">
-                        <div class="progress-bar" style="width: 60%"></div>
+                        <div class="progress-bar" style="width: {{ min($bibitDiterima * 10, 100) }}%"></div>
                     </div>
                 </div>
 
@@ -102,17 +102,17 @@
                         <i class="fas fa-piggy-bank"></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">2.4 Jt</div>
+                        <div class="stat-number">Rp {{ number_format($totalPenghematan / 1000, 0) }}K</div>
                         <div class="stat-label">Total Penghematan</div>
                     </div>
                     <div class="stat-progress">
-                        <div class="progress-bar" style="width: 90%"></div>
+                        <div class="progress-bar" style="width: {{ min($totalPenghematan / 10000, 100) }}%"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Orders -->
+        <!-- Recent Orders - REAL DATA -->
         <div class="orders-section-modern">
             <div class="section-header">
                 <div class="title-wrapper">
@@ -121,101 +121,62 @@
                     </h2>
                     <p class="section-subtitle">Daftar pesanan pupuk dan bibit Anda</p>
                 </div>
-                <a href="#" class="view-all-link">
+                <a href="{{ route('user.orders') }}" class="view-all-link">
                     Lihat Semua <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
 
             <div class="orders-grid">
+                @forelse($recentOrders as $order)
                 <div class="order-card">
                     <div class="order-header">
-                        <div class="order-id-badge">ORD-2025-001</div>
-                        <div class="order-status success">
-                            <i class="fas fa-check-circle"></i> Success
+                        <div class="order-id-badge">ORD-{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</div>
+                        <div class="order-status {{ strtolower($order->status) }}">
+                            @if($order->status == 'Completed')
+                                <i class="fas fa-check-circle"></i> Selesai
+                            @elseif($order->status == 'Pending')
+                                <i class="fas fa-clock"></i> Pending
+                            @elseif($order->status == 'Processing')
+                                <i class="fas fa-spinner"></i> Diproses
+                            @elseif($order->status == 'Ready')
+                                <i class="fas fa-box"></i> Siap
+                            @else
+                                <i class="fas fa-times-circle"></i> Ditolak
+                            @endif
                         </div>
                     </div>
                     <div class="order-body">
                         <div class="product-info">
-                            <div class="product-icon pupuk">
-                                <i class="fas fa-box"></i>
+                            <div class="product-icon {{ $order->tipe_produk ?? 'pupuk' }}">
+                                <i class="fas fa-{{ $order->tipe_produk == 'bibit' ? 'seedling' : 'box' }}"></i>
                             </div>
                             <div>
-                                <h4>Pupuk Urea Bersubsidi</h4>
-                                <p>50 Kg • Subsidi Pemerintah</p>
+                                <h4>{{ $order->nama_produk ?? 'Produk Tidak Ditemukan' }}</h4>
+                                <p>{{ ucfirst($order->tipe_produk ?? 'Pupuk') }} • {{ $order->kategori ?? '-' }}</p>
                             </div>
                         </div>
                         <div class="order-details">
                             <div class="detail-item">
                                 <i class="fas fa-calendar"></i>
-                                <span>24 Januari 2025</span>
+                                <span>{{ \Carbon\Carbon::parse($order->created_at)->locale('id')->translatedFormat('d M Y') }}</span>
                             </div>
                             <div class="detail-item">
                                 <i class="fas fa-money-bill-wave"></i>
-                                <span class="price">Rp 85.000</span>
+                                <span class="price">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="order-card">
-                    <div class="order-header">
-                        <div class="order-id-badge">ORD-2025-002</div>
-                        <div class="order-status success">
-                            <i class="fas fa-check-circle"></i> Success
-                        </div>
-                    </div>
-                    <div class="order-body">
-                        <div class="product-info">
-                            <div class="product-icon pupuk">
-                                <i class="fas fa-box"></i>
-                            </div>
-                            <div>
-                                <h4>Pupuk NPK Phonska</h4>
-                                <p>50 Kg • Subsidi Pemerintah</p>
-                            </div>
-                        </div>
-                        <div class="order-details">
-                            <div class="detail-item">
-                                <i class="fas fa-calendar"></i>
-                                <span>26 Januari 2025</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <span class="price">Rp 95.000</span>
-                            </div>
-                        </div>
-                    </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Belum Ada Pesanan</h3>
+                    <p>Anda belum memiliki riwayat pesanan</p>
+                    <a href="{{ route('pupuk.bibit') }}" class="btn-primary">
+                        <i class="fas fa-shopping-cart"></i> Mulai Belanja
+                    </a>
                 </div>
-
-                <div class="order-card">
-                    <div class="order-header">
-                        <div class="order-id-badge">ORD-2025-003</div>
-                        <div class="order-status success">
-                            <i class="fas fa-check-circle"></i> Success
-                        </div>
-                    </div>
-                    <div class="order-body">
-                        <div class="product-info">
-                            <div class="product-icon bibit">
-                                <i class="fas fa-seedling"></i>
-                            </div>
-                            <div>
-                                <h4>Bibit Padi Unggul IR64</h4>
-                                <p>10 Kg • Kualitas Premium</p>
-                            </div>
-                        </div>
-                        <div class="order-details">
-                            <div class="detail-item">
-                                <i class="fas fa-calendar"></i>
-                                <span>15 Maret 2025</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <span class="price">Rp 35.000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
@@ -591,6 +552,32 @@
     color: #2e7d32;
 }
 
+/* Order Status Colors */
+.order-status.completed {
+    background: #c8e6c9;
+    color: #2e7d32;
+}
+
+.order-status.pending {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.order-status.processing {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.order-status.ready {
+    background: #e1bee7;
+    color: #7b1fa2;
+}
+
+.order-status.rejected {
+    background: #ffcdd2;
+    color: #c62828;
+}
+
 .product-info {
     display: flex;
     gap: 15px;
@@ -655,6 +642,47 @@
     font-weight: 700;
     color: #1a5f3a;
     font-size: 1.1em;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9e9e9e;
+}
+
+.empty-state i {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: #e0e0e0;
+}
+
+.empty-state h3 {
+    font-size: 1.3em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    margin-bottom: 25px;
+}
+
+.empty-state .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #00897b, #00695c);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.empty-state .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 137, 123, 0.4);
 }
 
 /* Responsive */

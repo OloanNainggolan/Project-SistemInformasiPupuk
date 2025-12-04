@@ -8,6 +8,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminApiController;
 use App\Http\Controllers\PupukBibitController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     // Jika user sudah login, redirect ke dashboard
@@ -72,36 +75,18 @@ Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/profil', [ProfilController::class, 'show'])->name('profil.user');
+    Route::get('/profil/edit', [ProfilController::class, 'edit'])->name('profil.edit');
+    Route::put('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
     
-    // Profile Routes
-    Route::get('/profil', function () {
-        return view('user.ProfilUser');
-    })->name('profil.user');
-    Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit');
-    Route::put('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update');
+    // Notifikasi Routes
+    Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
+    Route::post('/notifikasi/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifikasi.read');
+    Route::post('/notifikasi/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifikasi.read.all');
     
-    // Notification Routes
-    Route::get('/notifikasi', function () {
-        return view('user.Notifikasi');
-    })->name('notifikasi');
-    Route::get('/notifikasi/detail/{type?}', function ($type = 'verifikasi') {
-        return view('user.DetailNotif', ['type' => $type]);
-    })->name('notifikasi.detail');
-    
-    // Product Order Routes
-    Route::prefix('user')->name('user.')->group(function () {
-        Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupukbibit');
-        Route::get('/pupuk-bibit/{id}/detail', [PupukBibitController::class, 'detail'])->name('pupukbibit.detail');
-        Route::post('/pupuk-bibit/{id}/konfirmasi', [PupukBibitController::class, 'confirmOrder'])->name('pupukbibit.konfirmasi');
-        Route::get('/pesan-berhasil', function () {
-            return view('user.pesan-berhasil');
-        })->name('pesan-berhasil');
-    });
-    
-    // Static route for order detail
-    Route::get('/lihat-detail-pesanan', function () {
-        return view('user.lihat-detail-pesan');
-    })->name('lihat-detail-pesanan');
+    // Route untuk melihat semua pesanan
+    Route::get('/pesanan', [OrderController::class, 'index'])->name('user.orders');
+    Route::get('/pesanan/{id}', [OrderController::class, 'show'])->name('user.orders.show');
 });
 
 // Admin Routes

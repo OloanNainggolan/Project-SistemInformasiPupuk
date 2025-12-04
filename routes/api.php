@@ -17,10 +17,3 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-// Contoh API routes untuk authentication (jika diperlukan)
-// Route::prefix('auth')->group(function () {
-//     Route::post('/login', [AuthApiController::class, 'login']);
-//     Route::post('/register', [AuthApiController::class, 'register']);
-//     Route::post('/logout', [AuthApiController::class, 'logout'])->middleware('auth:sanctum');
-// });

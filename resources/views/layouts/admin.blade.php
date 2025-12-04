@@ -700,10 +700,15 @@
                 <a href="{{ route('admin.notifications') }}" class="notification-bell">
                     <i class="fas fa-bell"></i>
                     @php
-                        $notificationCount = \App\Models\Notification::where('status', 'unread')->count() + 
-                                            \App\Models\Contact::where('status', 'unread')->count();
+                        // Check if notifications table exists
+                        $unreadCount = 0;
+                        try {
+                            $unreadCount = \App\Models\Notification::unread()->count();
+                        } catch (\Exception $e) {
+                            // Table doesn't exist yet, ignore error
+                        }
                     @endphp
-                    @if($notificationCount > 0)
+                    @if($unreadCount > 0)
                         <span class="notification-badge"></span>
                     @endif
                 </a>

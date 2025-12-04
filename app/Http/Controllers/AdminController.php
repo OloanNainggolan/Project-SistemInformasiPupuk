@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -97,102 +98,93 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        // Tanggal untuk perbandingan (bulan ini vs bulan lalu)
-        $now = now();
-        $startOfThisMonth = $now->copy()->startOfMonth();
-        $endOfThisMonth = $now->copy()->endOfMonth();
-        $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
-        $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
-
-        // ==========================================
-        // 1. TOTAL PESANAN - Real dari database
-        // ==========================================
+        // Overall Statistics
         $totalPesanan = Order::where('confirmed_by_user', true)->count();
-
-        // ==========================================
-        // 2. TOTAL PENDAPATAN - Hanya order Completed
-        // ==========================================
         $totalPendapatan = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
             ->sum('total_amount');
-
-        // ==========================================
-        // 3. TOTAL PETANI - Semua registered users
-        // ==========================================
         $totalPetani = User::count();
-
-        // ==========================================
-        // 4. TOTAL PRODUK - Dari tabel products
-        // ==========================================
         $totalProduk = Product::count();
 
-        // ==========================================
-        // STATISTIK BULAN LALU (untuk pertumbuhan)
-        // ==========================================
-        $pesananBulanLalu = Order::where('confirmed_by_user', true)
-            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+        // Current Month Statistics (November 2025)
+        $startOfMonth = Carbon::create(2025, 11, 1)->startOfDay();
+        $endOfMonth = Carbon::create(2025, 11, 30)->endOfDay();
+
+        $monthlyPesanan = Order::where('confirmed_by_user', true)
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->count();
-        $pendapatanBulanLalu = Order::where('confirmed_by_user', true)
+        
+        // Ganti completed_at dengan updated_at untuk status Completed
+        $monthlyPendapatan = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
-            ->whereBetween('completed_at', [$startOfLastMonth, $endOfLastMonth])
+            ->whereBetween('updated_at', [$startOfMonth, $endOfMonth])
             ->sum('total_amount');
-        $petaniBulanLalu = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
-        $produkBulanLalu = Product::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
 
-        // ==========================================
-        // STATISTIK BULAN INI (untuk pertumbuhan)
-        // ==========================================
-        $pesananBulanIni = Order::where('confirmed_by_user', true)
-            ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+        $monthlyPetani = User::whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->count();
-        $pendapatanBulanIni = Order::where('confirmed_by_user', true)
+
+        $monthlyProduk = Product::whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->count();
+
+        // Previous Month for comparison (December 2025)
+        $prevStartOfMonth = Carbon::create(2025, 12, 1)->startOfDay();
+        $prevEndOfMonth = Carbon::create(2025, 12, 31)->endOfDay();
+
+        $prevMonthPesanan = Order::where('confirmed_by_user', true)
+            ->whereBetween('created_at', [$prevStartOfMonth, $prevEndOfMonth])
+            ->count();
+
+        $prevMonthPendapatan = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
-            ->whereBetween('completed_at', [$startOfThisMonth, $endOfThisMonth])
+            ->whereBetween('updated_at', [$prevStartOfMonth, $prevEndOfMonth])
             ->sum('total_amount');
-        $petaniBulanIni = User::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
-        $produkBulanIni = Product::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
 
-        // Hitung persentase pertumbuhan real
-        $pertumbuhanPesanan = $pesananBulanLalu > 0 
-            ? round((($pesananBulanIni - $pesananBulanLalu) / $pesananBulanLalu) * 100, 1)
-            : ($pesananBulanIni > 0 ? 100 : 0);
+        $prevMonthPetani = User::whereBetween('created_at', [$prevStartOfMonth, $prevEndOfMonth])
+            ->count();
 
-        $pertumbuhanPendapatan = $pendapatanBulanLalu > 0 
-            ? round((($pendapatanBulanIni - $pendapatanBulanLalu) / $pendapatanBulanLalu) * 100, 1)
-            : ($pendapatanBulanIni > 0 ? 100 : 0);
+        $prevMonthProduk = Product::whereBetween('created_at', [$prevStartOfMonth, $prevEndOfMonth])
+            ->count();
 
-        $pertumbuhanPetani = $petaniBulanLalu > 0 
-            ? round((($petaniBulanIni - $petaniBulanLalu) / $petaniBulanLalu) * 100, 1)
-            : ($petaniBulanIni > 0 ? 100 : 0);
+        // Calculate growth percentages
+        $pertumbuhanPesanan = $prevMonthPesanan > 0 
+            ? round((($monthlyPesanan - $prevMonthPesanan) / $prevMonthPesanan) * 100, 1)
+            : ($monthlyPesanan > 0 ? 100 : 0);
 
-        $pertumbuhanProduk = $produkBulanLalu > 0 
-            ? round((($produkBulanIni - $produkBulanLalu) / $produkBulanLalu) * 100, 1)
-            : ($produkBulanIni > 0 ? 100 : 0);
+        $pertumbuhanPendapatan = $prevMonthPendapatan > 0
+            ? round((($monthlyPendapatan - $prevMonthPendapatan) / $prevMonthPendapatan) * 100, 1)
+            : ($monthlyPendapatan > 0 ? 100 : 0);
 
-        // ==========================================
-        // PESANAN TERBARU - Real order dari users
-        // ==========================================
-        $recentOrders = Order::with(['user', 'product'])
-            ->where('confirmed_by_user', true)
+        $pertumbuhanPetani = $prevMonthPetani > 0
+            ? round((($monthlyPetani - $prevMonthPetani) / $prevMonthPetani) * 100, 1)
+            : ($monthlyPetani > 0 ? 100 : 0);
+
+        $pertumbuhanProduk = $prevMonthProduk > 0
+            ? round((($monthlyProduk - $prevMonthProduk) / $prevMonthProduk) * 100, 1)
+            : ($monthlyProduk > 0 ? 100 : 0);
+
+        // Recent Orders
+        $recentOrders = Order::where('confirmed_by_user', true)
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 
-        // ==========================================
-        // STATISTIK PER STATUS - Count real orders
-        // ==========================================
+        // Order Status Counts
         $pendingCount = Order::where('confirmed_by_user', true)
             ->where('status', 'Pending')
             ->count();
+        
         $processingCount = Order::where('confirmed_by_user', true)
             ->where('status', 'Processing')
             ->count();
+        
         $readyCount = Order::where('confirmed_by_user', true)
             ->where('status', 'Ready')
             ->count();
+        
         $completedCount = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
             ->count();
+        
         $rejectedCount = Order::where('confirmed_by_user', true)
             ->where('status', 'Rejected')
             ->count();

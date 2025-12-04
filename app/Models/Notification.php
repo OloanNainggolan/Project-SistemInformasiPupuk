@@ -10,12 +10,15 @@ class Notification extends Model
     use HasFactory;
     
     protected $fillable = [
-        'type',
         'title',
         'message',
-        'link',
+        'type',
         'status',
-        'related_id'
+        'read_at',
+    ];
+
+    protected $casts = [
+        'read_at' => 'datetime',
     ];
     
     /**
@@ -25,12 +28,23 @@ class Notification extends Model
     {
         return $query->where('status', 'unread');
     }
-    
+
     /**
-     * Scope untuk notifikasi terbaru
+     * Scope untuk notifikasi yang sudah dibaca
      */
-    public function scopeLatest($query)
+    public function scopeRead($query)
     {
-        return $query->orderBy('created_at', 'desc');
+        return $query->where('status', 'read');
+    }
+
+    /**
+     * Mark notification as read
+     */
+    public function markAsRead()
+    {
+        $this->update([
+            'status' => 'read',
+            'read_at' => now(),
+        ]);
     }
 }
