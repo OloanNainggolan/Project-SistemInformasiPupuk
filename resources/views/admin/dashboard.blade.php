@@ -83,28 +83,35 @@
         margin: 16px 0;
         font-size: 11px;
         line-height: 1.5;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 
     .profile-info p {
-        margin: 8px 0;
+        margin: 0;
+        padding: 10px 12px;
         color: #4b5563;
-        display: flex;
-        align-items: flex-start;
-        gap: 6px;
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        align-items: start;
+        gap: 10px;
         word-break: break-word;
+        background: #f9fafb;
+        border-radius: 8px;
+        border-left: 3px solid var(--color-primary);
     }
 
     .profile-info i {
         color: var(--color-primary);
-        width: 14px;
         flex-shrink: 0;
-        margin-top: 2px;
-        font-size: 12px;
+        margin-top: 1px;
+        font-size: 13px;
+        text-align: center;
     }
     
     .profile-info p span {
-        flex: 1;
-        line-height: 1.4;
+        line-height: 1.5;
     }
 
     .profile-actions {
@@ -420,9 +427,12 @@
             </div>
         </div>
 
-        <!-- Orders Table -->
+        <!-- Orders Table - Pesanan dalam Proses -->
         <div class="orders-section">
-            <h2><i class="fas fa-shopping-cart"></i> Daftar Pesanan Terbaru</h2>
+            <h2><i class="fas fa-clock"></i> Pesanan dalam Pemrosesan</h2>
+            <p style="font-size: 13px; color: #6b7280; margin-top: -10px; margin-bottom: 15px;">
+                Pesanan yang memerlukan tindakan. Untuk melihat riwayat pesanan selesai, buka menu <a href="{{ route('admin.orders') }}" style="color: #10b981; font-weight: 600;">Pesanan</a>.
+            </p>
             <table class="orders-table">
                 <thead>
                     <tr>
@@ -436,9 +446,9 @@
                 </thead>
                 <tbody>
                     @forelse($recentOrders as $order)
-                    <tr>
-                        <td>{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
-                        <td>{{ $order->user->name ?? 'N/A' }}</td>
+                    <tr style="cursor: pointer;" onclick="window.location='{{ route('admin.orders.show', $order->order_number) }}'">
+                        <td>{{ $order->order_number }}</td>
+                        <td>{{ $order->user->nama_lengkap ?? $order->user->name ?? 'N/A' }}</td>
                         <td>{{ $order->village_office }}</td>
                         <td>{{ $order->created_at->format('d M Y') }}</td>
                         <td>
@@ -464,20 +474,15 @@
                     @empty
                     <tr>
                         <td colspan="6" style="text-align: center; padding: 30px; color: #6b7280;">
-                            <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
-                            Belum ada pesanan
+                            <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 10px; display: block; color: #10b981;"></i>
+                            <strong>Semua pesanan sudah diproses!</strong><br>
+                            <small>Lihat riwayat pesanan di menu Pesanan</small>
                         </td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-<<<<<<< Updated upstream
     </main>
 </div>
 @endsection
-=======
-    </div>
-</body>
-</html>
->>>>>>> Stashed changes

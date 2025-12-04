@@ -657,19 +657,19 @@
             <!-- Statistics Cards -->
             <div class="stats-grid">
                 <div class="stat-card purple">
-                    <div class="stat-value">24</div>
+                    <div class="stat-value">{{ $totalPesanan }}</div>
                     <div class="stat-label">Total Pesanan</div>
                 </div>
                 <div class="stat-card blue">
-                    <div class="stat-value">2,8 Ton</div>
+                    <div class="stat-value">{{ number_format($totalPupuk / 1000, 1) }} Ton</div>
                     <div class="stat-label">Pupuk Diterima</div>
                 </div>
                 <div class="stat-card red">
-                    <div class="stat-value">125 Kg</div>
+                    <div class="stat-value">{{ number_format($totalBibit, 0) }} Kg</div>
                     <div class="stat-label">Bibit Diterima</div>
                 </div>
                 <div class="stat-card pink">
-                    <div class="stat-value">2.4 Jt</div>
+                    <div class="stat-value">{{ number_format($totalPenghematan / 1000000, 1) }} Jt</div>
                     <div class="stat-label">Penghematan</div>
                 </div>
             </div>
@@ -688,49 +688,195 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            @forelse($orders as $order)
+                            <tr style="cursor: pointer; transition: background 0.2s;" 
+                                onmouseover="this.style.background='#f8f9fa'" 
+                                onmouseout="this.style.background='white'"
+                                onclick="showOrderDetail({{ $order->id }}, '{{ $order->order_number }}', '{{ $order->created_at->format('d F Y') }}', {{ json_encode($order->items) }}, {{ $order->total_amount }}, '{{ $order->status }}', '{{ $order->user->nama_lengkap }}', '{{ $order->user->alamat }}', '{{ $order->user->phone }}')">
                                 <td>
-                                    <div class="order-id">ORD-2025-001</div>
-                                    <div class="order-name">Pupuk Urea Bersubsidi</div>
+                                    <div class="order-id">{{ $order->order_number }}</div>
+                                    <div class="order-name">
+                                        @php
+                                            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
+                                            $productNames = array_column($items, 'name');
+                                            echo implode(', ', array_slice($productNames, 0, 2));
+                                            if(count($productNames) > 2) echo ' +' . (count($productNames) - 2) . ' lainnya';
+                                        @endphp
+                                    </div>
                                 </td>
-                                <td>24 Januari 2025</td>
-                                <td>Rp 85.000</td>
-                                <td><span class="status-badge">Success</span></td>
-                            </tr>
-                            <tr>
+                                <td>{{ $order->created_at->format('d F Y') }}</td>
+                                <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
                                 <td>
-                                    <div class="order-id">ORD-2025-002</div>
-                                    <div class="order-name">Pupuk NPK Phonska</div>
+                                    @if($order->status === 'Pending')
+                                        <span class="status-badge" style="background: #fff3cd; color: #856404;">Pending</span>
+                                    @elseif($order->status === 'Processing')
+                                        <span class="status-badge" style="background: #cfe2ff; color: #084298;">Diproses</span>
+                                    @elseif($order->status === 'Ready')
+                                        <span class="status-badge" style="background: #d1e7dd; color: #0f5132;">Siap Diambil</span>
+                                    @elseif($order->status === 'Completed')
+                                        <span class="status-badge">Selesai</span>
+                                    @elseif($order->status === 'Cancelled')
+                                        <span class="status-badge" style="background: #f8d7da; color: #842029;">Dibatalkan</span>
+                                    @endif
                                 </td>
-                                <td>26 Januari 2025</td>
-                                <td>Rp 95.000</td>
-                                <td><span class="status-badge">Success</span></td>
                             </tr>
+                            @empty
                             <tr>
-                                <td>
-                                    <div class="order-id">ORD-2025-003</div>
-                                    <div class="order-name">Bibit Padi Unggul IR64</div>
+                                <td colspan="4" style="text-align: center; padding: 40px; color: #999;">
+                                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                                    Belum ada riwayat pesanan
                                 </td>
-                                <td>15 Maret 2025</td>
-                                <td>Rp 35.000</td>
-                                <td><span class="status-badge">Success</span></td>
                             </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Pagination -->
-                <div class="pagination">
-                    <button class="page-arrow">←</button>
-                    <button class="page-btn active">01</button>
-                    <button class="page-btn">02</button>
-                    <button class="page-btn">03</button>
-                    <button class="page-arrow">→</button>
+                @if($orders->hasPages())
+                <div class="pagination" style="margin-top: 2rem;">
+                    {{ $orders->links() }}
                 </div>
+                @endif
             </div>
         </main>
     </div>
 </div>
+
+<!-- Order Detail Modal -->
+<div id="orderDetailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 15px; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+        <!-- Modal Header -->
+        <div style="padding: 1.5rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px 15px 0 0;">
+            <div>
+                <h3 style="margin: 0; font-size: 1.3rem;">Detail Pesanan</h3>
+                <p id="modalOrderNumber" style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.95rem;"></p>
+            </div>
+            <button onclick="closeModal()" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                ×
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div style="padding: 2rem;">
+            <!-- Customer Info -->
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #333; font-size: 1.1rem;">
+                    <i class="fas fa-user" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    Informasi Pemesan
+                </h4>
+                <div style="display: grid; gap: 0.8rem;">
+                    <div style="display: flex;">
+                        <span style="color: #666; width: 120px;">Nama</span>
+                        <span style="color: #333; font-weight: 500;" id="modalCustomerName"></span>
+                    </div>
+                    <div style="display: flex;">
+                        <span style="color: #666; width: 120px;">Telepon</span>
+                        <span style="color: #333; font-weight: 500;" id="modalCustomerPhone"></span>
+                    </div>
+                    <div style="display: flex;">
+                        <span style="color: #666; width: 120px;">Alamat</span>
+                        <span style="color: #333; font-weight: 500;" id="modalCustomerAddress"></span>
+                    </div>
+                    <div style="display: flex;">
+                        <span style="color: #666; width: 120px;">Tanggal Order</span>
+                        <span style="color: #333; font-weight: 500;" id="modalOrderDate"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products -->
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #333; font-size: 1.1rem;">
+                    <i class="fas fa-box" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    Produk yang Dipesan
+                </h4>
+                <div id="modalProducts" style="display: grid; gap: 0.8rem;"></div>
+            </div>
+
+            <!-- Status & Total -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white;">
+                <div>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.3rem;">Status Pesanan</div>
+                    <div id="modalStatus" style="font-size: 1.1rem; font-weight: 600;"></div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.3rem;">Total Pembayaran</div>
+                    <div id="modalTotal" style="font-size: 1.4rem; font-weight: 700;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showOrderDetail(id, orderNumber, date, items, total, status, customerName, customerAddress, customerPhone) {
+    // Parse items if string
+    const products = typeof items === 'string' ? JSON.parse(items) : items;
+    
+    // Set modal content
+    document.getElementById('modalOrderNumber').textContent = orderNumber;
+    document.getElementById('modalOrderDate').textContent = date;
+    document.getElementById('modalCustomerName').textContent = customerName;
+    document.getElementById('modalCustomerPhone').textContent = customerPhone;
+    document.getElementById('modalCustomerAddress').textContent = customerAddress;
+    
+    // Status translation
+    const statusMap = {
+        'Pending': 'Menunggu Konfirmasi',
+        'Processing': 'Sedang Diproses',
+        'Ready': 'Siap Diambil',
+        'Completed': 'Selesai',
+        'Cancelled': 'Dibatalkan'
+    };
+    document.getElementById('modalStatus').textContent = statusMap[status] || status;
+    
+    // Format total
+    document.getElementById('modalTotal').textContent = 'Rp ' + total.toLocaleString('id-ID');
+    
+    // Render products
+    const productsHtml = products.map(item => `
+        <div style="display: flex; justify-content: space-between; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+            <div>
+                <div style="font-weight: 600; color: #333; margin-bottom: 0.3rem;">${item.name}</div>
+                <div style="color: #666; font-size: 0.9rem;">
+                    ${item.qty} Kg × Rp ${item.price.toLocaleString('id-ID')}
+                </div>
+            </div>
+            <div style="font-weight: 700; color: #667eea; font-size: 1.1rem;">
+                Rp ${(item.qty * item.price).toLocaleString('id-ID')}
+            </div>
+        </div>
+    `).join('');
+    
+    document.getElementById('modalProducts').innerHTML = productsHtml;
+    
+    // Show modal
+    const modal = document.getElementById('orderDetailModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('orderDetailModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.getElementById('orderDetailModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Close with ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+</script>
+
 @endsection
 
 @push('scripts')

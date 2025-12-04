@@ -177,8 +177,8 @@
         .profile-button {
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 2px 6px;
+            gap: 6px;
+            padding: 4px 10px;
             background: white;
             border: 1.5px solid #e5e7eb;
             border-radius: 50px;
@@ -192,8 +192,8 @@
         }
 
         .profile-avatar {
-            width: 22px;
-            height: 22px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--green), var(--green-light));
             display: flex;
@@ -201,43 +201,35 @@
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 10px;
+            font-size: 14px;
         }
 
         .profile-info {
             display: flex;
-            flex-direction: row;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             gap: 0;
         }
 
         .profile-name {
-            font-size: 8.5px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--green-dark);
-            line-height: 1;
+            line-height: 1.2;
         }
 
         .profile-role {
-            font-size: 8.5px;
-            color: var(--green-dark);
+            font-size: 11px;
+            color: #6b7280;
             font-weight: 400;
-        }
-        
-        .profile-name::after {
-            content: '';
-            display: inline-block;
-            width: 1px;
-            height: 7px;
-            background: #d1d5db;
-            margin: 0 3px;
-            vertical-align: middle;
+            line-height: 1.2;
         }
 
         .profile-chevron {
             color: #6b7280;
-            font-size: 7px;
+            font-size: 10px;
             transition: transform 0.2s ease;
+            margin-left: 4px;
         }
 
         .profile-dropdown.active .profile-chevron {
