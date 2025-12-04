@@ -89,7 +89,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifikasi/detail/{type?}', function ($type = 'verifikasi') {
         return view('user.DetailNotif', ['type' => $type]);
     })->name('notifikasi.detail');
-    Route::get('/notifikasi/{id}', [UserNotificationController::class, 'show'])->name('user.notifications.show')->where('id', '[0-9]+');
+    Route::get('/notifikasi/{id}', [UserNotificationController::class, 'show'])->name('notifikasi.show')->where('id', '[0-9]+');
+    Route::post('/notifikasi/{id}/reply', [UserNotificationController::class, 'reply'])->name('notifikasi.reply')->where('id', '[0-9]+');
     
     // Product Order Routes
     Route::prefix('user')->name('user.')->group(function () {

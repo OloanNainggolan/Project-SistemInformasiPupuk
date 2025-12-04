@@ -142,9 +142,14 @@
                             <strong>Produk:</strong> {{ $notif['preview'] }}<br>
                             <strong>Total:</strong> Rp {{ number_format($notif['data']->total_price ?? 0, 0, ',', '.') }}
                         @elseif($notif['type'] === 'message' && isset($notif['reply_count']) && $notif['reply_count'] > 0)
-                            <strong>{{ $notif['data']->replies->last()->sender_type === 'admin' ? 'Anda' : $notif['user']->name }}:</strong> 
-                            {{ Str::limit($notif['preview'], 100) }}
+                            @php
+                                $lastReply = $notif['data']->replies->last();
+                                $lastSender = $lastReply->sender_type === 'admin' ? 'Anda' : $notif['user']->name;
+                            @endphp
+                            <span class="preview-sender {{ $lastReply->sender_type }}">{{ $lastSender }}:</span>
+                            {{ Str::limit($lastReply->message, 100) }}
                         @else
+                            <span class="preview-sender user">{{ $notif['user']->name ?? 'User' }}:</span>
                             {{ Str::limit($notif['preview'], 120) }}
                         @endif
                     </div>
@@ -557,6 +562,23 @@
     color: #6b7280;
     line-height: 1.5;
     margin-bottom: 8px;
+}
+
+.preview-sender {
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.preview-sender.admin {
+    color: #6366f1;
+    background: #eef2ff;
+}
+
+.preview-sender.user {
+    color: #10b981;
+    background: #d1fae5;
 }
 
 .message-replies {

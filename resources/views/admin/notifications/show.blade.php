@@ -27,11 +27,17 @@
         <div class="thread-message original">
             <div class="message-header">
                 <div class="sender-info">
-                    <div class="sender-avatar">
+                    @if($message->user && $message->user->photo_profile)
+                        <img src="{{ asset('images/profiles/' . $message->user->photo_profile) }}" alt="{{ $message->user->name }}" class="sender-avatar-img user" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    @endif
+                    <div class="sender-avatar" style="{{ $message->user && $message->user->photo_profile ? 'display:none;' : '' }}">
                         {{ strtoupper(substr($message->user->name ?? 'U', 0, 1)) }}
                     </div>
                     <div>
-                        <div class="sender-name">{{ $message->user->name ?? 'User' }}</div>
+                        <div class="sender-name">
+                            {{ $message->user->name ?? 'User' }}
+                            <span class="sender-badge user">Pengirim</span>
+                        </div>
                         <div class="sender-meta">
                             <span><i class="fas fa-phone"></i> {{ $message->user->no_telp ?? '-' }}</span>
                             <span><i class="fas fa-clock"></i> {{ $message->created_at->format('d M Y, H:i') }}</span>
@@ -70,11 +76,24 @@
         <div class="thread-message reply">
             <div class="message-header">
                 <div class="sender-info">
-                    <div class="sender-avatar admin">
-                        A
-                    </div>
+                    @if($reply->sender_type === 'admin')
+                        <img src="{{ asset('images/admin-avatar.png') }}" alt="Admin" class="sender-avatar-img admin" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="sender-avatar admin" style="display:none;">A</div>
+                    @else
+                        @if($reply->user && $reply->user->photo_profile)
+                            <img src="{{ asset('images/profiles/' . $reply->user->photo_profile) }}" alt="{{ $reply->user->name }}" class="sender-avatar-img user" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        @endif
+                        <div class="sender-avatar" style="{{ $reply->user && $reply->user->photo_profile ? 'display:none;' : '' }}">
+                            {{ strtoupper(substr($reply->user->name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
                     <div>
-                        <div class="sender-name">Admin</div>
+                        <div class="sender-name">
+                            {{ $reply->sender_type === 'admin' ? 'Anda (Admin)' : $reply->user->name }}
+                            <span class="sender-badge {{ $reply->sender_type }}">
+                                {{ $reply->sender_type === 'admin' ? 'Anda' : 'Pengirim' }}
+                            </span>
+                        </div>
                         <div class="sender-meta">
                             <span><i class="fas fa-clock"></i> {{ $reply->created_at->format('d M Y, H:i') }}</span>
                         </div>
@@ -245,6 +264,25 @@
     font-weight: 700;
     font-size: 18px;
     box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+    flex-shrink: 0;
+}
+
+.sender-avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.sender-avatar-img.user {
+    border: 3px solid #10b981;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+}
+
+.sender-avatar-img.admin {
+    border: 3px solid #6366f1;
+    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
 }
 
 .sender-avatar.admin {
@@ -257,6 +295,30 @@
     font-weight: 700;
     color: #065f46;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sender-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sender-badge.admin {
+    background: linear-gradient(135deg, #eef2ff, #ddd6fe);
+    color: #6366f1;
+    border: 1px solid #c7d2fe;
+}
+
+.sender-badge.user {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #059669;
+    border: 1px solid #6ee7b7;
 }
 
 .sender-meta {

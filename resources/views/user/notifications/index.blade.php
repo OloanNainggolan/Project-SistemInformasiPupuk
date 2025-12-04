@@ -55,10 +55,13 @@
             $lastActivity = $message->replies->count() > 0 ? $message->replies->last()->created_at : $message->created_at;
         @endphp
         <div class="message-card {{ $isUnread ? 'unread' : '' }}" data-message-id="{{ $message->id }}">
-            <a href="{{ route('user.notifications.show', $message->id) }}" class="message-link">
+            <a href="{{ route('notifikasi.show', $message->id) }}" class="message-link">
                 <div class="message-header">
                     <div class="sender-info">
-                        <div class="sender-avatar user">
+                        @if(Auth::user()->photo_profile)
+                            <img src="{{ asset('images/profiles/' . Auth::user()->photo_profile) }}" alt="{{ Auth::user()->name }}" class="sender-avatar-img user" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        @endif
+                        <div class="sender-avatar user" style="{{ Auth::user()->photo_profile ? 'display:none;' : '' }}">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         </div>
                         <div class="sender-details">
@@ -86,9 +89,14 @@
 
                 <div class="message-preview">
                     @if($message->replies->count() > 0)
-                        <strong>{{ $message->replies->last()->sender_type === 'admin' ? 'Admin' : 'Anda' }}:</strong> 
-                        {{ Str::limit($message->replies->last()->message, 100) }}
+                        @php
+                            $lastReply = $message->replies->last();
+                            $lastSender = $lastReply->sender_type === 'admin' ? 'Admin' : 'Anda';
+                        @endphp
+                        <span class="preview-sender {{ $lastReply->sender_type }}">{{ $lastSender }}:</span> 
+                        {{ Str::limit($lastReply->message, 100) }}
                     @else
+                        <span class="preview-sender user">Anda:</span>
                         {{ Str::limit($message->message, 120) }}
                     @endif
                 </div>
@@ -328,6 +336,20 @@
     font-weight: 700;
     font-size: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+}
+
+.sender-avatar-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.sender-avatar-img.user {
+    border: 2px solid #10b981;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .sender-avatar.user {
@@ -405,6 +427,23 @@
     color: #6b7280;
     line-height: 1.6;
     margin-bottom: 12px;
+}
+
+.preview-sender {
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.preview-sender.admin {
+    color: #6366f1;
+    background: #eef2ff;
+}
+
+.preview-sender.user {
+    color: #10b981;
+    background: #d1fae5;
 }
 
 /* Message Footer */

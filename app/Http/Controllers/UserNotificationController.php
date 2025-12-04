@@ -138,4 +138,31 @@ class UserNotificationController extends Controller
         return redirect()->route('user.notifications.index')
             ->with('success', "{$deleted} pesan berhasil dihapus");
     }
+
+    /**
+     * Store a reply to existing message thread
+     */
+    public function reply(Request $request, $id)
+    {
+        $parentMessage = Message::where('user_id', Auth::id())->findOrFail($id);
+        
+        $request->validate([
+            'message' => 'required|string|max:1000'
+        ], [
+            'message.required' => 'Pesan balasan tidak boleh kosong',
+            'message.max' => 'Pesan balasan maksimal 1000 karakter'
+        ]);
+
+        $reply = Message::create([
+            'user_id' => Auth::id(),
+            'subject' => 'Re: ' . $parentMessage->subject,
+            'message' => $request->message,
+            'sender_type' => 'user',
+            'status' => 'unread',
+            'reply_to' => $parentMessage->id
+        ]);
+
+        return redirect()->route('notifikasi.show', $parentMessage->id)
+            ->with('success', 'Balasan berhasil dikirim!');
+    }
 }
