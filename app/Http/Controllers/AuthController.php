@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Contact;
-use App\Models\Notification;
 
 class AuthController extends Controller
 {
@@ -119,51 +117,6 @@ class AuthController extends Controller
         return view('user.dashboard');
     }
 
-    public function showProfil()
-    {
-        $user = auth()->user();
-        
-        // Ambil pesanan user dengan relasi
-        $orders = \App\Models\Order::with('user')
-            ->where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
-        // Hitung statistik
-        $totalPesanan = \App\Models\Order::where('user_id', $user->id)->count();
-        $completedOrders = \App\Models\Order::where('user_id', $user->id)
-            ->where('status', 'Completed')
-            ->get();
-        
-        $totalPupuk = 0;
-        $totalBibit = 0;
-        $totalPenghematan = 0;
-        
-        foreach ($completedOrders as $order) {
-            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    if (isset($item['type'])) {
-                        if ($item['type'] === 'pupuk') {
-                            $totalPupuk += $item['qty'] ?? 0;
-                        } else if ($item['type'] === 'bibit') {
-                            $totalBibit += $item['qty'] ?? 0;
-                        }
-                    }
-                }
-            }
-            $totalPenghematan += $order->total_amount;
-        }
-        
-        return view('user.ProfilUser', compact(
-            'orders',
-            'totalPesanan',
-            'totalPupuk',
-            'totalBibit',
-            'totalPenghematan'
-        ));
-    }
-
     public function editProfil()
     {
         return view('user.EditProfil');
@@ -269,33 +222,11 @@ class AuthController extends Controller
             'no_telp' => 'required|string|max:20',
             'email' => 'required|email',
             'pesan' => 'required|string',
-        ], [
-            'nama.required' => 'Nama wajib diisi',
-            'no_telp.required' => 'Nomor telepon wajib diisi',
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
-            'pesan.required' => 'Pesan wajib diisi',
         ]);
 
-        // Simpan kontak ke database
-        $contact = Contact::create([
-            'nama' => $validated['nama'],
-            'no_telp' => $validated['no_telp'],
-            'email' => $validated['email'],
-            'pesan' => $validated['pesan'],
-            'user_id' => Auth::check() ? Auth::id() : null,
-            'status' => 'unread'
-        ]);
-
-        // Buat notifikasi untuk admin
-        Notification::create([
-            'type' => 'contact',
-            'title' => 'Pesan Baru dari ' . $validated['nama'],
-            'message' => substr($validated['pesan'], 0, 100) . (strlen($validated['pesan']) > 100 ? '...' : ''),
-            'link' => route('admin.notifications'),
-            'status' => 'unread',
-            'related_id' => $contact->id
-        ]);
+        // Di sini Anda bisa menambahkan logika untuk menyimpan pesan ke database
+        // atau mengirim email ke admin
+        // Untuk sementara, kita hanya redirect dengan pesan sukses
 
         return redirect()->route('kontak')->with('success', 'Pesan Anda telah terkirim! Kami akan menghubungi Anda segera.');
     }
@@ -307,33 +238,22 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'new_password' => 'required|string|min:4|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d).+$/',
+            'new_password' => 'required|string|min:4|confirmed',
         ], [
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
             'new_password.required' => 'Password baru wajib diisi',
             'new_password.min' => 'Password minimal 4 karakter',
-            'new_password.regex' => 'Password harus mengandung huruf dan angka',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
-        // Cari user berdasarkan email
         $user = User::where('email', $validated['email'])->first();
-        
         if (!$user) {
-            return back()
-                ->withInput(['email' => $validated['email']])
-                ->withErrors(['email' => 'Alamat email tidak terdaftar dalam sistem.']);
+            return back()->withInput()->withErrors(['email' => 'Alamat email tidak terdaftar.']);
         }
 
-        // Update password dengan hash
+        // Update password
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        // Log informasi untuk debugging (optional, bisa dihapus di production)
-        \Log::info('Password reset successful for user: ' . $user->email);
-
-        return redirect()->route('login')
-            ->with('success', 'Password berhasil direset! Silakan login dengan password baru Anda.');
+        return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
     }
 }
