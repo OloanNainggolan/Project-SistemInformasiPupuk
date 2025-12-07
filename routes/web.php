@@ -80,12 +80,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit');
     Route::put('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update');
     
-    // Notification Routes
-    Route::get('/notifikasi', [UserNotificationController::class, 'index'])->name('notifikasi');
-    Route::post('/notifikasi/mark-all-read', [UserNotificationController::class, 'markAllAsRead'])->name('user.notifications.markAllRead');
-    Route::post('/notifikasi/{id}/mark-read', [UserNotificationController::class, 'markAsRead'])->name('user.notifications.markRead');
-    Route::delete('/notifikasi/{id}', [UserNotificationController::class, 'destroy'])->name('user.notifications.destroy');
-    Route::post('/notifikasi/bulk-delete', [UserNotificationController::class, 'bulkDelete'])->name('user.notifications.bulkDelete');
+    // Route untuk halaman Notifikasi
+    Route::get('/notifikasi', function () {
+        return view('user.Notifikasi');
+    })->name('notifikasi');
     Route::get('/notifikasi/detail/{type?}', function ($type = 'verifikasi') {
         return view('user.DetailNotif', ['type' => $type]);
     })->name('notifikasi.detail');
