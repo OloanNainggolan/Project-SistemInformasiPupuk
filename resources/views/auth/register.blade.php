@@ -24,7 +24,7 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             min-height: 100vh;
             display: flex;

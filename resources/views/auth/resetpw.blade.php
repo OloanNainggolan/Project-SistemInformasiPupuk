@@ -20,7 +20,7 @@
       --border-color: #d1d5db;
       --error-red: #ef4444;
       --success-green: #10b981;
-      --font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     /* Reset dasar */

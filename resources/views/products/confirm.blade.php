@@ -31,7 +31,7 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--white);

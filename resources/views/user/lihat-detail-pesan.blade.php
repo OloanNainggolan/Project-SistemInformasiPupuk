@@ -12,7 +12,7 @@
 
     body {
         background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .container-detail {
