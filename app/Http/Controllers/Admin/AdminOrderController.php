@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Message;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -174,11 +175,15 @@ class AdminOrderController extends Controller
 
         // Update status
         $oldStatus = $order->status;
-        $order->status = $request->status;
+        $newStatus = $request->status;
+        $order->status = $newStatus;
         $order->save();
 
+        // Kirim notifikasi ke user bahwa status pesanan telah diupdate
+        $this->sendOrderStatusNotification($order, $oldStatus, $newStatus);
+
         return redirect()->route('admin.orders')
-            ->with('success', "Status pesanan {$orderId} berhasil diubah dari {$oldStatus} ke {$request->status}");
+            ->with('success', "Status pesanan {$orderId} berhasil diubah dari {$oldStatus} ke {$newStatus}");
     }
 
     /**
@@ -216,6 +221,120 @@ class AdminOrderController extends Controller
             'ready' => $readyOrders,
             'completed' => $completedOrders,
             'rejected' => $rejectedOrders,
+        ]);
+    }
+
+    /**
+     * Send order status update notification to user
+     */
+    private function sendOrderStatusNotification($order, $oldStatus, $newStatus)
+    {
+        // Status messages dalam Bahasa Indonesia
+        $statusMessages = [
+            'Pending' => 'Menunggu Konfirmasi',
+            'Processing' => 'Sedang Diproses',
+            'Ready' => 'Siap Diambil',
+            'Completed' => 'Selesai',
+            'Rejected' => 'Ditolak',
+        ];
+
+        // Emoji untuk setiap status
+        $statusEmoji = [
+            'Pending' => '⏳',
+            'Processing' => '⚙️',
+            'Ready' => '✅',
+            'Completed' => '🎉',
+            'Rejected' => '❌',
+        ];
+
+        // Buat pesan yang menarik dan informatif
+        $emoji = $statusEmoji[$newStatus] ?? '📦';
+        
+        $message = "━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+        $message .= "{$emoji} UPDATE STATUS PESANAN {$emoji}\n";
+        $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        
+        $message .= "📋 No. Pesanan: #{$order->order_number}\n";
+        $message .= "📦 Produk: {$order->product_name}\n";
+        $message .= "📊 Jumlah: {$order->quantity} {$order->unit}\n";
+        
+        // Tampilkan balai desa jika ada
+        if ($order->village_office) {
+            $message .= "🏛️ Balai Desa: {$order->village_office}\n";
+        }
+        
+        $message .= "\n";
+        
+        $message .= "🔄 Status Lama: {$statusEmoji[$oldStatus]} {$statusMessages[$oldStatus]}\n";
+        $message .= "✨ Status Baru: {$emoji} {$statusMessages[$newStatus]}\n\n";
+        
+        $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+        
+        // Pesan khusus berdasarkan status
+        if ($newStatus === 'Processing') {
+            $message .= "⚙️ INFORMASI:\n";
+            $message .= "Pesanan Anda sedang diproses oleh tim kami.\n";
+            $message .= "Harap menunggu informasi selanjutnya.\n";
+            $message .= "Estimasi proses: 1-3 hari kerja.\n\n";
+            
+            if ($order->village_office) {
+                $message .= "📍 Lokasi Pengambilan Nantinya:\n";
+                $message .= "Balai Desa {$order->village_office}\n";
+            }
+        } elseif ($newStatus === 'Ready') {
+            $message .= "✅ PESANAN SIAP DIAMBIL!\n";
+            $message .= "Pesanan Anda sudah siap.\n";
+            $message .= "Silakan datang untuk mengambil pesanan.\n\n";
+            
+            // Tampilkan lokasi pengambilan sesuai pilihan user
+            if ($order->village_office) {
+                $message .= "📍 Lokasi Pengambilan:\n";
+                $message .= "🏛️ Balai Desa {$order->village_office}\n";
+            } else {
+                $message .= "📍 Lokasi Pengambilan:\n";
+                $message .= "Akan dikonfirmasi lebih lanjut\n";
+            }
+            $message .= "⏰ Jam Operasional: 08.00 - 17.00 WIB\n";
+            $message .= "📋 Harap bawa bukti pesanan dan identitas diri\n";
+        } elseif ($newStatus === 'Completed') {
+            $message .= "🎉 PESANAN SELESAI!\n";
+            
+            if ($order->village_office) {
+                $message .= "Pesanan telah diambil di Balai Desa {$order->village_office}.\n";
+            }
+            
+            $message .= "Terima kasih atas kepercayaan Anda!\n";
+            $message .= "Semoga produk kami bermanfaat.\n\n";
+            $message .= "💬 Silakan berikan ulasan Anda untuk membantu kami meningkatkan layanan.\n";
+        } elseif ($newStatus === 'Rejected') {
+            $message .= "❌ PESANAN DITOLAK\n";
+            $message .= "Mohon maaf, pesanan Anda tidak dapat diproses.\n";
+            $message .= "Silakan hubungi admin untuk informasi lebih lanjut.\n\n";
+            $message .= "📞 Hubungi kami untuk klarifikasi.\n";
+        } elseif ($newStatus === 'Pending') {
+            $message .= "⏳ MENUNGGU KONFIRMASI\n";
+            $message .= "Pesanan Anda telah diterima dan menunggu konfirmasi.\n";
+            $message .= "Tim kami akan segera memproses pesanan Anda.\n\n";
+            
+            if ($order->village_office) {
+                $message .= "📍 Rencana Pengambilan:\n";
+                $message .= "Balai Desa {$order->village_office}\n";
+            }
+        }
+        
+        $message .= "\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+        $message .= "💡 Tip: Anda dapat membalas pesan ini jika ada pertanyaan.\n";
+
+        // Buat subject yang menarik
+        $subject = "{$emoji} Update Status Pesanan #{$order->order_number} - {$statusMessages[$newStatus]}";
+
+        Message::create([
+            'user_id' => $order->user_id,
+            'sender_type' => 'admin',
+            'subject' => $subject,
+            'message' => $message,
+            'status' => 'unread',
+            'reply_to' => null,
         ]);
     }
     
