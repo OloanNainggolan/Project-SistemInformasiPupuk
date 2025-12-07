@@ -65,7 +65,7 @@ class UserNotificationController extends Controller
             ->unread()
             ->update(['status' => 'read']);
 
-        return redirect()->route('user.notifications.index')
+        return redirect()->route('notifikasi')
             ->with('success', 'Semua notifikasi telah ditandai sebagai dibaca');
     }
 
@@ -110,7 +110,7 @@ class UserNotificationController extends Controller
             ]);
         }
 
-        return redirect()->route('user.notifications.index')
+        return redirect()->route('notifikasi')
             ->with('success', 'Pesan berhasil dihapus');
     }
 
@@ -135,7 +135,7 @@ class UserNotificationController extends Controller
             ]);
         }
 
-        return redirect()->route('user.notifications.index')
+        return redirect()->route('notifikasi')
             ->with('success', "{$deleted} pesan berhasil dihapus");
     }
 
