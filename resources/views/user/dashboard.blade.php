@@ -50,7 +50,11 @@
     .hero-section {
         padding: 0;
         margin: 0;
-        background: linear-gradient(135deg, #1a5f3a 0%, #2d7a4f 50%, #1a5f3a 100%);
+        background-image: url("{{ asset('images/teh.png') }}");
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -66,9 +70,28 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(circle at 20% 50%, rgba(212, 165, 116, 0.15) 0%, transparent 60%),
-                    radial-gradient(circle at 80% 50%, rgba(76, 175, 80, 0.15) 0%, transparent 60%);
+        background: linear-gradient(135deg, 
+            rgba(26, 95, 58, 0.68) 0%, 
+            rgba(45, 122, 79, 0.65) 30%,
+            rgba(26, 95, 58, 0.68) 60%,
+            rgba(34, 139, 34, 0.62) 100%);
+        backdrop-filter: blur(2px);
         pointer-events: none;
+        z-index: 1;
+    }
+
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(ellipse at 20% 30%, rgba(139, 195, 74, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(76, 175, 80, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 1;
     }
 
     .hero-content {
@@ -77,49 +100,16 @@
         gap: 70px;
         color: var(--white);
         width: 100%;
-        max-width: 1300px;
-        margin: 0 auto;
+        max-width: 1400px;
+        margin: 0;
+        margin-left: 80px;
         padding: 100px 60px 60px;
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
 
     .hero-image {
-        width: 52%;
-        background-image: url("{{ asset('images/teh.png') }}");
-        background-size: cover;
-        background-position: center;
-        height: 380px;
-        border-radius: 24px;
-        box-shadow: 0 25px 70px rgba(0,0,0,0.5), 
-                    0 15px 35px rgba(0,0,0,0.3),
-                    inset 0 0 0 2px rgba(255,255,255,0.2);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-image::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.2) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
-    }
-
-    /* Subtle highlight effect tanpa interaksi */
-    .hero-image::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-        animation: gentleGlow 8s ease-in-out infinite;
-        pointer-events: none;
+        display: none;
     }
 
     @keyframes gentleGlow {
@@ -128,18 +118,21 @@
     }
 
     .hero-text {
-        width: 48%;
+        width: 100%;
+        max-width: 950px;
         padding-right: 0;
+        text-align: left;
     }
 
     .welcome-text {
-        font-size: 3.8em;
+        font-size: 4.5em;
         font-weight: 900;
         color: var(--yellow-gold); 
-        margin-bottom: 20px;
+        margin-bottom: 56px;
         line-height: 1.05;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.3),
-                     0 0 30px rgba(255, 215, 0, 0.2);
+        text-shadow: 
+            3px 3px 8px rgba(0, 0, 0, 0.6),
+            0 0 40px rgba(255, 215, 0, 0.3);
         letter-spacing: -1.5px;
         animation: fadeInUp 0.8s ease-out;
     }
@@ -156,19 +149,20 @@
     }
 
     .hero-text p {
-        font-size: 1.2em;
-        margin-bottom: 32px;
-        line-height: 1.75;
-        color: rgba(255, 255, 255, 0.97);
+        font-size: 1.4em;
+        margin-bottom: 42px;
+        line-height: 1.85;
+        color: rgba(255, 255, 255, 0.98);
         font-weight: 400;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
         animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        max-width: 850px;
     }
 
     .cta-button {
-        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        background: linear-gradient(135deg, #52b569 0%, #42a356 100%);
         color: var(--white);
-        padding: 17px 45px;
+        padding: 18px 48px;
         border: none;
         border-radius: 12px;
         cursor: pointer;
@@ -176,8 +170,8 @@
         font-size: 1.1em;
         letter-spacing: 0.5px;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.45),
-                    0 5px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(82, 181, 105, 0.45),
+                    0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
         overflow: hidden;
         animation: fadeInUp 0.8s ease-out 0.4s backwards;
@@ -199,10 +193,10 @@
     }
     
     .cta-button:hover {
-        background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+        background: linear-gradient(135deg, #42a356 0%, #358f47 100%);
         transform: translateY(-4px);
-        box-shadow: 0 15px 40px rgba(76, 175, 80, 0.6),
-                    0 8px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 15px 40px rgba(82, 181, 105, 0.55),
+                    0 8px 20px rgba(0, 0, 0, 0.4);
     }
 
     .cta-button:active {
@@ -585,33 +579,37 @@
             min-height: 100vh;
             padding: 0;
             margin: 0;
+            background-attachment: scroll;
         }
 
         .hero-content {
             padding: 80px 20px 45px;
-            gap: 28px;
+            gap: 0;
+            justify-content: center;
         }
 
-        .hero-image {
-            height: 260px;
-            border-radius: 16px;
+        .hero-text {
+            width: 100%;
+            max-width: 100%;
+            text-align: center;
         }
 
         .welcome-text {
-            font-size: 2em;
-            margin-bottom: 14px;
+            font-size: 2.2em;
+            margin-bottom: 18px;
             letter-spacing: -1px;
         }
 
         .hero-text p {
-            font-size: 0.98em;
-            margin-bottom: 22px;
-            line-height: 1.65;
+            font-size: 1em;
+            margin-bottom: 26px;
+            line-height: 1.7;
+            max-width: 100%;
         }
 
         .cta-button {
-            padding: 12px 30px;
-            font-size: 0.95em;
+            padding: 14px 35px;
+            font-size: 1em;
         }
 
         .why-choose-us,
@@ -671,30 +669,30 @@
         }
 
         .hero-content {
-            padding: 70px 15px 35px;
-            gap: 22px;
+            padding: 60px 20px 40px;
+            gap: 0;
         }
 
-        .hero-image {
-            height: 220px;
-            border-radius: 14px;
+        .hero-text {
+            width: 100%;
+            text-align: center;
         }
 
         .welcome-text {
-            font-size: 1.7em;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
+            font-size: 1.9em;
+            margin-bottom: 16px;
+            letter-spacing: -0.8px;
         }
 
         .hero-text p {
-            font-size: 0.88em;
-            margin-bottom: 20px;
-            line-height: 1.6;
+            font-size: 0.95em;
+            margin-bottom: 24px;
+            line-height: 1.65;
         }
 
         .cta-button {
-            padding: 11px 26px;
-            font-size: 0.9em;
+            padding: 12px 30px;
+            font-size: 0.95em;
         }
 
         .why-choose-us h2,

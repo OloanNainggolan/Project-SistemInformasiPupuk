@@ -6,51 +6,57 @@
 <style>
     /* Main Container */
     .container {
-        max-width: 1300px;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 2rem;
-        margin-top: 100px;
-    }
-
-    .dashboard-title {
-        background: linear-gradient(135deg, #4caf50, #45a049);
-        padding: 1.2rem 2rem;
-        border-radius: 15px;
-        display: inline-block;
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: white;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+        padding: 2.5rem;
+        margin-top: 170px;
+        margin-bottom: 4rem;
     }
 
     .dashboard-content {
         display: grid;
-        grid-template-columns: 350px 1fr;
-        gap: 2.5rem;
+        grid-template-columns: 320px 1fr;
+        gap: 3rem;
     }
 
     /* Profile Card */
     .profile-card {
         background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border-radius: 24px;
+        padding: 3rem 2.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         height: fit-content;
         border: 1px solid #f0f0f0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 50%, #4CAF50 100%);
     }
 
     .profile-card .profile-avatar {
-        width: 110px;
-        height: 110px;
+        width: 130px;
+        height: 130px;
         border-radius: 50%;
-        margin: 0 auto 1.2rem;
+        margin: 0 auto 2rem;
         overflow: hidden;
-        border: 3px solid #4caf50;
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        border: 5px solid #4caf50;
+        box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .profile-card .profile-avatar:hover {
+        transform: scale(1.05);
     }
 
     .profile-card .profile-avatar img {
@@ -61,36 +67,54 @@
 
     .profile-name {
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
     }
 
     .profile-name h2 {
-        font-size: 1.3rem;
-        color: #2e7d32;
-        margin-bottom: 0.3rem;
-        font-weight: 600;
+        font-size: 1.6rem;
+        color: #1b5e20;
+        margin-bottom: 0.8rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
     }
 
     .profile-name p {
-        color: #888;
-        font-size: 0.9rem;
+        color: #666;
+        font-size: 0.95rem;
+        background: #f5f5f5;
+        padding: 0.5rem 1.4rem;
+        border-radius: 25px;
+        display: inline-block;
+        font-weight: 600;
+        border: 1px solid #e0e0e0;
     }
 
     .profile-info {
-        margin: 1.5rem 0;
-        padding: 1.5rem 0;
+        margin: 2.5rem 0;
+        padding: 2rem 0;
         border-top: 1px solid #e8e8e8;
         border-bottom: 1px solid #e8e8e8;
     }
 
     .info-item {
         display: flex;
-        align-items: flex-start;
-        gap: 0.9rem;
-        margin-bottom: 1.1rem;
+        align-items: center;
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
         color: #555;
-        font-size: 0.9rem;
+        font-size: 0.98rem;
         line-height: 1.5;
+        padding: 0.4rem 0;
+        transition: all 0.2s ease;
+    }
+
+    .info-item:hover {
+        color: #2e7d32;
+    }
+
+    .info-item:hover .info-icon {
+        background: #e8f5e9;
+        transform: scale(1.08);
     }
 
     .info-item:last-child {
@@ -98,74 +122,96 @@
     }
 
     .info-icon {
-        font-size: 18px;
-        min-width: 20px;
-        text-align: center;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        background: #f8f8f8;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: #4caf50;
+        transition: all 0.2s ease;
     }
 
     .profile-actions {
         display: flex;
         flex-direction: column;
-        gap: 0.9rem;
-        margin-top: 1.5rem;
+        gap: 1rem;
+        margin-top: 2rem;
     }
 
     .btn {
-        padding: 0.85rem 1rem;
+        padding: 1.1rem 1.5rem;
         border: none;
-        border-radius: 10px;
+        border-radius: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        font-size: 0.95rem;
+        font-size: 1rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.6rem;
+        gap: 0.8rem;
+        letter-spacing: 0.2px;
     }
 
     .btn-edit {
-        background: #4caf50;
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
         color: white;
-        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+        box-shadow: 0 3px 10px rgba(76, 175, 80, 0.2);
     }
 
     .btn-edit:hover {
-        background: #45a049;
+        background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        box-shadow: 0 6px 18px rgba(76, 175, 80, 0.35);
     }
 
     .btn-logout {
-        background: #f44336;
+        background: linear-gradient(135deg, #f44336 0%, #e53935 100%);
         color: white;
-        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
+        box-shadow: 0 3px 10px rgba(244, 67, 54, 0.2);
     }
 
     .btn-logout:hover {
-        background: #da190b;
+        background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        box-shadow: 0 6px 18px rgba(244, 67, 54, 0.35);
     }
 
     /* Land Info Section */
     .land-info {
         background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border-radius: 24px;
+        padding: 3rem 2.5rem;
+        margin-top: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         border: 1px solid #f0f0f0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .land-info::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 50%, #2e7d32 100%);
     }
 
     .land-info h3 {
-        font-size: 1.15rem;
-        color: #2e7d32;
-        margin-bottom: 1.5rem;
-        font-weight: 600;
+        font-size: 1.3rem;
+        color: #1b5e20;
+        margin-bottom: 2rem;
+        font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.7rem;
+        letter-spacing: -0.3px;
     }
 
     .land-details {
@@ -176,60 +222,80 @@
 
     .land-item {
         background: #fafafa;
-        padding: 1rem;
-        border-radius: 10px;
-        border: 1px solid #f0f0f0;
+        padding: 1.8rem 1.5rem;
+        border-radius: 16px;
+        border: 1px solid #e8e8e8;
+        transition: all 0.3s ease;
+    }
+
+    .land-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border-color: #4caf50;
+        background: white;
     }
 
     .land-label {
-        font-size: 0.85rem;
+        font-size: 0.88rem;
         color: #777;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
+        margin-bottom: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
     }
 
     .land-value {
-        font-size: 1.05rem;
-        font-weight: 600;
-        color: #333;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1b5e20;
     }
 
     .commodity-tags {
         display: flex;
-        gap: 0.8rem;
-        margin-top: 1rem;
+        gap: 0.9rem;
+        margin-top: 1.2rem;
+        flex-wrap: wrap;
     }
 
     .tag {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
+        padding: 0.65rem 1.4rem;
+        border-radius: 25px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+
+    .tag:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
     }
 
     .tag-padi {
         background: #fff3e0;
-        color: #f57c00;
+        color: #e65100;
+        border: 1.5px solid #ffcc80;
     }
 
     .tag-jagung {
         background: #fff9c4;
-        color: #f9a825;
+        color: #f57f17;
+        border: 1.5px solid #fff176;
     }
 
     /* Stats Section */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
         margin-bottom: 2rem;
     }
 
     .stat-card {
         background: white;
-        padding: 2rem;
+        padding: 2.5rem 2rem;
         border-radius: 20px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         text-align: center;
         transition: all 0.3s ease;
         position: relative;
@@ -253,8 +319,8 @@
     }
 
     .stat-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
     }
 
     .stat-card.purple {
@@ -292,15 +358,17 @@
     /* Orders Table */
     .orders-section {
         background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        border: 1px solid #f0f0f0;
     }
 
     .orders-section h3 {
-        font-size: 1.3rem;
-        color: #2e7d32;
-        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
+        color: #1b5e20;
+        margin-bottom: 2rem;
+        font-weight: 700;
     }
 
     .table-wrapper {
@@ -589,13 +657,11 @@
 @section('content')
 <div class="container">
     @if(session('success'))
-        <div style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
-            <i class="fas fa-check-circle"></i>
-            {{ session('success') }}
+        <div style="background: linear-gradient(135deg, #d4edda 0%, #c8e6c9 100%); color: #155724; border: 2px solid #81c784; padding: 1.2rem 1.8rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.15);">
+            <i class="fas fa-check-circle" style="font-size: 1.4rem;"></i>
+            <span style="font-weight: 600; font-size: 0.98rem;">{{ session('success') }}</span>
         </div>
     @endif
-    
-    <div class="dashboard-title">User Dashboard</div>
 
     <div class="dashboard-content">
         <!-- Left Sidebar - Profile Card -->
@@ -610,27 +676,27 @@
                 </div>
                 <div class="profile-info">
                     <div class="info-item">
-                        <span class="info-icon">✉️</span>
+                        <span class="info-icon"><i class="fas fa-envelope"></i></span>
                         <span>{{ auth()->user()->email }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-icon">📞</span>
+                        <span class="info-icon"><i class="fas fa-phone"></i></span>
                         <span>{{ auth()->user()->no_telp }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-icon">📍</span>
+                        <span class="info-icon"><i class="fas fa-map-marker-alt"></i></span>
                         <span>{{ auth()->user()->alamat }}{{ auth()->user()->kabupaten ? ', ' . auth()->user()->kabupaten : '' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-icon">📅</span>
+                        <span class="info-icon"><i class="fas fa-calendar-alt"></i></span>
                         <span>Bergabung Sejak {{ auth()->user()->created_at->format('F Y') }}</span>
                     </div>
                 </div>
                 <div class="profile-actions">
-                    <a href="{{ route('profil.edit') }}" class="btn btn-edit" style="text-decoration: none; text-align: center;">Edit Profil</a>
+                    <a href="{{ route('profil.edit') }}" class="btn btn-edit" style="text-decoration: none; text-align: center;"><i class="fas fa-edit"></i> Edit Profil</a>
                     <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                         @csrf
-                        <button type="submit" class="btn btn-logout" style="width: 100%;">➜ Keluar</button>
+                        <button type="submit" class="btn btn-logout" style="width: 100%;"><i class="fas fa-sign-out-alt"></i> Keluar</button>
                     </form>
                 </div>
             </div>
@@ -695,7 +761,7 @@
                                 </td>
                                 <td>24 Januari 2025</td>
                                 <td>Rp 85.000</td>
-                                <td><span class="status-badge">Success</span></td>
+                                <td><span class="status-badge">Berhasil</span></td>
                             </tr>
                             <tr>
                                 <td>
@@ -704,7 +770,7 @@
                                 </td>
                                 <td>26 Januari 2025</td>
                                 <td>Rp 95.000</td>
-                                <td><span class="status-badge">Success</span></td>
+                                <td><span class="status-badge">Berhasil</span></td>
                             </tr>
                             <tr>
                                 <td>
@@ -713,7 +779,7 @@
                                 </td>
                                 <td>15 Maret 2025</td>
                                 <td>Rp 35.000</td>
-                                <td><span class="status-badge">Success</span></td>
+                                <td><span class="status-badge">Berhasil</span></td>
                             </tr>
                         </tbody>
                     </table>

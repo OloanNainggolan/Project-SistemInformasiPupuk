@@ -18,93 +18,128 @@
     .container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 80px 20px 60px;
     }
 
     .page-header {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .page-header::after {
+        content: '';
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #4CAF50, #2e7d32);
+        display: block;
+        margin: 20px auto 0;
+        border-radius: 2px;
     }
 
     .page-header h1 {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         color: #2e7d32;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
         font-weight: 700;
+        position: relative;
+        display: inline-block;
     }
 
     .page-subtitle {
-        font-size: 1rem;
-        color: #666;
-        max-width: 700px;
+        font-size: 1.1rem;
+        color: #555;
+        max-width: 750px;
         margin: 0 auto;
-        line-height: 1.6;
+        line-height: 1.7;
     }
 
     .contact-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 30px;
+        gap: 35px;
         margin-top: 40px;
     }
 
     .contact-info-card {
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #f8fff9 100%);
+        padding: 45px;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border: 1px solid rgba(76, 175, 80, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(76, 175, 80, 0.15);
     }
 
     .info-header {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 30px;
+        gap: 18px;
+        margin-bottom: 25px;
     }
 
     .info-icon {
-        width: 60px;
-        height: 60px;
-        background: #f0f0f0;
-        border-radius: 10px;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #4CAF50, #2e7d32);
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 30px;
+        font-size: 35px;
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
     }
 
     .info-header h3 {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         color: var(--text-color);
+        font-weight: 600;
     }
 
     .info-description {
-        color: #666;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 25px;
+        color: #555;
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 28px;
     }
 
     .contact-detail {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         margin-bottom: 15px;
-        font-size: 0.95rem;
+        font-size: 1rem;
         color: var(--text-color);
+        font-weight: 500;
     }
 
     .operating-hours {
         margin-top: 30px;
+        padding-top: 30px;
+        border-top: 2px solid transparent;
+        border-image: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.3), transparent) 1;
     }
 
     .hours-header {
         display: flex;
         align-items: center;
         gap: 10px;
-        font-weight: 600;
-        margin-bottom: 15px;
-        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 1.15rem;
+        color: var(--text-color);
+    }
+
+    .hours-header::before {
+        content: '';
+        width: 4px;
+        height: 22px;
+        background: linear-gradient(180deg, #4CAF50, #2e7d32);
+        border-radius: 2px;
     }
 
     .hours-table {
@@ -114,8 +149,14 @@
     .hours-row {
         display: flex;
         justify-content: space-between;
-        padding: 10px 0;
+        padding: 14px 16px;
         border-bottom: 1px solid #f0f0f0;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+    }
+
+    .hours-row:hover {
+        background: rgba(76, 175, 80, 0.05);
     }
 
     .hours-row:last-child {
@@ -123,26 +164,46 @@
     }
 
     .day {
-        color: #666;
+        color: var(--text-color);
+        font-weight: 600;
     }
 
     .time {
-        font-weight: 600;
-        color: var(--text-color);
+        font-weight: 500;
+        color: #666;
     }
 
     .contact-form-card {
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #fafffe 100%);
+        padding: 45px;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border: 1px solid rgba(76, 175, 80, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+    .contact-form-card:hover {
+        box-shadow: 0 12px 40px rgba(76, 175, 80, 0.12);
     }
 
     .form-header {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         color: var(--text-color);
-        margin-bottom: 25px;
-        font-weight: 600;
+        margin-bottom: 30px;
+        font-weight: 700;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .form-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #4CAF50, #2e7d32);
+        border-radius: 2px;
     }
 
     .form-grid {
@@ -170,19 +231,27 @@
 
     .form-group input,
     .form-group textarea {
-        padding: 12px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        font-size: 0.95rem;
+        padding: 14px 18px;
+        border: 2px solid #e5e5e5;
+        border-radius: 10px;
+        font-size: 1rem;
         font-family: 'Arial', sans-serif;
         transition: all 0.3s ease;
+        background: #fafafa;
+    }
+
+    .form-group input:hover,
+    .form-group textarea:hover {
+        border-color: #d0d0d0;
+        background: #ffffff;
     }
 
     .form-group input:focus,
     .form-group textarea:focus {
         outline: none;
         border-color: var(--primary-green);
-        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
     }
 
     .form-group textarea {
@@ -192,57 +261,98 @@
 
     .submit-btn {
         width: 100%;
-        padding: 14px;
-        background: var(--primary-green);
+        padding: 16px;
+        background: linear-gradient(135deg, #4CAF50, #2e7d32);
         color: white;
         border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
+        border-radius: 12px;
+        font-size: 1.05rem;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
     }
 
     .submit-btn:hover {
-        background: #45a049;
+        background: linear-gradient(135deg, #45a049, #27692a);
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
     }
 
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
     .faq-section {
-        margin-top: 50px;
+        margin-top: 60px;
+        padding-top: 50px;
+        border-top: 2px solid transparent;
+        border-image: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.3), transparent) 1;
     }
 
     .faq-header {
-        font-size: 1.8rem;
+        font-size: 2rem;
         color: #2e7d32;
-        margin-bottom: 25px;
+        margin-bottom: 35px;
         font-weight: 700;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .faq-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #4CAF50, #2e7d32);
+        border-radius: 2px;
     }
 
     .faq-item {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background: linear-gradient(135deg, #ffffff 0%, #f9fffb 100%);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        border: 1px solid rgba(76, 175, 80, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 6px 25px rgba(76, 175, 80, 0.12);
+        border-color: rgba(76, 175, 80, 0.15);
     }
 
     .faq-question {
-        font-weight: 600;
+        font-weight: 700;
         color: var(--text-color);
-        margin-bottom: 10px;
-        font-size: 1rem;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .faq-question::before {
+        content: '\f059';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 400;
+        color: #4CAF50;
+        font-size: 1.2rem;
     }
 
     .faq-answer {
-        color: #666;
-        line-height: 1.6;
-        font-size: 0.95rem;
+        color: #555;
+        line-height: 1.7;
+        font-size: 1rem;
+        padding-left: 30px;
     }
 
     .alert {
@@ -263,6 +373,7 @@
     @media (max-width: 968px) {
         .contact-section {
             grid-template-columns: 1fr;
+            gap: 25px;
         }
 
         .form-grid {
@@ -270,16 +381,28 @@
         }
 
         .page-header h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
         }
 
         .container {
-            padding: 30px 15px;
+            padding: 50px 15px 40px;
         }
 
         .contact-info-card,
         .contact-form-card {
-            padding: 25px;
+            padding: 30px 20px;
+        }
+
+        .faq-header {
+            font-size: 1.7rem;
+        }
+
+        .faq-item {
+            padding: 25px 20px;
         }
     }
 </style>

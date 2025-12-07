@@ -91,7 +91,7 @@
 </section>
 
 <!-- ====== CTA SECTION ====== -->
-<section style="text-align:center; padding:70px 60px 50px; background:linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-bottom:0;">
+<section style="text-align:center; padding:70px 60px 70px; background:linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-bottom:-60px;">
     <h3 style="font-size:2rem; font-weight:bold; color:#2d7a3e; margin-bottom:20px;">Siap Meningkatkan Hasil Panen?</h3>
     <p style="color:#555; margin-bottom:35px; font-size:1.05rem; max-width:700px; margin-left:auto; margin-right:auto;">Bergabunglah dengan ribuan petani Indonesia yang sudah merasakan manfaatnya</p>
     <a href="{{ route('register') }}" style="padding:16px 45px; background:#2d7a3e; color:white; text-decoration:none; border-radius:12px; font-weight:600; font-size:1.05rem; display:inline-block; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(45,122,62,0.3);">Mulai Sekarang</a>
