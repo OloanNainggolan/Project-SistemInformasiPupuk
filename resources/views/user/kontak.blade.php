@@ -15,6 +15,11 @@
         --border-color: #ddd;
     }
 
+    body {
+        background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+        min-height: 100vh;
+    }
+
     .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -59,6 +64,7 @@
         grid-template-columns: 1fr 1fr;
         gap: 35px;
         margin-top: 40px;
+        animation: fadeIn 1s ease-out 0.4s both;
     }
 
     .contact-info-card {
@@ -370,6 +376,7 @@
         border: 1px solid #c3e6cb;
     }
 
+    /* Responsive Design */
     @media (max-width: 968px) {
         .contact-section {
             grid-template-columns: 1fr;
@@ -404,6 +411,36 @@
         .faq-item {
             padding: 25px 20px;
         }
+
+        .info-icon {
+            width: 55px;
+            height: 55px;
+            font-size: 24px;
+        }
+
+        .faq-header {
+            font-size: 1.6rem;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faq-header i {
+            font-size: 1.4rem;
+        }
+
+        .contact-detail {
+            gap: 10px;
+        }
+
+        .contact-detail i {
+            width: 18px;
+            font-size: 0.9rem;
+        }
+
+        .container::before,
+        .container::after {
+            display: none;
+        }
     }
 </style>
 @endpush
@@ -419,19 +456,35 @@
         <!-- Contact Info Card -->
         <div class="contact-info-card">
             <div class="info-header">
-                <div class="info-icon">💬</div>
+                <div class="info-icon"><i class="fas fa-headset"></i></div>
                 <h3>Butuh Bantuan Cepat?</h3>
             </div>
             <p class="info-description">Hubungi kami langsung melalui WhatsApp untuk respon lebih cepat</p>
+            
             <div class="contact-detail">
-                <span style="font-size: 1.2rem;">📞</span>
+                <i class="fas fa-phone-alt"></i>
                 <span>+62 812-3456-7890</span>
+            </div>
+            
+            <div class="contact-detail">
+                <i class="fab fa-whatsapp"></i>
+                <span>+62 812-3456-7890 (WhatsApp)</span>
+            </div>
+            
+            <div class="contact-detail">
+                <i class="fas fa-envelope"></i>
+                <span>info@pupuksubsidi.gov.id</span>
+            </div>
+            
+            <div class="contact-detail">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Jl. Pertanian No. 123, Jakarta Pusat</span>
             </div>
 
             <!-- Operating Hours -->
             <div class="operating-hours">
                 <div class="hours-header">
-                    <span>⏰</span>
+                    <i class="fas fa-clock" style="color: #4CAF50;"></i>
                     <span>Jam Operasional</span>
                 </div>
                 <div class="hours-table">
@@ -453,7 +506,10 @@
 
         <!-- Contact Form Card -->
         <div class="contact-form-card">
-            <h3 class="form-header">Kirim Pesan Sekarang</h3>
+            <h3 class="form-header">
+                <i class="fas fa-paper-plane"></i>
+                Kirim Pesan Sekarang
+            </h3>
 
             @if(session('success'))
                 <div class="alert alert-success">
@@ -492,25 +548,40 @@
 
     <!-- FAQ Section -->
     <div class="faq-section">
-        <h2 class="faq-header">Frequently Asked Questions</h2>
+        <h2 class="faq-header">
+            <i class="fas fa-question-circle"></i>
+            Pertanyaan yang Sering Diajukan
+        </h2>
         
         <div class="faq-item">
-            <div class="faq-question">Bagaimana cara mendaftar program subsidi?</div>
+            <div class="faq-question">
+                <i class="fas fa-user-plus"></i>
+                Bagaimana cara mendaftar program subsidi?
+            </div>
             <div class="faq-answer">Anda dapat mendaftar melalui website ini atau datang langsung ke Balai Desa setempat dengan membawa KTP.</div>
         </div>
 
         <div class="faq-item">
-            <div class="faq-question">Kapan pupuk akan dikirim?</div>
+            <div class="faq-question">
+                <i class="fas fa-shipping-fast"></i>
+                Kapan pupuk akan dikirim?
+            </div>
             <div class="faq-answer">Pupuk akan diambil 2-3 hari setelah konfirmasi pesanan. Anda akan menerima notifikasi saat pupuk siap diambil.</div>
         </div>
 
         <div class="faq-item">
-            <div class="faq-question">Bagaimana cara pembayaran?</div>
+            <div class="faq-question">
+                <i class="fas fa-money-bill-wave"></i>
+                Bagaimana cara pembayaran?
+            </div>
             <div class="faq-answer">Pembayaran hanya dapat dilakukan secara tunai di Balai Desa saat pengambilan pupuk.</div>
         </div>
 
         <div class="faq-item">
-            <div class="faq-question">Berapa batas maksimal pembelian?</div>
+            <div class="faq-question">
+                <i class="fas fa-balance-scale"></i>
+                Berapa batas maksimal pembelian?
+            </div>
             <div class="faq-answer">Batas pembelian disesuaikan dengan luas lahan yang terdaftar, maksimal 2 ton per musim tanam.</div>
         </div>
     </div>

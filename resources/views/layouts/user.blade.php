@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Pupuk & Bibit Subsidi')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
@@ -30,7 +31,7 @@
             right: 0;
             z-index: 1000;
             padding: 0;
-            border-bottom: 3px solid #10b981;
+            border-bottom: 3px solid #004d00;
         }
 
         .header-container {
@@ -57,13 +58,13 @@
         .logo {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+            box-shadow: 0 4px 15px #004d00;
         }
 
         .logo i {
@@ -73,7 +74,7 @@
 
         .logo-text h1 {
             font-size: 17px;
-            color: #065f46;
+            color: #004d00;
             font-weight: 700;
             margin: 0;
             letter-spacing: 0.3px;
@@ -81,7 +82,7 @@
 
         .logo-text p {
             font-size: 12px;
-            color: #059669;
+            color: #004d00;
             font-weight: 500;
             margin: 0;
         }
@@ -122,7 +123,7 @@
             left: 0;
             width: 0;
             height: 3px;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             transition: width 0.3s ease;
             border-radius: 10px 10px 0 0;
         }
@@ -140,11 +141,11 @@
 
         .nav-menu a:hover i {
             transform: scale(1.2);
-            color: #059669;
+            color: #047857;
         }
 
         .nav-menu a.active {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             color: white;
             box-shadow: 0 4px 15px rgba(16,185,129,0.3);
         }
@@ -178,7 +179,7 @@
         }
 
         .notification-icon i {
-            color: #10b981;
+            color: #004d00;
         }
 
         .notification-icon:hover {
@@ -189,30 +190,38 @@
 
         .notification-icon:hover i {
             transform: scale(1.2);
-            color: #059669;
+            color: #047857;
         }
 
         .notification-badge {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 3px;
+            right: 3px;
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
-            border-radius: 50%;
-            width: 8px;
-            height: 8px;
-            font-size: 10px;
+            border-radius: 12px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
             border: 2px solid white;
-            animation: pulse 2s infinite;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            animation: pulse-badge 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
+        @keyframes pulse-badge {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            }
+            50% { 
+                transform: scale(1.15); 
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.6);
+            }
         }
 
         .profile-section {
@@ -282,7 +291,7 @@
 
         .dropdown-item i {
             width: 20px;
-            color: #10b981;
+            color: #004d00;
             font-size: 16px;
         }
 
@@ -302,7 +311,7 @@
             width: 34px;
             height: 34px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00, #047857);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -339,7 +348,7 @@
 
         .profile-role {
             font-size: 11px;
-            color: #059669;
+            color: #047857;
             font-weight: 500;
         }
 
@@ -362,83 +371,165 @@
 
         /* ========== FOOTER ========== */
         footer {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            background-color: #2d5f2e;
             color: white;
-            padding: 60px 50px 0;
-            margin-top: auto;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        footer div {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        footer > div > div {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        footer > div > div > div {
+            flex: 1;
+            min-width: 250px;
+            text-align: left;
+        }
+
+        footer > div > div > div h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        footer > div > div > div p {
+            line-height: 1.6;
+            font-size: 0.95em;
+            color: rgba(255,255,255,0.9);
+        }
+
+        footer > div > div > div ul {
+            list-style: none;
+            padding: 0;
+            line-height: 2;
+        }
+
+        footer > div > div > div ul li a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer > div > div > div ul li a:hover {
+            color: #ffd700 !important;
+        }
+
+        footer > div > div:last-child {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        footer > div > div:last-child a {
+            color: white;
+            margin: 0 12px;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        footer > div > div:last-child a:hover {
+            color: #ffd700;
+        }
+
+        footer > div > div:last-child i {
+            margin-right: 8px;
+        }
+
+        footer > div > div:last-child p {
+            margin: 0;
+            font-size: 0.9em;
+            color: rgba(255,255,255,0.8);
+        }
+
+        @media (max-width: 768px) {
+            footer > div > div:first-child {
+                flex-direction: column;
+            }
+            
+            footer > div > div:first-child > div {
+                text-align: center !important;
+            }
+        }
+
+        .enhanced-footer {
+            background: linear-gradient(135deg, #1a5f3a 0%, #2d7a4f 100%);
+            color: white;
+            padding: 50px 0 0;
+            margin-top: 60px;
             position: relative;
             overflow: hidden;
         }
 
-        footer::before {
+        .enhanced-footer::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981);
-            background-size: 200% 100%;
-            animation: shimmer 3s linear infinite;
+            background: linear-gradient(90deg, #ffd700, #4CAF50, #ffd700);
+            animation: shimmer 3s ease-in-out infinite;
         }
 
         @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
-    .footer-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
-        gap: 50px;
-        margin-bottom: 40px;
-    }        .footer-logo {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
         }
 
-        .footer-logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 15px;
+        .footer-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 50px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-col h3 {
+            color: #ffd700;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-            margin-bottom: 10px;
+            gap: 10px;
         }
 
-        .footer-logo-icon i {
-            font-size: 30px;
-            color: white;
+        .footer-col h3 i {
+            font-size: 1.1em;
         }
 
-        .footer-logo h2 {
-            color: #FFF;
-            margin: 0;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-logo p {
+        .footer-col p {
+            color: rgba(255, 255, 255, 0.9);
             line-height: 1.8;
-            color: #d1fae5;
-            font-size: 14px;
-            margin-top: 10px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
         }
 
-        .footer-social {
+        /* Social Links */
+        .footer-social-links {
             display: flex;
             gap: 12px;
-            margin-top: 20px;
         }
 
-        .footer-social a {
+        .footer-social-links a {
             width: 40px;
             height: 40px;
             background: rgba(255, 255, 255, 0.1);
@@ -447,374 +538,125 @@
             align-items: center;
             justify-content: center;
             color: white;
-            text-decoration: none;
+            font-size: 1.2em;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .footer-social a:hover {
-            background: #10b981;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        .footer-social-links a:hover {
+            background: #ffd700;
+            color: #1a5f3a;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
         }
 
-        .footer-section h3 {
-            margin-bottom: 20px;
-            color: #FFF;
-            font-size: 18px;
-            font-weight: 600;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-section h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: linear-gradient(90deg, #10b981, #34d399);
-            border-radius: 2px;
-        }
-
+        /* Footer Links */
         .footer-links {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .footer-links li {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .footer-links a {
-            color: #d1fae5;
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .footer-links a i {
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: #FFF;
-            transform: translateX(5px);
+            color: #ffd700;
+            padding-left: 5px;
         }
 
-        .footer-links i {
-            width: 20px;
-            color: #10b981;
-            font-size: 16px;
+        .footer-links a:hover i {
+            transform: translateX(3px);
         }
 
-        .footer-contact-item {
+        /* Footer Contact */
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-contact li {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
-            color: #d1fae5;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 0.95em;
         }
 
-        .footer-contact-item i {
-            color: #10b981;
-            font-size: 18px;
-            margin-top: 2px;
-            min-width: 20px;
+        .footer-contact i {
+            color: #ffd700;
+            font-size: 1.1em;
+            width: 20px;
         }
 
+        /* Footer Bottom */
         .footer-bottom {
             text-align: center;
             padding: 25px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: #d1fae5;
-            font-size: 14px;
-            background: rgba(0, 0, 0, 0.2);
-            margin: 0 -50px;
-            padding-left: 50px;
-            padding-right: 50px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .footer-bottom p {
             margin: 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95em;
         }
 
-        .footer-bottom a {
-            color: #10b981;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
+        .footer-bottom strong {
+            color: #ffd700;
+            font-weight: 700;
         }
 
-        .footer-bottom a:hover {
-            color: #34d399;
-        }
-
-        /* ========== RESPONSIVE ========== */
-        /* Responsive - Large Tablet / Small Desktop */
-        @media (max-width: 1200px) {
-            .header-container {
-                padding: 15px 40px;
-            }
-            
-            .logo-text h1 {
-                font-size: 16px;
-            }
-            
-            .logo-text p {
-                font-size: 11px;
-            }
-            
-            .nav-menu a {
-                font-size: 13px;
-                padding: 9px 14px;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .header-container {
-                padding: 12px 25px;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .enhanced-footer {
+                padding: 40px 0 0;
             }
 
-            .logo {
-                width: 45px;
-                height: 45px;
-            }
-            
-            .logo i {
-                font-size: 20px;
+            .footer-container {
+                padding: 0 25px;
             }
 
-            .logo-text h1 {
-                font-size: 15px;
+            .footer-columns {
+                grid-template-columns: 1fr;
+                gap: 35px;
+                text-align: center;
             }
 
-            .logo-text p {
-                font-size: 10px;
-            }
-
-            .nav-menu {
-                gap: 6px;
-            }
-
-            .nav-menu a {
-                font-size: 12px;
-                padding: 8px 12px;
-            }
-            
-            .nav-menu a i {
-                font-size: 14px;
-            }
-
-            .header-right {
-                gap: 6px;
-            }
-
-            .notification-icon,
-            .profile-section {
-                padding: 8px 10px;
-            }
-
-            .profile-name {
-                font-size: 12px;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-            }
-
-            .footer-logo {
-                grid-column: 1 / -1;
-            }
-
-            footer {
-                padding: 50px 30px 0;
-            }
-        }
-
-        /* Responsive - Tablet */
-        @media (max-width: 900px) {
-            .header-container {
-                padding: 12px 20px;
-            }
-
-            .nav-menu a span {
-                display: none;
-            }
-
-            .nav-menu a {
-                padding: 8px;
-                min-width: 36px;
+            .footer-col h3 {
                 justify-content: center;
             }
 
-            .profile-section {
-                gap: 6px;
-                padding: 6px 10px;
+            .footer-social-links {
+                justify-content: center;
             }
 
-            .profile-avatar {
-                width: 30px;
-                height: 30px;
-            }
-
-            .profile-avatar i {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .header-container {
-                padding: 12px 15px;
-            }
-
-            .logo {
-                width: 40px;
-                height: 40px;
-            }
-
-            .logo i {
-                font-size: 18px;
-            }
-
-            .logo-text h1 {
-                font-size: 14px;
-            }
-
-            .logo-text p {
-                font-size: 9px;
-            }
-
-            .nav-menu {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                background-color: white;
-                flex-direction: column;
-                padding: 20px;
-                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-                transition: left 0.3s;
-                gap: 12px;
-                max-height: calc(100vh - 70px);
-                overflow-y: auto;
-            }
-
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .nav-menu a {
-                width: 100%;
-                padding: 12px 15px;
-                border-bottom: 1px solid #f0f0f0;
-                justify-content: flex-start;
-                gap: 10px;
-            }
-
-            .nav-menu a span {
-                display: inline;
-            }
-
-            .header-right {
-                gap: 5px;
-            }
-
-            .notification-icon {
-                padding: 8px;
-            }
-
-            .profile-section {
-                padding: 6px 8px;
-            }
-
-            .profile-info {
-                display: none;
-            }
-
-            .profile-avatar {
-                width: 32px;
-                height: 32px;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .footer-logo {
-                grid-column: auto;
-            }
-
-            footer {
-                padding: 40px 20px 0;
+            .footer-links a,
+            .footer-contact li {
+                justify-content: center;
             }
 
             .footer-bottom {
-                font-size: 12px;
-            }
-
-            .content-wrapper {
-                margin-top: 70px;
-                padding: 15px;
-            }
-        }
-
-        /* Responsive - Mobile */
-        @media (max-width: 480px) {
-            .header-container {
-                padding: 10px 12px;
-            }
-
-            .logo-section {
-                gap: 10px;
-            }
-
-            .logo {
-                width: 36px;
-                height: 36px;
-            }
-
-            .logo i {
-                font-size: 16px;
-            }
-
-            .logo-text h1 {
-                font-size: 13px;
-            }
-
-            .logo-text p {
-                display: none;
-            }
-
-            .notification-icon,
-            .profile-section {
-                padding: 6px;
-                border-radius: 8px;
-            }
-
-            .profile-avatar {
-                width: 28px;
-                height: 28px;
-            }
-
-            .profile-avatar i {
-                font-size: 12px;
-            }
-
-            .content-wrapper {
-                margin-top: 60px;
-                padding: 10px;
-            }
-
-            footer {
-                padding: 30px 15px 0;
+                padding: 20px 0;
             }
         }
     </style>
@@ -870,7 +712,15 @@
                 <!-- Notification Icon -->
                 <a href="{{ route('notifikasi') }}" class="notification-icon" title="Notifikasi">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
+                    @php
+                        $unreadMessages = \App\Models\Message::where('user_id', Auth::id())
+                            ->fromAdmin()
+                            ->unread()
+                            ->count();
+                    @endphp
+                    @if($unreadMessages > 0)
+                        <span class="notification-badge">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}</span>
+                    @endif
                 </a>
 
                 <!-- Profile Section with Dropdown -->
@@ -879,7 +729,7 @@
                         @if(auth()->user()->foto)
                             <img src="{{ asset(auth()->user()->foto) }}" alt="Profile">
                         @else
-                            <i class="fas fa-user"></i>
+                            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                         @endif
                     </div>
                     <div class="profile-info">
@@ -914,55 +764,48 @@
         @yield('content')
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <!-- Branding Section -->
-            <div class="footer-logo">
-                <div class="footer-logo-icon">
-                    <i class="fa-solid fa-seedling"></i>
+    <!-- Enhanced Footer -->
+    <footer class="enhanced-footer">
+        <div class="footer-container">
+            <div class="footer-columns">
+                <!-- Kolom 1 - About -->
+                <div class="footer-col">
+                    <h3><i class="fas fa-seedling"></i> Tentang Kami</h3>
+                    <p>Platform digital terpercaya untuk subsidi pupuk dan bibit berkualitas bagi petani Indonesia.</p>
+                    <div class="footer-social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
                 </div>
-                <h2>Pupuk Subsidi Indonesia</h2>
-                <p>Platform resmi pemerintah untuk distribusi pupuk dan bibit bersubsidi kepada petani Indonesia. Mendukung ketahanan pangan nasional melalui program subsidi berkelanjutan.</p>
-                <div class="footer-social">
-                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
+                <!-- Kolom 2 - Quick Links -->
+                <div class="footer-col">
+                    <h3><i class="fas fa-link"></i> Menu Cepat</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ route('home') }}"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                        <li><a href="{{ route('pupuk.bibit') }}"><i class="fas fa-chevron-right"></i> Pupuk & Bibit</a></li>
+                        <li><a href="{{ route('kontak') }}"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+                        <li><a href="{{ route('dashboard') }}"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3 - Contact -->
+                <div class="footer-col">
+                    <h3><i class="fas fa-phone-alt"></i> Hubungi Kami</h3>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia</li>
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-envelope"></i> info@pupukbibit.go.id</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Menu Links -->
-            <div class="footer-section">
-                <h3>Menu Utama</h3>
-                <ul class="footer-links">
-                    <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i>Beranda</a></li>
-                    <li><a href="{{ route('pupuk.bibit') }}"><i class="fas fa-seedling"></i>Pupuk & Bibit</a></li>
-                    <li><a href="{{ route('profil.user') }}"><i class="fas fa-user"></i>Profil</a></li>
-                    <li><a href="{{ route('kontak') }}"><i class="fas fa-envelope"></i>Kontak</a></li>
-                </ul>
+            <!-- Copyright -->
+            <div class="footer-bottom">
+                <p>&copy; {{ date('Y') }} <strong>Pupuk & Bibit Subsidi</strong>. All rights reserved.</p>
             </div>
-
-            <!-- Contact Info -->
-            <div class="footer-section">
-                <h3>Hubungi Kami</h3>
-                <div class="footer-contact-item">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span>Jl. Sitoluama, Laguboti, Toba</span>
-                </div>
-                <div class="footer-contact-item">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>+62 813 2323 09</span>
-                </div>
-                <div class="footer-contact-item">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>info@pupuksubsidi.id</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} INFORMATION SYSTEMS - <a href="https://www.del.ac.id" target="_blank">Del Institute of Technology</a>. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -988,6 +831,66 @@
                 document.getElementById('navMenu').classList.remove('active');
             }
         });
+
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Newsletter Form
+        document.querySelector('.newsletter-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            alert('Terima kasih! Email ' + email + ' telah terdaftar untuk newsletter.');
+            e.target.reset();
+        });
+
+        // Animate footer elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.footer-column, .footer-newsletter').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add fadeInUp animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 
     @stack('scripts')

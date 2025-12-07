@@ -19,7 +19,10 @@ class Product extends Model
         'harga_normal',
         'stok_produk',
         'gambar',
-        'deskripsi'
+        'deskripsi',
+        'manfaat',
+        'bahan',
+        'cara_penggunaan'
     ];
 
     /**
@@ -37,5 +40,25 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class, 'product_id', 'id_produk')
                     ->where('is_primary', true);
+    }
+
+    /**
+     * Relasi ke Orders
+     * Product bisa memiliki banyak pesanan
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'product_id', 'id_produk');
+    }
+
+    /**
+     * Get total quantity sold
+     */
+    public function getTotalSoldAttribute()
+    {
+        return $this->orders()
+            ->where('confirmed_by_user', true)
+            ->whereIn('status', ['Completed', 'Processing', 'Ready'])
+            ->sum('quantity');
     }
 }
