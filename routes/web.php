@@ -97,6 +97,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/pesan-berhasil', function () {
             return view('user.pesan-berhasil');
         })->name('pesan-berhasil');
+        
+        // Order Detail Route
+        Route::get('/orders/{id}/detail', [AuthController::class, 'getOrderDetail'])->name('orders.detail');
+        
+        // Debug route
+        Route::get('/debug-orders', function() {
+            $orders = \App\Models\Order::with('product')->whereIn('order_number', ['ORD-2025-001', 'ORD-2025-002'])->get();
+            return response()->json($orders);
+        });
     });
     
     // Static route for order detail
@@ -116,6 +125,7 @@ Route::prefix('admin')->group(function () {
     // Protected routes (harus login)
     Route::middleware('admin.auth')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/dashboard/detail/{type}', [AdminController::class, 'getDashboardDetail'])->name('admin.dashboard.detail');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         
         // Profile Routes
