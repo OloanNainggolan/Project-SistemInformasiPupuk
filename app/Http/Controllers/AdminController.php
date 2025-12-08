@@ -134,7 +134,7 @@ class AdminController extends Controller
             ->count();
         $pendapatanBulanLalu = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
-            ->whereBetween('completed_at', [$startOfLastMonth, $endOfLastMonth])
+            ->whereBetween('updated_at', [$startOfLastMonth, $endOfLastMonth])
             ->sum('total_amount');
         $petaniBulanLalu = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
         $produkBulanLalu = Product::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
@@ -147,7 +147,7 @@ class AdminController extends Controller
             ->count();
         $pendapatanBulanIni = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
-            ->whereBetween('completed_at', [$startOfThisMonth, $endOfThisMonth])
+            ->whereBetween('updated_at', [$startOfThisMonth, $endOfThisMonth])
             ->sum('total_amount');
         $petaniBulanIni = User::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
         $produkBulanIni = Product::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();

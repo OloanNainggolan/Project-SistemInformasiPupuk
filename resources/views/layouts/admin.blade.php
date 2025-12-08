@@ -305,14 +305,14 @@
         }
 
         .profile-name {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #065f46;
             line-height: 1.2;
         }
 
         .profile-role {
-            font-size: 11px;
+            font-size: 10px;
             color: #059669;
             line-height: 1.2;
             font-weight: 500;
@@ -702,9 +702,17 @@
                     <i class="fas fa-box"></i>
                     <span>Produk</span>
                 </a>
-                <a href="{{ route('admin.notifications.index') }}" class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
-                    <i class="fas fa-bell"></i>
-                    <span>Notifikasi</span>
+                <a href="{{ route('admin.notifications.inbox') }}" class="nav-link {{ request()->routeIs('admin.notifications.inbox') ? 'active' : '' }}">
+                    <i class="fas fa-inbox"></i>
+                    <span>Notifikasi Masuk</span>
+                    @php $unreadCount = \App\Models\Message::fromUser()->unread()->count(); @endphp
+                    @if($unreadCount > 0)
+                        <span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; margin-left: 5px;">{{ $unreadCount }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('admin.notifications.send') }}" class="nav-link {{ request()->routeIs('admin.notifications.send') ? 'active' : '' }}">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Kirim Notifikasi</span>
                 </a>
             </nav>
 
@@ -714,17 +722,6 @@
                 <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
                     <i class="fas fa-bars"></i>
                 </button>
-
-                <!-- Notification Bell -->
-                <a href="{{ route('admin.notifications.index') }}" class="notification-bell">
-                    <i class="fas fa-bell"></i>
-                    @php
-                        $unreadMessages = \App\Models\Message::fromUser()->unread()->count();
-                    @endphp
-                    @if($unreadMessages > 0)
-                        <span class="notification-badge">{{ $unreadMessages }}</span>
-                    @endif
-                </a>
 
                 <!-- Profile Dropdown -->
                 <div class="profile-dropdown" id="profileDropdown">
@@ -803,7 +800,7 @@
                         <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-angle-right"></i> Overview</a></li>
                         <li><a href="{{ route('admin.orders') }}"><i class="fas fa-angle-right"></i> Pesanan</a></li>
                         <li><a href="{{ route('admin.products.index') }}"><i class="fas fa-angle-right"></i> Produk</a></li>
-                        <li><a href="{{ route('admin.notifications.index') }}"><i class="fas fa-angle-right"></i> Notifikasi</a></li>
+                        <li><a href="{{ route('admin.notifications.send') }}"><i class="fas fa-angle-right"></i> Kirim Notifikasi</a></li>
                     </ul>
                 </div>
 

@@ -85,6 +85,19 @@
                 <div class="message-subject">
                     <i class="fas fa-envelope"></i>
                     {{ $message->subject }}
+                    @if($message->sender_type === 'admin' && $message->priority)
+                        <span class="priority-badge priority-{{ $message->priority }}">
+                            @if($message->priority === 'urgent')
+                                <i class="fas fa-exclamation-circle"></i> MENDESAK
+                            @elseif($message->priority === 'high')
+                                <i class="fas fa-arrow-up"></i> PENTING
+                            @elseif($message->priority === 'normal')
+                                <i class="fas fa-minus"></i> NORMAL
+                            @else
+                                <i class="fas fa-arrow-down"></i> RENDAH
+                            @endif
+                        </span>
+                    @endif
                 </div>
 
                 <div class="message-preview">
@@ -96,7 +109,10 @@
                         <span class="preview-sender {{ $lastReply->sender_type }}">{{ $lastSender }}:</span> 
                         {{ Str::limit($lastReply->message, 100) }}
                     @else
-                        <span class="preview-sender user">Anda:</span>
+                        @php
+                            $originalSender = $message->sender_type === 'admin' ? 'Admin' : 'Anda';
+                        @endphp
+                        <span class="preview-sender {{ $message->sender_type }}">{{ $originalSender }}:</span>
                         {{ Str::limit($message->message, 120) }}
                     @endif
                 </div>
@@ -112,10 +128,17 @@
                         Percakapan Aktif
                     </span>
                     @else
-                    <span class="message-type user-msg">
-                        <i class="fas fa-paper-plane"></i>
-                        Menunggu Balasan
-                    </span>
+                        @if($message->sender_type === 'admin')
+                        <span class="message-type admin-msg">
+                            <i class="fas fa-bell"></i>
+                            Notifikasi dari Admin
+                        </span>
+                        @else
+                        <span class="message-type user-msg">
+                            <i class="fas fa-paper-plane"></i>
+                            Menunggu Balasan
+                        </span>
+                        @endif
                     @endif
                 </div>
             </a>
@@ -420,6 +443,44 @@
 .message-subject i {
     color: #10b981;
     font-size: 14px;
+}
+
+/* Priority Badges */
+.priority-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+}
+
+.priority-badge i {
+    font-size: 10px;
+}
+
+.priority-urgent {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.priority-high {
+    background: #fed7aa;
+    color: #9a3412;
+}
+
+.priority-normal {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.priority-low {
+    background: #e5e7eb;
+    color: #4b5563;
 }
 
 .message-preview {

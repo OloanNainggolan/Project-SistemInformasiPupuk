@@ -60,57 +60,16 @@ class AuthController extends Controller
     {
         // Validasi input
         $credentials = $request->validate([
-            'login' => 'required|string',
-            'password' => 'required|string',
-        ], [
-            'login.required' => 'Username atau Email wajib diisi',
-            'password.required' => 'Password wajib diisi',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        // Tentukan apakah login menggunakan email atau username
-        $loginType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        // Cari user berdasarkan email atau username
-        $user = User::where($loginType, $credentials['login'])->first();
-
-        if (!$user) {
-            return back()
-                ->withInput($request->only('login'))
-                ->withErrors(['login' => 'Username atau Email tidak ditemukan']);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
         }
 
-        // Cek apakah password di-hash atau plain text
-        $passwordMatch = false;
-        
-        // Cek jika password sudah di-hash dengan bcrypt
-        if (str_starts_with($user->password, '$2y$')) {
-            // Password sudah di-hash, gunakan Hash::check
-            $passwordMatch = Hash::check($credentials['password'], $user->password);
-        } else {
-            // Password masih plain text (backward compatibility)
-            $passwordMatch = ($credentials['password'] === $user->password);
-            
-            // Jika match, hash password untuk keamanan di masa depan
-            if ($passwordMatch) {
-                $user->password = Hash::make($credentials['password']);
-                $user->save();
-            }
-        }
-
-        if (!$passwordMatch) {
-            return back()
-                ->withInput($request->only('login'))
-                ->withErrors(['password' => 'Password yang Anda masukkan salah']);
-        }
-
-        // Login user
-        Auth::login($user, $request->filled('remember'));
-
-        // Regenerate session untuk keamanan
-        $request->session()->regenerate();
-
-        // Redirect ke dashboard
-        return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
+        return back()->withErrors(['email' => 'Email atau password salah.']);
     }
 
     public function logout(Request $request)
@@ -178,6 +137,64 @@ class AuthController extends Controller
     }
 
     public function updateProfil(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validation rules
+        $rules = [
+            'nama_lengkap' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'no_telp' => 'required|string|max:20',
+            'username' => 'nullable|string|max:255',
+            'kabupaten' => 'nullable|string|max:255',
+            'kode_pos' => 'nullable|string|max:10',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
+
+        // Only validate password if user fills in the password field
+        if ($request->filled('password')) {
+            $rules['current_password'] = 'required';
+            $rules['password'] = 'required|min:3|confirmed';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Check password if user wants to change it
+        if ($request->filled('password')) {
+            // Verify current password
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'Sandi saat ini tidak sesuai.'])->withInput();
+            }
+            // Update with new password
+            $validated['password'] = Hash::make($request->password);
+        }
+
+        // Handle file upload
+        if ($request->hasFile('foto')) {
+            // Delete old photo if exists
+            if ($user->foto && file_exists(public_path($user->foto))) {
+                unlink(public_path($user->foto));
+            }
+
+            $file = $request->file('foto');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/profiles'), $filename);
+            $validated['foto'] = 'images/profiles/' . $filename;
+        }
+
+        // Remove password fields if not changing password
+        if (!$request->filled('password')) {
+            unset($validated['password']);
+        }
+
+        // Update user
+        $user->update($validated);
+
+        return redirect()->route('profil.user')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function updateProfilSecondMethod(Request $request)
     {
         $user = Auth::user();
 
@@ -277,12 +294,6 @@ class AuthController extends Controller
             'no_telp' => 'required|string|max:20',
             'email' => 'required|email',
             'pesan' => 'required|string',
-        ], [
-            'nama.required' => 'Nama wajib diisi',
-            'no_telp.required' => 'Nomor telepon wajib diisi',
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
-            'pesan.required' => 'Pesan wajib diisi',
         ]);
 
         // Jika user login, simpan ke tabel messages (sistem notifikasi baru)
@@ -328,33 +339,22 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'new_password' => 'required|string|min:4|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d).+$/',
+            'new_password' => 'required|string|min:4|confirmed',
         ], [
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
             'new_password.required' => 'Password baru wajib diisi',
             'new_password.min' => 'Password minimal 4 karakter',
-            'new_password.regex' => 'Password harus mengandung huruf dan angka',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
-        // Cari user berdasarkan email
         $user = User::where('email', $validated['email'])->first();
-        
         if (!$user) {
-            return back()
-                ->withInput(['email' => $validated['email']])
-                ->withErrors(['email' => 'Alamat email tidak terdaftar dalam sistem.']);
+            return back()->withInput()->withErrors(['email' => 'Alamat email tidak terdaftar.']);
         }
 
-        // Update password dengan hash
+        // Update password
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        // Log informasi untuk debugging (optional, bisa dihapus di production)
-        \Log::info('Password reset successful for user: ' . $user->email);
-
-        return redirect()->route('login')
-            ->with('success', 'Password berhasil direset! Silakan login dengan password baru Anda.');
+        return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
     }
 }

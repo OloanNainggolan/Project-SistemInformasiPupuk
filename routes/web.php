@@ -81,9 +81,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update');
     
     // Route untuk halaman Notifikasi
-    Route::get('/notifikasi', function () {
-        return view('user.Notifikasi');
-    })->name('notifikasi');
+    Route::get('/notifikasi', [UserNotificationController::class, 'index'])->name('notifikasi');
+    Route::post('/notifikasi/mark-all-read', [UserNotificationController::class, 'markAllAsRead'])->name('user.notifications.markAllRead');
     Route::get('/notifikasi/detail/{type?}', function ($type = 'verifikasi') {
         return view('user.DetailNotif', ['type' => $type]);
     })->name('notifikasi.detail');
@@ -125,6 +124,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
         
         // Message/Notification Routes (2-way communication)
+        Route::get('/notifications/send', [AdminNotificationController::class, 'createSend'])->name('admin.notifications.send');
+        Route::post('/notifications/send', [AdminNotificationController::class, 'sendNotification'])->name('admin.notifications.send.post');
+        Route::get('/notifications/inbox', [AdminNotificationController::class, 'inbox'])->name('admin.notifications.inbox');
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
         Route::get('/notifications/{id}', [AdminNotificationController::class, 'show'])->name('admin.notifications.show');
         Route::get('/notifications/contact/{id}', [AdminNotificationController::class, 'showContact'])->name('admin.notifications.contact');
@@ -152,6 +154,18 @@ Route::prefix('admin')->group(function () {
             Route::patch('/orders/{orderId}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
         });
         
+        // Daftar Pesanan Routes
+        Route::get('/daftarpesanan', [AdminOrderController::class, 'daftarpesanan'])->name('admin.daftarpesanan');
+        Route::post('/daftarpesanan/{id}/update-status', [AdminOrderController::class, 'updateOrderStatus'])->name('admin.daftarpesanan.updateStatus');
+        Route::get('/daftarpesanan/{id}', [AdminOrderController::class, 'showOrder'])->name('admin.daftarpesanan.show');
+        Route::delete('/daftarpesanan/{id}', [AdminOrderController::class, 'deleteOrder'])->name('admin.daftarpesanan.delete');
+
+        // Pesan Masuk Routes (Kelola Pesanan)
+        Route::get('/pesanmasuk', [AdminOrderController::class, 'pesanMasuk'])->name('admin.pesanmasuk');
+        Route::post('/pesanmasuk/{orderNumber}/status', [AdminOrderController::class, 'updatePesanStatus'])->name('admin.pesanmasuk.updateStatus');
+        Route::get('/pesanmasuk/{orderNumber}', [AdminOrderController::class, 'showPesan'])->name('admin.pesanmasuk.show');
+        Route::delete('/pesanmasuk/{orderNumber}', [AdminOrderController::class, 'deletePesan'])->name('admin.pesanmasuk.delete');
+
         // Product Management Routes - PERBAIKAN: Tambah name untuk resource
         Route::resource('products', ProductController::class)->names([
             'index' => 'admin.products.index',
