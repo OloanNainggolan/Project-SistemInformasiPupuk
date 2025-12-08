@@ -29,7 +29,7 @@
   }
 
   main h2 {
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       color: #2e7d32;
       font-size: 2.2rem;
       margin-bottom: 25px;
@@ -143,7 +143,7 @@
 
   .notif-title {
       font-weight: 700;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       font-size: 1.05rem;
       color: #222;
       line-height: 1.5;
@@ -165,7 +165,7 @@
 
   .notification-item p {
       font-weight: 400;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       font-size: 0.95rem;
       color: #555;
       line-height: 1.65;
@@ -183,7 +183,7 @@
       gap: 20px;
       color: #4CAF50;
       font-weight: 600;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       margin-top: 25px;
       padding: 25px 0;
       font-size: 1rem;

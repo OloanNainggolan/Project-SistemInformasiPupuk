@@ -12,7 +12,7 @@
 
     body {
         background: linear-gradient(135deg, #f5f7fa 0%, #f0f5f1 100%);
-        font-family: Arial, sans-serif;
+        font-family: 'Inter', Arial, sans-serif;
         color: #333;
     }
 

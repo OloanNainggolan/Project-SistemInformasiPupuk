@@ -1,0 +1,263 @@
+/* ========================================
+   GLOBAL STANDARDS - Konsistensi Seluruh Aplikasi
+   User, Admin, Overview Pages
+   ======================================== */
+
+/* CSS Variables - Global Standards */
+:root {
+    /* Typography Standards */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono: 'Courier New', Courier, monospace;
+    
+    /* Font Sizes - Consistent Scale */
+    --text-xs: 0.75rem;      /* 12px */
+    --text-sm: 0.875rem;     /* 14px */
+    --text-base: 1rem;       /* 16px */
+    --text-lg: 1.125rem;     /* 18px */
+    --text-xl: 1.25rem;      /* 20px */
+    --text-2xl: 1.5rem;      /* 24px */
+    --text-3xl: 1.875rem;    /* 30px */
+    --text-4xl: 2.25rem;     /* 36px */
+    --text-5xl: 3rem;        /* 48px */
+    
+    /* Colors - Green Primary Palette */
+    --green-50: #e8f5e9;
+    --green-100: #c8e6c9;
+    --green-200: #a5d6a7;
+    --green-300: #81c784;
+    --green-400: #66bb6a;
+    --green-500: #4caf50;
+    --green-600: #43a047;
+    --green-700: #388e3c;
+    --green-800: #2e7d32;
+    --green-900: #1b5e20;
+    
+    /* Button Sizes - Standardized */
+    --btn-padding-sm: 0.5rem 1rem;
+    --btn-padding-md: 0.75rem 1.5rem;
+    --btn-padding-lg: 1rem 2rem;
+    --btn-padding-xl: 1.25rem 2.5rem;
+    
+    /* Button Border Radius */
+    --btn-radius-sm: 8px;
+    --btn-radius-md: 10px;
+    --btn-radius-lg: 12px;
+    --btn-radius-full: 50px;
+    
+    /* Spacing Standards */
+    --spacing-1: 0.25rem;   /* 4px */
+    --spacing-2: 0.5rem;    /* 8px */
+    --spacing-3: 0.75rem;   /* 12px */
+    --spacing-4: 1rem;      /* 16px */
+    --spacing-5: 1.25rem;   /* 20px */
+    --spacing-6: 1.5rem;    /* 24px */
+    --spacing-8: 2rem;      /* 32px */
+    --spacing-10: 2.5rem;   /* 40px */
+    --spacing-12: 3rem;     /* 48px */
+    --spacing-16: 4rem;     /* 64px */
+}
+
+/* ========================================
+   TYPOGRAPHY - Body Text menggunakan Inter
+   ======================================== */
+
+/* Body text dan paragraf */
+body, p, span, div, li, td, th, label, input, textarea, select {
+    font-family: var(--font-body) !important;
+}
+
+/* Headings tetap bold, bisa pakai font berbeda jika mau */
+h1, h2, h3, h4, h5, h6, .heading {
+    font-family: var(--font-heading);
+}
+
+/* ========================================
+   BUTTON STANDARDS - Konsisten di semua halaman
+   ======================================== */
+
+.btn, button, .button, input[type="submit"], input[type="button"] {
+    font-family: var(--font-body);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Button Primary - Green */
+.btn-primary, .button-primary {
+    background: linear-gradient(135deg, var(--green-500) 0%, var(--green-700) 100%);
+    color: white;
+    padding: var(--btn-padding-md);
+    border-radius: var(--btn-radius-lg);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--green-600) 0%, var(--green-800) 100%);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Button Secondary - Outline */
+.btn-secondary, .button-secondary {
+    background: white;
+    color: var(--green-700);
+    padding: var(--btn-padding-md);
+    border-radius: var(--btn-radius-lg);
+    border: 2px solid var(--green-500);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:hover {
+    background: var(--green-50);
+    border-color: var(--green-700);
+    transform: translateY(-2px);
+}
+
+/* Button Sizes */
+.btn-sm {
+    padding: var(--btn-padding-sm);
+    font-size: var(--text-sm);
+    border-radius: var(--btn-radius-sm);
+}
+
+.btn-lg {
+    padding: var(--btn-padding-lg);
+    font-size: var(--text-lg);
+    border-radius: var(--btn-radius-lg);
+}
+
+.btn-xl {
+    padding: var(--btn-padding-xl);
+    font-size: var(--text-xl);
+    border-radius: var(--btn-radius-lg);
+}
+
+/* Button Full Width */
+.btn-block {
+    width: 100%;
+}
+
+/* ========================================
+   FORM STANDARDS - Input, Textarea, Select
+   ======================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+textarea,
+select {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--btn-radius-md);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* ========================================
+   CARD STANDARDS - Konsisten card design
+   ======================================== */
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: var(--spacing-6);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   SPACING UTILITIES - Konsisten margin/padding
+   ======================================== */
+
+.mt-1 { margin-top: var(--spacing-1); }
+.mt-2 { margin-top: var(--spacing-2); }
+.mt-3 { margin-top: var(--spacing-3); }
+.mt-4 { margin-top: var(--spacing-4); }
+.mt-6 { margin-top: var(--spacing-6); }
+.mt-8 { margin-top: var(--spacing-8); }
+
+.mb-1 { margin-bottom: var(--spacing-1); }
+.mb-2 { margin-bottom: var(--spacing-2); }
+.mb-3 { margin-bottom: var(--spacing-3); }
+.mb-4 { margin-bottom: var(--spacing-4); }
+.mb-6 { margin-bottom: var(--spacing-6); }
+.mb-8 { margin-bottom: var(--spacing-8); }
+
+.pt-4 { padding-top: var(--spacing-4); }
+.pt-6 { padding-top: var(--spacing-6); }
+.pt-8 { padding-top: var(--spacing-8); }
+
+.pb-4 { padding-bottom: var(--spacing-4); }
+.pb-6 { padding-bottom: var(--spacing-6); }
+.pb-8 { padding-bottom: var(--spacing-8); }
+
+/* ========================================
+   TEXT UTILITIES - Font size konsisten
+   ======================================== */
+
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+
+.text-green { color: var(--green-700); }
+.text-gray { color: #666; }
+.text-light { color: #999; }
+
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+/* ========================================
+   ICON STANDARDS - FontAwesome sizing
+   ======================================== */
+
+.icon-sm { font-size: 0.875rem; }
+.icon-md { font-size: 1.125rem; }
+.icon-lg { font-size: 1.5rem; }
+.icon-xl { font-size: 2rem; }
+
+/* ========================================
+   RESPONSIVE - Mobile-first approach
+   ======================================== */
+
+@media (max-width: 768px) {
+    :root {
+        --text-4xl: 2rem;
+        --text-5xl: 2.5rem;
+    }
+    
+    .btn, button {
+        padding: var(--btn-padding-sm);
+        font-size: var(--text-sm);
+    }
+    
+    .card {
+        padding: var(--spacing-4);
+    }
+}

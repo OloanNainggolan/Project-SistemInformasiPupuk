@@ -11,8 +11,8 @@
     }
 
     body {
-        background: #f8fafc;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f7f9fc;
     }
 
     main {
