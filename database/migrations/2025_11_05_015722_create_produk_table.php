@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('harga_normal', 10, 2);
             $table->integer('stok_produk');
             $table->string('gambar');
-            $table->text('deskripsi');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

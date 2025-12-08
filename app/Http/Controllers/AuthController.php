@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Contact;
+use App\Models\Notification;
+use App\Models\Message;
 
 class AuthController extends Controller
 {
@@ -55,53 +58,59 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
+        // Validasi input
+        $credentials = $request->validate([
             'login' => 'required|string',
-            'password' => 'required',
+            'password' => 'required|string',
         ], [
             'login.required' => 'Username atau Email wajib diisi',
             'password.required' => 'Password wajib diisi',
         ]);
 
-        $login = $request->input('login');
-        $password = $request->input('password');
-
-        // Cek apakah ini login admin berdasarkan username atau email
-        if ($login === 'admin' || $login === 'admin@pupuksubsidi.id') {
-            // Redirect ke halaman login admin
-            return redirect()->route('admin.login')
-                ->withInput(['username' => 'admin'])
-                ->with('info', 'Silakan gunakan halaman login admin.');
-        }
-
         // Tentukan apakah login menggunakan email atau username
-        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        
-        // Attempt login dengan email atau username
-        $credentials = [
-            $fieldType => $login,
-            'password' => $password
-        ];
+        $loginType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        // Login untuk user biasa
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            // Cek apakah user ini adalah admin (jika ada field role)
-            $user = Auth::user();
-            
-            // Double check: pastikan bukan admin
-            if (isset($user->role) && $user->role === 'admin') {
-                Auth::logout();
-                return redirect()->route('admin.login')
-                    ->with('info', 'Silakan gunakan halaman login admin.');
-            }
-            
-            return redirect()->route('dashboard');
+        // Cari user berdasarkan email atau username
+        $user = User::where($loginType, $credentials['login'])->first();
+
+        if (!$user) {
+            return back()
+                ->withInput($request->only('login'))
+                ->withErrors(['login' => 'Username atau Email tidak ditemukan']);
         }
 
-        return back()->withInput(['login' => $login])
-            ->withErrors(['login' => 'Username/Email atau password salah.']);
+        // Cek apakah password di-hash atau plain text
+        $passwordMatch = false;
+        
+        // Cek jika password sudah di-hash dengan bcrypt
+        if (str_starts_with($user->password, '$2y$')) {
+            // Password sudah di-hash, gunakan Hash::check
+            $passwordMatch = Hash::check($credentials['password'], $user->password);
+        } else {
+            // Password masih plain text (backward compatibility)
+            $passwordMatch = ($credentials['password'] === $user->password);
+            
+            // Jika match, hash password untuk keamanan di masa depan
+            if ($passwordMatch) {
+                $user->password = Hash::make($credentials['password']);
+                $user->save();
+            }
+        }
+
+        if (!$passwordMatch) {
+            return back()
+                ->withInput($request->only('login'))
+                ->withErrors(['password' => 'Password yang Anda masukkan salah']);
+        }
+
+        // Login user
+        Auth::login($user, $request->filled('remember'));
+
+        // Regenerate session untuk keamanan
+        $request->session()->regenerate();
+
+        // Redirect ke dashboard
+        return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
     }
 
     public function logout(Request $request)
@@ -115,6 +124,52 @@ class AuthController extends Controller
     public function dashboard()
     {
         return view('user.dashboard');
+    }
+
+    public function showProfil()
+    {
+        $user = auth()->user();
+        
+        // Ambil pesanan user dengan relasi product
+        $orders = \App\Models\Order::with(['user', 'product'])
+            ->where('user_id', $user->id)
+            ->where('confirmed_by_user', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Hitung statistik REAL dari database
+        $totalPesanan = $orders->count();
+        
+        // Hitung total pupuk yang diterima (status Completed atau Ready)
+        $pupukDiterima = 0;
+        $bibitDiterima = 0;
+        $totalPenghematan = 0;
+        
+        foreach ($orders as $order) {
+            // Hitung penghematan dari semua pesanan yang confirmed
+            $totalPenghematan += $order->savings ?? 0;
+            
+            // Hitung pupuk/bibit yang sudah diterima (status Completed atau Ready)
+            if (in_array($order->status, ['Completed', 'Ready for Pickup'])) {
+                if ($order->product) {
+                    $qty = $order->quantity ?? 0;
+                    
+                    if ($order->product->tipe_produk === 'pupuk') {
+                        $pupukDiterima += $qty;
+                    } elseif ($order->product->tipe_produk === 'bibit') {
+                        $bibitDiterima += $qty;
+                    }
+                }
+            }
+        }
+        
+        return view('user.ProfilUser', compact(
+            'orders',
+            'totalPesanan',
+            'pupukDiterima',
+            'bibitDiterima',
+            'totalPenghematan'
+        ));
     }
 
     public function editProfil()
@@ -222,11 +277,46 @@ class AuthController extends Controller
             'no_telp' => 'required|string|max:20',
             'email' => 'required|email',
             'pesan' => 'required|string',
+        ], [
+            'nama.required' => 'Nama wajib diisi',
+            'no_telp.required' => 'Nomor telepon wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'pesan.required' => 'Pesan wajib diisi',
         ]);
 
-        // Di sini Anda bisa menambahkan logika untuk menyimpan pesan ke database
-        // atau mengirim email ke admin
-        // Untuk sementara, kita hanya redirect dengan pesan sukses
+        // Jika user login, simpan ke tabel messages (sistem notifikasi baru)
+        if (Auth::check()) {
+            Message::create([
+                'user_id' => Auth::id(),
+                'sender_type' => 'user',
+                'subject' => 'Pesan dari ' . $validated['nama'],
+                'message' => $validated['pesan'],
+                'status' => 'unread',
+            ]);
+
+            return redirect()->route('kontak')->with('success', 'Pesan Anda telah terkirim! Admin akan segera membalasnya.');
+        }
+
+        // Jika user tidak login, simpan ke tabel contacts (sistem lama)
+        $contact = Contact::create([
+            'nama' => $validated['nama'],
+            'no_telp' => $validated['no_telp'],
+            'email' => $validated['email'],
+            'pesan' => $validated['pesan'],
+            'user_id' => null,
+            'status' => 'unread'
+        ]);
+
+        // Buat notifikasi untuk admin
+        Notification::create([
+            'type' => 'contact',
+            'title' => 'Pesan Baru dari ' . $validated['nama'],
+            'message' => substr($validated['pesan'], 0, 100) . (strlen($validated['pesan']) > 100 ? '...' : ''),
+            'link' => route('admin.notifications.index'),
+            'status' => 'unread',
+            'related_id' => $contact->id
+        ]);
 
         return redirect()->route('kontak')->with('success', 'Pesan Anda telah terkirim! Kami akan menghubungi Anda segera.');
     }
@@ -238,22 +328,33 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'new_password' => 'required|string|min:4|confirmed',
+            'new_password' => 'required|string|min:4|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d).+$/',
         ], [
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
             'new_password.required' => 'Password baru wajib diisi',
             'new_password.min' => 'Password minimal 4 karakter',
+            'new_password.regex' => 'Password harus mengandung huruf dan angka',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
+        // Cari user berdasarkan email
         $user = User::where('email', $validated['email'])->first();
+        
         if (!$user) {
-            return back()->withInput()->withErrors(['email' => 'Alamat email tidak terdaftar.']);
+            return back()
+                ->withInput(['email' => $validated['email']])
+                ->withErrors(['email' => 'Alamat email tidak terdaftar dalam sistem.']);
         }
 
-        // Update password
+        // Update password dengan hash
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
+        // Log informasi untuk debugging (optional, bisa dihapus di production)
+        \Log::info('Password reset successful for user: ' . $user->email);
+
+        return redirect()->route('login')
+            ->with('success', 'Password berhasil direset! Silakan login dengan password baru Anda.');
     }
 }

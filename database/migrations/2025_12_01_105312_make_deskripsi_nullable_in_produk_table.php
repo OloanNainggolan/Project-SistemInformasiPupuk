@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('name')->after('id')->nullable();
+        Schema::table('produk', function (Blueprint $table) {
+            $table->text('deskripsi')->nullable()->change();
         });
-        
-        // Copy data from nama_lengkap to name for existing records
-        \DB::table('users')->update(['name' => \DB::raw('nama_lengkap')]);
     }
 
     /**
@@ -24,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('name');
+        Schema::table('produk', function (Blueprint $table) {
+            $table->text('deskripsi')->nullable(false)->change();
         });
     }
 };

@@ -14,18 +14,18 @@
         body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .btn { 
-            background: #2e8b57; color: white; padding: 12px 24px; 
+            background: #004d00; color: white; padding: 12px 24px; 
             border: none; border-radius: 6px; cursor: pointer; font-weight: bold;
             text-decoration: none; display: inline-block;
         }
-        .btn:hover { background: #1a5d1a; }
+        .btn:hover { background: #004d00; }
 
         /* Modern Footer Styles */
         .home-footer {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            background: linear-gradient(135deg, #004d00 0%, #004d00 100%);
             color: white;
             padding: 50px 20px 0;
-            margin-top: 60px;
+            margin-top: 0;
             position: relative;
             overflow: hidden;
         }
@@ -37,7 +37,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981);
+            background: linear-gradient(90deg, #004d00);
             background-size: 200% 100%;
             animation: shimmer 3s linear infinite;
         }
@@ -65,12 +65,12 @@
         .home-footer-logo-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #004d00);
             border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 20px #004d00;
             margin-bottom: 10px;
         }
 
@@ -115,7 +115,7 @@
         }
 
         .home-footer-social a:hover {
-            background: #10b981;
+            background: #004d00;
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
         }
@@ -136,7 +136,7 @@
             left: 0;
             width: 40px;
             height: 3px;
-            background: linear-gradient(90deg, #10b981, #34d399);
+            background: linear-gradient(90deg, #004d00);
             border-radius: 2px;
         }
 
@@ -165,7 +165,7 @@
 
         .home-footer-links i {
             width: 20px;
-            color: #10b981;
+            color : #004d00;
             font-size: 16px;
         }
 
@@ -180,7 +180,7 @@
         }
 
         .home-footer-contact-item i {
-            color: #10b981;
+            color: #004d00;
             font-size: 18px;
             margin-top: 2px;
             min-width: 20px;
@@ -200,14 +200,14 @@
         }
 
         .home-footer-bottom a {
-            color: #10b981;
+            color: #004d00;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s;
         }
 
         .home-footer-bottom a:hover {
-            color: #34d399;
+            color: #004d00;
         }
 
         @media (max-width: 1024px) {

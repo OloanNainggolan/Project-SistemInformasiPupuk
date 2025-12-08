@@ -23,14 +23,77 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        html::before {
+            content: '';
+            position: fixed;
+            top: -100vh;
+            left: 0;
+            right: 0;
+            height: 200vh;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            z-index: -2;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            z-index: -1;
+        }
+
+        /* Prevent white gaps during overscroll */
+        html, body {
+            overscroll-behavior: none;
+            background-color: #ecfdf5;
+        }
+
+        html::before {
+            content: '';
+            position: fixed;
+            top: -100vh;
+            left: 0;
+            right: 0;
+            height: 200vh;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            z-index: -1;
+        }
+
         body {
             font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
             min-height: 100vh;
+            min-height: 100dvh;
+            height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            margin: 0;
+            position: relative;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        html {
+            height: 100%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            overscroll-behavior: none;
         }
 
         .register-wrapper {
@@ -43,6 +106,8 @@
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0,0,0,0.12);
             animation: slideUp 0.6s ease;
+            position: relative;
+            z-index: 1;
         }
 
         @keyframes slideUp {
@@ -272,26 +337,56 @@
 
         .input-wrapper {
             position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            flex: 1;
         }
 
         .input-wrapper i {
             position: absolute;
-            left: 16px;
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--muted);
-            font-size: 16px;
+            font-size: 14px;
+            width: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .form-group input {
             width: 100%;
-            padding: 14px 16px 14px 45px;
+            padding: 14px 16px 14px 38px;
             border: 2px solid var(--line);
             border-radius: 12px;
             font-size: 14px;
             color: var(--text);
             transition: all 0.3s ease;
             background: white;
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+            font-size: 14px;
+            text-align: left;
+            padding-left: 0;
+            opacity: 0.8;
+            text-indent: 0;
+            margin-left: 0;
+            position: relative;
+            left: 0;
+        }
+
+        /* Pastikan placeholder dimulai dari posisi yang tepat */
+        .input-wrapper input::placeholder {
+            transform: translateX(0);
         }
 
         .form-group input:focus {
@@ -299,6 +394,17 @@
             border-color: var(--green);
             background: var(--mint);
         }
+
+        .form-group input:focus::placeholder {
+            opacity: 0.6;
+            color: #6b7280;
+        }
+
+        .input-wrapper:focus-within i {
+            color: var(--green);
+        }
+
+
 
         .form-group input.error {
             border-color: var(--error);
@@ -311,12 +417,19 @@
             transform: translateY(-50%);
             cursor: pointer;
             color: var(--muted);
-            font-size: 16px;
-            transition: color 0.3s ease;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
         }
 
         .password-toggle:hover {
             color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
         }
 
         .btn-submit {
@@ -380,6 +493,12 @@
         @media (max-width: 768px) {
             body {
                 padding: 10px;
+                min-height: 100vh;
+                min-height: -webkit-fill-available;
+            }
+
+            html {
+                height: -webkit-fill-available;
             }
 
             .register-right {
@@ -392,6 +511,27 @@
 
             .left-content h1 {
                 font-size: 26px;
+            }
+
+            .form-group input {
+                font-size: 16px;
+                padding: 15px 16px 15px 38px;
+            }
+
+            .form-group input::placeholder {
+                font-size: 15px;
+            }
+
+            .input-wrapper i {
+                font-size: 15px;
+                width: 20px;
+                left: 12px;
+            }
+
+            .password-toggle {
+                font-size: 16px;
+                width: 22px;
+                height: 22px;
             }
         }
     </style>

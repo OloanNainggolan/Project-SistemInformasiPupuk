@@ -2,501 +2,645 @@
 
 @section('title', 'Edit Profil')
 
-@push('styles')
-<style>
-    :root {
-        --primary-green: #4CAF50;
-        --dark-green: #065f46;
-        --medium-green: #1a4d1a;
-        --light-green: #81c784;
-        --text-color: #333;
-        --white: #ffffff;
-        --light-gray-bg: #f7f7f7;
-        --border-color: #ddd;
-    }
-
-    .container {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 0 2rem;
-        margin-top: 120px;
-    }
-
-    .edit-profile-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-    }
-
-    .card-header {
-        background: linear-gradient(135deg, var(--primary-green), #2e7d32);
-        color: white;
-        padding: 2rem;
-        text-align: left;
-    }
-
-    .card-header h2 {
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .card-body {
-        padding: 2.5rem;
-    }
-
-    .section-title {
-        background: var(--primary-green);
-        color: white;
-        padding: 0.8rem 1.5rem;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-    }
-
-    .profile-photo-section {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        margin-bottom: 2.5rem;
-        padding-bottom: 2rem;
-        border-bottom: 2px solid var(--light-gray-bg);
-    }
-
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 4px solid var(--primary-green);
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-    }
-
-    .profile-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .photo-upload-info {
-        flex: 1;
-    }
-
-    .photo-upload-info p {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-    }
-
-    .upload-btn {
-        background: var(--primary-green);
-        color: white;
-        padding: 0.7rem 1.5rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .upload-btn:hover {
-        background: #45a049;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-    }
-
-    .upload-btn input[type="file"] {
-        display: none;
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group.full-width {
-        grid-column: 1 / -1;
-    }
-
-    .form-group label {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: var(--text-color);
-        font-size: 0.95rem;
-    }
-
-    .form-group input,
-    .form-group select {
-        padding: 0.9rem;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-        outline: none;
-        border-color: var(--primary-green);
-        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-    }
-
-    .form-group input[readonly] {
-        background: #f5f5f5;
-        color: #666;
-        cursor: not-allowed;
-    }
-
-    .password-input-wrapper {
-        position: relative;
-    }
-
-    .password-input-wrapper input {
-        padding-right: 3rem;
-    }
-
-    .toggle-password {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #666;
-        font-size: 1.2rem;
-        padding: 0.5rem;
-    }
-
-    .toggle-password:hover {
-        color: var(--primary-green);
-    }
-
-    .password-hint {
-        font-size: 0.85rem;
-        color: #666;
-        margin-top: 0.3rem;
-        font-style: italic;
-    }
-
-    .form-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: flex-start;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid var(--light-gray-bg);
-    }
-
-    .btn {
-        padding: 0.9rem 2.5rem;
-        border: none;
-        border-radius: 10px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .btn-save {
-        background: var(--primary-green);
-        color: white;
-    }
-
-    .btn-save:hover {
-        background: #45a049;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-    }
-
-    .btn-cancel {
-        background: #f44336;
-        color: white;
-    }
-
-    .btn-cancel:hover {
-        background: #da190b;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
-    }
-
-    .alert {
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-    }
-
-    .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-
-    .alert-error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-
-    @media (max-width: 768px) {
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .profile-photo-section {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .form-actions {
-            flex-direction: column;
-        }
-
-        .btn {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .container {
-            padding: 0 1rem;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-    }
-</style>
-@endpush
-
 @section('content')
-<div class="container">
-    <div class="edit-profile-card">
-        <div class="card-header">
-            <h2>Edit Profil</h2>
+<div class="edit-profile-container">
+    <!-- Simple Header -->
+    <div class="edit-header">
+        <div class="header-background"></div>
+        <div class="header-content">
+            <a href="{{ route('profil.user') }}" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="header-title">
+                <h1><i class="fas fa-user-edit"></i> Edit Profil</h1>
+                <p>Perbarui informasi profil Anda</p>
+            </div>
         </div>
+    </div>
 
-        <div class="card-body">
+    <!-- Edit Form Content -->
+    <div class="edit-content">
+        <div class="form-container">
             @if(session('success'))
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i>
-                    {{ session('success') }}
-                </div>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ session('success') }}</span>
+            </div>
             @endif
 
             @if($errors->any())
-                <div class="alert alert-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <div>
-                        @foreach($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
-                    </div>
-                </div>
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
 
-            <form action="{{ route('profil.update') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('profil.update') }}" method="POST" enctype="multipart/form-data" id="editProfileForm">
                 @csrf
                 @method('PUT')
 
-                <!-- EDIT AKUN Section -->
-                <div class="section-title">EDIT AKUN</div>
-
-                <!-- Profile Photo -->
-                <div class="profile-photo-section">
-                    <div class="profile-avatar">
-                        <img id="profilePreview" src="{{ auth()->user()->foto ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_lengkap ?? 'User') . '&background=4caf50&color=fff&size=200' }}" alt="Profile">
+                <!-- Photo Upload Section -->
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-camera"></i> Foto Profil</h2>
+                        <span class="card-subtitle">JPG, PNG atau GIF. Maksimal 2MB</span>
                     </div>
-                    <div class="photo-upload-info">
-                        <p>Unggah foto profil baru (Maksimal 2MB, format: JPG, PNG, GIF)</p>
-                        <label class="upload-btn">
-                            <i class="fas fa-camera"></i>
-                            Pilih Foto
-                            <input type="file" name="foto" accept="image/jpeg,image/png,image/jpg,image/gif" onchange="previewImage(event)">
-                        </label>
+                    <div class="photo-upload-wrapper">
+                        <div class="photo-preview" id="photoPreview">
+                            @if(Auth::user()->foto && file_exists(public_path(Auth::user()->foto)))
+                                <img src="{{ asset(Auth::user()->foto) }}" alt="Foto Profil">
+                            @else
+                                <i class="fas fa-user"></i>
+                            @endif
+                        </div>
+                        <div class="upload-controls">
+                            <label for="foto" class="btn-upload">
+                                <i class="fas fa-upload"></i> Pilih Foto Baru
+                            </label>
+                            <input type="file" name="foto" id="foto" accept="image/*" hidden>
+                            <p class="upload-hint">Klik untuk memilih foto dari perangkat Anda</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Form Fields -->
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" value="{{ old('username', auth()->user()->username ?? '') }}" placeholder="Contoh: Budi123">
+                <!-- Personal Information -->
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user"></i> Informasi Pribadi</h2>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nama_lengkap">
+                                Nama Lengkap <span class="required">*</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="nama_lengkap" name="nama_lengkap" 
+                                       value="{{ old('nama_lengkap', Auth::user()->nama_lengkap) }}" 
+                                       placeholder="Masukkan nama lengkap" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-at"></i>
+                                <input type="text" id="username" name="username" 
+                                       value="{{ old('username', Auth::user()->username) }}" 
+                                       placeholder="Masukkan username">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required>
+                        <label for="alamat">
+                            Alamat <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <textarea id="alamat" name="alamat" rows="3" 
+                                      placeholder="Masukkan alamat lengkap" required>{{ old('alamat', Auth::user()->alamat) }}</textarea>
+                        </div>
                     </div>
 
-                    <div class="form-group full-width">
-                        <label for="nama_lengkap">Nama Lengkap</label>
-                        <input type="text" id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap', auth()->user()->nama_lengkap ?? '') }}" required>
-                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="alamat_balai_desa">Alamat Balai Desa</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-building"></i>
+                                <input type="text" id="alamat_balai_desa" name="alamat_balai_desa" 
+                                       value="{{ old('alamat_balai_desa', Auth::user()->alamat_balai_desa) }}" 
+                                       placeholder="Alamat balai desa">
+                            </div>
+                        </div>
 
-                    <div class="form-group full-width">
-                        <label for="alamat">Alamat</label>
-                        <input type="text" id="alamat" name="alamat" value="{{ old('alamat', auth()->user()->alamat ?? '') }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="no_telp">Phone Number</label>
-                        <input type="text" id="no_telp" name="no_telp" value="{{ old('no_telp', auth()->user()->no_telp ?? '') }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="kabupaten">Kabupaten</label>
-                        <input type="text" id="kabupaten" name="kabupaten" value="{{ old('kabupaten', auth()->user()->kabupaten ?? '') }}" placeholder="Contoh: Subang">
+                        <div class="form-group">
+                            <label for="kabupaten">Kabupaten/Kota</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-city"></i>
+                                <input type="text" id="kabupaten" name="kabupaten" 
+                                       value="{{ old('kabupaten', Auth::user()->kabupaten) }}" 
+                                       placeholder="Nama kabupaten/kota">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="kode_pos">Kode Pos</label>
-                        <input type="text" id="kode_pos" name="kode_pos" value="{{ old('kode_pos', auth()->user()->kode_pos ?? '') }}" placeholder="Contoh: 41237">
-                    </div>
-                </div>
-
-                <!-- UBAH SANDI Section -->
-                <div class="section-title">UBAH SANDI</div>
-
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label for="sandi_saat_ini">Sandi saat ini</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" id="sandi_saat_ini" name="current_password" placeholder="8+ characters">
-                            <button type="button" class="toggle-password" onclick="togglePassword('sandi_saat_ini')">
-                                <i class="far fa-eye"></i>
-                            </button>
-                        </div>
-                        <p class="password-hint">Kosongkan jika tidak ingin mengubah password</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sandi_baru">Sandi Baru</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" id="sandi_baru" name="password" placeholder="8+ characters">
-                            <button type="button" class="toggle-password" onclick="togglePassword('sandi_baru')">
-                                <i class="far fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="konfirmasi_sandi">Konfirmasi Sandi</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" id="konfirmasi_sandi" name="password_confirmation" placeholder="8+ characters">
-                            <button type="button" class="toggle-password" onclick="togglePassword('konfirmasi_sandi')">
-                                <i class="far fa-eye"></i>
-                            </button>
+                        <div class="input-wrapper">
+                            <i class="fas fa-mail-bulk"></i>
+                            <input type="text" id="kode_pos" name="kode_pos" 
+                                   value="{{ old('kode_pos', Auth::user()->kode_pos) }}" 
+                                   placeholder="Kode pos" maxlength="5">
                         </div>
                     </div>
                 </div>
 
-                <!-- Form Actions -->
+                <!-- Contact Information -->
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-address-book"></i> Informasi Kontak</h2>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" name="email" 
+                                       value="{{ old('email', Auth::user()->email) }}" 
+                                       placeholder="email@example.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="no_telp">
+                                Nomor Telepon <span class="required">*</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-phone"></i>
+                                <input type="text" id="no_telp" name="no_telp" 
+                                       value="{{ old('no_telp', Auth::user()->no_telp) }}" 
+                                       placeholder="08xxxxxxxxxx" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Change (Optional) -->
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-lock"></i> Ubah Password</h2>
+                        <span class="card-subtitle">Kosongkan jika tidak ingin mengubah password</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current_password">Password Saat Ini</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-key"></i>
+                            <input type="password" id="current_password" name="current_password" 
+                                   placeholder="Masukkan password saat ini">
+                            <span class="toggle-password" onclick="togglePassword('current_password')">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="password">Password Baru</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="password" name="password" 
+                                       placeholder="Password baru">
+                                <span class="toggle-password" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password_confirmation">Konfirmasi Password Baru</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="password_confirmation" name="password_confirmation" 
+                                       placeholder="Konfirmasi password baru">
+                                <span class="toggle-password" onclick="togglePassword('password_confirmation')">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-save">
-                        <i class="fas fa-save"></i>
-                        Simpan
-                    </button>
-                    <button type="button" class="btn btn-cancel" onclick="logoutUser()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Keluar
+                    <a href="{{ route('profil.user') }}" class="btn-cancel">
+                        <i class="fas fa-times"></i> Batal
+                    </a>
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i> Simpan Perubahan
                     </button>
                 </div>
-            </form>
-            
-            <!-- Form Logout tersembunyi -->
-            <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
             </form>
         </div>
     </div>
 </div>
-@endsection
 
-@push('scripts')
+<style>
+.edit-profile-container {
+    min-height: 100vh;
+    background: #f5f7fa;
+    padding-bottom: 50px;
+}
+
+/* Header */
+.edit-header {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.header-background {
+    height: 160px;
+    background: linear-gradient(135deg, #1a5f3a 0%, #2d7a4f 50%, #00897b 100%);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    top: -80px;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: white;
+    color: #1a5f3a;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.btn-back:hover {
+    background: #00897b;
+    color: white;
+    transform: translateX(-3px);
+}
+
+.header-title {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.header-title h1 {
+    font-size: 1.8em;
+    color: #1a5f3a;
+    margin-bottom: 8px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-title p {
+    color: #666;
+    font-size: 0.95em;
+}
+
+/* Edit Content */
+.edit-content {
+    max-width: 1200px;
+    margin: -50px auto 0;
+    padding: 0 40px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.alert i {
+    font-size: 1.2em;
+    margin-top: 2px;
+}
+
+.alert-success {
+    background: #d1f2eb;
+    color: #0c5140;
+    border: 1px solid #0c5140;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert ul {
+    margin: 0;
+    padding-left: 20px;
+    flex: 1;
+}
+
+/* Form Cards */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.form-card:hover {
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.card-header h2 {
+    font-size: 1.4em;
+    color: #1a5f3a;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.card-header h2 i {
+    color: #00897b;
+}
+
+.card-subtitle {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Photo Upload */
+.photo-upload-wrapper {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.photo-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-preview i {
+    font-size: 60px;
+    color: #00897b;
+}
+
+.upload-controls {
+    flex: 1;
+}
+
+.btn-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #00897b, #00695c);
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);
+}
+
+.btn-upload:hover {
+    background: linear-gradient(135deg, #00695c, #004d40);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 137, 123, 0.4);
+}
+
+.upload-hint {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 12px;
+}
+
+/* Form Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.required {
+    color: #e74c3c;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    color: #00897b;
+    font-size: 1.1em;
+    z-index: 1;
+}
+
+.input-wrapper input,
+.input-wrapper textarea {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.input-wrapper textarea {
+    padding-top: 12px;
+    resize: vertical;
+}
+
+.input-wrapper input:focus,
+.input-wrapper textarea:focus {
+    outline: none;
+    border-color: #00897b;
+    box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.1);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.toggle-password:hover {
+    color: #00897b;
+}
+
+/* Action Buttons */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    padding-top: 10px;
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 14px 30px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-cancel {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #00897b, #00695c);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #00695c, #004d40);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 137, 123, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content,
+    .edit-content {
+        padding: 0 20px;
+    }
+
+    .header-background {
+        height: 140px;
+    }
+
+    .header-content {
+        top: -70px;
+    }
+
+    .header-title {
+        padding: 25px 20px;
+    }
+
+    .header-title h1 {
+        font-size: 1.5em;
+    }
+
+    .form-card {
+        padding: 25px 20px;
+    }
+
+    .photo-upload-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancel,
+    .btn-save {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
 <script>
-    // Logout function
-    function logoutUser() {
-        if (confirm('Apakah Anda yakin ingin keluar dari akun?')) {
-            document.getElementById('logoutForm').submit();
-        }
+// Photo preview
+document.getElementById('foto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+        };
+        reader.readAsDataURL(file);
     }
+});
 
-    // Preview uploaded image
-    function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('profilePreview');
-        
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            };
-            
-            reader.readAsDataURL(input.files[0]);
-        }
+// Toggle password visibility
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const icon = field.nextElementSibling.querySelector('i');
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
     }
-
-    // Toggle password visibility
-    function togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        const button = input.nextElementSibling.querySelector('i');
-        
-        if (input.type === 'password') {
-            input.type = 'text';
-            button.classList.remove('fa-eye');
-            button.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            button.classList.remove('fa-eye-slash');
-            button.classList.add('fa-eye');
-        }
-    }
-
-    // Form validation
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const currentPassword = document.getElementById('sandi_saat_ini').value;
-        const newPassword = document.getElementById('sandi_baru').value;
-        const confirmPassword = document.getElementById('konfirmasi_sandi').value;
-
-        // If changing password
-        if (newPassword || confirmPassword) {
-            if (!currentPassword) {
-                e.preventDefault();
-                alert('Masukkan sandi saat ini untuk mengubah password');
-                return false;
-            }
-
-            if (newPassword !== confirmPassword) {
-                e.preventDefault();
-                alert('Konfirmasi sandi tidak cocok dengan sandi baru');
-                return false;
-            }
-
-            if (newPassword.length < 3) {
-                e.preventDefault();
-                alert('Sandi baru minimal 3 karakter');
-                return false;
-            }
-        }
-    });
+}
 </script>
-@endpush
+@endsection

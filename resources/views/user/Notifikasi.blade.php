@@ -15,7 +15,7 @@
   .container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 30px;
   }
 
   /* Main */
@@ -327,8 +327,12 @@
     </a>
 
     <div class="no-notifs" aria-live="polite" aria-atomic="true">
-      <hr /><span>Tidak Ada Notifikasi Lain</span><hr />
+      <hr><span>Tidak Ada Notifikasi Lain</span><hr>
     </div>
   </section>
 </main>
 @endsection
+sil</span>
+        <span class="date">02/09/2025</span>
+      </div>
+      <p>"Selamat datang secara resmi di [Nama Platform/Web Kamu]! 🎉 Kami se
