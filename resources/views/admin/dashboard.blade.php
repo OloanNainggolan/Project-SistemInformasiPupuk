@@ -71,11 +71,16 @@
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .stat-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card:active {
+        transform: translateY(-2px);
     }
 
     .stat-card::before {
@@ -429,6 +434,195 @@
             grid-template-columns: 1fr;
         }
     }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9998;
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-container {
+        background: white;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 85vh;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+        z-index: 9999;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-header {
+        padding: 25px 30px;
+        border-bottom: 2px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+    }
+
+    .modal-header h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+    }
+
+    .modal-close {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 30px;
+        max-height: calc(85vh - 100px);
+        overflow-y: auto;
+    }
+
+    .modal-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+        background: #00897b;
+        border-radius: 4px;
+    }
+
+    .loading-spinner {
+        text-align: center;
+        padding: 40px;
+    }
+
+    .loading-spinner i {
+        font-size: 48px;
+        color: #00897b;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .data-table thead {
+        background: #f8fafc;
+    }
+
+    .data-table th {
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #64748b;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .data-table td {
+        padding: 15px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #1e293b;
+    }
+
+    .data-table tr:hover {
+        background: #f8fafc;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge.pending { background: #fef3c7; color: #92400e; }
+    .badge.processing { background: #dbeafe; color: #1e40af; }
+    .badge.ready { background: #ede9fe; color: #5b21b6; }
+    .badge.completed { background: #d1fae5; color: #065f46; }
+    .badge.rejected { background: #fee2e2; color: #991b1b; }
+
+    .empty-modal-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-modal-state i {
+        font-size: 64px;
+        color: #cbd5e0;
+        margin-bottom: 15px;
+    }
+
+    .empty-modal-state h4 {
+        font-size: 18px;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .empty-modal-state p {
+        color: #94a3b8;
+        font-size: 14px;
+    }
 </style>
 @endpush
 
@@ -444,7 +638,7 @@
 
     <!-- Stats Cards -->
     <div class="stats-grid">
-        <div class="stat-card">
+        <div class="stat-card" data-type="orders" onclick="showDetailModal('orders')">
             <div class="stat-icon">
                 <i class="fas fa-shopping-cart"></i>
             </div>
@@ -456,19 +650,19 @@
             </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card" data-type="revenue" onclick="showDetailModal('revenue')">
             <div class="stat-icon">
                 <i class="fas fa-wallet"></i>
             </div>
             <div class="stat-label">Total Pendapatan</div>
-            <div class="stat-value">Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</div>
+            <div class="stat-value">Rp {{ number_format($totalPendapatan ?? 0, ',', '.') }}</div>
             <div class="stat-change {{ ($pertumbuhanPendapatan ?? 0) >= 0 ? 'positive' : 'negative' }}">
                 <i class="fas fa-arrow-{{ ($pertumbuhanPendapatan ?? 0) >= 0 ? 'up' : 'down' }}"></i>
                 {{ ($pertumbuhanPendapatan ?? 0) > 0 ? '+' : '' }}{{ $pertumbuhanPendapatan ?? 0 }}% dari bulan lalu
             </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card" data-type="farmers" onclick="showDetailModal('farmers')">
             <div class="stat-icon">
                 <i class="fas fa-users"></i>
             </div>
@@ -480,7 +674,7 @@
             </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card" data-type="products" onclick="showDetailModal('products')">
             <div class="stat-icon">
                 <i class="fas fa-box"></i>
             </div>
@@ -616,4 +810,269 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Detail -->
+<div class="modal-overlay" id="detailModal" onclick="closeModal(event)">
+    <div class="modal-container" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 id="modalTitle">
+                <i class="fas fa-chart-line"></i>
+                <span>Detail Data</span>
+            </h2>
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="modalContent">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner"></i>
+                <p>Memuat data...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showDetailModal(type) {
+    const modal = document.getElementById('detailModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    
+    // Show modal
+    modal.classList.add('active');
+    
+    // Set loading state
+    modalContent.innerHTML = `
+        <div class="loading-spinner">
+            <i class="fas fa-spinner"></i>
+            <p>Memuat data...</p>
+        </div>
+    `;
+    
+    // Set title based on type
+    const titles = {
+        'orders': '<i class="fas fa-shopping-cart"></i> Detail Pesanan',
+        'revenue': '<i class="fas fa-wallet"></i> Detail Pendapatan',
+        'farmers': '<i class="fas fa-users"></i> Detail Petani',
+        'products': '<i class="fas fa-box"></i> Detail Produk'
+    };
+    modalTitle.innerHTML = titles[type] || 'Detail Data';
+    
+    // Fetch data
+    fetch(`/admin/dashboard/detail/${type}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                modalContent.innerHTML = renderData(type, data.data);
+            } else {
+                modalContent.innerHTML = `
+                    <div class="empty-modal-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h4>Gagal Memuat Data</h4>
+                        <p>${data.message || 'Terjadi kesalahan saat memuat data'}</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            modalContent.innerHTML = `
+                <div class="empty-modal-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4>Error</h4>
+                    <p>Tidak dapat terhubung ke server</p>
+                </div>
+            `;
+        });
+}
+
+function renderData(type, data) {
+    if (!data || data.length === 0) {
+        return `
+            <div class="empty-modal-state">
+                <i class="fas fa-inbox"></i>
+                <h4>Belum Ada Data</h4>
+                <p>Data akan muncul di sini ketika tersedia</p>
+            </div>
+        `;
+    }
+    
+    switch(type) {
+        case 'orders':
+            return renderOrders(data);
+        case 'revenue':
+            return renderRevenue(data);
+        case 'farmers':
+            return renderFarmers(data);
+        case 'products':
+            return renderProducts(data);
+        default:
+            return '<p>Tipe data tidak dikenali</p>';
+    }
+}
+
+function renderOrders(orders) {
+    let html = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>No. Pesanan</th>
+                    <th>Pelanggan</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Tanggal</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    orders.forEach(order => {
+        const statusClass = order.status.toLowerCase();
+        html += `
+            <tr>
+                <td><strong>${order.order_number}</strong></td>
+                <td>${order.customer_name}</td>
+                <td>Rp ${Number(order.total_amount).toLocaleString('id-ID')}</td>
+                <td><span class="badge ${statusClass}">${order.status}</span></td>
+                <td>${order.date}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    
+    return html;
+}
+
+function renderRevenue(revenues) {
+    let total = 0;
+    let html = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>No. Pesanan</th>
+                    <th>Pelanggan</th>
+                    <th>Pendapatan</th>
+                    <th>Tanggal</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    revenues.forEach(order => {
+        total += parseFloat(order.total_amount);
+        html += `
+            <tr>
+                <td><strong>${order.order_number}</strong></td>
+                <td>${order.customer_name}</td>
+                <td>Rp ${Number(order.total_amount).toLocaleString('id-ID')}</td>
+                <td>${order.date}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-top: 20px;">Total Pendapatan:</td>
+                    <td colspan="2" style="font-weight: bold; font-size: 18px; color: #00897b; padding-top: 20px;">
+                        Rp ${total.toLocaleString('id-ID')}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    `;
+    
+    return html;
+}
+
+function renderFarmers(farmers) {
+    let html = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Telepon</th>
+                    <th>Alamat</th>
+                    <th>Bergabung</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    farmers.forEach(farmer => {
+        html += `
+            <tr>
+                <td><strong>${farmer.nama_lengkap}</strong></td>
+                <td>${farmer.email}</td>
+                <td>${farmer.no_telp || '-'}</td>
+                <td>${farmer.alamat || '-'}</td>
+                <td>${farmer.joined_date}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    
+    return html;
+}
+
+function renderProducts(products) {
+    let html = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nama Produk</th>
+                    <th>Tipe</th>
+                    <th>Kategori</th>
+                    <th>Stok</th>
+                    <th>Harga Subsidi</th>
+                    <th>Harga Normal</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    products.forEach(product => {
+        html += `
+            <tr>
+                <td><strong>${product.nama_produk}</strong></td>
+                <td>${product.tipe_produk}</td>
+                <td>${product.kategori}</td>
+                <td>${product.stok_produk} ${product.satuan || 'kg'}</td>
+                <td>Rp ${Number(product.harga_subsidi).toLocaleString('id-ID')}</td>
+                <td>Rp ${Number(product.harga_normal).toLocaleString('id-ID')}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    
+    return html;
+}
+
+function closeModal(event) {
+    if (!event || event.target.id === 'detailModal') {
+        document.getElementById('detailModal').classList.remove('active');
+    }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+</script>
 @endsection
