@@ -11,8 +11,8 @@
     }
 
     body {
-        background: #f8fafc;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .container-detail {
@@ -63,7 +63,7 @@
 
     .main-image {
         width: 100%;
-        height: 420px;
+        height: 600px;
         border-radius: 18px;
         overflow: hidden;
         margin-bottom: 18px;
@@ -72,13 +72,64 @@
         align-items: center;
         justify-content: center;
         border: 2px solid rgba(0,0,0,0.04);
+        position: relative;
     }
 
     .main-image img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s ease;
+        object-fit: contain;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid #10b981;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #10b981;
+        font-size: 20px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10;
+    }
+
+    .carousel-btn:hover {
+        background: #10b981;
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .carousel-btn:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .carousel-btn.prev {
+        left: 15px;
+    }
+
+    .carousel-btn.next {
+        right: 15px;
+    }
+
+    .carousel-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .carousel-btn:disabled:hover {
+        background: rgba(255, 255, 255, 0.95);
+        color: #10b981;
+        transform: translateY(-50%);
     }
 
     .main-image:hover img {
@@ -480,33 +531,56 @@
     <div class="product-detail-grid">
         <!-- Product Images -->
         <div class="product-images">
-            <div class="main-image">
-                @php
-                $imageSrc = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=400&fit=crop';
-                
+            @php
+            $imageList = [];
+            if(isset($produk->images) && $produk->images->count() > 0) {
+                foreach($produk->images as $image) {
+                    $imageList[] = asset($image->image_path);
+                }
+            } else {
+                $fallbackSrc = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=600&fit=crop';
                 if(isset($produk)) {
                     if(isset($produk->primaryImage)) {
-                        $imageSrc = asset($produk->primaryImage->gambar);
+                        $fallbackSrc = asset($produk->primaryImage->gambar);
                     } elseif(isset($produk->gambar)) {
                         if(filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
-                            $imageSrc = $produk->gambar;
+                            $fallbackSrc = $produk->gambar;
                         } else {
-                            $imageSrc = asset($produk->gambar);
+                            $fallbackSrc = asset($produk->gambar);
                         }
                     }
                 }
-                @endphp
-                <img id="mainProductImage" src="{{ $imageSrc }}" alt="{{ $produk->nama_produk ?? 'Pupuk Urea' }}">
+                $imageList[] = $fallbackSrc;
+            }
+            $imageSrc = $imageList[0] ?? '';
+            @endphp
+            
+            <!-- Hidden data untuk JavaScript -->
+            <div id="imageData" data-images='@json($imageList)' style="display: none;"></div>
+            
+            <div class="main-image">
+                <!-- Tombol Previous -->
+                <button class="carousel-btn prev" onclick="prevImage()" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <img id="mainProductImage" src="{{ $imageSrc }}" alt="{{ $produk->nama_produk ?? 'Produk' }}">
+                
+                <!-- Tombol Next -->
+                <button class="carousel-btn next" onclick="nextImage()" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
+            
             <div class="thumbnail-grid">
                 @if(isset($produk->images) && $produk->images->count() > 0)
                     @foreach($produk->images as $index => $image)
-                        <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeImage('{{ asset($image->image_path) }}', this)">
+                        <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="goToImage({{ $index }})" data-index="{{ $index }}">
                             <img src="{{ asset($image->image_path) }}" alt="Thumbnail {{ $index + 1 }}">
                         </div>
                     @endforeach
                 @else
-                    <div class="thumbnail active" onclick="changeImage('{{ $imageSrc }}', this)">
+                    <div class="thumbnail active" onclick="goToImage(0)" data-index="0">
                         <img src="{{ $imageSrc }}" alt="Thumbnail 1">
                     </div>
                 @endif
@@ -542,39 +616,83 @@
                         Jumlah Produk yang dipesan:
                     </span>
                     <div class="quantity-buttons">
-                        <button class="qty-btn" onclick="decreaseQty()"><i class="fas fa-minus"></i></button>
+                        <button class="qty-btn" onclick="decreaseQty()" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
+                            <i class="fas fa-minus"></i>
+                        </button>
                         <span class="qty-display" id="qtyDisplay">1</span>
-                        <button class="qty-btn" onclick="increaseQty()"><i class="fas fa-plus"></i></button>
+                        <button class="qty-btn" onclick="increaseQty()" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
-                    <span class="stock-info">
-                        <i class="fas fa-warehouse"></i>
-                        Tersedia {{ $produk->stok_produk ?? 85 }} unit
+                    @php
+                        $stock = $produk->stok_produk ?? 0;
+                    @endphp
+                    <span class="stock-info" id="stockInfo" style="{{ $stock == 0 ? 'color: #ef4444;' : ($stock < 10 ? 'color: #f59e0b;' : 'color: #10b981;') }}">
+                        <i class="fas fa-{{ $stock == 0 ? 'times-circle' : ($stock < 10 ? 'exclamation-triangle' : 'warehouse') }}"></i>
+                        @if($stock == 0)
+                            Stok Habis
+                        @elseif($stock < 10)
+                            Tersisa {{ $stock }} unit (Segera habis!)
+                        @else
+                            Tersedia {{ $stock }} unit
+                        @endif
                     </span>
+                    <div id="stockWarning" style="display: none; background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 13px; font-weight: 600;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Jumlah pesanan melebihi stok tersedia!
+                    </div>
                 </div>
 
                 <div class="summary-box">
                     <div class="summary-row">
                         <span class="summary-label">Subtotal</span>
-                        <span class="summary-value" id="subtotal">Rp. {{ number_format($produk->harga_subsidi ?? 2800, 0, ',', '.') }}</span>
+                        <span class="summary-value" id="subtotal">Rp {{ number_format($produk->harga_subsidi ?? 2800, 0, ',', '.') }}</span>
                     </div>
-                    <div class="summary-row">
-                        <span class="summary-label">Ongkos Kirim</span>
-                        <span class="summary-value">Rp. 0</span>
+                    @php
+                        $discountAmt = $discountAmount ?? 0;
+                        $subsidyAmt = $subsidyAmount ?? 0;
+                    @endphp
+                    @if($discountAmt > 0)
+                    <div class="summary-row" style="color: #10b981;">
+                        <span class="summary-label">
+                            <i class="fas fa-tag"></i> Potongan
+                            @if(isset($bestDiscount))
+                                <small style="font-size: 11px; opacity: 0.8;">({{ $bestDiscount->code }})</small>
+                            @endif
+                        </span>
+                        <span class="summary-value" id="discountDisplay">- Rp {{ number_format($discountAmt, 0, ',', '.') }}</span>
                     </div>
+                    @endif
+                    @if($subsidyAmt > 0)
+                    <div class="summary-row" style="color: #059669; font-size: 13px;">
+                        <span class="summary-label">
+                            <i class="fas fa-gift"></i> Subsidi Pemerintah
+                        </span>
+                        <span class="summary-value">Hemat Rp {{ number_format($subsidyAmt, 0, ',', '.') }}</span>
+                    </div>
+                    @endif
                     <div class="summary-row summary-total">
                         <span class="summary-label">Total</span>
-                        <span class="summary-value" id="total">Rp {{ number_format($produk->harga_subsidi ?? 2800, 0, ',', '.') }}</span>
+                        <span class="summary-value" id="total">Rp {{ number_format(($produk->harga_subsidi ?? 2800) - $discountAmt, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
-                <form action="{{ route('user.pupukbibit.konfirmasi', $produk->id_produk ?? 1) }}" method="POST">
+                <form action="{{ route('user.pupukbibit.konfirmasi', $produk->id_produk ?? 1) }}" method="POST" id="orderForm">
                     @csrf
                     <input type="hidden" name="quantity" id="quantityInput" value="1">
-                    <input type="hidden" name="catatan" id="catatanInput" value="">
-                    <button type="submit" class="btn-order">
-                        <i class="fas fa-shopping-cart"></i>
-                        Pesan Sekarang
-                    </button>
+                    <input type="hidden" name="product_id" value="{{ $produk->id_produk ?? 1 }}">
+                    
+                    @if(($produk->stok_produk ?? 0) > 0)
+                        <button type="submit" class="btn-order" id="orderBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            Pesan Sekarang
+                        </button>
+                    @else
+                        <button type="button" class="btn-order" disabled style="opacity: 0.5; cursor: not-allowed; background: linear-gradient(135deg, #9ca3af, #6b7280);">
+                            <i class="fas fa-times-circle"></i>
+                            Stok Habis
+                        </button>
+                    @endif
                 </form>
 
                 <div class="info-notice">
@@ -708,32 +826,99 @@
 
 @push('scripts')
 <script>
+    const productId = {{ $produk->id_produk ?? 1 }};
+    const productName = '{{ $produk->nama_produk ?? "Produk" }}';
     const basePrice = {{ $produk->harga_subsidi ?? 2800 }};
+    const maxStock = {{ $produk->stok_produk ?? 0 }};
+    const discountPerUnit = {{ $discountAmount ?? 0 }};
     let quantity = 1;
-
-    function changeImage(src, element) {
+    
+    // Image Carousel Variables
+    const imageData = document.getElementById('imageData');
+    const images = imageData ? JSON.parse(imageData.dataset.images) : [];
+    let currentImageIndex = 0;
+    
+    // ============================================
+    // IMAGE CAROUSEL FUNCTIONS
+    // ============================================
+    function updateMainImage() {
+        if (images.length === 0) return;
+        
         const mainImage = document.getElementById('mainProductImage');
         mainImage.style.opacity = '0.5';
         
         setTimeout(() => {
-            mainImage.src = src;
+            mainImage.src = images[currentImageIndex];
             mainImage.style.opacity = '1';
         }, 150);
-
+        
         // Update active thumbnail
-        document.querySelectorAll('.thumbnail').forEach(thumb => {
-            thumb.classList.remove('active');
-        });
-        if (element) {
-            element.classList.add('active');
+        updateActiveThumbnail();
+        updateCarouselButtons();
+    }
+    
+    function nextImage() {
+        if (currentImageIndex < images.length - 1) {
+            currentImageIndex++;
+            updateMainImage();
         }
     }
+    
+    function prevImage() {
+        if (currentImageIndex > 0) {
+            currentImageIndex--;
+            updateMainImage();
+        }
+    }
+    
+    function goToImage(index) {
+        if (index >= 0 && index < images.length) {
+            currentImageIndex = index;
+            updateMainImage();
+        }
+    }
+    
+    function updateActiveThumbnail() {
+        document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+            if (index === currentImageIndex) {
+                thumb.classList.add('active');
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+    }
+    
+    function updateCarouselButtons() {
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn) {
+            prevBtn.disabled = currentImageIndex === 0;
+        }
+        if (nextBtn) {
+            nextBtn.disabled = currentImageIndex === images.length - 1;
+        }
+    }
+    
+    // Keyboard navigation (Arrow keys)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+            prevImage();
+        } else if (e.key === 'ArrowRight') {
+            nextImage();
+        }
+    });
 
+    // ============================================
+    // QUANTITY FUNCTIONS
+    // ============================================
     function increaseQty() {
-        const maxStock = {{ $produk->stok_produk ?? 85 }};
         if (quantity < maxStock) {
             quantity++;
             updateDisplay();
+            hideStockWarning();
+        } else {
+            showStockWarning();
         }
     }
 
@@ -741,6 +926,24 @@
         if (quantity > 1) {
             quantity--;
             updateDisplay();
+            hideStockWarning();
+        }
+    }
+
+    function showStockWarning() {
+        const warning = document.getElementById('stockWarning');
+        if (warning) {
+            warning.style.display = 'block';
+            setTimeout(() => {
+                warning.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    function hideStockWarning() {
+        const warning = document.getElementById('stockWarning');
+        if (warning) {
+            warning.style.display = 'none';
         }
     }
 
@@ -749,18 +952,77 @@
         document.getElementById('quantityInput').value = quantity;
         
         const subtotal = basePrice * quantity;
-        const total = subtotal; // + ongkir (0)
+        const discount = discountPerUnit * quantity;
+        const total = subtotal - discount;
         
-        document.getElementById('subtotal').textContent = 'Rp. ' + subtotal.toLocaleString('id-ID');
+        document.getElementById('subtotal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
+        
+        const discountEl = document.getElementById('discountDisplay');
+        if (discountEl && discount > 0) {
+            discountEl.textContent = '- Rp ' + discount.toLocaleString('id-ID');
+        }
+        
         document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+        
+        // Update button state
+        updateButtonState();
     }
 
-    // Set first thumbnail as active on load
+    function updateButtonState() {
+        const orderBtn = document.getElementById('orderBtn');
+        if (orderBtn) {
+            if (quantity > maxStock || maxStock == 0) {
+                orderBtn.disabled = true;
+                orderBtn.style.opacity = '0.5';
+                orderBtn.style.cursor = 'not-allowed';
+            } else {
+                orderBtn.disabled = false;
+                orderBtn.style.opacity = '1';
+                orderBtn.style.cursor = 'pointer';
+            }
+        }
+    }
+
+    // ============================================
+    // VALIDASI SEBELUM SUBMIT
+    // ============================================
+    document.getElementById('orderForm')?.addEventListener('submit', function(e) {
+        // Validasi stok
+        if (quantity > maxStock) {
+            e.preventDefault();
+            alert(`Stok tidak mencukupi!\nMaksimal: ${maxStock} unit`);
+            return false;
+        }
+        
+        if (maxStock == 0) {
+            e.preventDefault();
+            alert('Maaf, stok produk sedang habis.');
+            return false;
+        }
+        
+        // Show loading state
+        const btn = document.getElementById('orderBtn');
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            btn.disabled = true;
+        }
+    });
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
     document.addEventListener('DOMContentLoaded', function() {
+        // Set first thumbnail as active
         const firstThumbnail = document.querySelector('.thumbnail');
         if (firstThumbnail) {
             firstThumbnail.classList.add('active');
         }
+        
+        // Initialize carousel buttons state
+        updateCarouselButtons();
+        
+        // Initial display update
+        updateDisplay();
     });
 </script>
 @endpush

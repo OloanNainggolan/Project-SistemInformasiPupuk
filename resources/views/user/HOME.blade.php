@@ -6,6 +6,11 @@
 
 <!-- ====== HERO SECTION ====== -->
 <section class="hero-section">
+    <!-- Background Image Layer with Blur -->
+    <div class="hero-background"></div>
+    <!-- Green Overlay Layer -->
+    <div class="hero-overlay"></div>
+    
     <div class="hero-content">
         <div class="hero-text">
             <h1 class="hero-title">Selamat Datang!</h1>
@@ -21,13 +26,6 @@
                     <i class="fas fa-sign-in-alt"></i>
                     Sudah Punya Akun
                 </a>
-            </div>
-        </div>
-        
-        <div class="hero-image">
-            <div class="image-wrapper">
-                <img src="{{ asset('images/petani.jpg') }}" alt="Petani">
-                <div class="image-decoration"></div>
             </div>
         </div>
     </div>
@@ -94,20 +92,15 @@
 </section>
 
 <!-- ====== CTA SECTION ====== -->
-<section class="cta-section">
-    <div class="cta-content">
-        <h3>Siap Meningkatkan Hasil Panen?</h3>
-        <p>Bergabunglah dengan ribuan petani Indonesia yang sudah merasakan manfaatnya</p>
-        <a href="{{ route('register') }}" class="cta-btn">
-            Mulai Sekarang
-        </a>
-    </div>
+<section style="text-align:center; padding:70px 60px 70px; background:linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-bottom:-60px;">
+    <h3 style="font-size:2rem; font-weight:bold; color:#2d7a3e; margin-bottom:20px;">Siap Meningkatkan Hasil Panen?</h3>
+    <p style="color:#555; margin-bottom:35px; font-size:1.05rem; max-width:700px; margin-left:auto; margin-right:auto;">Bergabunglah dengan ribuan petani Indonesia yang sudah merasakan manfaatnya</p>
+    <a href="{{ route('register') }}" style="padding:16px 45px; background:#2d7a3e; color:white; text-decoration:none; border-radius:12px; font-weight:600; font-size:1.05rem; display:inline-block; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(45,122,62,0.3);">Mulai Sekarang</a>
 </section>
 
 <style>
     /* Hero Section Styles */
     .hero-section {
-        background: linear-gradient(135deg, #004d00 0%, #004d00 50%, #004d00 100%);
         color: white;
         padding: 100px 60px;
         min-height: 600px;
@@ -115,15 +108,31 @@
         overflow: hidden;
     }
     
-    .hero-section::before {
-        content: '';
+    /* Background Image Layer with Blur Effect */
+    .hero-background {
         position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        animation: rotate 30s linear infinite;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('{{ asset('images/Petani.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: blur(2px);
+        transform: scale(1.05);
+        z-index: 0;
+    }
+    
+    /* Green Overlay Layer */
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(6, 95, 70, 0.45) 0%, rgba(5, 150, 105, 0.40) 50%, rgba(16, 185, 129, 0.35) 100%);
+        z-index: 1;
     }
     
     @keyframes rotate {
@@ -163,39 +172,42 @@
         margin: 0 auto;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 60px;
+        justify-content: center;
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
     
     .hero-text {
-        flex: 1;
-        max-width: 600px;
+        max-width: 850px;
+        text-align: center;
         animation: fadeInUp 1s ease;
     }
     
     .hero-title {
-        font-size: 3.8rem;
+        font-size: 4.5rem;
         font-weight: 800;
-        margin-bottom: 25px;
+        margin-bottom: 30px;
         line-height: 1.1;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        text-shadow: 3px 4px 15px rgba(0,0,0,0.7);
         letter-spacing: -1px;
     }
     
     .hero-description {
-        font-size: 1.2rem;
-        line-height: 1.8;
-        margin-bottom: 40px;
-        opacity: 0.95;
+        font-size: 1.35rem;
+        line-height: 1.9;
+        margin-bottom: 45px;
         font-weight: 400;
+        text-shadow: 2px 3px 12px rgba(0,0,0,0.7);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .hero-buttons {
         display: flex;
         gap: 20px;
         flex-wrap: wrap;
+        justify-content: center;
     }
     
     .btn {
@@ -218,14 +230,13 @@
     .btn-primary {
         background: #fbbf24;
         color: #000;
-        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        box-shadow: 0 12px 35px rgba(251, 191, 36, 0.6);
         border: none;
     }
     
     .btn-primary:hover {
-        background: #f59e0b;
-        box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
-        transform: translateY(-2px);
+        transform: translateY(-5px) scale(1.08);
+        box-shadow: 0 18px 50px rgba(251, 191, 36, 0.8);
     }
     
     .btn-primary:active {
@@ -234,17 +245,18 @@
     }
     
     .btn-secondary {
-        background: transparent;
+        background: rgba(255, 255, 255, 0.15);
         color: white;
-        border: 2px solid white;
-        box-shadow: 0 4px 15px rgba(255,255,255,0.15);
+        border: 3px solid white;
+        box-shadow: 0 12px 35px rgba(255,255,255,0.25);
+        backdrop-filter: blur(10px);
     }
     
     .btn-secondary:hover {
         background: white;
-        color: #004d00 50%;
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 15px 40px rgba(255,255,255,0.4);
+        color: #065f46;
+        transform: translateY(-5px) scale(1.08);
+        box-shadow: 0 18px 50px rgba(255,255,255,0.5);
     }
     
     .btn-secondary:active {
@@ -252,42 +264,7 @@
         box-shadow: 0 2px 10px rgba(255,255,255,0.2);
     }
     
-    .hero-image {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        animation: fadeInRight 1.2s ease;
-    }
-    
-    .image-wrapper {
-        position: relative;
-        width: 450px;
-        height: 450px;
-    }
-    
-    .image-wrapper img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 10px solid rgba(255,255,255,0.3);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-        position: relative;
-        z-index: 2;
-        animation: pulse 3s ease-in-out infinite;
-    }
-    
-    .image-decoration {
-        position: absolute;
-        top: -20px;
-        left: -20px;
-        right: -20px;
-        bottom: -20px;
-        border-radius: 50%;
-        border: 3px dashed rgba(255,255,255,0.5);
-        animation: rotate 20s linear infinite;
-    }
+
 
     /* Features Section */
     .features-section {
@@ -459,24 +436,12 @@
     
     /* Responsive */
     @media (max-width: 1024px) {
-        .hero-content {
-            flex-direction: column;
-            text-align: center;
-            gap: 50px;
-            padding: 80px 40px 50px;
+        .hero-title {
+            font-size: 3.8rem;
         }
         
-        .hero-text {
-            max-width: 100%;
-        }
-        
-        .hero-buttons {
-            justify-content: center;
-        }
-        
-        .image-wrapper {
-            width: 380px;
-            height: 380px;
+        .hero-description {
+            font-size: 1.25rem;
         }
         
         .features-section, .cta-section {
@@ -491,21 +456,16 @@
     
     @media (max-width: 768px) {
         .hero-section {
-            padding: 50px 30px;
-            min-height: auto;
+            padding: 70px 30px;
+            min-height: 550px;
         }
         
         .hero-title {
-            font-size: 2.8rem;
+            font-size: 3rem;
         }
         
         .hero-description {
-            font-size: 1.05rem;
-        }
-        
-        .image-wrapper {
-            width: 320px;
-            height: 320px;
+            font-size: 1.15rem;
         }
         
         .btn {
@@ -541,15 +501,16 @@
     
     @media (max-width: 480px) {
         .hero-section {
-            padding: 40px 20px;
-        }
-        
-        .hero-content {
-            padding: 60px 20px 40px;
+            padding: 60px 20px;
+            min-height: 500px;
         }
         
         .hero-title {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
+        }
+        
+        .hero-description {
+            font-size: 1.05rem;
         }
         
         .hero-description {
@@ -566,28 +527,6 @@
             width: 100%;
             justify-content: center;
             padding: 16px 24px;
-        }
-        
-        .image-wrapper {
-            width: 260px;
-            height: 260px;
-        }
-        
-        .features-section, .cta-section {
-            padding: 50px 20px;
-        }
-        
-        .feature-card {
-            padding: 30px 20px;
-        }
-        
-        .cta-content h3 {
-            font-size: 1.75rem;
-        }
-        
-        .cta-btn {
-            padding: 16px 36px;
-            font-size: 1rem;
         }
     }
 </style>

@@ -13,53 +13,66 @@
 
   /* Container */
   .container {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 0 30px;
   }
 
   /* Main */
   main {
-      margin: 120px auto 120px;
-      background: white;
-      border-radius: 16px;
-      padding: 40px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin: 130px auto 100px;
+      background: linear-gradient(135deg, #ffffff 0%, #f5fdf7 100%);
+      border-radius: 20px;
+      padding: 45px 40px;
+      box-shadow: 0 8px 35px rgba(0,0,0,0.08);
+      border: 1px solid rgba(76, 175, 80, 0.1);
   }
 
   main h2 {
-      font-family: system-ui, -apple-system, sans-serif;
-      color: #065f46;
-      font-size: 28px;
+      font-family: 'Inter', Arial, sans-serif;
+      color: #2e7d32;
+      font-size: 2.2rem;
+      margin-bottom: 25px;
       font-weight: 700;
-      margin-bottom: 32px;
-      padding-bottom: 16px;
-      border-bottom: 3px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      position: relative;
+      padding-bottom: 25px;
+      letter-spacing: -0.5px;
   }
 
-  main h2::before {
+  main h2::after {
       content: '';
-      width: 4px;
-      height: 28px;
-      background: linear-gradient(180deg, #059669, #065f46);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 70px;
+      height: 4px;
+      background: linear-gradient(90deg, #4CAF50, #2e7d32);
       border-radius: 2px;
+  }
+
+  .subtitle {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 45px;
+      font-weight: 400;
+      line-height: 1.6;
   }
 
   /* Notification items */
   .notification-item {
-      background: #f9fafb;
-      border: 2px solid #e5e7eb;
-      border-left: 4px solid #059669;
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #fafffe 100%);
+      border-radius: 16px;
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      border: 1.5px solid #e8e8e8;
+      cursor: pointer;
+      transition: all 0.3s ease;
       text-decoration: none;
       color: inherit;
-      display: block;
-      transition: all 0.25s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
       position: relative;
       overflow: hidden;
   }
@@ -69,122 +82,97 @@
       position: absolute;
       left: 0;
       top: 0;
-      bottom: 0;
       width: 4px;
-      background: linear-gradient(180deg, #059669, #047857);
-      transition: width 0.25s ease;
+      height: 100%;
+      background: linear-gradient(180deg, #4CAF50, #2e7d32);
+      opacity: 0;
+      transition: opacity 0.3s ease;
   }
 
   .notification-item:hover {
-      background: white;
-      border-color: #059669;
-      box-shadow: 0 4px 15px rgba(5, 150, 105, 0.15);
-      transform: translateX(4px);
+      border-color: rgba(76, 175, 80, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
   }
 
   .notification-item:hover::before {
-      width: 6px;
+      opacity: 1;
+  }
+
+  .notif-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .notif-icon.success {
+      background: linear-gradient(135deg, #4CAF50, #2e7d32);
+  }
+
+  .notif-icon.processing {
+      background: linear-gradient(135deg, #2196F3, #1565C0);
+  }
+
+  .notif-icon.warning {
+      background: linear-gradient(135deg, #FF9800, #F57C00);
+  }
+
+  .notif-icon.info {
+      background: linear-gradient(135deg, #00BCD4, #0097A7);
+  }
+
+  .notif-content {
+      flex: 1;
+      min-width: 0;
   }
 
   .notif-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 16px;
       margin-bottom: 12px;
+      gap: 18px;
   }
 
   .notif-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
+      font-weight: 700;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 1.05rem;
+      color: #222;
+      line-height: 1.5;
   }
 
-  .notif-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 18px;
-      color: white;
-  }
-
-  .notif-icon.success {
-      background: linear-gradient(135deg, #10b981, #059669);
-  }
-
-  .notif-icon.process {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-  }
-
-  .notif-icon.warning {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-  }
-
-  .notif-icon.info {
-      background: linear-gradient(135deg, #06b6d4, #0891b2);
-  }
-
-  .notif-title-text {
-      font-weight: 600;
-      font-size: 16px;
-      color: #111827;
-      line-height: 1.4;
-  }
-
-  .notif-header .date {
-      font-size: 13px;
-      color: #6b7280;
+  .notif-date {
+      font-size: 0.85rem;
+      color: #888;
       font-weight: 500;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
   }
 
-  .notif-header .date::before {
-      content: '';
-      width: 4px;
-      height: 4px;
-      background: #9ca3af;
-      border-radius: 50%;
+  .notif-date i {
+      font-size: 0.8rem;
   }
 
   .notification-item p {
-      font-size: 14px;
-      color: #4b5563;
-      line-height: 1.6;
-      margin-left: 52px;
+      font-weight: 400;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.65;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-  }
-
-  /* Notification badge (unread indicator) */
-  .notification-item.unread {
-      background: #ecfdf5;
-      border-left-color: #10b981;
-  }
-
-  .notification-item.unread .notif-title-text::after {
-      content: '';
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: #10b981;
-      border-radius: 50%;
-      margin-left: 8px;
-      animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
   }
 
   /* No notifications */
@@ -193,104 +181,89 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
-      color: #6b7280;
-      font-weight: 500;
-      margin-top: 32px;
-      padding-top: 24px;
-      font-size: 14px;
+      color: #4CAF50;
+      font-weight: 600;
+      font-family: 'Inter', Arial, sans-serif;
+      margin-top: 25px;
+      padding: 25px 0;
+      font-size: 1rem;
   }
 
   .no-notifs hr {
       border: none;
-      border-top: 2px solid #e5e7eb;
-      flex: 1;
+      border-top: 2px solid transparent;
+      border-image: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.4), transparent) 1;
+      width: 30%;
   }
 
   /* Responsive */
   @media (max-width: 768px) {
-      .container {
-          padding: 0 20px;
-      }
+    .container {
+        padding: 0 15px;
+    }
 
-      main {
-          margin: 80px auto 100px;
-          padding: 24px 20px;
-          border-radius: 12px;
-      }
+    main {
+        margin: 90px auto 80px;
+        padding: 30px 20px;
+    }
 
-      main h2 {
-          font-size: 22px;
-          margin-bottom: 24px;
-      }
+    main h2 {
+        font-size: 1.8rem;
+    }
 
-      .notification-item {
-          padding: 16px 18px;
-      }
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+    }
 
-      .notif-header {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 8px;
-      }
+    .notification-item {
+        padding: 18px 16px;
+        gap: 14px;
+    }
 
-      .notif-icon {
-          width: 36px;
-          height: 36px;
-          font-size: 16px;
-      }
+    .notif-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+    }
 
-      .notif-title-text {
-          font-size: 15px;
-      }
+    .notif-title {
+        font-size: 0.95rem;
+    }
 
-      .notif-header .date {
-          font-size: 12px;
-          margin-left: 48px;
-      }
+    .notif-date {
+        font-size: 0.8rem;
+    }
 
-      .notification-item p {
-          font-size: 13px;
-          margin-left: 48px;
-          -webkit-line-clamp: 3;
-      }
+    .notification-item p {
+        font-size: 0.88rem;
+    }
+
+    .no-notifs {
+        font-size: 0.9rem;
+        gap: 15px;
+    }
+
+    .no-notifs hr {
+        width: 25%;
+    }
   }
 
   @media (max-width: 480px) {
-      .container {
-          padding: 0 16px;
-      }
+    .notification-item {
+        flex-direction: column;
+        gap: 12px;
+    }
 
-      main {
-          margin: 60px auto 80px;
-          padding: 20px 16px;
-      }
+    .notif-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
 
-      main h2 {
-          font-size: 20px;
-      }
-
-      .notification-item {
-          padding: 14px 16px;
-          margin-bottom: 12px;
-      }
-
-      .notif-icon {
-          width: 32px;
-          height: 32px;
-          font-size: 14px;
-      }
-
-      .notif-title-text {
-          font-size: 14px;
-      }
-
-      .notification-item p {
-          margin-left: 44px;
-      }
-
-      .notif-header .date {
-          margin-left: 44px;
-      }
+    .notif-date {
+        font-size: 0.78rem;
+    }
   }
 </style>
 @endpush
@@ -298,50 +271,59 @@
 @section('content')
 <main class="container" role="main" aria-label="Daftar notifikasi">
   <h2>Notifikasi</h2>
+  <p class="subtitle">Pantau semua pemberitahuan penting terkait pesanan dan akun Anda</p>
 
   <section aria-live="polite">
-    <a href="{{ route('notifikasi.detail', ['type' => 'selesai']) }}" class="notification-item unread" role="alert" aria-label="Pesanan Telah Selesai 10 September 2025">
-      <div class="notif-header">
-        <div class="notif-title">
-          <div class="notif-icon success">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <span class="notif-title-text">Pesanan Telah Selesai</span>
-        </div>
-        <span class="date">10/09/2025</span>
+    <a href="{{ route('notifikasi.detail', ['type' => 'selesai']) }}" class="notification-item" role="alert" aria-label="Pesanan Telah Selesai 10 September 2025">
+      <div class="notif-icon success">
+        <i class="fas fa-check-circle"></i>
       </div>
-      <p>Halo Oloan, selamat atas kemajuan pesanan Anda di Pupuk & Bibit Subsidi! Kami dengan senang menginformasikan bahwa pesanan Anda telah selesai diproses dan siap untuk diambil.</p>
+      <div class="notif-content">
+        <div class="notif-header">
+          <span class="notif-title">Pesanan Telah Selesai</span>
+          <span class="notif-date"><i class="far fa-clock"></i> 10/09/2025</span>
+        </div>
+        <p>Halo Oloan, selamat atas kemajuan pesanan Anda di Pupuk & Bibit Subsidi! Kami dengan senang menginformasikan bahwa pesanan Anda telah selesai diproses dan siap untuk digunakan.</p>
+      </div>
     </a>
 
     <a href="{{ route('notifikasi.detail', ['type' => 'diproses']) }}" class="notification-item" role="alert" aria-label="Pesanan Sedang Diproses 6 September 2025">
-      <div class="notif-header">
-        <div class="notif-title">
-          <div class="notif-icon process">
-            <i class="fas fa-clock"></i>
-          </div>
-          <span class="notif-title-text">Pesanan Sedang Diproses</span>
-        </div>
-        <span class="date">06/09/2025</span>
+      <div class="notif-icon processing">
+        <i class="fas fa-hourglass-half"></i>
       </div>
-      <p>Halo Oloan, terima kasih sudah memilih Pupuk dan Bibit Subsidi untuk belanja Anda! Kami senang melihat pesanan sedang dalam proses dan akan segera siap untuk diambil.</p>
+      <div class="notif-content">
+        <div class="notif-header">
+          <span class="notif-title">Pesanan Sedang Diproses</span>
+          <span class="notif-date"><i class="far fa-clock"></i> 06/09/2025</span>
+        </div>
+        <p>Halo Oloan, terima kasih sudah memilih Pupuk dan Bibit Subsidi untuk belanja seru Anda! Kami senang melihat pesanan Anda sedang dalam proses dan akan segera selesai.</p>
+      </div>
     </a>
 
     <a href="{{ route('notifikasi.detail', ['type' => 'konfirmasi']) }}" class="notification-item" role="alert" aria-label="Segera Lakukan Konfirmasi Pesanan 5 September 2025">
-      <div class="notif-header">
-        <div class="notif-title">
-          <div class="notif-icon warning">
-            <i class="fas fa-exclamation-circle"></i>
-          </div>
-          <span class="notif-title-text">Segera Lakukan Konfirmasi Pesanan</span>
-        </div>
-        <span class="date">05/09/2025</span>
+      <div class="notif-icon warning">
+        <i class="fas fa-exclamation-circle"></i>
       </div>
-      <p>Halo Oloan, pesanan Anda memerlukan konfirmasi. Mohon segera lakukan konfirmasi untuk melanjutkan proses pemesanan produk subsidi Anda.</p>
+      <div class="notif-content">
+        <div class="notif-header">
+          <span class="notif-title">Segera Lakukan Konfirmasi Pesanan</span>
+          <span class="notif-date"><i class="far fa-clock"></i> 05/09/2025</span>
+        </div>
+        <p>Halo Oloan, terima kasih sudah memilih Pupuk dan Bibit Subsidi untuk belanja seru Anda! Mohon segera lakukan konfirmasi pesanan agar dapat kami proses lebih lanjut.</p>
+      </div>
     </a>
 
     <a href="{{ route('notifikasi.detail', ['type' => 'verifikasi']) }}" class="notification-item" role="alert" aria-label="Verifikasi Akun Pengguna Berhasil 2 September 2025">
-      <div class="notif-header">
-        <span><i class="fa-check-circle"></i> Verifikasi Akun Pengguna Berhanang sekali mengumumkan bahwa proses verifikasi akun.....</p>
+      <div class="notif-icon info">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div class="notif-content">
+        <div class="notif-header">
+          <span class="notif-title">Verifikasi Akun Pengguna Berhasil</span>
+          <span class="notif-date"><i class="far fa-clock"></i> 02/09/2025</span>
+        </div>
+        <p>Selamat datang secara resmi di Pupuk & Bibit Subsidi! Kami senang sekali mengumumkan bahwa proses verifikasi akun Anda telah berhasil dilakukan.</p>
+      </div>
     </a>
 
     <div class="no-notifs" aria-live="polite" aria-atomic="true">

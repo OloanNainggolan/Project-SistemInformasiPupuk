@@ -3,6 +3,8 @@
 @section('title', 'Konfirmasi Pesanan - Pupuk & Bibit Subsidi')
 
 @push('styles')
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
         * {
             margin: 0;
@@ -11,7 +13,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
             color: #333;
             min-height: 100vh;
@@ -543,72 +545,205 @@
             min-height: 80px;
         }
 
-        /* Quantity Control */
-        .quantity-control {
+        /* Quantity Display (Read-only) */
+        .quantity-display {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: 10px;
+            border: 2px solid #10b981;
         }
 
         .quantity-label {
-            font-weight: 600;
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .quantity-input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quantity-btn {
-            width: 35px;
-            height: 35px;
-            border: 2px solid #10b981;
-            background: white;
-            color: #10b981;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quantity-btn:hover {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .quantity-btn:active {
-            transform: scale(0.95);
-        }
-
-        .quantity-input {
-            width: 70px;
-            padding: 8px;
-            text-align: center;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
             font-weight: 700;
             color: #065f46;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .quantity-input:focus {
-            outline: none;
-            border-color: #10b981;
+        .quantity-label i {
+            color: #10b981;
+            font-size: 16px;
+        }
+
+        .quantity-value-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+        }
+
+        .quantity-display-input {
+            width: 50px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #10b981;
+            pointer-events: none;
         }
 
         .quantity-unit {
-            font-weight: 600;
+            font-weight: 700;
+            color: #059669;
+            font-size: 14px;
+        }
+
+        /* Price per unit styling */
+        .product-quantity {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .price-per-unit-label {
             color: #6b7280;
             font-size: 14px;
+            font-weight: 500;
+        }
+
+        .price-per-unit-value {
+            color: #065f46;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Original Price Strikethrough */
+        .original-price {
+            text-decoration: line-through;
+            color: #9ca3af !important;
+            font-size: 14px;
+        }
+
+        /* Discount Rows */
+        .discount-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .subsidy-row {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+        }
+
+        .promo-row {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+        }
+
+        .discount-label {
+            color: #065f46;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .discount-label i {
+            font-size: 16px;
+        }
+
+        .subsidy-row .discount-label i {
+            color: #10b981;
+        }
+
+        .promo-row .discount-label i {
+            color: #f59e0b;
+        }
+
+        .promo-code {
+            background: white;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #f59e0b;
+            border: 1px solid #fbbf24;
+            margin-left: 6px;
+        }
+
+        .discount-value {
+            font-weight: 800;
+            color: #059669;
+        }
+
+        /* Savings Highlight */
+        .savings-highlight {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .savings-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .savings-content {
+            flex: 1;
+        }
+
+        .savings-label {
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .savings-amount {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .savings-percent {
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.85;
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* Divider */
+        .divider-dashed {
+            border-top: 2px dashed #d1d5db;
+            margin: 16px 0;
         }
 
         /* Responsive */
@@ -658,16 +793,23 @@
                 margin-top: 10px;
             }
 
-            .quantity-control {
+            .quantity-display {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
-                width: 100%;
             }
 
-            .quantity-input-group {
-                width: 100%;
-                justify-content: center;
+            .quantity-value-box {
+                width: auto;
+            }
+
+            .savings-highlight {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .savings-amount {
+                font-size: 24px;
             }
 
             .form-group {
@@ -789,35 +931,40 @@
                     <!-- Product Item -->
                     <div class="product-item">
                         @php
-                            // Cek apakah produk punya primaryImage (dari database) atau gambar (data statis)
+                            $imageSrc = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&h=300&fit=crop';
+                            
+                            // Cek gambar dari relasi database
                             if (isset($produk->primaryImage) && $produk->primaryImage) {
-                                $imageSrc = asset('images/products/' . $produk->primaryImage->image_path);
-                            } elseif (isset($produk->gambar) && !filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
-                                $imageSrc = asset('images/products/' . $produk->gambar);
-                            } else {
-                                $imageSrc = $produk->gambar ?? asset('images/placeholder-product.jpg');
+                                // primaryImage sudah punya image_path lengkap
+                                $imageSrc = asset($produk->primaryImage->image_path);
+                            } elseif (isset($produk->images) && $produk->images->count() > 0) {
+                                // Ambil gambar pertama dari collection
+                                $imageSrc = asset($produk->images->first()->image_path);
+                            } elseif (isset($produk->gambar) && !empty($produk->gambar)) {
+                                // Field gambar lama
+                                if (filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
+                                    $imageSrc = $produk->gambar;
+                                } else {
+                                    $imageSrc = asset($produk->gambar);
+                                }
                             }
                         @endphp
-                        <img src="{{ $imageSrc }}" alt="{{ $produk->nama_produk }}" class="product-image">
+                        <img src="{{ $imageSrc }}" alt="{{ $produk->nama_produk }}" class="product-image" onerror="this.src='https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&h=300&fit=crop'">
                         <div class="product-details" style="flex: 1;">
                             <div class="product-name">{{ $produk->nama_produk }}</div>
                             <div class="product-sku">{{ $produk->kategori ?? 'NPK 16-16-16' }}</div>
                             
-                            <div class="quantity-control">
-                                <span class="quantity-label">Jumlah:</span>
-                                <div class="quantity-input-group">
-                                    <button type="button" class="quantity-btn" onclick="updateQuantity(-1)">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <input type="number" id="quantityInput" class="quantity-input" value="{{ $quantity ?? 1 }}" min="1" max="100" onchange="updateTotal()">
-                                    <button type="button" class="quantity-btn" onclick="updateQuantity(1)">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
+                            <div class="quantity-display">
+                                <span class="quantity-label"><i class="fas fa-box"></i> Jumlah Pesanan:</span>
+                                <div class="quantity-value-box">
+                                    <input type="number" id="quantityInput" class="quantity-display-input" value="{{ $quantity ?? 1 }}" readonly>
                                     <span class="quantity-unit">kg</span>
                                 </div>
                             </div>
-                            <div class="product-quantity" style="margin-top: 10px;">
-                                <span id="pricePerUnit">Rp. {{ number_format($produk->harga_subsidi, 0, ',', '.') }}</span> / kg
+                            <div class="product-quantity" style="margin-top: 12px;">
+                                <span class="price-per-unit-label">Harga:</span>
+                                <span id="pricePerUnit" class="price-per-unit-value">Rp {{ number_format($produk->harga_subsidi, 0, ',', '.') }}</span>
+                                <span class="price-per-unit-label">/ kg</span>
                             </div>
                         </div>
                         <div class="product-price" id="productTotalPrice">
@@ -827,17 +974,61 @@
 
                     <!-- Price Summary -->
                     <div class="price-summary">
+                        @php
+                            $calculatedSubsidy = ($produk->harga_normal - $produk->harga_subsidi) * ($quantity ?? 1);
+                            $totalDiscount = ($discountAmount ?? 0) + $calculatedSubsidy;
+                        @endphp
+                        
                         <div class="price-row">
-                            <span class="price-label">Subtotal</span>
-                            <span class="price-value" id="subtotalValue">Rp. {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}</span>
+                            <span class="price-label"><i class="fas fa-receipt" style="color: #6b7280;"></i> Harga Normal</span>
+                            <span class="price-value original-price">Rp {{ number_format($produk->harga_normal * ($quantity ?? 1), 0, ',', '.') }}</span>
                         </div>
-                        <div class="price-row">
-                            <span class="price-label">Ongkos Kirim</span>
-                            <span class="price-value">Rp. 0</span>
+                        
+                        <!-- Subsidi Pemerintah -->
+                        @if($calculatedSubsidy > 0)
+                        <div class="discount-row subsidy-row">
+                            <span class="discount-label">
+                                <i class="fas fa-hand-holding-heart"></i> Subsidi Pemerintah
+                            </span>
+                            <span class="discount-value">- Rp {{ number_format($calculatedSubsidy, 0, ',', '.') }}</span>
                         </div>
+                        @endif
+                        
+                        <!-- Potongan Tambahan -->
+                        @if(($discountAmount ?? 0) > 0)
+                        <div class="discount-row promo-row">
+                            <span class="discount-label">
+                                <i class="fas fa-tags"></i> Potongan Promo
+                                @if(isset($bestDiscount))
+                                    <span class="promo-code">{{ $bestDiscount->code }}</span>
+                                @endif
+                            </span>
+                            <span class="discount-value">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+                        
+                        <!-- Total Penghematan -->
+                        @if($totalDiscount > 0)
+                        <div class="savings-highlight">
+                            <div class="savings-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                            <div class="savings-content">
+                                <div class="savings-label">Total Penghematan Anda</div>
+                                <div class="savings-amount">Rp {{ number_format($totalDiscount, 0, ',', '.') }}</div>
+                                @php
+                                    $savingsPercent = ($produk->harga_normal > 0) ? round(($totalDiscount / ($produk->harga_normal * ($quantity ?? 1))) * 100) : 0;
+                                @endphp
+                                <div class="savings-percent">Hemat {{ $savingsPercent }}% dari harga normal!</div>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        <div class="divider-dashed"></div>
+                        
                         <div class="total-row">
-                            <span class="total-label">Total</span>
-                            <span class="total-value" id="totalValue">Rp {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}</span>
+                            <span class="total-label"><i class="fas fa-wallet"></i> Total Bayar</span>
+                            <span class="total-value" id="totalValue">Rp {{ number_format($total ?? ($produk->harga_subsidi * ($quantity ?? 1)), 0, ',', '.') }}</span>
                         </div>
                     </div>
 
@@ -857,43 +1048,33 @@
 @endsection
 
 @push('scripts')
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Harga per unit dari backend
         const hargaPerUnit = {{ $produk->harga_subsidi }};
+        const productName = '{{ $produk->nama_produk }}';
         
-        // Update quantity
-        function updateQuantity(change) {
-            const quantityInput = document.getElementById('quantityInput');
-            let currentValue = parseInt(quantityInput.value) || 1;
-            let newValue = currentValue + change;
-            
-            // Validasi min max
-            if (newValue < 1) newValue = 1;
-            if (newValue > 100) newValue = 100;
-            
-            quantityInput.value = newValue;
-            updateTotal();
-        }
+        // Get product image dari database
+        @php
+            $popupImageSrc = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=200&h=200&fit=crop';
+            if(isset($produk->primaryImage) && $produk->primaryImage) {
+                $popupImageSrc = asset($produk->primaryImage->image_path);
+            } elseif(isset($produk->images) && $produk->images->count() > 0) {
+                $popupImageSrc = asset($produk->images->first()->image_path);
+            } elseif(isset($produk->gambar) && !empty($produk->gambar)) {
+                if(filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
+                    $popupImageSrc = $produk->gambar;
+                } else {
+                    $popupImageSrc = asset($produk->gambar);
+                }
+            }
+        @endphp
+        const productImage = '{{ $popupImageSrc }}';
         
-        // Update total harga
-        function updateTotal() {
-            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
-            const subtotal = hargaPerUnit * quantity;
-            
-            // Update product total price
-            document.getElementById('productTotalPrice').textContent = 
-                'Rp. ' + subtotal.toLocaleString('id-ID');
-            
-            // Update subtotal
-            document.getElementById('subtotalValue').textContent = 
-                'Rp. ' + subtotal.toLocaleString('id-ID');
-            
-            // Update total (subtotal + ongkir)
-            document.getElementById('totalValue').textContent = 
-                'Rp ' + subtotal.toLocaleString('id-ID');
-        }
+        // Quantity is now readonly - no update functions needed
         
-        // Konfirmasi pesanan dengan validasi form
+        // Konfirmasi pesanan dengan SweetAlert2
         function konfirmasiPesanan() {
             // Ambil data dari form
             const nama = document.getElementById('nama').value.trim();
@@ -904,82 +1085,210 @@
             
             // Validasi form
             if (!nama || !noHp || !alamat) {
-                alert('Mohon lengkapi semua data yang diperlukan (Nama, HP, dan Alamat)!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Belum Lengkap',
+                    text: 'Mohon lengkapi Nama, No. HP, dan Alamat Pengiriman!',
+                    confirmButtonColor: '#10b981'
+                });
                 return;
             }
             
             if (quantity < 1 || quantity > 100) {
-                alert('Jumlah pesanan harus antara 1-100 kg!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Jumlah Tidak Valid',
+                    text: 'Jumlah pesanan harus antara 1-100 unit!',
+                    confirmButtonColor: '#10b981'
+                });
                 return;
             }
             
             // Hitung total
             const total = hargaPerUnit * quantity;
             
-            // Konfirmasi
-            const confirmMessage = `Konfirmasi Pesanan Anda:\n\n` +
-                `Nama: ${nama}\n` +
-                `HP: ${noHp}\n` +
-                `Alamat: ${alamat}\n` +
-                `${catatan ? 'Catatan: ' + catatan + '\n' : ''}` +
-                `\nProduk: {{ $produk->nama_produk }}\n` +
-                `Jumlah: ${quantity} kg\n` +
-                `Total: Rp ${total.toLocaleString('id-ID')}\n\n` +
-                `Apakah data sudah benar?`;
-            
-            if (confirm(confirmMessage)) {
-                // Kirim data ke server
-                const formData = new FormData();
-                formData.append('nama', nama);
-                formData.append('no_hp', noHp);
-                formData.append('alamat', alamat);
-                formData.append('catatan', catatan);
-                formData.append('quantity', quantity);
-                formData.append('village_office', 'Balai Desa');
-                formData.append('_token', '{{ csrf_token() }}');
-                
-                fetch('{{ route("user.pupukbibit.store", $produk->id_produk) }}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(`✅ Pesanan Berhasil Dikonfirmasi!\n\n` +
-                            `Nomor Pesanan: ${data.order_number}\n` +
-                            `Total Pembayaran: Rp ${data.total.toLocaleString('id-ID')}\n\n` +
-                            `Silakan lakukan pembayaran di:\n` +
-                            `• Balai Desa setempat\n` +
-                            `• Dinas Pertanian Kabupaten/Kota\n` +
-                            `• Kantor Penyuluhan Pertanian (BP3K)\n\n` +
-                            `Bawa nomor pesanan dan identitas diri.\n` +
-                            `Maksimal pembayaran: 3 hari\n\n` +
-                            `Terima kasih!`);
+            // Tampilkan konfirmasi dengan SweetAlert2
+            Swal.fire({
+                title: 'Konfirmasi Pesanan Anda',
+                html: `
+                    <div style="text-align: center; padding: 20px;">
+                        <img src="${productImage}" 
+                             style="width: 180px; height: 180px; object-fit: cover; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
                         
-                        // Redirect ke halaman dashboard
+                        <h3 style="font-size: 22px; font-weight: 700; color: #1f2937; margin-bottom: 20px;">${productName}</h3>
+                        
+                        <div style="background: #f9fafb; border-radius: 12px; padding: 16px; margin-bottom: 16px; text-align: left;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6b7280; font-weight: 600;"><i class="fas fa-user"></i> Nama:</span>
+                                <span style="color: #1f2937; font-weight: 700;">${nama}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6b7280; font-weight: 600;"><i class="fas fa-phone"></i> HP:</span>
+                                <span style="color: #1f2937; font-weight: 700;">${noHp}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6b7280; font-weight: 600;"><i class="fas fa-map-marker-alt"></i> Alamat:</span>
+                                <span style="color: #1f2937; font-weight: 700; max-width: 200px; text-align: right;">${alamat}</span>
+                            </div>
+                            ${catatan ? `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6b7280; font-weight: 600;"><i class="fas fa-sticky-note"></i> Catatan:</span>
+                                <span style="color: #1f2937; font-weight: 700; max-width: 200px; text-align: right;">${catatan}</span>
+                            </div>
+                            ` : ''}
+                            <hr style="border: 0; border-top: 2px dashed #e5e7eb; margin: 12px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6b7280; font-weight: 600;"><i class="fas fa-box"></i> Jumlah:</span>
+                                <span style="color: #1f2937; font-weight: 700;">${quantity} unit</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: #059669; font-weight: 700; font-size: 16px;"><i class="fas fa-money-bill-wave"></i> Total:</span>
+                                <span style="color: #10b981; font-weight: 800; font-size: 24px;">Rp ${total.toLocaleString('id-ID')}</span>
+                            </div>
+                        </div>
+                        
+                        <p style="font-size: 15px; color: #374151; margin-top: 16px; font-weight: 600;">
+                            <i class="fas fa-question-circle"></i> Apakah data pesanan sudah benar?
+                        </p>
+                    </div>
+                `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-check-circle"></i> Ya, Konfirmasi Pesanan',
+                cancelButtonText: '<i class="fas fa-times-circle"></i> Periksa Lagi',
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#ef4444',
+                reverseButtons: true,
+                width: '600px',
+                customClass: {
+                    popup: 'animated-popup',
+                    confirmButton: 'swal-btn-confirm',
+                    cancelButton: 'swal-btn-cancel'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Menyimpan Pesanan',
+                        html: '<i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #10b981;"></i><br><br>Mohon tunggu sebentar...',
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+                    
+                    // Submit data ke server untuk disimpan ke database
+                    fetch('{{ route("user.pupukbibit.store", $produk->id_produk) }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            quantity: quantity,
+                            customer_name: nama,
+                            customer_phone: noHp,
+                            customer_address: alamat,
+                            customer_notes: catatan
+                        })
+                    })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Response data:', data);
+                        if (data.success) {
+                            const nomorPesanan = data.order_number;
+                            const total = data.total_amount;
+                            
+                            // Tampilkan sukses dengan informasi pembayaran
+                            Swal.fire({
+                                icon: 'success',
+                                title: '🎉 Pesanan Berhasil Dikonfirmasi!',
+                                html: `
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
+                                    <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700;">Nomor Pesanan</h3>
+                                    <p style="font-size: 32px; font-weight: 800; letter-spacing: 2px; margin: 0;">${nomorPesanan}</p>
+                                </div>
+                                
+                                <div style="background: #f9fafb; border-radius: 12px; padding: 20px; margin-bottom: 16px; text-align: left;">
+                                    <h4 style="color: #1f2937; font-weight: 700; margin-bottom: 12px; font-size: 16px;">
+                                        <i class="fas fa-money-bill-wave" style="color: #10b981;"></i> Total Pembayaran
+                                    </h4>
+                                    <p style="font-size: 28px; font-weight: 800; color: #10b981; margin: 0 0 16px 0;">
+                                        Rp ${total.toLocaleString('id-ID')}
+                                    </p>
+                                    
+                                    <h4 style="color: #1f2937; font-weight: 700; margin-bottom: 12px; font-size: 16px;">
+                                        <i class="fas fa-map-marker-alt" style="color: #10b981;"></i> Lokasi Pembayaran
+                                    </h4>
+                                    <ul style="text-align: left; color: #374151; line-height: 1.8; padding-left: 20px; margin: 0;">
+                                        <li><strong>Balai Desa setempat</strong></li>
+                                        <li><strong>Dinas Pertanian Kabupaten/Kota</strong></li>
+                                        <li><strong>Kantor Penyuluhan Pertanian (BP3K)</strong></li>
+                                    </ul>
+                                    
+                                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                                        <p style="margin: 0; color: #92400e; font-size: 14px; font-weight: 600;">
+                                            <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i> 
+                                            <strong>Penting:</strong> Bawa nomor pesanan dan identitas diri (KTP/KK)
+                                        </p>
+                                    </div>
+                                    
+                                    <div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 12px; border-radius: 8px; margin-top: 12px;">
+                                        <p style="margin: 0; color: #991b1b; font-size: 14px; font-weight: 600;">
+                                            <i class="fas fa-clock" style="color: #ef4444;"></i> 
+                                            <strong>Batas Waktu:</strong> Maksimal 3 hari setelah konfirmasi
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <p style="font-size: 16px; color: #059669; font-weight: 700; margin-top: 20px;">
+                                    <i class="fas fa-heart" style="color: #ef4444;"></i> Terima kasih atas pesanan Anda!
+                                </p>
+                            </div>
+                        `,
+                        confirmButtonText: '<i class="fas fa-home"></i> Kembali ke Dashboard',
+                        confirmButtonColor: '#10b981',
+                        allowOutsideClick: false,
+                        width: '650px',
+                        customClass: {
+                            popup: 'success-popup'
+                        }
+                    }).then(() => {
+                        // Redirect ke dashboard
                         window.location.href = "{{ route('dashboard') }}";
-                    } else {
-                        alert('❌ Gagal membuat pesanan: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('❌ Terjadi kesalahan saat membuat pesanan. Silakan coba lagi.');
-                });
-            }
+                    });
+                        } else {
+                            // Error saat menyimpan
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Menyimpan Pesanan',
+                                text: data.message || 'Terjadi kesalahan saat menyimpan pesanan',
+                                confirmButtonColor: '#10b981'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan',
+                            text: 'Gagal menghubungi server. Silakan coba lagi.',
+                            confirmButtonColor: '#10b981'
+                        });
+                    });
+                }
+            });
         }
         
-        // Initialize
+        // Initialize - quantity is fixed, no need for updates
         document.addEventListener('DOMContentLoaded', function() {
-            // Update total saat halaman dimuat
-            updateTotal();
-            
-            // Event listener untuk input quantity manual
-            document.getElementById('quantityInput').addEventListener('input', updateTotal);
+            console.log('Konfirmasi pesanan page loaded');
         });
     </script>
 @endpush

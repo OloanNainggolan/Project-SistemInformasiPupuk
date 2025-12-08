@@ -12,6 +12,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Global Standards CSS -->
+    <link rel="stylesheet" href="{{ asset('css/global-standards.css') }}">
+    
     <style>
         * {
             margin: 0;
@@ -36,22 +39,21 @@
 
         /* ========== HEADER ========== */
         .admin-header {
-            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-            border-bottom: 3px solid #004d00;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%);
+            border-bottom: 3px solid #10b981;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 0;
-            height: 70px;
+            height: 65px;
         }
 
         .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px;
+            max-width: 100%;
+            margin: 0;
+            padding: 0 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -65,7 +67,6 @@
             gap: 12px;
             text-decoration: none;
             transition: transform 0.3s ease;
-            cursor: pointer;
         }
 
         .logo-section:hover {
@@ -73,14 +74,20 @@
         }
 
         .logo {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #004d00, #047857);
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 77, 0, 0.3);
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .logo-section:hover .logo {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+            transform: scale(1.05);
         }
 
         .logo i {
@@ -90,18 +97,18 @@
 
         .logo-text h1 {
             font-size: 16px;
-            color: #004d00;
+            color: #065f46;
             font-weight: 700;
             margin: 0;
-            letter-spacing: 0;
             line-height: 1.2;
         }
 
         .logo-text p {
             font-size: 11px;
-            color: #004d00;
+            color: #059669;
             font-weight: 500;
             margin: 0;
+            line-height: 1.2;
         }
 
         /* Navigation */
@@ -110,28 +117,25 @@
             gap: 6px;
             align-items: center;
             list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
+            padding: 10px 18px;
             color: #374151;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             font-size: 13px;
             transition: all 0.3s ease;
-            position: relative;
             background: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-link i {
-            font-size: 15px;
-            color: #10b981;
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
         }
 
         .nav-link::before {
@@ -140,32 +144,38 @@
             bottom: 0;
             left: 0;
             width: 0;
-            height: 2px;
-            background: linear-gradient(135deg, #004d00, #047857);
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #059669);
             transition: width 0.3s ease;
-            border-radius: 8px 8px 0 0;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .nav-link i {
+            font-size: 15px;
+            color: #10b981;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            color: #065f46;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
         .nav-link:hover::before {
             width: 100%;
         }
 
-        .nav-link:hover {
-            background: linear-gradient(135deg, #dcfce7, #d1fae5);
-            color: #065f46;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
-        }
-
         .nav-link:hover i {
-            transform: scale(1.1);
-            color: #047857;
+            transform: scale(1.15) rotate(5deg);
+            color: #059669;
         }
 
         .nav-link.active {
-            background: linear-gradient(135deg, #004d00, #047857);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
         }
 
         .nav-link.active i {
@@ -180,58 +190,59 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         /* Notification Bell */
         .notification-bell {
             position: relative;
-            font-size: 16px;
             color: #374151;
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 8px 10px;
-            border-radius: 8px;
+            padding: 10px 12px;
+            border-radius: 10px;
             background: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            text-decoration: none;
         }
 
         .notification-bell i {
-            color: #004d00;
-            font-size: 16px;
+            color: #10b981;
+            font-size: 18px;
             transition: all 0.3s ease;
         }
 
         .notification-bell:hover {
-            background: linear-gradient(135deg, #dcfce7, #d1fae5);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
         .notification-bell:hover i {
-            transform: scale(1.1);
-            color: #047857;
+            transform: scale(1.15) rotate(-10deg);
+            color: #059669;
         }
 
         .notification-badge {
             position: absolute;
-            top: 4px;
-            right: 4px;
+            top: 3px;
+            right: 3px;
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
-            border-radius: 50%;
-            width: 7px;
-            height: 7px;
-            font-size: 9px;
+            border-radius: 10px;
+            min-width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 0 4px;
             border: 2px solid white;
             animation: pulseBadge 2s infinite;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
         }
 
         @keyframes pulseBadge {
@@ -247,62 +258,70 @@
         .profile-button {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
+            gap: 10px;
+            padding: 6px 14px;
             background: white;
             border: 2px solid #e5e7eb;
             border-radius: 50px;
             cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease;
-            width: 180px;
-            height: 52px;
-            flex-shrink: 0;
+            transition: all 0.3s ease;
+            height: 48px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
         }
 
         .profile-button:hover {
-            background: var(--mint);
-            border-color: var(--green);
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-color: #10b981;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
         .profile-avatar {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--green), var(--green-light));
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
             font-size: 14px;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .profile-button:hover .profile-avatar {
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4);
         }
 
         .profile-info {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 0;
+            gap: 2px;
+            min-width: 120px;
         }
 
         .profile-name {
             font-size: 13px;
             font-weight: 600;
-            color: var(--green-dark);
+            color: #065f46;
             line-height: 1.2;
         }
 
         .profile-role {
             font-size: 11px;
-            color: #6b7280;
-            font-weight: 400;
+            color: #059669;
             line-height: 1.2;
+            font-weight: 500;
         }
 
         .profile-chevron {
-            color: #6b7280;
-            font-size: 10px;
-            transition: transform 0.2s ease;
-            margin-left: 4px;
+            color: #9ca3af;
+            font-size: 11px;
+            transition: transform 0.3s ease;
         }
 
         .profile-dropdown.active .profile-chevron {
@@ -400,7 +419,7 @@
         /* ========== MAIN CONTAINER ========== */
         .admin-main {
             min-height: auto;
-            margin-top: 70px;
+            margin-top: 65px;
             padding-bottom: 40px;
         }
 
@@ -575,20 +594,20 @@
         @media (max-width: 768px) {
             .header-container {
                 padding: 0 20px;
-                height: 60px;
+                height: 65px;
             }
 
             .admin-header {
-                height: 60px;
+                height: 65px;
             }
 
             .admin-main {
-                margin-top: 60px;
+                margin-top: 65px;
             }
 
             .nav-menu {
                 position: fixed;
-                top: 60px;
+                top: 65px;
                 left: -100%;
                 width: 100%;
                 background: white;
@@ -683,7 +702,7 @@
                     <i class="fas fa-box"></i>
                     <span>Produk</span>
                 </a>
-                <a href="{{ route('admin.notifications') }}" class="nav-link {{ request()->routeIs('admin.notifications') ? 'active' : '' }}">
+                <a href="{{ route('admin.notifications.index') }}" class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
                     <i class="fas fa-bell"></i>
                     <span>Notifikasi</span>
                 </a>
@@ -697,14 +716,13 @@
                 </button>
 
                 <!-- Notification Bell -->
-                <a href="{{ route('admin.notifications') }}" class="notification-bell">
+                <a href="{{ route('admin.notifications.index') }}" class="notification-bell">
                     <i class="fas fa-bell"></i>
                     @php
-                        $notificationCount = \App\Models\Notification::where('status', 'unread')->count() + 
-                                            \App\Models\Contact::where('status', 'unread')->count();
+                        $unreadMessages = \App\Models\Message::fromUser()->unread()->count();
                     @endphp
-                    @if($notificationCount > 0)
-                        <span class="notification-badge"></span>
+                    @if($unreadMessages > 0)
+                        <span class="notification-badge">{{ $unreadMessages }}</span>
                     @endif
                 </a>
 
@@ -785,7 +803,7 @@
                         <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-angle-right"></i> Overview</a></li>
                         <li><a href="{{ route('admin.orders') }}"><i class="fas fa-angle-right"></i> Pesanan</a></li>
                         <li><a href="{{ route('admin.products.index') }}"><i class="fas fa-angle-right"></i> Produk</a></li>
-                        <li><a href="{{ route('admin.notifications') }}"><i class="fas fa-angle-right"></i> Notifikasi</a></li>
+                        <li><a href="{{ route('admin.notifications.index') }}"><i class="fas fa-angle-right"></i> Notifikasi</a></li>
                     </ul>
                 </div>
 
