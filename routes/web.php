@@ -107,12 +107,20 @@ Route::prefix('admin')->group(function () {
         Route::get('/profil/edit', [AdminController::class, 'editProfil'])->name('admin.profil.edit');
         Route::post('/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
         
-        // Notification Routes
-        Route::get('/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');
-        Route::post('/notifications/send', [AdminController::class, 'sendNotification'])->name('admin.notifications.send');
+        // Message/Notification Routes (2-way communication)
+        Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
+        Route::get('/notifications/{id}', [AdminNotificationController::class, 'show'])->name('admin.notifications.show');
+        Route::get('/notifications/contact/{id}', [AdminNotificationController::class, 'showContact'])->name('admin.notifications.contact');
+        Route::post('/notifications/{id}/reply', [AdminNotificationController::class, 'reply'])->name('admin.notifications.reply');
+        Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destroy'])->name('admin.notifications.destroy');
+        Route::post('/notifications/{id}/mark-read', [AdminNotificationController::class, 'markAsRead'])->name('admin.notifications.markRead');
+        Route::post('/notifications/mark-all-read', [AdminNotificationController::class, 'markAllAsRead'])->name('admin.notifications.markAllRead');
+        Route::delete('/notifications/contact/{id}', [AdminNotificationController::class, 'deleteContact'])->name('admin.notifications.deleteContact');
+        Route::post('/notifications/bulk-delete', [AdminNotificationController::class, 'bulkDelete'])->name('admin.notifications.bulkDelete');
         
         // Order Management Routes
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
+        Route::patch('/orders/{orderNumber}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
         Route::get('/orders/{orderNumber}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
         
         // API Routes untuk Metrics & Orders (Real Data dari Database)
@@ -121,13 +129,10 @@ Route::prefix('admin')->group(function () {
             Route::get('/metrics', [AdminApiController::class, 'getMetrics'])->name('metrics');
             Route::get('/revenue', [AdminApiController::class, 'getRevenue'])->name('revenue');
             
-            // Orders Management
-            Route::get('/orders', [AdminApiController::class, 'getOrders'])->name('orders');
-            Route::get('/orders/{id}', [AdminApiController::class, 'getOrderDetail'])->name('orders.detail');
-            Route::patch('/orders/{id}/status', [AdminApiController::class, 'updateOrderStatus'])->name('orders.status');
-            
-            // Legacy routes (backward compatibility)
+            // Orders Management API (AdminOrderController)
+            Route::get('/orders', [AdminOrderController::class, 'getOrders'])->name('orders');
             Route::get('/orders/stats', [AdminOrderController::class, 'getStats'])->name('orders.stats');
+            Route::patch('/orders/{orderId}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
         });
         
         // Product Management Routes - PERBAIKAN: Tambah name untuk resource

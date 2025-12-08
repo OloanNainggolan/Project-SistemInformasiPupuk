@@ -4,270 +4,85 @@
 
 @push('styles')
 <style>
-    :root {
-        --primary-green: #4CAF50;
-        --dark-green: #065f46;
-        --medium-green: #1a4d1a;
-        --light-green: #81c784;
-        --text-color: #333;
-        --white: #ffffff;
-        --light-gray-bg: #f7f7f7;
-        --border-color: #ddd;
-    }
-
-    body {
-        background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
-        min-height: 100vh;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 60px 20px;
-        position: relative;
-    }
-
-    /* Decorative background elements */
-    .container::before {
-        content: '';
-        position: absolute;
-        top: 10%;
-        left: -5%;
-        width: 150px;
-        height: 150px;
-        background: linear-gradient(45deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
-        border-radius: 50%;
-        z-index: -1;
-        animation: float 6s ease-in-out infinite;
-    }
-
-    .container::after {
-        content: '';
-        position: absolute;
-        bottom: 20%;
-        right: -3%;
-        width: 120px;
-        height: 120px;
-        background: linear-gradient(45deg, rgba(46, 125, 50, 0.08), rgba(46, 125, 50, 0.04));
-        border-radius: 50%;
-        z-index: -1;
-        animation: float 8s ease-in-out infinite reverse;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(180deg); }
-    }
-
-    .page-header {
-        text-align: center;
-        margin-bottom: 50px;
-        position: relative;
-        padding: 40px 0;
-    }
-
-    .page-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(90deg, #4CAF50, #2e7d32);
-        border-radius: 2px;
-        animation: slideIn 1s ease-out;
-    }
-
-    .page-header h1 {
-        font-size: 3rem;
-        background: linear-gradient(135deg, #2e7d32, #4CAF50);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 15px;
-        font-weight: 700;
-        animation: fadeInUp 0.8s ease-out;
-        position: relative;
-    }
-
-    .page-subtitle {
-        font-size: 1.1rem;
-        color: #555;
-        max-width: 700px;
-        margin: 0 auto;
-        line-height: 1.7;
-        animation: fadeInUp 0.8s ease-out 0.2s both;
-    }
-
-    @keyframes slideIn {
-        from { width: 0; }
-        to { width: 80px; }
-    }
-
-    @keyframes fadeInUp {
-        from { 
-            opacity: 0; 
-            transform: translateY(30px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-    }
 
     .contact-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 40px;
-        margin-top: 40px;
-        animation: fadeIn 1s ease-out 0.4s both;
+        gap: var(--space-2xl);
+        margin-top: var(--space-3xl);
     }
 
     .contact-info-card {
-        background: linear-gradient(145deg, #ffffff, #f8fffe);
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08), 
-                    0 1px 8px rgba(0,0,0,0.05);
-        border: 1px solid rgba(76, 175, 80, 0.1);
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        transform: translateY(0);
-    }
-
-    .contact-info-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #4CAF50, #2e7d32, #4CAF50);
-        background-size: 200% 100%;
-        animation: shimmer 3s ease-in-out infinite;
+        background: var(--white);
+        padding: var(--space-2xl);
+        border-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        transition: all var(--transition-base);
     }
 
     .contact-info-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.12), 
-                    0 5px 15px rgba(76, 175, 80, 0.1);
-    }
-
-    @keyframes shimmer {
-        0%, 100% { background-position: -200% 0; }
-        50% { background-position: 200% 0; }
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
     }
 
     .info-header {
         display: flex;
         align-items: center;
-        gap: 18px;
-        margin-bottom: 30px;
+        gap: var(--space-lg);
+        margin-bottom: var(--space-xl);
     }
 
     .info-icon {
-        width: 65px;
-        height: 65px;
-        background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
-        border-radius: 16px;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary-green), var(--primary-green-medium));
+        border-radius: var(--radius-lg);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 28px;
-        color: #4CAF50;
-        border: 2px solid rgba(76, 175, 80, 0.2);
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-    .info-icon i {
-        transition: all 0.3s ease;
-    }
-
-    .info-icon::after {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: 18px;
-        padding: 2px;
-        background: linear-gradient(45deg, #4CAF50, #2e7d32);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask-composite: xor;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .contact-info-card:hover .info-icon::after {
-        opacity: 1;
-    }
-
-    .contact-info-card:hover .info-icon {
-        transform: scale(1.1);
-        background: linear-gradient(135deg, #4CAF50, #45a049);
-        color: white;
-        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        box-shadow: var(--shadow-green);
+        color: var(--white);
     }
 
     .info-header h3 {
-        font-size: 1.3rem;
-        color: var(--text-color);
+        font-size: var(--font-size-xl);
+        color: var(--text-primary);
+        font-weight: 700;
     }
 
     .info-description {
-        color: #666;
-        font-size: 0.95rem;
+        color: var(--text-secondary);
+        font-size: var(--font-size-base);
         line-height: 1.6;
-        margin-bottom: 25px;
+        margin-bottom: var(--space-xl);
     }
 
     .contact-detail {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 18px;
-        font-size: 0.95rem;
-        color: var(--text-color);
-        padding: 10px 0;
-        transition: all 0.3s ease;
-    }
-
-    .contact-detail:hover {
-        color: #4CAF50;
-        transform: translateX(5px);
-    }
-
-    .contact-detail i {
-        width: 20px;
-        text-align: center;
-        transition: all 0.3s ease;
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+        font-size: var(--font-size-base);
+        color: var(--text-secondary);
+        font-weight: 600;
     }
 
     .operating-hours {
-        margin-top: 30px;
+        margin-top: var(--space-2xl);
+        padding-top: var(--space-2xl);
+        border-top: 1px solid var(--border-light);
     }
 
     .hours-header {
         display: flex;
         align-items: center;
-        gap: 12px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        font-size: 1rem;
-        padding: 12px 0;
-        border-bottom: 2px solid rgba(76, 175, 80, 0.1);
-    }
-
-    .hours-header i {
-        font-size: 1.1rem;
-        width: 20px;
-        text-align: center;
+        gap: var(--space-md);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        font-size: var(--font-size-lg);
+        color: var(--text-primary);
     }
 
     .hours-table {
@@ -277,8 +92,14 @@
     .hours-row {
         display: flex;
         justify-content: space-between;
-        padding: 10px 0;
-        border-bottom: 1px solid #f0f0f0;
+        padding: var(--space-md) var(--space-lg);
+        border-bottom: 1px solid var(--border-light);
+        border-radius: var(--radius-sm);
+        transition: background var(--transition-fast);
+    }
+
+    .hours-row:hover {
+        background: var(--gray-50);
     }
 
     .hours-row:last-child {
@@ -286,107 +107,62 @@
     }
 
     .day {
-        color: #666;
+        color: var(--text-secondary);
+        font-weight: 600;
     }
 
     .time {
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-tertiary);
     }
 
     .contact-form-card {
-        background: linear-gradient(145deg, #ffffff, #f8fffe);
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08), 
-                    0 1px 8px rgba(0,0,0,0.05);
-        border: 1px solid rgba(76, 175, 80, 0.1);
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .contact-form-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #2e7d32, #4CAF50, #2e7d32);
-        background-size: 200% 100%;
-        animation: shimmer 3s ease-in-out infinite;
+        background: var(--white);
+        padding: var(--space-2xl);
+        border-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        transition: all var(--transition-base);
     }
 
     .contact-form-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.12), 
-                    0 5px 15px rgba(76, 175, 80, 0.1);
+        box-shadow: var(--shadow-lg);
     }
 
     .form-header {
-        font-size: 1.3rem;
-        color: var(--text-color);
-        margin-bottom: 25px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        font-size: var(--font-size-xl);
+        color: var(--text-primary);
+        margin-bottom: var(--space-xl);
+        font-weight: 700;
+        position: relative;
+        padding-bottom: var(--space-lg);
     }
 
-    .form-header i {
-        color: #4CAF50;
-        font-size: 1.2rem;
+    .form-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-green), var(--primary-green-medium));
+        border-radius: 2px;
     }
 
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        margin-bottom: 20px;
+        gap: var(--space-lg);
+        margin-bottom: var(--space-xl);
     }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group.full-width {
+    .full-width {
         grid-column: 1 / -1;
     }
-
-    .form-group label {
-        font-weight: 500;
-        margin-bottom: 8px;
-        color: var(--text-color);
-        font-size: 0.95rem;
-    }
-
-    .form-group input,
-    .form-group textarea {
-        padding: 14px 16px;
-        border: 2px solid #e8e8e8;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-family: 'Segoe UI', sans-serif;
-        transition: all 0.3s ease;
-        background: #fafafa;
-        position: relative;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
         outline: none;
         border-color: var(--primary-green);
-        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
-        background: white;
-        transform: translateY(-2px);
-    }
-
-    .form-group input:hover,
-    .form-group textarea:hover {
-        border-color: #c8c8c8;
-        background: white;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
     }
 
     .form-group textarea {
@@ -396,143 +172,98 @@
 
     .submit-btn {
         width: 100%;
-        padding: 16px 24px;
-        background: linear-gradient(135deg, #4CAF50, #45a049);
+        padding: 16px;
+        background: linear-gradient(135deg, #4CAF50, #2e7d32);
         color: white;
         border: none;
         border-radius: 12px;
         font-size: 1.05rem;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .submit-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.5s;
-    }
-
-    .submit-btn:hover::before {
-        left: 100%;
-    }
-
-    .submit-btn:hover {
-        background: linear-gradient(135deg, #45a049, #3d8b40);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-    }
-
-    .submit-btn:active {
-        transform: translateY(-1px);
+        gap: 8px;
         box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
     }
 
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #45a049, #27692a);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
     .faq-section {
-        margin-top: 80px;
-        animation: fadeInUp 0.8s ease-out 0.6s both;
+        margin-top: 60px;
+        padding-top: 50px;
+        border-top: 2px solid transparent;
+        border-image: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.3), transparent) 1;
     }
 
     .faq-header {
-        font-size: 2.2rem;
-        background: linear-gradient(135deg, #2e7d32, #4CAF50);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 40px;
-        font-weight: 700;
-        text-align: center;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-    }
-
-    .faq-header i {
         font-size: 2rem;
-        color: #4CAF50;
-        background: none;
-        -webkit-text-fill-color: #4CAF50;
+        color: #2e7d32;
+        margin-bottom: 35px;
+        font-weight: 700;
+        position: relative;
+        padding-bottom: 15px;
     }
 
     .faq-header::after {
         content: '';
         position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 4px;
         background: linear-gradient(90deg, #4CAF50, #2e7d32);
         border-radius: 2px;
     }
 
     .faq-item {
-        background: linear-gradient(145deg, #ffffff, #f9fffa);
-        padding: 30px;
-        border-radius: 16px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-        border: 1px solid rgba(76, 175, 80, 0.08);
-        transition: all 0.3s ease;
-        cursor: pointer;
-        position: relative;
-    }
-
-    .faq-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background: linear-gradient(135deg, #4CAF50, #2e7d32);
-        border-radius: 0 2px 2px 0;
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        background: var(--white);
+        padding: var(--space-xl);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-light);
+        transition: all var(--transition-base);
     }
 
     .faq-item:hover {
-        transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-
-    .faq-item:hover::before {
-        opacity: 1;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-green-light);
     }
 
     .faq-question {
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 12px;
-        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: var(--space-md);
+        font-size: var(--font-size-lg);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: var(--space-md);
     }
 
-    .faq-question i {
-        color: #4CAF50;
-        font-size: 0.9rem;
-        min-width: 16px;
+    .faq-question::before {
+        content: '\f059';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 400;
+        color: var(--primary-green);
+        font-size: var(--font-size-xl);
     }
 
     .faq-answer {
-        color: #666;
+        color: var(--text-secondary);
         line-height: 1.6;
-        font-size: 0.95rem;
+        font-size: var(--font-size-base);
+        padding-left: var(--space-2xl);
     }
 
     .alert {
@@ -554,7 +285,7 @@
     @media (max-width: 968px) {
         .contact-section {
             grid-template-columns: 1fr;
-            gap: 30px;
+            gap: 25px;
         }
 
         .form-grid {
@@ -562,7 +293,7 @@
         }
 
         .page-header h1 {
-            font-size: 2.4rem;
+            font-size: 2.2rem;
         }
 
         .page-subtitle {
@@ -570,41 +301,20 @@
         }
 
         .container {
-            padding: 40px 20px;
+            padding: 50px 15px 40px;
         }
 
         .contact-info-card,
         .contact-form-card {
-            padding: 30px;
-        }
-
-        .faq-item:hover {
-            transform: translateX(5px);
+            padding: 30px 20px;
         }
 
         .faq-header {
-            font-size: 1.8rem;
-            flex-direction: column;
-            gap: 10px;
+            font-size: 1.7rem;
         }
 
-        .faq-header i {
-            font-size: 1.6rem;
-        }
-    }
-
-    @media (max-width: 640px) {
-        .page-header h1 {
-            font-size: 2rem;
-        }
-
-        .container {
-            padding: 30px 15px;
-        }
-
-        .contact-info-card,
-        .contact-form-card {
-            padding: 25px;
+        .faq-item {
+            padding: 25px 20px;
         }
 
         .info-icon {
@@ -641,23 +351,24 @@
 @endpush
 
 @section('content')
-<div class="container">
-    <div class="page-header">
-        <h1>Hubungi Kami</h1>
-        <p class="page-subtitle">Customer Service kami siap membantu Anda 24/7 dengan pertanyaan seputar program pupuk subsidi</p>
-    </div>
+<div class="page-wrapper-user">
+    <div class="container-user-md">
+        <div class="page-header-user">
+            <h1 class="page-title">Hubungi Kami</h1>
+            <p class="page-subtitle">Customer Service kami siap membantu Anda 24/7 dengan pertanyaan seputar program pupuk subsidi</p>
+        </div>
 
     <div class="contact-section">
         <!-- Contact Info Card -->
         <div class="contact-info-card">
             <div class="info-header">
-                <div class="info-icon"><i class="fas fa-headset"></i></div>
+                <div class="info-icon"><i class="fas fa-comments"></i></div>
                 <h3>Butuh Bantuan Cepat?</h3>
             </div>
             <p class="info-description">Hubungi kami langsung melalui WhatsApp untuk respon lebih cepat</p>
             
             <div class="contact-detail">
-                <i class="fas fa-phone-alt"></i>
+                <span class="icon-box-user"><i class="fas fa-phone"></i></span>
                 <span>+62 812-3456-7890</span>
             </div>
             
@@ -679,7 +390,7 @@
             <!-- Operating Hours -->
             <div class="operating-hours">
                 <div class="hours-header">
-                    <i class="fas fa-clock" style="color: #4CAF50;"></i>
+                    <span class="icon-box-user"><i class="fas fa-clock"></i></span>
                     <span>Jam Operasional</span>
                 </div>
                 <div class="hours-table">
@@ -707,33 +418,33 @@
             </h3>
 
             @if(session('success'))
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i>
-                    {{ session('success') }}
+                <div class="alert-user alert-user-success">
+                    <i class="fas fa-check-circle" style="font-size: 1.4rem;"></i>
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             <form action="{{ route('kontak.send') }}" method="POST">
                 @csrf
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" id="nama" name="nama" value="{{ old('nama') }}" required>
+                    <div class="form-group-user">
+                        <label for="nama" class="form-label-user">Nama</label>
+                        <input type="text" id="nama" name="nama" value="{{ old('nama') }}" class="form-input-user" required>
                     </div>
-                    <div class="form-group">
-                        <label for="no_telp">No. Telp</label>
-                        <input type="text" id="no_telp" name="no_telp" value="{{ old('no_telp') }}" required>
+                    <div class="form-group-user">
+                        <label for="no_telp" class="form-label-user">No. Telp</label>
+                        <input type="text" id="no_telp" name="no_telp" value="{{ old('no_telp') }}" class="form-input-user" required>
                     </div>
-                    <div class="form-group full-width">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                    <div class="form-group-user full-width">
+                        <label for="email" class="form-label-user">Email</label>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" class="form-input-user" required>
                     </div>
-                    <div class="form-group full-width">
-                        <label for="pesan">Pesan</label>
-                        <textarea id="pesan" name="pesan" required>{{ old('pesan') }}</textarea>
+                    <div class="form-group-user full-width">
+                        <label for="pesan" class="form-label-user">Pesan</label>
+                        <textarea id="pesan" name="pesan" class="form-input-user form-textarea-user" required>{{ old('pesan') }}</textarea>
                     </div>
                 </div>
-                <button type="submit" class="submit-btn">
+                <button type="submit" class="btn-user btn-user-primary btn-user-lg" style="width: 100%;">
                     <i class="fas fa-paper-plane"></i>
                     Kirim Pesan
                 </button>
@@ -742,11 +453,8 @@
     </div>
 
     <!-- FAQ Section -->
-    <div class="faq-section">
-        <h2 class="faq-header">
-            <i class="fas fa-question-circle"></i>
-            Pertanyaan yang Sering Diajukan
-        </h2>
+    <div class="faq-section" style="margin-top: var(--space-4xl);">
+        <h2 class="section-title" style="text-align: center; margin-bottom: var(--space-3xl);">Pertanyaan yang Sering Diajukan</h2>
         
         <div class="faq-item">
             <div class="faq-question">
@@ -779,6 +487,7 @@
             </div>
             <div class="faq-answer">Batas pembelian disesuaikan dengan luas lahan yang terdaftar, maksimal 2 ton per musim tanam.</div>
         </div>
+    </div>
     </div>
 </div>
 @endsection

@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Pupuk & Bibit Subsidi')</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/global-standards.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user-theme.css') }}">
     
     <style>
         * {
@@ -15,7 +20,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -195,25 +200,33 @@
 
         .notification-badge {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 3px;
+            right: 3px;
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
-            border-radius: 50%;
-            width: 8px;
-            height: 8px;
-            font-size: 10px;
+            border-radius: 12px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
             border: 2px solid white;
-            animation: pulse 2s infinite;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            animation: pulse-badge 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
+        @keyframes pulse-badge {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            }
+            50% { 
+                transform: scale(1.15); 
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.6);
+            }
         }
 
         .profile-section {
@@ -704,7 +717,15 @@
                 <!-- Notification Icon -->
                 <a href="{{ route('notifikasi') }}" class="notification-icon" title="Notifikasi">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
+                    @php
+                        $unreadMessages = \App\Models\Message::where('user_id', Auth::id())
+                            ->fromAdmin()
+                            ->unread()
+                            ->count();
+                    @endphp
+                    @if($unreadMessages > 0)
+                        <span class="notification-badge">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}</span>
+                    @endif
                 </a>
 
                 <!-- Profile Section with Dropdown -->
@@ -713,7 +734,7 @@
                         @if(auth()->user()->foto)
                             <img src="{{ asset(auth()->user()->foto) }}" alt="Profile">
                         @else
-                            <i class="fas fa-user"></i>
+                            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                         @endif
                     </div>
                     <div class="profile-info">
