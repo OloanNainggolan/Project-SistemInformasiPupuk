@@ -168,6 +168,13 @@
                         </div>
                     </form>
                 </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="{{ route('admin.orders.show', $order->order_number) }}" class="btn-detail">
+                        <i class="fas fa-eye"></i> Lihat Detail
+                    </a>
+                </div>
             </div>
         </div>
         @endforeach
@@ -588,6 +595,42 @@
     font-size: 14px;
     color: #666;
     margin: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-detail {
+    flex: 1;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-detail:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.btn-detail i {
+    font-size: 14px;
 }
 
 /* Pagination */

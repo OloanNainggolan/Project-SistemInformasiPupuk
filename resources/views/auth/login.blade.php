@@ -6,6 +6,10 @@
     <title>Pupuk dan Bibit Bersubsidi Pemerintah – Masuk</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root{
+            --green-dark:#184e2b;
+            --green:#2f7d32;
+            --green-2:#1f6b22;
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +23,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
             position: relative;
             overflow: hidden;
         }
@@ -87,6 +91,7 @@
             position: relative;
             z-index: 1;
             animation: scaleIn 0.6s ease-out;
+            margin-top: 20px;
         }
 
         /* Left Side - Green */
