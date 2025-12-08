@@ -655,7 +655,7 @@
                 <i class="fas fa-wallet"></i>
             </div>
             <div class="stat-label">Total Pendapatan</div>
-            <div class="stat-value">Rp {{ number_format($totalPendapatan ?? 0, ',', '.') }}</div>
+            <div class="stat-value">Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.')}}</div>            
             <div class="stat-change {{ ($pertumbuhanPendapatan ?? 0) >= 0 ? 'positive' : 'negative' }}">
                 <i class="fas fa-arrow-{{ ($pertumbuhanPendapatan ?? 0) >= 0 ? 'up' : 'down' }}"></i>
                 {{ ($pertumbuhanPendapatan ?? 0) > 0 ? '+' : '' }}{{ $pertumbuhanPendapatan ?? 0 }}% dari bulan lalu

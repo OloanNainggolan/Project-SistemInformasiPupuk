@@ -58,18 +58,30 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // Validasi input
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        // Validasi input - form menggunakan field 'login' yang bisa username atau email
+        $request->validate([
+            'login' => 'required|string',
             'password' => 'required',
         ]);
+
+        $loginField = $request->input('login');
+        $password = $request->input('password');
+
+        // Cek apakah input adalah email atau username
+        $fieldType = filter_var($loginField, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // Attempt login dengan email atau username
+        $credentials = [
+            $fieldType => $loginField,
+            'password' => $password,
+        ];
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->route('dashboard');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah.']);
+        return back()->withErrors(['login' => 'Username/Email atau password salah.'])->withInput();
     }
 
     public function logout(Request $request)
@@ -152,7 +164,8 @@ class AuthController extends Controller
 
     public function editProfil()
     {
-        return view('user.EditProfil');
+        $user = Auth::user();
+        return view('user.EditProfil', compact('user'));
     }
 
     public function updateProfil(Request $request)
@@ -163,13 +176,21 @@ class AuthController extends Controller
         $rules = [
             'nama_lengkap' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
+            'alamat_balai_desa' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'no_telp' => 'required|string|max:20',
-            'username' => 'nullable|string|max:255',
             'kabupaten' => 'nullable|string|max:255',
             'kode_pos' => 'nullable|string|max:10',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'luas_lahan' => 'nullable|numeric|min:0|max:999999.99',
+            'jenis_tanaman' => 'nullable|string|max:255',
+            'lokasi_lahan' => 'nullable|string|max:255',
         ];
+
+        // Only add username validation if username is filled
+        if ($request->filled('username')) {
+            $rules['username'] = 'nullable|string|max:255|unique:users,username,' . $user->id;
+        }
 
         // Only validate password if user fills in the password field
         if ($request->filled('password')) {
@@ -183,7 +204,7 @@ class AuthController extends Controller
         if ($request->filled('password')) {
             // Verify current password
             if (!Hash::check($request->current_password, $user->password)) {
-                return back()->withErrors(['current_password' => 'Sandi saat ini tidak sesuai.'])->withInput();
+                return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai.'])->withInput();
             }
             // Update with new password
             $validated['password'] = Hash::make($request->password);
@@ -193,7 +214,7 @@ class AuthController extends Controller
         if ($request->hasFile('foto')) {
             // Delete old photo if exists
             if ($user->foto && file_exists(public_path($user->foto))) {
-                unlink(public_path($user->foto));
+                @unlink(public_path($user->foto));
             }
 
             $file = $request->file('foto');
@@ -202,10 +223,21 @@ class AuthController extends Controller
             $validated['foto'] = 'images/profiles/' . $filename;
         }
 
+        // Handle photo removal
+        if ($request->has('remove_foto') && $request->input('remove_foto') == '1') {
+            if ($user->foto && file_exists(public_path($user->foto))) {
+                @unlink(public_path($user->foto));
+            }
+            $validated['foto'] = null;
+        }
+
         // Remove password fields if not changing password
         if (!$request->filled('password')) {
             unset($validated['password']);
         }
+
+        // Remove password_confirmation from validated data
+        unset($validated['password_confirmation'], $validated['current_password']);
 
         // Update user
         $user->update($validated);
