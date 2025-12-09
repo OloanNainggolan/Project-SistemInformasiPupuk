@@ -114,7 +114,7 @@
         /* Navigation */
         .nav-menu {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             align-items: center;
             list-style: none;
             margin: 0;
@@ -124,130 +124,98 @@
         .nav-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            color: #374151;
+            gap: 10px;
+            padding: 12px 24px;
+            color: white;
             text-decoration: none;
             border-radius: 10px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             transition: all 0.3s ease;
-            background: white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
             position: relative;
-            overflow: hidden;
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #10b981, #059669);
-            transition: width 0.3s ease;
-            border-radius: 10px 10px 0 0;
+            height: 44px;
+            min-width: 160px;
+            justify-content: center;
+            border: none;
         }
 
         .nav-link i {
-            font-size: 15px;
-            color: #10b981;
+            font-size: 16px;
+            color: white;
             transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-link span {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1;
+            color: white;
         }
 
         .nav-link:hover {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            color: #065f46;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-        }
-
-        .nav-link:hover::before {
-            width: 100%;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
         }
 
         .nav-link:hover i {
-            transform: scale(1.15) rotate(5deg);
-            color: #059669;
+            transform: scale(1.1);
+            color: white;
         }
 
         .nav-link.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+            transform: scale(1.05);
         }
 
         .nav-link.active i {
             color: white;
         }
 
-        .nav-link.active::before {
-            display: none;
+        .nav-link.active span {
+            color: white;
         }
 
         /* Right Section */
         .header-right {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 20px;
         }
 
-        /* Notification Bell */
-        .notification-bell {
-            position: relative;
-            color: #374151;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 10px 12px;
-            border-radius: 10px;
-            background: white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-        }
+        /* All nav items have consistent styling - no special cases */
 
-        .notification-bell i {
-            color: #10b981;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .notification-bell:hover {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-        }
-
-        .notification-bell:hover i {
-            transform: scale(1.15) rotate(-10deg);
-            color: #059669;
-        }
-
-        .notification-badge {
+        .nav-badge {
             position: absolute;
-            top: 3px;
-            right: 3px;
+            top: -8px;
+            right: -8px;
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
-            border-radius: 10px;
-            min-width: 18px;
-            height: 18px;
+            border-radius: 12px;
+            min-width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 0 4px;
+            padding: 0 6px;
             border: 2px solid white;
             animation: pulseBadge 2s infinite;
             box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+            z-index: 10;
         }
 
         @keyframes pulseBadge {
             0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 0.9; }
         }
 
         /* Profile Dropdown */
@@ -258,15 +226,16 @@
         .profile-button {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 6px 14px;
+            gap: 12px;
+            padding: 4px 16px 4px 4px;
             background: white;
             border: 2px solid #e5e7eb;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            height: 48px;
+            height: 56px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            min-width: 200px;
         }
 
         .profile-button:hover {
@@ -277,8 +246,8 @@
         }
 
         .profile-avatar {
-            width: 34px;
-            height: 34px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             display: flex;
@@ -286,9 +255,10 @@
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 18px;
             box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
         .profile-button:hover .profile-avatar {
@@ -300,48 +270,60 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 2px;
-            min-width: 120px;
+            gap: 3px;
+            flex: 1;
+            min-width: 0;
         }
 
         .profile-name {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             color: #065f46;
-            line-height: 1.2;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: block;
         }
 
         .profile-role {
-            font-size: 10px;
-            color: #059669;
-            line-height: 1.2;
-            font-weight: 500;
+            font-size: 11px;
+            color: #10b981;
+            line-height: 1.3;
+            font-weight: 600;
+            white-space: nowrap;
+            display: block;
         }
 
         .profile-chevron {
             color: #9ca3af;
-            font-size: 11px;
+            font-size: 12px;
             transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 4px;
         }
 
         .profile-dropdown.active .profile-chevron {
             transform: rotate(180deg);
+            color: #10b981;
         }
 
         /* Dropdown Menu */
         .dropdown-menu {
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 10px);
             right: 0;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            min-width: 220px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            min-width: 240px;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             border: 1px solid #e5e7eb;
+            z-index: 1000;
         }
 
         .profile-dropdown.active .dropdown-menu {
@@ -353,23 +335,26 @@
         .dropdown-header {
             padding: 16px;
             border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
         }
 
         .dropdown-header-name {
             font-size: 14px;
             font-weight: 700;
             color: var(--green-dark);
+            margin-bottom: 4px;
         }
 
         .dropdown-header-email {
             font-size: 12px;
             color: #6b7280;
+            font-weight: 500;
         }
 
         .dropdown-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             padding: 12px 16px;
             color: #4b5563;
             text-decoration: none;
@@ -385,13 +370,15 @@
         }
 
         .dropdown-item:hover {
-            background: var(--mint);
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             color: var(--green-dark);
         }
 
         .dropdown-item i {
-            font-size: 16px;
+            font-size: 15px;
             width: 20px;
+            text-align: center;
+            color: #10b981;
         }
 
         .dropdown-item.logout {
@@ -702,17 +689,21 @@
                     <i class="fas fa-box"></i>
                     <span>Produk</span>
                 </a>
-                <a href="{{ route('admin.notifications.inbox') }}" class="nav-link {{ request()->routeIs('admin.notifications.inbox') ? 'active' : '' }}">
-                    <i class="fas fa-inbox"></i>
-                    <span>Notifikasi Masuk</span>
-                    @php $unreadCount = \App\Models\Message::fromUser()->unread()->count(); @endphp
-                    @if($unreadCount > 0)
-                        <span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; margin-left: 5px;">{{ $unreadCount }}</span>
-                    @endif
-                </a>
-                <a href="{{ route('admin.notifications.send') }}" class="nav-link {{ request()->routeIs('admin.notifications.send') ? 'active' : '' }}">
+                <a href="{{ route('admin.notifications.create') }}" class="nav-link {{ request()->routeIs('admin.notifications.create') ? 'active' : '' }}">
                     <i class="fas fa-paper-plane"></i>
                     <span>Kirim Notifikasi</span>
+                </a>
+                <a href="{{ route('admin.messages.inbox') }}" class="nav-link {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}">
+                    <i class="fas fa-envelope"></i>
+                    <span>Pesan Masuk</span>
+                    @php
+                        $unreadMessages = \App\Models\Message::fromUser()->unread()->count();
+                        $newUsersToday = \App\Models\User::whereDate('created_at', today())->count();
+                        $totalUnread = $unreadMessages + $newUsersToday;
+                    @endphp
+                    @if($totalUnread > 0)
+                        <span class="nav-badge">{{ $totalUnread }}</span>
+                    @endif
                 </a>
             </nav>
 
@@ -800,7 +791,7 @@
                         <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-angle-right"></i> Overview</a></li>
                         <li><a href="{{ route('admin.orders') }}"><i class="fas fa-angle-right"></i> Pesanan</a></li>
                         <li><a href="{{ route('admin.products.index') }}"><i class="fas fa-angle-right"></i> Produk</a></li>
-                        <li><a href="{{ route('admin.notifications.send') }}"><i class="fas fa-angle-right"></i> Kirim Notifikasi</a></li>
+                        <li><a href="{{ route('admin.notifications.index') }}"><i class="fas fa-angle-right"></i> Notifikasi</a></li>
                     </ul>
                 </div>
 

@@ -257,6 +257,7 @@ class PupukBibitController extends Controller
                 'customer_phone' => 'required|string|max:20',
                 'customer_address' => 'required|string',
                 'customer_notes' => 'nullable|string',
+                'village_office' => 'required|string|max:255',
             ]);
             
             // Ambil produk
@@ -323,6 +324,7 @@ class PupukBibitController extends Controller
                 'customer_phone' => $validated['customer_phone'],
                 'customer_address' => $validated['customer_address'],
                 'customer_notes' => $validated['customer_notes'] ?? null,
+                'village_office' => $validated['village_office'],
                 'items' => json_encode([[
                     'product_id' => $produk->id_produk,
                     'product_name' => $produk->nama_produk,

@@ -115,7 +115,7 @@
         border: 5px solid white;
     }
 
-    .profile-name-admin {
+    .profile-name {
         font-size: 24px;
         font-weight: 700;
         color: var(--green-dark);
@@ -451,7 +451,7 @@
             font-size: 36px;
         }
 
-        .profile-name-admin {
+        .profile-name {
             font-size: 20px;
         }
 
@@ -519,7 +519,7 @@
                         <i class="fas fa-user-shield"></i>
                     @endif
                 </div>
-                <h2 class="profile-name-admin">{{ session('admin_name', 'Administrator Sistem') }}</h2>
+                <h2 class="profile-name">{{ session('admin_name', 'Administrator Sistem') }}</h2>
                 <p class="profile-username">
                     <i class="fas fa-at" style="font-size: 11px;"></i>
                     <span>{{ session('admin_username', 'admin') }}</span>
