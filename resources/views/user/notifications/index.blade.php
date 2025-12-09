@@ -24,12 +24,18 @@
         <div class="header-stats">
             <span class="stat-badge">
                 <i class="fas fa-envelope"></i>
-                Total: <strong>{{ $messages->total() }}</strong>
+                Total Pesan: <strong>{{ $messages->total() }}</strong>
             </span>
-            @if($unreadCount > 0)
+            @if(isset($notifications))
+            <span class="stat-badge">
+                <i class="fas fa-bell"></i>
+                Total Notifikasi: <strong>{{ $notifications->total() }}</strong>
+            </span>
+            @endif
+            @if($unreadCount > 0 || (isset($unreadNotifications) && $unreadNotifications > 0))
             <span class="stat-badge unread">
                 <i class="fas fa-envelope-open"></i>
-                Belum Dibaca: <strong>{{ $unreadCount }}</strong>
+                Belum Dibaca: <strong>{{ $unreadCount + ($unreadNotifications ?? 0) }}</strong>
             </span>
             <form action="{{ route('user.notifications.markAllRead') }}" method="POST" style="display: inline;">
                 @csrf
@@ -42,7 +48,64 @@
         </div>
     </div>
 
+    <!-- Notifications from Notifications Table + System Messages -->
+    @if(isset($allNotifications) && $allNotifications->count() > 0)
+    <div class="notifications-section">
+        <h2 class="section-title">
+            <i class="fas fa-bell"></i>
+            Notifikasi Sistem
+            <span class="badge-count">{{ $allNotifications->count() }}</span>
+        </h2>
+        <div class="notifications-grid">
+            @foreach($allNotifications as $notification)
+            <div class="notification-card {{ !$notification->is_read ? 'unread' : '' }}" data-notification-id="{{ $notification->id }}">
+                <div class="notification-icon {{ $notification->type }}">
+                    @if($notification->type == 'order')
+                        <i class="fas fa-shopping-cart"></i>
+                    @elseif($notification->type == 'info')
+                        <i class="fas fa-info-circle"></i>
+                    @elseif($notification->type == 'success')
+                        <i class="fas fa-check-circle"></i>
+                    @elseif($notification->type == 'warning')
+                        <i class="fas fa-exclamation-triangle"></i>
+                    @elseif($notification->type == 'important')
+                        <i class="fas fa-exclamation-circle"></i>
+                    @else
+                        <i class="fas fa-bell"></i>
+                    @endif
+                </div>
+                <div class="notification-content">
+                    <div class="notification-header">
+                        <h3 class="notification-title">{{ $notification->title }}</h3>
+                        @if(!$notification->is_read)
+                        <span class="badge-new">BARU</span>
+                        @endif
+                    </div>
+                    <p class="notification-message">{{ $notification->message }}</p>
+                    <div class="notification-footer">
+                        <span class="notification-date">
+                            <i class="fas fa-clock"></i>
+                            {{ $notification->created_at->diffForHumans() }}
+                        </span>
+                        @if(!$notification->is_read)
+                        <button class="btn-mark-read-small" onclick="markNotificationAsRead('{{ $notification->id }}', {{ isset($notification->is_message) && $notification->is_message ? 'true' : 'false' }})">
+                            <i class="fas fa-check"></i>
+                            Tandai Dibaca
+                        </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <!-- Messages List -->
+    <h2 class="section-title">
+        <i class="fas fa-envelope"></i>
+        Pesan & Percakapan
+    </h2>
     @if($messages->count() > 0)
     <div class="messages-list">
         @foreach($messages as $message)
@@ -85,19 +148,6 @@
                 <div class="message-subject">
                     <i class="fas fa-envelope"></i>
                     {{ $message->subject }}
-                    @if($message->sender_type === 'admin' && $message->priority)
-                        <span class="priority-badge priority-{{ $message->priority }}">
-                            @if($message->priority === 'urgent')
-                                <i class="fas fa-exclamation-circle"></i> MENDESAK
-                            @elseif($message->priority === 'high')
-                                <i class="fas fa-arrow-up"></i> PENTING
-                            @elseif($message->priority === 'normal')
-                                <i class="fas fa-minus"></i> NORMAL
-                            @else
-                                <i class="fas fa-arrow-down"></i> RENDAH
-                            @endif
-                        </span>
-                    @endif
                 </div>
 
                 <div class="message-preview">
@@ -109,10 +159,7 @@
                         <span class="preview-sender {{ $lastReply->sender_type }}">{{ $lastSender }}:</span> 
                         {{ Str::limit($lastReply->message, 100) }}
                     @else
-                        @php
-                            $originalSender = $message->sender_type === 'admin' ? 'Admin' : 'Anda';
-                        @endphp
-                        <span class="preview-sender {{ $message->sender_type }}">{{ $originalSender }}:</span>
+                        <span class="preview-sender user">Anda:</span>
                         {{ Str::limit($message->message, 120) }}
                     @endif
                 </div>
@@ -128,17 +175,10 @@
                         Percakapan Aktif
                     </span>
                     @else
-                        @if($message->sender_type === 'admin')
-                        <span class="message-type admin-msg">
-                            <i class="fas fa-bell"></i>
-                            Notifikasi dari Admin
-                        </span>
-                        @else
-                        <span class="message-type user-msg">
-                            <i class="fas fa-paper-plane"></i>
-                            Menunggu Balasan
-                        </span>
-                        @endif
+                    <span class="message-type user-msg">
+                        <i class="fas fa-paper-plane"></i>
+                        Menunggu Balasan
+                    </span>
                     @endif
                 </div>
             </a>
@@ -445,44 +485,6 @@
     font-size: 14px;
 }
 
-/* Priority Badges */
-.priority-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-left: 8px;
-}
-
-.priority-badge i {
-    font-size: 10px;
-}
-
-.priority-urgent {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.priority-high {
-    background: #fed7aa;
-    color: #9a3412;
-}
-
-.priority-normal {
-    background: #dbeafe;
-    color: #1e40af;
-}
-
-.priority-low {
-    background: #e5e7eb;
-    color: #4b5563;
-}
-
 .message-preview {
     font-size: 14px;
     color: #6b7280;
@@ -660,6 +662,166 @@
     transform: scale(0.95);
 }
 
+/* Section Title */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #065f46;
+    margin: 32px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #10b981;
+}
+
+.section-title i {
+    color: #10b981;
+}
+
+.section-title .badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: auto;
+}
+
+/* Notifications Section */
+.notifications-section {
+    margin-bottom: 40px;
+}
+
+.notifications-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.notification-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+    border-left: 4px solid #e5e7eb;
+}
+
+.notification-card.unread {
+    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+    border-left-color: #10b981;
+}
+
+.notification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.notification-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.notification-icon.order {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.notification-icon.info {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.notification-icon.success {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.notification-icon.warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.notification-icon.important {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    gap: 12px;
+}
+
+.notification-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #065f46;
+    margin: 0;
+}
+
+.notification-message {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0 0 12px 0;
+    white-space: pre-wrap;
+}
+
+.notification-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.notification-date {
+    font-size: 12px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-mark-read-small {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-mark-read-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
 /* Animation for deleted cards */
 @keyframes fadeOut {
     from {
@@ -676,6 +838,10 @@
     animation: fadeOut 0.4s ease forwards;
 }
 
+.notification-card.deleting {
+    animation: fadeOut 0.4s ease forwards;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .header-stats {
@@ -686,6 +852,15 @@
     .message-footer {
         flex-direction: column;
         gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .notification-card {
+        flex-direction: column;
+    }
+    
+    .notification-footer {
+        flex-direction: column;
         align-items: flex-start;
     }
 }
@@ -843,6 +1018,78 @@ function deleteMessage(messageId) {
                 });
             });
         }
+    });
+}
+
+// Mark notification as read
+function markNotificationAsRead(notificationId, isMessage = false) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Show loading
+    Swal.fire({
+        title: 'Memproses...',
+        html: '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #10b981;"></i>',
+        showConfirmButton: false,
+        allowOutsideClick: false
+    });
+    
+    // Determine endpoint based on source
+    let endpoint;
+    if (isMessage) {
+        // Extract message ID (remove 'msg_' prefix)
+        const messageId = notificationId.toString().replace('msg_', '');
+        endpoint = `/user/messages/${messageId}/mark-read`;
+    } else {
+        endpoint = `/user/notifications/${notificationId}/mark-read`;
+    }
+    
+    // Send AJAX request
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Notifikasi ditandai sebagai dibaca',
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                // Remove unread styling
+                const card = document.querySelector(`[data-notification-id="${notificationId}"]`);
+                if (card) {
+                    card.classList.remove('unread');
+                    const badgeNew = card.querySelector('.badge-new');
+                    const markReadBtn = card.querySelector('.btn-mark-read-small');
+                    
+                    if (badgeNew) badgeNew.remove();
+                    if (markReadBtn) markReadBtn.remove();
+                }
+                
+                // Update counter
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            });
+        } else {
+            throw new Error(data.message || 'Gagal menandai notifikasi sebagai dibaca');
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: error.message || 'Terjadi kesalahan',
+            confirmButtonColor: '#ef4444'
+        });
     });
 }
 </script>
