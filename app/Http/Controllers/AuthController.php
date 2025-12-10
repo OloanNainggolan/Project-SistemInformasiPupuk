@@ -76,11 +76,20 @@ class AuthController extends Controller
             'password' => $password,
         ];
 
+        // Debug logging
+        \Log::info('Login attempt', [
+            'field_type' => $fieldType,
+            'field_value' => $loginField,
+            'credentials' => [$fieldType => $loginField, 'password' => '***']
+        ]);
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            \Log::info('Login successful', ['user_id' => Auth::id()]);
             return redirect()->route('dashboard');
         }
 
+        \Log::warning('Login failed', ['field' => $loginField]);
         return back()->withErrors(['login' => 'Username/Email atau password salah.'])->withInput();
     }
 
