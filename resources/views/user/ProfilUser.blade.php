@@ -1004,7 +1004,7 @@
                     <div class="empty-state">
                         <i class="fas fa-inbox"></i>
                         <p>Anda belum memiliki riwayat pesanan</p>
-                        <a href="{{ route('pupuk-bibit') }}" class="btn-browse">
+                        <a href="{{ route('pupuk.bibit') }}" class="btn-browse">
                             <i class="fas fa-shopping-cart"></i> Mulai Belanja
                         </a>
                     </div>

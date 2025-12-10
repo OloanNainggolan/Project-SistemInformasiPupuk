@@ -294,7 +294,15 @@ class AdminNotificationController extends Controller
         $users = User::orderBy('nama_lengkap')->get();
         $totalUsers = User::count();
 
-        return view('admin.notifications.create', compact('users', 'totalUsers'));
+        return view('admin.notifications.send', compact('users', 'totalUsers'));
+    }
+
+    /**
+     * Alias untuk create() - untuk backward compatibility
+     */
+    public function createSend()
+    {
+        return $this->create();
     }
 
     /**
@@ -319,8 +327,16 @@ class AdminNotificationController extends Controller
             'is_read' => false
         ]);
 
-        return redirect()->route('admin.notifications.create')
+        return redirect()->route('admin.notifications.send')
             ->with('success', "Notifikasi berhasil dikirim ke {$user->nama_lengkap}");
+    }
+
+    /**
+     * Alias untuk send() - untuk route compatibility
+     */
+    public function sendNotification(Request $request)
+    {
+        return $this->send($request);
     }
 
     /**
@@ -348,7 +364,7 @@ class AdminNotificationController extends Controller
             $count++;
         }
 
-        return redirect()->route('admin.notifications.create')
+        return redirect()->route('admin.notifications.send')
             ->with('success', "Notifikasi berhasil dikirim ke {$count} user");
     }
 
@@ -358,11 +374,22 @@ class AdminNotificationController extends Controller
     public function inbox(Request $request)
     {
         $filter = $request->get('filter', 'all');
+        $sortBy = $request->get('sort', 'latest');
+        $dateFrom = $request->get('date_from', '');
+        $dateTo = $request->get('date_to', '');
 
         // Query dasar untuk messages dari user
         $query = Message::with('user')
             ->fromUser()
             ->whereNull('reply_to');
+
+        // Filter berdasarkan tanggal
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
 
         // Filter berdasarkan tipe
         if ($filter == 'unread') {
@@ -374,13 +401,57 @@ class AdminNotificationController extends Controller
             });
         } elseif ($filter == 'new_user') {
             // Notifikasi user baru (simulasi)
-            $query->where('title', 'LIKE', '%User Baru%');
+            $query->where('subject', 'LIKE', '%User Baru%');
         } elseif ($filter == 'order') {
             // Notifikasi pesanan baru
-            $query->where('title', 'LIKE', '%Pesanan Baru%');
+            $query->where('subject', 'LIKE', '%Pesanan Baru%');
         }
 
-        $messages = $query->orderBy('created_at', 'desc')->paginate(20);
+        // Sorting
+        if ($sortBy == 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sortBy == 'name_asc') {
+            $query->join('users', 'messages.user_id', '=', 'users.id')
+                ->orderBy('users.nama_lengkap', 'asc')
+                ->select('messages.*');
+        } elseif ($sortBy == 'name_desc') {
+            $query->join('users', 'messages.user_id', '=', 'users.id')
+                ->orderBy('users.nama_lengkap', 'desc')
+                ->select('messages.*');
+        } else {
+            // Default: latest
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $messages = $query->paginate(20);
+
+        // Transform messages to notifications format
+        $notifications = collect($messages->items())->map(function($message) {
+            $hasUnreadReply = $message->replies->where('sender_type', 'user')->where('status', 'unread')->count() > 0;
+            $isUnread = ($message->sender_type === 'user' && $message->status === 'unread') || $hasUnreadReply;
+            $lastActivity = $message->replies->count() > 0 ? $message->replies->last()->created_at : $message->created_at;
+            $previewText = $message->replies->count() > 0 ? $message->replies->last()->message : $message->message;
+            
+            return [
+                'id' => $message->id,
+                'type' => 'message',
+                'status' => $isUnread ? 'unread' : 'read',
+                'sender_name' => $message->user ? $message->user->nama_lengkap : 'Unknown',
+                'content' => $previewText,
+                'time' => $lastActivity->diffForHumans(),
+                'link' => route('admin.notifications.show', $message->id),
+                'order_number' => null,
+            ];
+        });
+
+        // Create paginator for notifications
+        $notifications = new \Illuminate\Pagination\LengthAwarePaginator(
+            $notifications,
+            $messages->total(),
+            $messages->perPage(),
+            $messages->currentPage(),
+            ['path' => $messages->path(), 'query' => $messages->getOptions()['query'] ?? []]
+        );
 
         // Hitung total untuk setiap filter
         $totalAll = Message::fromUser()->whereNull('reply_to')->count();
@@ -389,14 +460,23 @@ class AdminNotificationController extends Controller
         $totalNewUsers = User::whereDate('created_at', today())->count();
         $totalNewOrders = Order::where('confirmed_by_user', true)->where('status', 'Pending')->count();
 
-        return view('admin.messages.inbox', compact(
-            'messages',
+        // Total count dan unread count untuk header
+        $totalCount = $totalAll;
+        $unreadCount = $totalUnread;
+
+        return view('admin.notifications.inbox', compact(
+            'notifications',
             'filter',
+            'sortBy',
+            'dateFrom',
+            'dateTo',
             'totalAll',
             'totalUnread',
             'totalContactMessages',
             'totalNewUsers',
-            'totalNewOrders'
+            'totalNewOrders',
+            'totalCount',
+            'unreadCount'
         ));
     }
 
@@ -418,7 +498,7 @@ class AdminNotificationController extends Controller
             ->where('status', 'unread')
             ->update(['status' => 'read']);
 
-        return view('admin.messages.show', compact('message'));
+        return view('admin.notifications.show', compact('message'));
     }
 
     /**
@@ -440,7 +520,7 @@ class AdminNotificationController extends Controller
             'status' => 'unread'
         ]);
 
-        return redirect()->route('admin.messages.show', $id)
+        return redirect()->route('admin.notifications.show', $id)
             ->with('success', 'Balasan berhasil dikirim');
     }
 
@@ -452,7 +532,7 @@ class AdminNotificationController extends Controller
         $message = Message::findOrFail($id);
         $message->delete();
 
-        return redirect()->route('admin.messages.inbox')
+        return redirect()->route('admin.notifications.inbox')
             ->with('success', 'Pesan berhasil dihapus');
     }
 

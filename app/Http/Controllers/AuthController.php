@@ -79,38 +79,21 @@ class AuthController extends Controller
                 ->withErrors(['login' => 'Username atau Email tidak ditemukan']);
         }
 
-        // Cek apakah password di-hash atau plain text
-        $passwordMatch = false;
-        
-        // Cek jika password sudah di-hash dengan bcrypt
-        if (str_starts_with($user->password, '$2y$')) {
-            // Password sudah di-hash, gunakan Hash::check
-            $passwordMatch = Hash::check($credentials['password'], $user->password);
-        } else {
-            // Password masih plain text (backward compatibility)
-            $passwordMatch = ($credentials['password'] === $user->password);
-            
-            // Jika match, hash password untuk keamanan di masa depan
-            if ($passwordMatch) {
-                $user->password = Hash::make($credentials['password']);
-                $user->save();
-            }
+        // Debug logging
+        \Log::info('Login attempt', [
+            'field_type' => $fieldType,
+            'field_value' => $loginField,
+            'credentials' => [$fieldType => $loginField, 'password' => '***']
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            \Log::info('Login successful', ['user_id' => Auth::id()]);
+            return redirect()->route('dashboard');
         }
 
-        if (!$passwordMatch) {
-            return back()
-                ->withInput($request->only('login'))
-                ->withErrors(['password' => 'Password yang Anda masukkan salah']);
-        }
-
-        // Login user
-        Auth::login($user, $request->filled('remember'));
-
-        // Regenerate session untuk keamanan
-        $request->session()->regenerate();
-
-        // Redirect ke dashboard
-        return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
+        \Log::warning('Login failed', ['field' => $loginField]);
+        return back()->withErrors(['login' => 'Username/Email atau password salah.'])->withInput();
     }
 
     public function logout(Request $request)
@@ -172,7 +155,8 @@ class AuthController extends Controller
 
     public function editProfil()
     {
-        return view('user.EditProfil');
+        $user = auth()->user();
+        return view('user.EditProfil', compact('user'));
     }
 
     public function updateProfil(Request $request)

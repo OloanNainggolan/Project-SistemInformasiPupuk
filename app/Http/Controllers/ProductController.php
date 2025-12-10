@@ -319,13 +319,13 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()->route('products.index')
+            return redirect()->route('admin.products.index')
                 ->with('success', 'Produk berhasil dihapus.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            return redirect()->route('products.index')
+
+            return redirect()->route('admin.products.index')
                 ->withErrors(['error' => 'Terjadi kesalahan saat menghapus produk: ' . $e->getMessage()]);
         }
     }

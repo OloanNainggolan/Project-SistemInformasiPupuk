@@ -514,7 +514,7 @@
                                 <span><i class="fas fa-box"></i> Stok: {{ number_format($product->stok_produk) }} unit</span>
                             </div>
 
-                            <button class="btn-detail btn-green" onclick="window.location.href='/user/pupuk-bibit/{{ $product->id_produk }}/detail'">
+                            <button class="btn-detail btn-green" onclick="window.location.href='{{ route('user.pupukbibit.detail', $product->id_produk) }}'">
                                 <i class="fas fa-eye"></i> Lihat Detail & Pesan
                             </button>
                         </div>
@@ -582,7 +582,7 @@
                                 <span><i class="fas fa-box"></i> Stok: {{ number_format($product->stok_produk) }} unit</span>
                             </div>
 
-                            <button class="btn-detail btn-blue" onclick="window.location.href='/user/pupuk-bibit/{{ $product->id_produk }}/detail'">
+                            <button class="btn-detail btn-blue" onclick="window.location.href='{{ route('user.pupukbibit.detail', $product->id_produk) }}'">
                                 <i class="fas fa-eye"></i> Lihat Detail & Pesan
                             </button>
                         </div>
@@ -639,3 +639,4 @@
     });
 </script>
 @endpush
+

@@ -737,11 +737,11 @@
                 <!-- Profile Section with Dropdown -->
                 <div class="profile-section">
                     <div class="profile-avatar">
-                        @if(auth()->user()->foto)
-                            <img src="{{ asset(auth()->user()->foto) }}" alt="Profile">
-                        @else
-                            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-                        @endif
+                      @if(Auth::user()->foto)
+                            <img src="{{ asset(Auth::user()->foto) }}" alt="Profile">
+                      @else
+                          {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                      @endif
                     </div>
                     <div class="profile-info">
                         <span class="profile-name">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'User' }}</span>
