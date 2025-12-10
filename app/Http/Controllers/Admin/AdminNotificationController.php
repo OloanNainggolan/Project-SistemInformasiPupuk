@@ -374,6 +374,7 @@ class AdminNotificationController extends Controller
     public function inbox(Request $request)
     {
         $filter = $request->get('filter', 'all');
+        $sortBy = $request->get('sort', 'latest');
 
         // Query dasar untuk messages dari user
         $query = Message::with('user')
@@ -396,7 +397,23 @@ class AdminNotificationController extends Controller
             $query->where('subject', 'LIKE', '%Pesanan Baru%');
         }
 
-        $messages = $query->orderBy('created_at', 'desc')->paginate(20);
+        // Sorting
+        if ($sortBy == 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sortBy == 'name_asc') {
+            $query->join('users', 'messages.user_id', '=', 'users.id')
+                ->orderBy('users.nama_lengkap', 'asc')
+                ->select('messages.*');
+        } elseif ($sortBy == 'name_desc') {
+            $query->join('users', 'messages.user_id', '=', 'users.id')
+                ->orderBy('users.nama_lengkap', 'desc')
+                ->select('messages.*');
+        } else {
+            // Default: latest
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $messages = $query->paginate(20);
 
         // Hitung total untuk setiap filter
         $totalAll = Message::fromUser()->whereNull('reply_to')->count();
@@ -412,6 +429,7 @@ class AdminNotificationController extends Controller
         return view('admin.notifications.inbox', compact(
             'messages',
             'filter',
+            'sortBy',
             'totalAll',
             'totalUnread',
             'totalContactMessages',
