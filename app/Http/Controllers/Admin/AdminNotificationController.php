@@ -405,7 +405,7 @@ class AdminNotificationController extends Controller
         $totalNewUsers = User::whereDate('created_at', today())->count();
         $totalNewOrders = Order::where('confirmed_by_user', true)->where('status', 'Pending')->count();
 
-        return view('admin.messages.inbox', compact(
+        return view('admin.notifications.inbox', compact(
             'messages',
             'filter',
             'totalAll',
@@ -434,7 +434,7 @@ class AdminNotificationController extends Controller
             ->where('status', 'unread')
             ->update(['status' => 'read']);
 
-        return view('admin.messages.show', compact('message'));
+        return view('admin.notifications.show', compact('message'));
     }
 
     /**
@@ -456,7 +456,7 @@ class AdminNotificationController extends Controller
             'status' => 'unread'
         ]);
 
-        return redirect()->route('admin.messages.show', $id)
+        return redirect()->route('admin.notifications.show', $id)
             ->with('success', 'Balasan berhasil dikirim');
     }
 
@@ -468,7 +468,7 @@ class AdminNotificationController extends Controller
         $message = Message::findOrFail($id);
         $message->delete();
 
-        return redirect()->route('admin.messages.inbox')
+        return redirect()->route('admin.notifications.inbox')
             ->with('success', 'Pesan berhasil dihapus');
     }
 
