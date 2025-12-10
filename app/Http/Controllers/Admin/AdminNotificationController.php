@@ -425,6 +425,34 @@ class AdminNotificationController extends Controller
 
         $messages = $query->paginate(20);
 
+        // Transform messages to notifications format
+        $notifications = collect($messages->items())->map(function($message) {
+            $hasUnreadReply = $message->replies->where('sender_type', 'user')->where('status', 'unread')->count() > 0;
+            $isUnread = ($message->sender_type === 'user' && $message->status === 'unread') || $hasUnreadReply;
+            $lastActivity = $message->replies->count() > 0 ? $message->replies->last()->created_at : $message->created_at;
+            $previewText = $message->replies->count() > 0 ? $message->replies->last()->message : $message->message;
+            
+            return [
+                'id' => $message->id,
+                'type' => 'message',
+                'status' => $isUnread ? 'unread' : 'read',
+                'sender_name' => $message->user ? $message->user->nama_lengkap : 'Unknown',
+                'content' => $previewText,
+                'time' => $lastActivity->diffForHumans(),
+                'link' => route('admin.notifications.show', $message->id),
+                'order_number' => null,
+            ];
+        });
+
+        // Create paginator for notifications
+        $notifications = new \Illuminate\Pagination\LengthAwarePaginator(
+            $notifications,
+            $messages->total(),
+            $messages->perPage(),
+            $messages->currentPage(),
+            ['path' => $messages->path(), 'query' => $messages->getOptions()['query'] ?? []]
+        );
+
         // Hitung total untuk setiap filter
         $totalAll = Message::fromUser()->whereNull('reply_to')->count();
         $totalUnread = Message::fromUser()->whereNull('reply_to')->unread()->count();
@@ -437,7 +465,7 @@ class AdminNotificationController extends Controller
         $unreadCount = $totalUnread;
 
         return view('admin.notifications.inbox', compact(
-            'messages',
+            'notifications',
             'filter',
             'sortBy',
             'dateFrom',
