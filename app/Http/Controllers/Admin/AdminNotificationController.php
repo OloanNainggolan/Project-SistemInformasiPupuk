@@ -298,6 +298,14 @@ class AdminNotificationController extends Controller
     }
 
     /**
+     * Alias untuk create() - untuk backward compatibility
+     */
+    public function createSend()
+    {
+        return $this->create();
+    }
+
+    /**
      * Kirim notifikasi ke user tertentu
      */
     public function send(Request $request)
@@ -321,6 +329,14 @@ class AdminNotificationController extends Controller
 
         return redirect()->route('admin.notifications.create')
             ->with('success', "Notifikasi berhasil dikirim ke {$user->nama_lengkap}");
+    }
+
+    /**
+     * Alias untuk send() - untuk route compatibility
+     */
+    public function sendNotification(Request $request)
+    {
+        return $this->send($request);
     }
 
     /**
