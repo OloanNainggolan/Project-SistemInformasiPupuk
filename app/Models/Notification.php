@@ -10,38 +10,20 @@ class Notification extends Model
     use HasFactory;
     
     protected $fillable = [
-        'user_id',
         'type',
         'title',
         'message',
         'link',
         'status',
-        'is_read',
-        'related_id',
-        'related_type'
-    ];
-
-    protected $casts = [
-        'is_read' => 'boolean',
+        'related_id'
     ];
     
-    /**
-     * Relasi ke User
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     /**
      * Scope untuk notifikasi yang belum dibaca
      */
     public function scopeUnread($query)
     {
-        return $query->where(function($q) {
-            $q->where('status', 'unread')
-              ->orWhere('is_read', false);
-        });
+        return $query->where('status', 'unread');
     }
     
     /**

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Message;
-use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 
 class UserNotificationController extends Controller
@@ -15,69 +14,19 @@ class UserNotificationController extends Controller
      */
     public function index()
     {
-        // Get parent messages that are actual conversations (from user or replied by admin)
-        // EXCLUDE messages that are system notifications (order status updates)
+        // Only get parent messages (not replies)
         $messages = Message::where('user_id', Auth::id())
             ->whereNull('reply_to') // Only parent messages
-            ->where('subject', 'NOT LIKE', '%Update Status Pesanan%') // Exclude order status updates
-            ->where('subject', 'NOT LIKE', '%Status Pesanan Diperbarui%') // Exclude order status updates
             ->with(['replyToMessage', 'replies'])
             ->orderBy('created_at', 'desc')
-            ->paginate(15, ['*'], 'messages_page');
-
-        // Get ALL notifications from notifications table
-        $notifications = Notification::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Get system messages (order status updates) and merge with notifications
-        $systemMessages = Message::where('user_id', Auth::id())
-            ->whereNull('reply_to')
-            ->where(function($q) {
-                $q->where('subject', 'LIKE', '%Update Status Pesanan%')
-                  ->orWhere('subject', 'LIKE', '%Status Pesanan Diperbarui%');
-            })
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($msg) {
-                // Convert Message to notification-like object
-                return (object) [
-                    'id' => 'msg_' . $msg->id,
-                    'type' => 'order',
-                    'title' => $msg->subject,
-                    'message' => $msg->message,
-                    'is_read' => $msg->status === 'read',
-                    'created_at' => $msg->created_at,
-                    'is_message' => true, // Flag to identify source
-                    'message_id' => $msg->id
-                ];
-            });
-
-        // Merge notifications with system messages
-        $allNotifications = $notifications->concat($systemMessages)->sortByDesc('created_at');
+            ->paginate(15);
 
         $unreadCount = Message::where('user_id', Auth::id())
             ->fromAdmin()
             ->unread()
             ->count();
 
-        $unreadNotifications = Notification::where('user_id', Auth::id())
-            ->where('is_read', false)
-            ->count();
-
-        // Add unread system messages
-        $unreadSystemMessages = Message::where('user_id', Auth::id())
-            ->whereNull('reply_to')
-            ->where(function($q) {
-                $q->where('subject', 'LIKE', '%Update Status Pesanan%')
-                  ->orWhere('subject', 'LIKE', '%Status Pesanan Diperbarui%');
-            })
-            ->where('status', 'unread')
-            ->count();
-
-        $unreadNotifications += $unreadSystemMessages;
-
-        return view('user.notifications.index', compact('messages', 'allNotifications', 'unreadCount', 'unreadNotifications'));
+        return view('user.notifications.index', compact('messages', 'unreadCount'));
     }
 
     /**
@@ -188,51 +137,6 @@ class UserNotificationController extends Controller
 
         return redirect()->route('notifikasi')
             ->with('success', "{$deleted} pesan berhasil dihapus");
-    }
-
-    /**
-     * Mark notification as read
-     */
-    public function markNotificationAsRead($id)
-    {
-        $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
-        
-        $notification->update([
-            'is_read' => true,
-            'status' => 'read'
-        ]);
-
-        if (request()->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Notifikasi berhasil ditandai sebagai dibaca'
-            ]);
-        }
-
-        return redirect()->route('notifikasi')
-            ->with('success', 'Notifikasi berhasil ditandai sebagai dibaca');
-    }
-
-    /**
-     * Mark message as read
-     */
-    public function markMessageAsRead($id)
-    {
-        $message = Message::where('user_id', Auth::id())->findOrFail($id);
-        
-        $message->update([
-            'status' => 'read'
-        ]);
-
-        if (request()->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Pesan berhasil ditandai sebagai dibaca'
-            ]);
-        }
-
-        return redirect()->route('notifikasi')
-            ->with('success', 'Pesan berhasil ditandai sebagai dibaca');
     }
 
     /**

@@ -872,13 +872,6 @@
                             <textarea class="form-input" id="alamat" name="alamat" rows="3" required>{{ auth()->user()->alamat ?? 'Jl. Jalan-jalan, balai desa sukamaju' }}</textarea>
                         </div>
                         <div class="form-group">
-                            <label class="form-label"><i class="fas fa-building"></i> Balai Desa</label>
-                            <input type="text" class="form-input" id="balai_desa" name="balai_desa" placeholder="Contoh: Balai Desa Sukamaju" required>
-                            <small class="form-text" style="color: #666; font-size: 12px; margin-top: 4px; display: block;">
-                                <i class="fas fa-info-circle"></i> Masukkan nama balai desa tempat Anda akan mengambil pesanan
-                            </small>
-                        </div>
-                        <div class="form-group">
                             <label class="form-label"><i class="fas fa-comment-dots"></i> Catatan (Opsional)</label>
                             <textarea class="form-input" id="catatan" name="catatan" rows="2" placeholder="Tambahkan catatan untuk pesanan...">{{ $catatan ?? '' }}</textarea>
                         </div>
@@ -1182,9 +1175,6 @@
                         allowOutsideClick: false
                     });
                     
-                    // Get village office value
-                    const balaiDesa = document.getElementById('balai_desa').value;
-                    
                     // Submit data ke server untuk disimpan ke database
                     fetch('{{ route("user.pupukbibit.store", $produk->id_produk) }}', {
                         method: 'POST',
@@ -1198,8 +1188,7 @@
                             customer_name: nama,
                             customer_phone: noHp,
                             customer_address: alamat,
-                            customer_notes: catatan,
-                            village_office: balaiDesa
+                            customer_notes: catatan
                         })
                     })
                     .then(response => {
