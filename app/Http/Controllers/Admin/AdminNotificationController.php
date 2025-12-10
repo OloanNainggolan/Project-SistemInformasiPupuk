@@ -405,6 +405,10 @@ class AdminNotificationController extends Controller
         $totalNewUsers = User::whereDate('created_at', today())->count();
         $totalNewOrders = Order::where('confirmed_by_user', true)->where('status', 'Pending')->count();
 
+        // Total count dan unread count untuk header
+        $totalCount = $totalAll;
+        $unreadCount = $totalUnread;
+
         return view('admin.notifications.inbox', compact(
             'messages',
             'filter',
@@ -412,7 +416,9 @@ class AdminNotificationController extends Controller
             'totalUnread',
             'totalContactMessages',
             'totalNewUsers',
-            'totalNewOrders'
+            'totalNewOrders',
+            'totalCount',
+            'unreadCount'
         ));
     }
 
