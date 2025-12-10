@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Pupuk dan Bibit Bersubsidi Pemerintah – Masuk</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -690,7 +691,7 @@
             </div>
 
             <!-- Form -->
-            <form id="loginForm" action="/login" method="POST">
+            <form id="loginForm" action="{{ route('login.process') }}" method="POST">
                 @csrf
 
                 <div class="form-group">
