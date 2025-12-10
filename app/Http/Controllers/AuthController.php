@@ -164,7 +164,7 @@ class AuthController extends Controller
 
     public function editProfil()
     {
-        $user = Auth::user();
+        $user = auth()->user();
         return view('user.EditProfil', compact('user'));
     }
 
