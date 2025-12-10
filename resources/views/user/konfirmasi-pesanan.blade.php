@@ -576,20 +576,67 @@
             align-items: center;
             gap: 8px;
             background: white;
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+            border: 2px solid #d1fae5;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+
+        .quantity-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .quantity-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
+        }
+
+        .quantity-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .quantity-display-input {
-            width: 50px;
+            width: 60px;
             border: none;
             background: transparent;
             text-align: center;
             font-size: 20px;
             font-weight: 800;
             color: #10b981;
-            pointer-events: none;
+            outline: none;
+            -moz-appearance: textfield;
+        }
+
+        .quantity-display-input::-webkit-outer-spin-button,
+        .quantity-display-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .quantity-display-input:focus {
+            color: #047857;
         }
 
         .quantity-unit {
@@ -802,6 +849,17 @@
             .quantity-value-box {
                 width: auto;
             }
+            
+            .quantity-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .quantity-display-input {
+                width: 70px;
+                font-size: 18px;
+            }
 
             .savings-highlight {
                 flex-direction: column;
@@ -957,7 +1015,13 @@
                             <div class="quantity-display">
                                 <span class="quantity-label"><i class="fas fa-box"></i> Jumlah Pesanan:</span>
                                 <div class="quantity-value-box">
-                                    <input type="number" id="quantityInput" class="quantity-display-input" value="{{ $quantity ?? 1 }}" readonly>
+                                    <button type="button" class="quantity-btn" id="decreaseBtn" onclick="decreaseQuantity()">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" id="quantityInput" class="quantity-display-input" value="{{ $quantity ?? 1 }}" min="1" max="{{ $produk->stok }}" onchange="updateQuantity()" oninput="updateQuantity()">
+                                    <button type="button" class="quantity-btn" id="increaseBtn" onclick="increaseQuantity()">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
                                     <span class="quantity-unit">kg</span>
                                 </div>
                             </div>
@@ -1053,7 +1117,11 @@
     <script>
         // Harga per unit dari backend
         const hargaPerUnit = {{ $produk->harga_subsidi }};
+        const hargaNormal = {{ $produk->harga_normal }};
         const productName = '{{ $produk->nama_produk }}';
+        const maxStock = {{ $produk->stok }};
+        const subsidyAmount = {{ $produk->harga_normal - $produk->harga_subsidi }};
+        const discountAmount = {{ $discountAmount ?? 0 }};
         
         // Get product image dari database
         @php
@@ -1072,7 +1140,90 @@
         @endphp
         const productImage = '{{ $popupImageSrc }}';
         
-        // Quantity is now readonly - no update functions needed
+        // Quantity control functions
+        function increaseQuantity() {
+            const input = document.getElementById('quantityInput');
+            let currentValue = parseInt(input.value) || 1;
+            
+            if (currentValue < maxStock) {
+                input.value = currentValue + 1;
+                updateQuantity();
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stok Terbatas',
+                    text: `Stok tersedia hanya ${maxStock} kg!`,
+                    confirmButtonColor: '#10b981'
+                });
+            }
+        }
+        
+        function decreaseQuantity() {
+            const input = document.getElementById('quantityInput');
+            let currentValue = parseInt(input.value) || 1;
+            
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+                updateQuantity();
+            }
+        }
+        
+        function updateQuantity() {
+            const input = document.getElementById('quantityInput');
+            let quantity = parseInt(input.value) || 1;
+            
+            // Validate input
+            if (quantity < 1) {
+                quantity = 1;
+                input.value = 1;
+            } else if (quantity > maxStock) {
+                quantity = maxStock;
+                input.value = maxStock;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stok Terbatas',
+                    text: `Stok tersedia hanya ${maxStock} kg!`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+            
+            // Update button states
+            document.getElementById('decreaseBtn').disabled = (quantity <= 1);
+            document.getElementById('increaseBtn').disabled = (quantity >= maxStock);
+            
+            // Update price displays
+            const totalPrice = hargaPerUnit * quantity;
+            const normalPrice = hargaNormal * quantity;
+            const totalSubsidy = subsidyAmount * quantity;
+            const totalDiscount = discountAmount + totalSubsidy;
+            const finalTotal = normalPrice - totalDiscount;
+            
+            // Update product total price
+            document.getElementById('productTotalPrice').textContent = 
+                'Rp. ' + totalPrice.toLocaleString('id-ID');
+            
+            // Update price summary
+            document.querySelectorAll('.price-row .price-value.original-price').forEach(el => {
+                el.textContent = 'Rp ' + normalPrice.toLocaleString('id-ID');
+            });
+            
+            // Update subsidy row
+            const subsidyRow = document.querySelector('.discount-row.subsidy-row .discount-value');
+            if (subsidyRow) {
+                subsidyRow.textContent = '- Rp ' + totalSubsidy.toLocaleString('id-ID');
+            }
+            
+            // Update final total
+            document.querySelectorAll('.total-row .total-value').forEach(el => {
+                el.textContent = 'Rp ' + finalTotal.toLocaleString('id-ID');
+            });
+        }
+        
+        // Initialize button states on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateQuantity();
+        });
         
         // Konfirmasi pesanan dengan SweetAlert2
         function konfirmasiPesanan() {

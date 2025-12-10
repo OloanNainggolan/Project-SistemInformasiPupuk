@@ -254,6 +254,19 @@ class AuthController extends Controller
         return redirect()->route('profil.user')->with('success', 'Profil berhasil diperbarui!');
     }
 
+    /**
+     * Show order detail page
+     */
+    public function showOrderDetail($id)
+    {
+        $order = \App\Models\Order::with(['product', 'user'])
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('user.order-detail', compact('order'));
+    }
+
     public function getOrderDetail($id)
     {
         try {

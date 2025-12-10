@@ -306,17 +306,45 @@ class AdminNotificationController extends Controller
     }
 
     /**
-     * Kirim notifikasi ke user tertentu
+     * Kirim notifikasi ke user tertentu atau semua user
      */
     public function send(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'recipient_type' => 'required|in:all,specific',
+            'user_id' => 'required_if:recipient_type,specific|nullable|exists:users,id',
             'title' => 'required|string|max:100',
             'message' => 'required|string',
             'type' => 'required|in:info,success,warning,important'
+        ], [
+            'recipient_type.required' => 'Tipe penerima wajib dipilih',
+            'user_id.required_if' => 'User wajib dipilih ketika mengirim ke user tertentu',
+            'title.required' => 'Judul notifikasi wajib diisi',
+            'message.required' => 'Isi pesan wajib diisi',
+            'type.required' => 'Tipe notifikasi wajib dipilih'
         ]);
 
+        // Jika kirim ke semua user
+        if ($validated['recipient_type'] === 'all') {
+            $users = User::all();
+            $count = 0;
+
+            foreach ($users as $user) {
+                \App\Models\Notification::create([
+                    'user_id' => $user->id,
+                    'title' => $validated['title'],
+                    'message' => $validated['message'],
+                    'type' => $validated['type'],
+                    'is_read' => false
+                ]);
+                $count++;
+            }
+
+            return redirect()->route('admin.notifications.send')
+                ->with('success', "Notifikasi berhasil dikirim ke {$count} user");
+        }
+
+        // Jika kirim ke user spesifik
         $user = User::findOrFail($validated['user_id']);
 
         \App\Models\Notification::create([

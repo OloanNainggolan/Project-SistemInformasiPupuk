@@ -77,6 +77,20 @@
         box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.1);
     }
 
+    .form-control.is-invalid {
+        border-color: #ef4444;
+    }
+
+    .form-control.is-invalid:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .text-danger {
+        color: #ef4444;
+        font-weight: 600;
+    }
+
     textarea.form-control {
         min-height: 150px;
         resize: vertical;
@@ -311,14 +325,14 @@
                 <label class="form-label">Kirim Ke <span class="required">*</span></label>
                 <div class="recipient-type">
                     <div class="recipient-option">
-                        <input type="radio" name="recipient_type" id="all_users" value="all" checked onchange="toggleUserSelect()">
+                        <input type="radio" name="recipient_type" id="all_users" value="all" {{ old('recipient_type', 'all') == 'all' ? 'checked' : '' }} onchange="toggleUserSelect()">
                         <label for="all_users">
                             <i class="fas fa-users"></i>
                             Semua User
                         </label>
                     </div>
                     <div class="recipient-option">
-                        <input type="radio" name="recipient_type" id="specific_user" value="specific" onchange="toggleUserSelect()">
+                        <input type="radio" name="recipient_type" id="specific_user" value="specific" {{ old('recipient_type') == 'specific' ? 'checked' : '' }} onchange="toggleUserSelect()">
                         <label for="specific_user">
                             <i class="fas fa-user"></i>
                             Pilih User
@@ -329,68 +343,93 @@
                 <!-- Specific User Selection -->
                 <div class="user-select-group" id="userSelectGroup">
                     <label class="form-label">Pilih User</label>
-                    <select name="user_id" class="form-control form-select">
+                    <select name="user_id" class="form-control form-select @error('user_id') is-invalid @enderror">
                         <option value="">-- Pilih User --</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}">
+                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                                 {{ $user->nama_lengkap ?? $user->name ?? 'User #'.$user->id }} ({{ $user->email }})
                             </option>
                         @endforeach
                     </select>
+                    @error('user_id')
+                        <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
+                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                        </div>
+                    @enderror
                 </div>
+                @error('recipient_type')
+                    <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
+                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <!-- Subject -->
             <div class="form-group">
-                <label class="form-label" for="subject">Judul Notifikasi <span class="required">*</span></label>
-                <input type="text" name="subject" id="subject" class="form-control" 
+                <label class="form-label" for="title">Judul Notifikasi <span class="required">*</span></label>
+                <input type="text" name="title" id="title" class="form-control @error('title') is-invalid @enderror" 
                        placeholder="Contoh: Pengumuman Penting - Perubahan Jadwal Distribusi" 
-                       value="{{ old('subject') }}" required maxlength="100">
+                       value="{{ old('title') }}" required maxlength="100">
                 <div class="char-count">
                     <span id="subjectCount">0</span>/100 karakter
                 </div>
+                @error('title')
+                    <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
+                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <!-- Message -->
             <div class="form-group">
                 <label class="form-label" for="message">Isi Pesan <span class="required">*</span></label>
-                <textarea name="message" id="message" class="form-control" 
+                <textarea name="message" id="message" class="form-control @error('message') is-invalid @enderror" 
                           placeholder="Tulis pesan atau pengumuman yang akan dikirim ke user..." 
                           required maxlength="1000">{{ old('message') }}</textarea>
                 <div class="char-count">
                     <span id="messageCount">0</span>/1000 karakter
                 </div>
+                @error('message')
+                    <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
+                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <!-- Priority -->
             <div class="form-group">
-                <label class="form-label">Prioritas</label>
+                <label class="form-label">Tipe Notifikasi <span class="required">*</span></label>
                 <div class="priority-badges">
                     <div class="priority-option low">
-                        <input type="radio" name="priority" id="priority_low" value="low">
-                        <label for="priority_low" class="low">
-                            <i class="fas fa-info-circle"></i> Rendah
+                        <input type="radio" name="type" id="type_info" value="info" {{ old('type', 'info') == 'info' ? 'checked' : '' }}>
+                        <label for="type_info" class="low">
+                            <i class="fas fa-info-circle"></i> Info
                         </label>
                     </div>
                     <div class="priority-option normal">
-                        <input type="radio" name="priority" id="priority_normal" value="normal" checked>
-                        <label for="priority_normal" class="normal">
-                            <i class="fas fa-bell"></i> Normal
+                        <input type="radio" name="type" id="type_success" value="success" {{ old('type') == 'success' ? 'checked' : '' }}>
+                        <label for="type_success" class="normal">
+                            <i class="fas fa-check-circle"></i> Sukses
                         </label>
                     </div>
                     <div class="priority-option high">
-                        <input type="radio" name="priority" id="priority_high" value="high">
-                        <label for="priority_high" class="high">
-                            <i class="fas fa-exclamation"></i> Tinggi
+                        <input type="radio" name="type" id="type_warning" value="warning" {{ old('type') == 'warning' ? 'checked' : '' }}>
+                        <label for="type_warning" class="high">
+                            <i class="fas fa-exclamation-circle"></i> Peringatan
                         </label>
                     </div>
                     <div class="priority-option urgent">
-                        <input type="radio" name="priority" id="priority_urgent" value="urgent">
-                        <label for="priority_urgent" class="urgent">
-                            <i class="fas fa-exclamation-triangle"></i> Urgent
+                        <input type="radio" name="type" id="type_important" value="important" {{ old('type') == 'important' ? 'checked' : '' }}>
+                        <label for="type_important" class="urgent">
+                            <i class="fas fa-exclamation-triangle"></i> Penting
                         </label>
                     </div>
                 </div>
+                @error('type')
+                    <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
+                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <!-- Action Buttons -->
@@ -410,7 +449,7 @@
 
 <script>
     // Character counter
-    document.getElementById('subject').addEventListener('input', function() {
+    document.getElementById('title').addEventListener('input', function() {
         document.getElementById('subjectCount').textContent = this.value.length;
     });
 
@@ -432,10 +471,16 @@
 
     // Initialize counters on page load
     window.addEventListener('DOMContentLoaded', function() {
-        const subject = document.getElementById('subject').value;
+        const title = document.getElementById('title').value;
         const message = document.getElementById('message').value;
-        document.getElementById('subjectCount').textContent = subject.length;
+        document.getElementById('subjectCount').textContent = title.length;
         document.getElementById('messageCount').textContent = message.length;
+        
+        // Check if specific user was selected (for validation errors)
+        const specificRadio = document.getElementById('specific_user');
+        if (specificRadio && specificRadio.checked) {
+            toggleUserSelect();
+        }
     });
 </script>
 @endsection
