@@ -170,8 +170,8 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <a href="{{ route('admin.orders.show', $order->order_number) }}" class="btn-detail">
+                <div class="action-section">
+                    <a href="{{ route('admin.orders.detail', $order->id) }}" class="btn-detail">
                         <i class="fas fa-eye"></i> Lihat Detail
                     </a>
                 </div>
@@ -576,6 +576,44 @@
     background: #45a049;
 }
 
+/* Action Section */
+.action-section {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.btn-detail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+}
+
+.btn-detail:hover {
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-detail i {
+    font-size: 12px;
+}
+
 /* Empty State */
 .empty-state {
     background: white;
@@ -595,42 +633,6 @@
     font-size: 14px;
     color: #666;
     margin: 0;
-}
-
-/* Action Buttons */
-.action-buttons {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-}
-
-.btn-detail {
-    flex: 1;
-    padding: 10px 15px;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: white !important;
-    text-decoration: none !important;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-detail:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
-}
-
-.btn-detail i {
-    font-size: 14px;
 }
 
 /* Pagination */

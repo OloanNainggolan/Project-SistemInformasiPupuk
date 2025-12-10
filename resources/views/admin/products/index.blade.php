@@ -401,9 +401,18 @@
 <div class="products-grid">
     @forelse($products as $product)
     <div class="product-card" data-type="{{ $product->tipe_produk }}" data-category="{{ $product->kategori }}">
-        <img src="{{ $product->primaryImage ? asset($product->primaryImage->image_path) : asset('images/products/default.jpg') }}" 
+        @php
+            $imageSrc = asset('images/products/placeholder.jpg');
+            if ($product->primaryImage && $product->primaryImage->image_path) {
+                $imageSrc = asset($product->primaryImage->image_path);
+            } elseif ($product->gambar) {
+                $imageSrc = asset($product->gambar);
+            }
+        @endphp
+        <img src="{{ $imageSrc }}" 
              alt="{{ $product->nama_produk }}" 
-             class="product-image">
+             class="product-image"
+             onerror="this.src='{{ asset('images/products/placeholder.jpg') }}'">
         
         <div class="product-body">
             <span class="product-type-badge badge-{{ $product->tipe_produk }}">

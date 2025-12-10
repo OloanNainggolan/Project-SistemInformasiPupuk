@@ -310,37 +310,8 @@
         font-size: 20px;
         font-weight: 800;
         color: #065f46;
-        min-width: 60px;
-        width: 60px;
+        min-width: 50px;
         text-align: center;
-        border: 2px solid #d1fae5;
-        border-radius: 8px;
-        padding: 4px 8px;
-        background: white;
-        transition: all 0.3s ease;
-    }
-
-    .qty-display:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
-
-    .qty-display:disabled {
-        background: #f3f4f6;
-        color: #9ca3af;
-        cursor: not-allowed;
-    }
-
-    /* Hide number input spinner arrows */
-    .qty-display::-webkit-outer-spin-button,
-    .qty-display::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .qty-display[type=number] {
-        -moz-appearance: textfield;
     }
 
     .stock-info {
@@ -648,7 +619,7 @@
                         <button class="qty-btn" onclick="decreaseQty()" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
                             <i class="fas fa-minus"></i>
                         </button>
-                        <input type="number" class="qty-display" id="qtyDisplay" value="1" min="1" max="{{ $produk->stok_produk ?? 1 }}" oninput="handleManualInput(this.value)" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
+                        <span class="qty-display" id="qtyDisplay">1</span>
                         <button class="qty-btn" onclick="increaseQty()" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
                             <i class="fas fa-plus"></i>
                         </button>
@@ -976,48 +947,8 @@
         }
     }
 
-    function handleManualInput(value) {
-        // Convert to number and validate
-        let newQty = parseInt(value);
-        
-        // Check if valid number
-        if (isNaN(newQty) || newQty < 1) {
-            newQty = 1;
-        }
-        
-        // Check if exceeds stock
-        if (newQty > maxStock) {
-            newQty = maxStock;
-            showStockWarning();
-        } else {
-            hideStockWarning();
-        }
-        
-        // Update quantity
-        quantity = newQty;
-        document.getElementById('qtyDisplay').value = quantity;
-        document.getElementById('quantityInput').value = quantity;
-        
-        // Update prices
-        const subtotal = basePrice * quantity;
-        const discount = discountPerUnit * quantity;
-        const total = subtotal - discount;
-        
-        document.getElementById('subtotal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
-        
-        const discountEl = document.getElementById('discountDisplay');
-        if (discountEl && discount > 0) {
-            discountEl.textContent = '- Rp ' + discount.toLocaleString('id-ID');
-        }
-        
-        document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
-        
-        // Update button state
-        updateButtonState();
-    }
-
     function updateDisplay() {
-        document.getElementById('qtyDisplay').value = quantity;
+        document.getElementById('qtyDisplay').textContent = quantity;
         document.getElementById('quantityInput').value = quantity;
         
         const subtotal = basePrice * quantity;

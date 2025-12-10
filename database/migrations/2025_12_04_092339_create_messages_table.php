@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('messages', function (Blueprint $table) {
-            $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('normal')->after('message');
+        Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('messages', function (Blueprint $table) {
-            $table->dropColumn('priority');
-        });
+        Schema::dropIfExists('messages');
     }
 };

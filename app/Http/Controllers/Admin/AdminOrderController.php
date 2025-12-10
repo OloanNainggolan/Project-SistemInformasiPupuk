@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Message;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -182,15 +183,6 @@ class AdminOrderController extends Controller
         // Kirim notifikasi ke user bahwa status pesanan telah diupdate
         $this->sendOrderStatusNotification($order, $oldStatus, $newStatus);
 
-        // Jika request adalah JSON/AJAX, return JSON response
-        if ($request->expectsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => "Status pesanan {$orderId} berhasil diubah dari {$oldStatus} ke {$newStatus}",
-                'order' => $order
-            ]);
-        }
-
         return redirect()->route('admin.orders')
             ->with('success', "Status pesanan {$orderId} berhasil diubah dari {$oldStatus} ke {$newStatus}");
     }
@@ -337,6 +329,7 @@ class AdminOrderController extends Controller
         // Buat subject yang menarik
         $subject = "{$emoji} Update Status Pesanan #{$order->order_number} - {$statusMessages[$newStatus]}";
 
+        // Simpan ke Message untuk inbox
         Message::create([
             'user_id' => $order->user_id,
             'sender_type' => 'admin',
@@ -345,6 +338,28 @@ class AdminOrderController extends Controller
             'status' => 'unread',
             'reply_to' => null,
         ]);
+
+        // Simpan juga ke Notification untuk notifikasi real-time
+        \App\Models\Notification::create([
+            'user_id' => $order->user_id,
+            'type' => 'order',
+            'title' => "Status Pesanan Diperbarui",
+            'message' => "Pesanan #{$order->order_number} - Status: {$statusMessages[$newStatus]}",
+            'is_read' => false,
+            'related_id' => $order->id,
+            'related_type' => 'order',
+        ]);
+    }
+    
+    /**
+     * Tampilkan halaman detail pesanan yang lengkap
+     */
+    public function detailOrder($id)
+    {
+        $order = Order::with(['user', 'product'])
+            ->findOrFail($id);
+        
+        return view('admin.orders.detailorder', compact('order'));
     }
     
     /**
@@ -352,285 +367,10 @@ class AdminOrderController extends Controller
      */
     public function show($orderNumber)
     {
-        $order = Order::with(['user', 'product'])
+        $order = Order::with('user')
             ->where('order_number', $orderNumber)
             ->firstOrFail();
         
         return view('admin.orders.detail', compact('order'));
-    }
-
-    /**
-     * Halaman Daftar Pesanan
-     */
-    public function daftarpesanan(Request $request)
-    {
-        $query = Order::with(['user', 'product']);
-
-        // Filter by status
-        if ($request->has('status') && $request->status != 'all') {
-            $query->where('status', $request->status);
-        }
-
-        // Search by order ID or user name
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('id', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($userQuery) use ($search) {
-                      $userQuery->where('nama_lengkap', 'like', "%{$search}%")
-                                ->orWhere('username', 'like', "%{$search}%");
-                  });
-            });
-        }
-
-        // Sort by created_at desc (newest first)
-        $orders = $query->orderBy('created_at', 'desc')->paginate(20);
-
-        return view('admin.daftarpesanan', compact('orders'));
-    }
-
-    /**
-     * Update order status via AJAX
-     */
-    public function updateOrderStatus(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'status' => 'required|in:Pending,Processing,Ready for Pickup,Completed,Cancelled'
-        ]);
-
-        $order = Order::findOrFail($id);
-        $oldStatus = $order->status;
-        $newStatus = $validated['status'];
-
-        // Update status
-        $order->status = $newStatus;
-        $order->save();
-
-        // Kirim notifikasi ke user
-        $this->sendNotificationToUser($order, $oldStatus, $newStatus);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Status pesanan berhasil diupdate',
-            'new_status' => $newStatus
-        ]);
-    }
-
-    /**
-     * Show order details via AJAX
-     */
-    public function showOrder($id)
-    {
-        $order = Order::with(['user', 'product'])->findOrFail($id);
-        
-        return response()->json([
-            'success' => true,
-            'order' => [
-                'id' => $order->id,
-                'user_name' => $order->user->nama_lengkap ?? 'N/A',
-                'user_phone' => $order->user->no_telp ?? 'N/A',
-                'user_address' => $order->user->alamat ?? 'N/A',
-                'product_name' => $order->product->nama_produk ?? 'N/A',
-                'quantity' => $order->quantity,
-                'total_amount' => $order->total_amount,
-                'status' => $order->status,
-                'items' => $order->items ? json_decode($order->items, true) : [],
-                'created_at' => $order->created_at->format('d M Y H:i'),
-                'updated_at' => $order->updated_at->format('d M Y H:i')
-            ]
-        ]);
-    }
-
-    /**
-     * Delete order via AJAX
-     */
-    public function deleteOrder($id)
-    {
-        $order = Order::findOrFail($id);
-        
-        // Kirim notifikasi sebelum hapus
-        Message::create([
-            'user_id' => $order->user_id,
-            'sender_type' => 'admin',
-            'subject' => "Pesanan #{$order->id} Dihapus",
-            'message' => "Pesanan Anda dengan ID #{$order->id} telah dihapus oleh admin.",
-            'status' => 'unread',
-            'reply_to' => null
-        ]);
-
-        $order->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Pesanan berhasil dihapus'
-        ]);
-    }
-
-    /**
-     * Send notification to user about status change
-     */
-    private function sendNotificationToUser($order, $oldStatus, $newStatus)
-    {
-        // Tentukan pesan notifikasi berdasarkan status
-        $statusMessages = [
-            'Pending' => 'Pesanan Anda sedang menunggu konfirmasi.',
-            'Processing' => 'Pesanan Anda sedang diproses oleh admin.',
-            'Ready for Pickup' => 'Pesanan Anda sudah siap untuk diambil!',
-            'Completed' => 'Pesanan Anda telah selesai. Terima kasih!',
-            'Cancelled' => 'Pesanan Anda telah dibatalkan.'
-        ];
-
-        $message = $statusMessages[$newStatus] ?? 'Status pesanan Anda telah diperbarui.';
-
-        // Buat notifikasi di tabel messages
-        Message::create([
-            'user_id' => $order->user_id,
-            'sender_type' => 'admin',
-            'subject' => "Update Status Pesanan #{$order->id}",
-            'message' => "Status pesanan Anda telah diubah dari <strong>{$oldStatus}</strong> menjadi <strong>{$newStatus}</strong>. {$message}",
-            'status' => 'unread',
-            'reply_to' => null
-        ]);
-    }
-
-    /**
-     * Halaman Pesan Masuk - Kelola Pesanan
-     */
-    public function pesanMasuk(Request $request)
-    {
-        $query = Order::with(['user', 'product'])
-            ->where('confirmed_by_user', true);
-
-        // Filter pencarian
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('order_number', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($userQuery) use ($search) {
-                      $userQuery->where('name', 'like', "%{$search}%");
-                  });
-            });
-        }
-
-        // Filter status
-        if ($request->has('status') && !empty($request->status)) {
-            $query->where('status', $request->status);
-        }
-
-        // Filter tanggal
-        if ($request->has('date') && !empty($request->date)) {
-            $query->whereDate('created_at', $request->date);
-        }
-
-        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
-
-        // Statistik
-        $totalPesanan = Order::where('confirmed_by_user', true)->count();
-        $pendingCount = Order::where('confirmed_by_user', true)->where('status', 'Pending')->count();
-        $processingCount = Order::where('confirmed_by_user', true)->where('status', 'Processing')->count();
-        $readyCount = Order::where('confirmed_by_user', true)->where('status', 'Ready')->count();
-        $completedCount = Order::where('confirmed_by_user', true)->where('status', 'Completed')->count();
-        $rejectedCount = Order::where('confirmed_by_user', true)->where('status', 'Rejected')->count();
-
-        return view('admin.pesanmasuk', compact(
-            'orders',
-            'totalPesanan',
-            'pendingCount',
-            'processingCount',
-            'readyCount',
-            'completedCount',
-            'rejectedCount'
-        ));
-    }
-
-    /**
-     * Update status pesanan dari halaman pesan masuk
-     */
-    public function updatePesanStatus(Request $request, $orderNumber)
-    {
-        $order = Order::where('order_number', $orderNumber)->firstOrFail();
-        
-        $request->validate([
-            'status' => 'required|in:Pending,Processing,Ready,Completed,Rejected'
-        ]);
-
-        $oldStatus = $order->status;
-        $newStatus = $request->status;
-
-        $order->status = $newStatus;
-        $order->save();
-
-        // Kirim notifikasi ke user
-        $this->sendNotificationToUser($order, $oldStatus, $newStatus);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Status pesanan berhasil diubah'
-        ]);
-    }
-
-    /**
-     * Tampilkan detail pesanan (JSON)
-     */
-    public function showPesan($orderNumber)
-    {
-        $order = Order::with(['user', 'product'])
-            ->where('order_number', $orderNumber)
-            ->firstOrFail();
-
-        return response()->json([
-            'success' => true,
-            'order' => [
-                'id' => $order->id,
-                'order_number' => $order->order_number,
-                'status' => $order->status,
-                'quantity' => $order->quantity,
-                'total_amount' => $order->total_amount,
-                'delivery_address' => $order->delivery_address,
-                'delivery_notes' => $order->delivery_notes,
-                'payment_method' => $order->payment_method,
-                'created_at' => $order->created_at->toIso8601String(),
-                'user' => [
-                    'id' => $order->user->id,
-                    'name' => $order->user->name,
-                    'email' => $order->user->email,
-                    'phone' => $order->user->phone ?? '-'
-                ],
-                'product' => [
-                    'id' => $order->product->id_produk,
-                    'nama_produk' => $order->product->nama_produk,
-                    'kategori' => $order->product->kategori,
-                    'tipe_produk' => $order->product->tipe_produk,
-                    'harga_subsidi' => $order->product->harga_subsidi,
-                    'satuan' => $order->product->satuan,
-                    'gambar' => $order->product->gambar
-                ]
-            ]
-        ]);
-    }
-
-    /**
-     * Hapus pesanan dari halaman pesan masuk
-     */
-    public function deletePesan($orderNumber)
-    {
-        $order = Order::where('order_number', $orderNumber)->firstOrFail();
-
-        // Kirim notifikasi penghapusan ke user
-        Message::create([
-            'user_id' => $order->user_id,
-            'sender_type' => 'admin',
-            'subject' => "Pesanan #{$order->order_number} Dihapus",
-            'message' => "Pesanan Anda dengan nomor <strong>#{$order->order_number}</strong> telah dihapus oleh admin. Jika ada pertanyaan, silakan hubungi customer service kami.",
-            'status' => 'unread',
-            'reply_to' => null
-        ]);
-
-        $order->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Pesanan berhasil dihapus'
-        ]);
     }
 }
