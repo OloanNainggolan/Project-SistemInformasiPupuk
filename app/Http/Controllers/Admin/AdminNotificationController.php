@@ -375,11 +375,21 @@ class AdminNotificationController extends Controller
     {
         $filter = $request->get('filter', 'all');
         $sortBy = $request->get('sort', 'latest');
+        $dateFrom = $request->get('date_from', '');
+        $dateTo = $request->get('date_to', '');
 
         // Query dasar untuk messages dari user
         $query = Message::with('user')
             ->fromUser()
             ->whereNull('reply_to');
+
+        // Filter berdasarkan tanggal
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
 
         // Filter berdasarkan tipe
         if ($filter == 'unread') {
@@ -430,6 +440,8 @@ class AdminNotificationController extends Controller
             'messages',
             'filter',
             'sortBy',
+            'dateFrom',
+            'dateTo',
             'totalAll',
             'totalUnread',
             'totalContactMessages',
