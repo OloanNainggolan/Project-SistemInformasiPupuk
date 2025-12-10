@@ -740,7 +740,7 @@
             <div class="section-header">
                 <i class="fas fa-clock"></i>
                 <h3>Pesanan Terbaru</h3>
-                <a href="{{ route('admin.pesanmasuk') }}" class="view-all-link">
+                <a href="{{ route('admin.orders') }}" class="view-all-link">
                     Lihat Semua <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
@@ -784,6 +784,9 @@
         </div>
     </div>
 
+    <!-- Activity Log Section -->
+    @include('admin.partials.activity-log')
+
     <!-- Quick Actions -->
     <div class="quick-actions">
         <div class="section-header">
@@ -795,7 +798,7 @@
                 <i class="fas fa-plus-circle"></i>
                 <span>Tambah Produk</span>
             </a>
-            <a href="{{ route('admin.pesanmasuk') }}" class="action-btn">
+            <a href="{{ route('admin.orders') }}" class="action-btn">
                 <i class="fas fa-list-alt"></i>
                 <span>Kelola Pesanan</span>
             </a>

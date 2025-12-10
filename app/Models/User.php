@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'foto',
+        'google_id',
         'luas_lahan',
         'jenis_tanaman',
         'lokasi_lahan',

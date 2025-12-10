@@ -3,185 +3,121 @@
 namespace App\Http\Controllers\Api\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\StoreOrderRequest;
+use App\Http\Requests\Api\UpdateOrderStatusRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
-    /**
-     * Create new order
-     * 
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Request $request)
+    public function __construct()
     {
-        $request->validate([
-            'product_id' => 'required|exists:produk,id_produk',
-            'quantity' => 'required|integer|min:1',
-            'delivery_address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'notes' => 'nullable|string'
-        ], [
-            'product_id.required' => 'ID produk wajib diisi',
-            'product_id.exists' => 'Produk tidak ditemukan',
-            'quantity.required' => 'Jumlah pesanan wajib diisi',
-            'quantity.min' => 'Jumlah pesanan minimal 1',
-            'delivery_address.required' => 'Alamat pengiriman wajib diisi',
-            'phone.required' => 'Nomor telepon wajib diisi'
-        ]);
-
-        try {
-            return DB::transaction(function () use ($request) {
-                // Step 1: Ambil data produk dari Catalog API (Internal Call)
-                $productData = $this->getProductFromCatalog($request->product_id);
-
-                if (!$productData['success']) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Product not found in catalog'
-                    ], 404);
-                }
-
-                $product = $productData['data'];
-
-                // Step 2: Cek stok dari Catalog API
-                if ($product['stock'] < $request->quantity) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Insufficient stock. Available: ' . $product['stock']
-                    ], 400);
-                }
-
-                // Step 3: Hitung total harga
-                $pricePerUnit = $product['harga_subsidi'];
-                $totalPrice = $pricePerUnit * $request->quantity;
-
-                // Step 4: Generate order number
-                $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(uniqid());
-
-                // Step 5: Prepare items array
-                $items = [[
-                    'name' => $product['nama_produk'],
-                    'qty' => $request->quantity,
-                    'price' => $pricePerUnit
-                ]];
-
-                // Step 6: Buat order
-                $order = Order::create([
-                    'order_number' => $orderNumber,
-                    'user_id' => $request->user()->id,
-                    'product_id' => $request->product_id,
-                    'quantity' => $request->quantity,
-                    'items' => json_encode($items),
-                    'price_per_unit' => $pricePerUnit,
-                    'total_price' => $totalPrice,
-                    'delivery_address' => $request->delivery_address,
-                    'phone' => $request->phone,
-                    'notes' => $request->notes,
-                    'status' => 'pending'
-                ]);
-
-                // Step 7: Kurangi stok produk
-                DB::table('produk')
-                    ->where('id_produk', $request->product_id)
-                    ->decrement('stok_produk', $request->quantity);
-
-                // Load order dengan relasi product
-                $order->load('product.images');
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Order created successfully',
-                    'data' => [
-                        'order' => $order,
-                        'product_info' => [
-                            'nama_produk' => $product['nama_produk'],
-                            'harga_normal' => $product['harga_normal'],
-                            'harga_subsidi' => $product['harga_subsidi'],
-                            'penghematan' => ($product['harga_normal'] - $product['harga_subsidi']) * $request->quantity
-                        ]
-                    ]
-                ], 201);
-            });
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create order',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        // auth is applied on routes
     }
 
     /**
-     * Get order by ID
-     * 
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * List orders (paginated). Admins can see all, users see own orders.
+     */
+    public function index(Request $request)
+    {
+        $query = Order::with('user','product');
+        // if not admin, limit to user
+        if (! $request->user() || ! $request->user()->can('viewAny', Order::class)) {
+            $query->where('user_id', $request->user()->id);
+        }
+
+        if ($status = $request->query('status')) {
+            $query->where('status', $status);
+        }
+
+        if ($search = $request->query('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $orders = $query->orderBy('created_at','desc')->paginate(15);
+
+        return response()->json([
+            'success' => true,
+            'data' => OrderResource::collection($orders),
+            'meta' => [
+                'current_page' => $orders->currentPage(),
+                'last_page' => $orders->lastPage(),
+                'per_page' => $orders->perPage(),
+                'total' => $orders->total(),
+            ]
+        ]);
+    }
+
+    /**
+     * Store a new order
+     */
+    public function store(StoreOrderRequest $request)
+    {
+        $data = $request->validated();
+
+        $order = DB::transaction(function () use ($data) {
+            $order = new Order();
+            $order->order_number = Order::generateOrderNumber();
+            $order->user_id = $data['user_id'];
+            $order->village_office = $data['village_office'] ?? null;
+            $order->items = $data['items'];
+            $order->total_amount = $data['total_amount'];
+            $order->status = $data['status'] ?? 'Pending';
+            $order->confirmed_by_user = $data['confirmed_by_user'] ?? false;
+            $order->rejection_reason = $data['rejection_reason'] ?? null;
+            $order->save();
+            return $order;
+        });
+
+        return response()->json(["success" => true, "order" => new OrderResource($order)], 201);
+    }
+
+    /**
+     * Show an order
      */
     public function show($id)
     {
-        try {
-            $order = Order::with('product.images')
-                        ->where('user_id', auth()->id())
-                        ->where('id', $id)
-                        ->first();
-
-            if (!$order) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Order not found'
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Order retrieved successfully',
-                'data' => $order
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve order',
-                'error' => $e->getMessage()
-            ], 500);
+        $order = Order::with('user','product')->where('order_number', $id)->first();
+        if (! $order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
+        return response()->json(['success' => true, 'order' => new OrderResource($order)]);
     }
 
     /**
-     * Internal method: Get product data from Catalog
-     * Instead of HTTP call, directly query Product model for better performance
-     * 
-     * @param int $productId
-     * @return array
+     * Update order status
      */
-    private function getProductFromCatalog($productId)
+    public function updateStatus(UpdateOrderStatusRequest $request, $orderNumber)
     {
-        try {
-            $product = \App\Models\Product::find($productId);
-
-            if (!$product) {
-                return ['success' => false];
-            }
-
-            return [
-                'success' => true,
-                'data' => [
-                    'product_id' => $product->id_produk,
-                    'nama_produk' => $product->nama_produk,
-                    'stock' => $product->stok_produk,
-                    'available' => $product->stok_produk > 0,
-                    'harga_subsidi' => $product->harga_subsidi,
-                    'harga_normal' => $product->harga_normal
-                ]
-            ];
-
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
+        $order = Order::where('order_number', $orderNumber)->first();
+        if (! $order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
+
+        $order->status = $request->validated()['status'];
+        $order->save();
+
+        return response()->json(['success' => true, 'order' => new OrderResource($order)]);
+    }
+
+    /**
+     * Delete order
+     */
+    public function destroy($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->first();
+        if (! $order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+        $order->delete();
+        return response()->json(['success' => true]);
     }
 }
+

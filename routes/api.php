@@ -42,8 +42,11 @@ Route::prefix('v1')->group(function () {
     // SALES ROUTES (Protected - Orders)
     // ========================================
     Route::prefix('orders')->middleware('auth:sanctum')->group(function () {
-        Route::post('/', [OrderController::class, 'store']);
-        Route::get('/{id}', [OrderController::class, 'show']);
+        Route::get('/', [OrderController::class, 'index'])->name('api.orders.index');
+        Route::post('/', [OrderController::class, 'store'])->name('api.orders.store');
+        Route::get('/{id}', [OrderController::class, 'show'])->name('api.orders.show');
+        Route::patch('/{id}/status', [OrderController::class, 'updateStatus'])->name('api.orders.updateStatus');
+        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('api.orders.destroy');
     });
 
     // ========================================

@@ -6,10 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\AdminActivity;
+use App\Traits\TrackAdminActivity;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    use TrackAdminActivity;
+
     // Hardcoded admin credentials
     private const ADMIN_USERNAME = 'admin';
     private const ADMIN_PASSWORD = 'admin123';
@@ -57,12 +61,27 @@ class AdminController extends Controller
                 'admin_login_time' => now()
             ]);
 
+            // Log activity
+            $this->logActivity(
+                action: 'login',
+                description: 'Admin berhasil login ke sistem',
+                module: 'auth'
+            );
+
             // Regenerate session untuk keamanan
             $request->session()->regenerate();
 
             return redirect()->route('admin.dashboard')
                 ->with('success', 'Selamat datang, ' . self::ADMIN_NAME . '!');
         }
+
+        // Log activity untuk failed login
+        $this->logActivity(
+            action: 'login',
+            description: 'Percobaan login gagal dengan username: ' . $username,
+            module: 'auth',
+            status: 'failed'
+        );
 
         // Login gagal
         return back()
@@ -75,6 +94,13 @@ class AdminController extends Controller
      */
     public function logout(Request $request)
     {
+        // Log activity sebelum logout
+        $this->logActivity(
+            action: 'logout',
+            description: 'Admin logout dari sistem',
+            module: 'auth'
+        );
+
         // Hapus semua session admin
         session()->forget([
             'admin_logged_in',
@@ -197,6 +223,11 @@ class AdminController extends Controller
             ->where('status', 'Rejected')
             ->count();
 
+        // Ambil recent activities untuk real-time display
+        $recentActivities = AdminActivity::latest()
+            ->limit(10)
+            ->get();
+
         return view('admin.dashboard', compact(
             'totalPesanan',
             'totalPendapatan',
@@ -207,6 +238,7 @@ class AdminController extends Controller
             'pertumbuhanPetani',
             'pertumbuhanProduk',
             'recentOrders',
+            'recentActivities',
             'pendingCount',
             'processingCount',
             'readyCount',
@@ -354,15 +386,44 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'current_password' => 'nullable|string',
             'password' => 'nullable|string|min:6|confirmed',
         ], [
             'name.required' => 'Nama lengkap harus diisi',
             'email.required' => 'Email harus diisi',
             'email.email' => 'Format email tidak valid',
+            'avatar.image' => 'File harus berupa gambar',
+            'avatar.max' => 'Ukuran gambar maksimal 2MB',
             'password.min' => 'Password minimal 6 karakter',
             'password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
+
+        // Handle avatar upload
+        $avatarPath = session('admin_avatar');
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            
+            // Delete old avatar jika ada
+            if ($avatarPath && file_exists(public_path($avatarPath))) {
+                unlink(public_path($avatarPath));
+            }
+            
+            // Generate filename
+            $filename = 'admin_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = 'images/admin/';
+            
+            // Create directory if not exists
+            if (!file_exists(public_path($path))) {
+                mkdir(public_path($path), 0755, true);
+            }
+            
+            // Move file to public path
+            $file->move(public_path($path), $filename);
+            $avatarPath = $path . $filename;
+        }
 
         // Jika ingin update password, validasi password lama
         if ($request->filled('password')) {
@@ -384,11 +445,39 @@ class AdminController extends Controller
             return back()->with('error', 'Untuk keamanan, password admin hanya bisa diubah melalui konfigurasi sistem. Silakan hubungi developer.');
         }
 
-        // Update session admin (hanya name dan email yang bisa diubah via UI)
+        // Update session admin
         session([
             'admin_name' => $request->name,
             'admin_email' => $request->email,
+            'admin_phone' => $request->phone ?? '',
+            'admin_address' => $request->address ?? '',
+            'admin_avatar' => $avatarPath,
         ]);
+
+        // Log activity untuk update profil
+        $changes = [];
+        if ($request->name !== session('admin_name')) {
+            $changes['name'] = ['old' => session('admin_name'), 'new' => $request->name];
+        }
+        if ($request->email !== session('admin_email')) {
+            $changes['email'] = ['old' => session('admin_email'), 'new' => $request->email];
+        }
+        if ($request->hasFile('avatar')) {
+            $changes['avatar'] = ['old' => 'avatar lama', 'new' => 'avatar baru'];
+        }
+        if ($request->phone !== session('admin_phone')) {
+            $changes['phone'] = ['old' => session('admin_phone'), 'new' => $request->phone];
+        }
+        if ($request->address !== session('admin_address')) {
+            $changes['address'] = ['old' => session('admin_address'), 'new' => $request->address];
+        }
+
+        $this->logActivity(
+            action: 'update_profile',
+            description: 'Admin mengupdate profil dengan ' . count($changes) . ' perubahan',
+            module: 'profile',
+            changes: count($changes) > 0 ? $changes : null
+        );
 
         return redirect()->route('admin.profil')
             ->with('success', 'Profil berhasil diperbarui!');
@@ -488,6 +577,45 @@ class AdminController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memuat data'
+            ], 500);
+        }
+    }
+
+    /**
+     * Fetch recent admin activities (API endpoint untuk real-time update)
+     */
+    public function getActivities()
+    {
+        try {
+            $activities = AdminActivity::latest()
+                ->limit(10)
+                ->get()
+                ->map(function ($activity) {
+                    return [
+                        'id' => $activity->id,
+                        'action' => $activity->action,
+                        'description' => $activity->description,
+                        'module' => $activity->module,
+                        'related_id' => $activity->related_id,
+                        'status' => $activity->status,
+                        'icon' => $activity->icon,
+                        'activity_text' => $activity->activity_text,
+                        'changes' => is_string($activity->changes) ? json_decode($activity->changes, true) : $activity->changes,
+                        'created_at' => $activity->created_at->toIso8601String(),
+                        'time_diff' => $activity->created_at->diffForHumans()
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'activities' => $activities
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Get Activities Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memuat aktivitas'
             ], 500);
         }
     }

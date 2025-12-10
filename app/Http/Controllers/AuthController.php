@@ -298,7 +298,7 @@ class AuthController extends Controller
                     'total_amount' => $order->total_amount ?? 0,
                     'total_formatted' => number_format($order->total_amount ?? 0, 0, ',', '.'),
                     'customer_name' => $order->user->nama_lengkap ?? '-',
-                    'customer_phone' => $order->user->no_hp ?? '-',
+                    'customer_phone' => $order->user->no_telp ?? $order->user->no_hp ?? '-',
                     'customer_address' => $order->user->alamat ?? '-',
                     'village_office' => $order->village_office ?? '-',
                     'customer_notes' => null,

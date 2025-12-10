@@ -2,6 +2,165 @@
 
 @section('title', 'Profil Saya')
 
+@push('styles')
+<style>
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .modal-close:hover {
+        color: #1f2937;
+        background: #f3f4f6;
+        border-radius: 8px;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .order-detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.875rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .order-detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        font-size: 0.875rem;
+        color: #1f2937;
+        font-weight: 600;
+    }
+
+    .order-status-badge {
+        padding: 0.375rem 0.875rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-processing {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-pending {
+        background: #dbeafe;
+        color: #0c4a6e;
+    }
+
+    .modal-loading {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #10b981;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .modal-error {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+</style>
+@endpush
+
 @section('content')
 <div style="background: #f0f4f8; min-height: 100vh; padding: 2rem 0;">
     <div style="max-width: 1400px; margin: 0 auto; padding: 0 1.5rem;">
@@ -188,7 +347,7 @@
                                         </span>
                                     </td>
                                     <td style="padding: 1rem 1.5rem; text-align: center;">
-                                        <button style="background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 6px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.375rem;">
+                                        <button onclick="viewOrderDetail({{ $order->id }})" style="background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 6px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.375rem; transition: all 0.3s;">
                                             <i class="fas fa-eye"></i> Detail
                                         </button>
                                     </td>
@@ -218,4 +377,157 @@
         }
     }
 </style>
+
+<!-- Modal Order Detail -->
+<div id="orderDetailModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Detail Pesanan</h2>
+            <button class="modal-close" onclick="closeOrderDetail()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="modalBodyContent">
+            <!-- Content diisi oleh JavaScript -->
+        </div>
+    </div>
+</div>
+
+<script>
+    function viewOrderDetail(orderId) {
+        const modal = document.getElementById('orderDetailModal');
+        const modalBody = document.getElementById('modalBodyContent');
+        
+        // Tampilkan loading state
+        modalBody.innerHTML = `
+            <div class="modal-loading">
+                <div class="spinner"></div>
+                <p style="color: #6b7280;">Memuat detail pesanan...</p>
+            </div>
+        `;
+        
+        modal.classList.add('show');
+        
+        // Fetch data dari API
+        fetch(`/user/orders/${orderId}/detail`)
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+                if (data.success && data.order) {
+                    const order = data.order;
+                    
+                    // Format status untuk styling
+                    let statusClass = 'status-pending';
+                    if (order.status.toLowerCase() === 'processing') {
+                        statusClass = 'status-processing';
+                    } else if (order.status.toLowerCase() === 'completed' || order.status.toLowerCase() === 'selesai') {
+                        statusClass = 'status-completed';
+                    }
+                    
+                    // Build HTML untuk detail order
+                    const html = `
+                        <div class="order-detail-row">
+                            <span class="detail-label">Nomor Pesanan</span>
+                            <span class="detail-value">${order.order_number}</span>
+                        </div>
+                        <div class="order-detail-row">
+                            <span class="detail-label">Tanggal Pesanan</span>
+                            <span class="detail-value">${order.created_at}</span>
+                        </div>
+                        <div class="order-detail-row">
+                            <span class="detail-label">Status</span>
+                            <span class="order-status-badge ${statusClass}">${order.status}</span>
+                        </div>
+                        <div style="padding: 1rem 0; border-top: 2px solid #e5e7eb; border-bottom: 2px solid #e5e7eb; margin: 1rem 0;">
+                            <h3 style="font-size: 0.875rem; color: #6b7280; text-transform: uppercase; font-weight: 600; margin: 0 0 1rem 0;">Informasi Produk</h3>
+                            <div class="order-detail-row">
+                                <span class="detail-label">Nama Produk</span>
+                                <span class="detail-value">${order.product_name}</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="detail-label">Jumlah</span>
+                                <span class="detail-value">${order.quantity} unit</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="detail-label">Harga Satuan</span>
+                                <span class="detail-value">Rp ${order.unit_price_formatted}</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="detail-label">Subtotal</span>
+                                <span class="detail-value">Rp ${order.subtotal_formatted}</span>
+                            </div>
+                        </div>
+                        <div style="padding: 1rem 0; border-bottom: 2px solid #e5e7eb; margin-bottom: 1rem;">
+                            <h3 style="font-size: 0.875rem; color: #6b7280; text-transform: uppercase; font-weight: 600; margin: 0 0 1rem 0;">Informasi Pembeli</h3>
+                            <div class="order-detail-row">
+                                <span class="detail-label">Nama</span>
+                                <span class="detail-value">${order.customer_name}</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="detail-label">No. Telepon</span>
+                                <span class="detail-value">${order.customer_phone}</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="detail-label">Alamat</span>
+                                <span class="detail-value">${order.customer_address}</span>
+                            </div>
+                            <div class="order-detail-row">
+                                <span class="detail-label">Balai Desa</span>
+                                <span class="detail-value">${order.village_office || '-'}</span>
+                            </div>
+                        </div>
+                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
+                            <div class="order-detail-row" style="border-bottom: none;">
+                                <span class="detail-label" style="font-size: 1rem; font-weight: 700;">Total Pesanan</span>
+                                <span class="detail-value" style="font-size: 1rem; color: #10b981;">Rp ${order.total_formatted}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    modalBody.innerHTML = html;
+                } else {
+                    modalBody.innerHTML = `
+                        <div class="modal-error">
+                            <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
+                            ${data.message || 'Gagal memuat data pesanan. Coba lagi nanti.'}
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                modalBody.innerHTML = `
+                    <div class="modal-error">
+                        <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
+                        Terjadi kesalahan: ${error.message}
+                    </div>
+                `;
+            });
+    }
+
+    function closeOrderDetail() {
+        const modal = document.getElementById('orderDetailModal');
+        modal.classList.remove('show');
+    }
+
+    // Close modal ketika klik di luar modal
+    document.getElementById('orderDetailModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeOrderDetail();
+        }
+    });
+
+    // Close modal dengan tombol ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeOrderDetail();
+        }
+    });
+</script>
 @endsection
