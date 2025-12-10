@@ -294,7 +294,7 @@ class AdminNotificationController extends Controller
         $users = User::orderBy('nama_lengkap')->get();
         $totalUsers = User::count();
 
-        return view('admin.notifications.create', compact('users', 'totalUsers'));
+        return view('admin.notifications.send', compact('users', 'totalUsers'));
     }
 
     /**
@@ -327,7 +327,7 @@ class AdminNotificationController extends Controller
             'is_read' => false
         ]);
 
-        return redirect()->route('admin.notifications.create')
+        return redirect()->route('admin.notifications.send')
             ->with('success', "Notifikasi berhasil dikirim ke {$user->nama_lengkap}");
     }
 
@@ -364,7 +364,7 @@ class AdminNotificationController extends Controller
             $count++;
         }
 
-        return redirect()->route('admin.notifications.create')
+        return redirect()->route('admin.notifications.send')
             ->with('success', "Notifikasi berhasil dikirim ke {$count} user");
     }
 
