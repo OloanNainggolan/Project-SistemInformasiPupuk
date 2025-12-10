@@ -474,17 +474,13 @@
                 @foreach($pupukProducts as $product)
                     <div class="product-card" data-product-id="{{ $product->id_produk }}">
                         <div class="product-image">
-                            @php
-                                $imgSrc = asset('images/products/placeholder.jpg');
-                                if ($product->primaryImage && $product->primaryImage->image_path) {
-                                    $imgSrc = asset($product->primaryImage->image_path);
-                                } elseif ($product->gambar) {
-                                    $imgSrc = asset($product->gambar);
-                                }
-                            @endphp
-                            <img src="{{ $imgSrc }}" 
-                                 alt="{{ $product->nama_produk }}"
-                                 onerror="this.src='{{ asset('images/products/placeholder.jpg') }}'">
+                            @if($product->primaryImage)
+                                <img src="{{ asset($product->primaryImage->image_path) }}" alt="{{ $product->nama_produk }}">
+                            @elseif($product->gambar)
+                                <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama_produk }}">
+                            @else
+                                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=300&fit=crop" alt="{{ $product->nama_produk }}">
+                            @endif
                         </div>
                         <div class="product-info">
                             <h3>{{ $product->nama_produk }}</h3>
@@ -541,18 +537,14 @@
             <div class="card-grid">
                 @foreach($bibitProducts as $product)
                     <div class="product-card" data-product-id="{{ $product->id_produk }}">
-                        <div class="modal-product-image">
-                            @php
-                                $modalImgSrc = asset('images/products/placeholder.jpg');
-                                if ($product->primaryImage && $product->primaryImage->image_path) {
-                                    $modalImgSrc = asset($product->primaryImage->image_path);
-                                } elseif ($product->gambar) {
-                                    $modalImgSrc = asset($product->gambar);
-                                }
-                            @endphp
-                            <img src="{{ $modalImgSrc }}" 
-                                 alt="{{ $product->nama_produk }}"
-                                 onerror="this.src='{{ asset('images/products/placeholder.jpg') }}'">
+                        <div class="product-image">
+                            @if($product->primaryImage)
+                                <img src="{{ asset($product->primaryImage->image_path) }}" alt="{{ $product->nama_produk }}">
+                            @elseif($product->gambar)
+                                <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama_produk }}">
+                            @else
+                                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&h=300&fit=crop" alt="{{ $product->nama_produk }}">
+                            @endif
                         </div>
                         <div class="product-info">
                             <h3>{{ $product->nama_produk }}</h3>

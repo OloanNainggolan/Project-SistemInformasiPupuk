@@ -11,6 +11,7 @@ class Message extends Model
         'sender_type',
         'subject',
         'message',
+        'priority',
         'status',
         'reply_to',
     ];
@@ -49,5 +50,11 @@ class Message extends Model
     public function scopeFromAdmin($query)
     {
         return $query->where('sender_type', 'admin');
+    }
+
+    // Get link untuk notifikasi
+    public function getLink()
+    {
+        return route('admin.notifications.show', $this->id);
     }
 }
