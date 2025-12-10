@@ -543,39 +543,6 @@
 
                 <div class="user-name">{{ $user->nama_lengkap }}</div>
                 <div class="user-email">{{ $user->email }}</div>
-
-                <label for="foto" class="upload-btn">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
-                    </svg>
-                    Pilih Foto Baru
-                </label>
-                <input type="file" 
-                       id="foto" 
-                       name="foto" 
-                       class="hidden" 
-                       accept="image/jpeg,image/png,image/jpg,image/gif"
-                       onchange="previewPhoto(this)">
-
-                @if($user->foto)
-                <button type="button" class="remove-btn" onclick="removeFoto()">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                    Hapus Foto
-                </button>
-                @endif
-
-                <div class="file-info">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                    </svg>
-                    JPG, PNG, GIF. Max 2MB
-                </div>
-
-                @error('foto')
-                <p class="error-text" style="margin-top: 0.5rem;">{{ $message }}</p>
-                @enderror
             </div>
 
             <!-- Form Sections -->

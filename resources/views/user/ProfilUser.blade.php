@@ -991,9 +991,9 @@
                                         <span class="status-badge {{ $statusClass }}">{{ $order->status }}</span>
                                     </td>
                                     <td>
-                                        <button class="btn-detail" onclick="showOrderDetail({{ $order->id }})">
+                                        <a href="{{ route('user.orders.detail', $order->id) }}" class="btn-detail">
                                             <i class="fas fa-eye"></i> Detail
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach

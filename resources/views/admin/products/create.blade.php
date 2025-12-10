@@ -212,108 +212,170 @@
         display: block;
     }
 
-    /* File Upload */
-    .file-upload-area {
-        border: 2px dashed var(--green);
-        background: var(--mint);
-        border-radius: 12px;
-        padding: 30px 20px;
-        text-align: center;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .file-upload-area:hover {
-        background: #d1fae5;
-        border-color: var(--green-dark);
-    }
-
-    .file-upload-area input[type="file"] {
-        display: none;
-    }
-
-    .file-upload-label {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
+    /* Flexible Image Upload */
+    .btn-add-image {
+        display: inline-flex;
         align-items: center;
-        gap: 12px;
-    }
-
-    .file-upload-icon {
-        width: 60px;
-        height: 60px;
+        gap: 8px;
+        padding: 12px 24px;
         background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         color: white;
-        font-size: 24px;
-    }
-
-    .file-upload-text {
+        border: none;
+        border-radius: 10px;
         font-weight: 600;
-        color: var(--green-dark);
-        font-size: 15px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2);
     }
 
-    .file-upload-hint {
+    .btn-add-image:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+    }
+
+    .btn-add-image:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .btn-add-image i {
+        font-size: 16px;
+    }
+
+    .upload-hint {
+        margin-top: 10px;
         font-size: 12px;
         color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
-    /* Image Previews */
-    .image-previews {
+    .upload-hint i {
+        color: var(--green);
+    }
+
+    /* Image Previews Grid */
+    .image-previews-grid {
         margin-top: 20px;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 15px;
     }
 
-    .preview-item {
+    .image-preview-item {
         position: relative;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        background: #f9fafb;
+        background: white;
+        transition: all 0.3s ease;
     }
 
-    .preview-item img {
+    .image-preview-item:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .image-preview-item img {
         width: 100%;
-        height: 150px;
+        height: 160px;
         object-fit: cover;
+        display: block;
     }
 
-    .preview-badge {
+    .image-preview-badge {
         position: absolute;
         top: 8px;
         left: 8px;
         background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
         color: white;
         padding: 6px 12px;
-        border-radius: 6px;
+        border-radius: 8px;
         font-size: 11px;
         font-weight: 700;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
-    .preview-info {
-        padding: 10px;
-        background: white;
+    .image-preview-badge i {
+        font-size: 12px;
+    }
+
+    .image-remove-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        background: rgba(239, 68, 68, 0.95);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-remove-btn:hover {
+        background: #dc2626;
+        transform: scale(1.1);
+    }
+
+    .image-preview-info {
+        padding: 12px;
+        background: #f9fafb;
         border-top: 1px solid #e5e7eb;
     }
 
-    .preview-name {
+    .image-preview-name {
         font-size: 12px;
         font-weight: 600;
         color: #1f2937;
         margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .preview-size {
+    .image-preview-size {
         font-size: 11px;
         color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .image-preview-size i {
+        font-size: 10px;
+    }
+
+    .image-counter-info {
+        margin-top: 15px;
+        padding: 12px 16px;
+        background: var(--mint);
+        border-radius: 8px;
+        border: 1px solid #d1fae5;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--green-dark);
+    }
+
+    .image-counter-info i {
+        font-size: 16px;
+        color: var(--green);
     }
 
     /* Form Actions */
@@ -564,35 +626,45 @@
             @enderror
         </div>
 
-        <!-- Upload Gambar (Multiple) -->
+        <!-- Upload Gambar (Flexible) -->
         <div class="form-group">
             <label class="form-label">
                 <i class="fas fa-images"></i>
-                Gambar Produk (Multiple)
+                Gambar Produk
                 <span class="required">*</span>
             </label>
-            <div class="file-upload-area">
-                <input 
-                    type="file" 
-                    id="gambar" 
-                    name="gambar[]" 
-                    accept="image/*"
-                    multiple
-                    required
-                >
-                <label for="gambar" class="file-upload-label">
-                    <div class="file-upload-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <div class="file-upload-text">Klik untuk upload gambar</div>
-                    <div class="file-upload-hint">JPG, PNG, GIF | Max 2MB/gambar | Min 1, Max 5 gambar</div>
-                </label>
+            
+            <!-- Add Image Button -->
+            <button 
+                type="button" 
+                id="addImageBtn" 
+                class="btn-add-image"
+                onclick="document.getElementById('gambarInput').click()"
+            >
+                <i class="fas fa-plus-circle"></i>
+                Tambah Gambar
+            </button>
+            
+            <!-- Hidden File Input -->
+            <input 
+                type="file" 
+                id="gambarInput" 
+                accept="image/jpeg,image/jpg,image/png,image/gif"
+                style="display: none;"
+            >
+            
+            <div class="upload-hint">
+                <i class="fas fa-info-circle"></i>
+                JPG, PNG, GIF | Max 2MB per gambar | Maksimal 5 gambar total
             </div>
             
-            <div id="fileInfo" style="margin-top: 10px; font-size: 13px; color: #6b7280;"></div>
-            
             <!-- Image Previews Container -->
-            <div class="image-previews" id="imagePreviews"></div>
+            <div class="image-previews-grid" id="imagePreviewsGrid"></div>
+            
+            <div id="imageCounter" class="image-counter-info">
+                <i class="fas fa-images"></i>
+                <span id="imageCountText">0 gambar dipilih</span>
+            </div>
             
             @error('gambar')
                 <span class="invalid-feedback">{{ $message }}</span>
@@ -708,75 +780,129 @@
         }
     });
 
-    // Handle multiple file upload preview
-    document.getElementById('gambar').addEventListener('change', function(e) {
-        const files = e.target.files;
-        const fileInfo = document.getElementById('fileInfo');
-        const imagePreviews = document.getElementById('imagePreviews');
+    // Flexible Image Upload System
+    let selectedImages = []; // Array to store selected images
+    const maxImages = 5;
+    const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+    // Handle file selection
+    document.getElementById('gambarInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
         
-        // Clear previous previews
-        imagePreviews.innerHTML = '';
-        
-        if (files.length > 0) {
-            // Validasi jumlah file
-            if (files.length > 5) {
-                alert('Maksimal upload 5 gambar!');
-                e.target.value = '';
-                fileInfo.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-exclamation-circle"></i> Maksimal 5 gambar!</span>';
-                return;
-            }
+        if (!file) return;
 
-            // Update file info
-            fileInfo.innerHTML = `<span style="color: #059669;"><i class="fas fa-check-circle"></i> ${files.length} gambar dipilih</span>`;
-            
-            // Show previews for each file
-            Array.from(files).forEach((file, index) => {
-                // Validasi ukuran file
-                const maxSize = 2 * 1024 * 1024; // 2MB in bytes
-                if (file.size > maxSize) {
-                    alert(`File ${file.name} terlalu besar! Maksimal 2MB per file.`);
-                    e.target.value = '';
-                    imagePreviews.innerHTML = '';
-                    fileInfo.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-exclamation-circle"></i> Ada file yang terlalu besar!</span>';
-                    return;
-                }
-
-                // Validasi tipe file
-                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-                if (!allowedTypes.includes(file.type)) {
-                    alert(`File ${file.name} bukan gambar yang valid!`);
-                    e.target.value = '';
-                    imagePreviews.innerHTML = '';
-                    fileInfo.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-exclamation-circle"></i> Format file tidak valid!</span>';
-                    return;
-                }
-
-                // Create preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewItem = document.createElement('div');
-                    previewItem.className = 'preview-item';
-                    
-                    const badge = index === 0 ? '<div class="preview-badge">Gambar Utama</div>' : '';
-                    const fileSize = (file.size / 1024).toFixed(2);
-                    
-                    previewItem.innerHTML = `
-                        ${badge}
-                        <img src="${e.target.result}" alt="Preview ${index + 1}">
-                        <div class="preview-info">
-                            <div class="preview-name">Gambar ${index + 1}</div>
-                            <div class="preview-size">${fileSize} KB</div>
-                        </div>
-                    `;
-                    
-                    imagePreviews.appendChild(previewItem);
-                }
-                reader.readAsDataURL(file);
-            });
-        } else {
-            fileInfo.innerHTML = '<span style="color: #6b7280;">Belum ada file dipilih</span>';
+        // Check if max images reached
+        if (selectedImages.length >= maxImages) {
+            alert(`Maksimal ${maxImages} gambar!`);
+            e.target.value = '';
+            return;
         }
+
+        // Validate file size
+        if (file.size > maxFileSize) {
+            alert(`File ${file.name} terlalu besar! Maksimal 2MB per gambar.`);
+            e.target.value = '';
+            return;
+        }
+
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            alert(`File ${file.name} bukan format gambar yang valid!`);
+            e.target.value = '';
+            return;
+        }
+
+        // Add image to array
+        selectedImages.push(file);
+        
+        // Reset file input
+        e.target.value = '';
+        
+        // Update UI
+        updateImagePreviews();
+        updateImageCounter();
+        updateAddButton();
     });
+
+    // Update image previews
+    function updateImagePreviews() {
+        const grid = document.getElementById('imagePreviewsGrid');
+        grid.innerHTML = '';
+
+        selectedImages.forEach((file, index) => {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'image-preview-item';
+                
+                const isPrimary = index === 0;
+                const badge = isPrimary 
+                    ? `<div class="image-preview-badge"><i class="fas fa-star"></i> Gambar Utama</div>` 
+                    : '';
+                
+                const fileSize = (file.size / 1024).toFixed(2);
+                
+                previewDiv.innerHTML = `
+                    ${badge}
+                    <button type="button" class="image-remove-btn" onclick="removeImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <img src="${e.target.result}" alt="${file.name}">
+                    <div class="image-preview-info">
+                        <div class="image-preview-name" title="${file.name}">${file.name}</div>
+                        <div class="image-preview-size">
+                            <i class="fas fa-weight-hanging"></i>
+                            ${fileSize} KB
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(previewDiv);
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Remove image from array
+    window.removeImage = function(index) {
+        selectedImages.splice(index, 1);
+        updateImagePreviews();
+        updateImageCounter();
+        updateAddButton();
+    };
+
+    // Update image counter
+    function updateImageCounter() {
+        const counter = document.getElementById('imageCountText');
+        const count = selectedImages.length;
+        
+        if (count === 0) {
+            counter.textContent = '0 gambar dipilih';
+            counter.parentElement.style.display = 'none';
+        } else {
+            counter.textContent = `${count} gambar dipilih (maksimal ${maxImages})`;
+            counter.parentElement.style.display = 'inline-flex';
+        }
+    }
+
+    // Update add button state
+    function updateAddButton() {
+        const btn = document.getElementById('addImageBtn');
+        
+        if (selectedImages.length >= maxImages) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Maksimal gambar tercapai';
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-plus-circle"></i> Tambah Gambar';
+        }
+    }
+
+    // Initialize
+    updateImageCounter();
 
     // Trigger auto-fill on page load if old value exists
     window.addEventListener('DOMContentLoaded', function() {
@@ -786,41 +912,69 @@
         }
     });
 
-    // Form validation before submit
+    // Form validation and submission
     document.getElementById('productForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
         const hargaSubsidi = parseFloat(document.getElementById('harga_subsidi').value);
         const hargaNormal = parseFloat(document.getElementById('harga_normal').value);
-        const files = document.getElementById('gambar').files;
         
         // Validasi harga
         if (hargaSubsidi >= hargaNormal) {
-            e.preventDefault();
             alert('Harga subsidi harus lebih kecil dari harga normal!');
             return false;
         }
 
-        // Validasi jumlah file
-        if (files.length === 0) {
-            e.preventDefault();
+        // Validasi jumlah gambar
+        if (selectedImages.length === 0) {
             alert('Minimal upload 1 gambar produk!');
             return false;
         }
 
-        if (files.length > 5) {
-            e.preventDefault();
-            alert('Maksimal upload 5 gambar produk!');
-            return false;
-        }
-
-        // Validasi ukuran setiap file
-        const maxSize = 2 * 1024 * 1024; // 2MB
-        for (let i = 0; i < files.length; i++) {
-            if (files[i].size > maxSize) {
-                e.preventDefault();
-                alert(`File ${files[i].name} terlalu besar! Maksimal 2MB per file.`);
-                return false;
+        // Create FormData and append all fields
+        const formData = new FormData(this);
+        
+        // Remove any existing gambar[] fields
+        formData.delete('gambar[]');
+        
+        // Add selected images to FormData
+        selectedImages.forEach((file, index) => {
+            formData.append('gambar[]', file);
+        });
+        
+        // Submit form via fetch
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
-        }
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.success) {
+                window.location.href = data.redirect || '{{ route("admin.products.index") }}';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan produk. Silakan coba lagi.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+        
+        return false;
     });
 </script>
 @endpush

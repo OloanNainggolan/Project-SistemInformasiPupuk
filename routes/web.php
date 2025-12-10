@@ -88,6 +88,12 @@ Route::middleware('auth')->group(function () {
     })->name('notifikasi.detail');
     Route::get('/notifikasi/{id}', [UserNotificationController::class, 'show'])->name('notifikasi.show')->where('id', '[0-9]+');
     Route::post('/notifikasi/{id}/reply', [UserNotificationController::class, 'reply'])->name('notifikasi.reply')->where('id', '[0-9]+');
+    Route::post('/notifikasi/{id}/mark-read', [UserNotificationController::class, 'markAsRead'])->name('user.notifications.markAsRead')->where('id', '[0-9]+');
+    Route::delete('/notifikasi/{id}', [UserNotificationController::class, 'destroy'])->name('user.notifications.destroy')->where('id', '[0-9]+');
+    
+    // System Notification Routes
+    Route::post('/notifications/{id}/mark-read', [UserNotificationController::class, 'markNotificationAsRead'])->where('id', '[0-9]+');
+    Route::delete('/notifications/{id}', [UserNotificationController::class, 'destroyNotification'])->where('id', '[0-9]+');
     
     // Product Order Routes
     Route::prefix('user')->name('user.')->group(function () {
@@ -99,7 +105,7 @@ Route::middleware('auth')->group(function () {
         })->name('pesan-berhasil');
         
         // Order Detail Route
-        Route::get('/orders/{id}/detail', [AuthController::class, 'getOrderDetail'])->name('orders.detail');
+        Route::get('/orders/{id}/detail', [AuthController::class, 'showOrderDetail'])->name('orders.detail');
         
         // Debug route
         Route::get('/debug-orders', function() {
