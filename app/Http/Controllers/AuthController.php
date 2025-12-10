@@ -76,11 +76,20 @@ class AuthController extends Controller
             'password' => $password,
         ];
 
+        // Debug logging
+        \Log::info('Login attempt', [
+            'field_type' => $fieldType,
+            'field_value' => $loginField,
+            'credentials' => [$fieldType => $loginField, 'password' => '***']
+        ]);
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            \Log::info('Login successful', ['user_id' => Auth::id()]);
             return redirect()->route('dashboard');
         }
 
+        \Log::warning('Login failed', ['field' => $loginField]);
         return back()->withErrors(['login' => 'Username/Email atau password salah.'])->withInput();
     }
 
@@ -164,7 +173,7 @@ class AuthController extends Controller
 
     public function editProfil()
     {
-        $user = Auth::user();
+        $user = auth()->user();
         return view('user.EditProfil', compact('user'));
     }
 
@@ -243,6 +252,19 @@ class AuthController extends Controller
         $user->update($validated);
 
         return redirect()->route('profil.user')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
+     * Show order detail page
+     */
+    public function showOrderDetail($id)
+    {
+        $order = \App\Models\Order::with(['product', 'user'])
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('user.order-detail', compact('order'));
     }
 
     public function getOrderDetail($id)

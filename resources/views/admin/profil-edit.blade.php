@@ -372,7 +372,6 @@
     <div class="form-card">
         <form action="{{ route('admin.profil.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
 
             <!-- Avatar Upload Section -->
             <div class="avatar-upload-section">

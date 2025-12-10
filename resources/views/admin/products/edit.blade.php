@@ -307,6 +307,172 @@
         color: #6b7280;
     }
 
+    /* Flexible Image Upload */
+    .btn-add-image {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2);
+    }
+
+    .btn-add-image:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+    }
+
+    .btn-add-image:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .btn-add-image i {
+        font-size: 16px;
+    }
+
+    .upload-hint {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .upload-hint i {
+        color: var(--green);
+    }
+
+    /* Image Previews Grid */
+    .image-previews-grid {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+    }
+
+    .image-preview-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .image-preview-item:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .image-preview-item img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .image-preview-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .image-preview-badge i {
+        font-size: 12px;
+    }
+
+    .image-remove-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        background: rgba(239, 68, 68, 0.95);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-remove-btn:hover {
+        background: #dc2626;
+        transform: scale(1.1);
+    }
+
+    .image-preview-info {
+        padding: 12px;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .image-preview-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .image-preview-size {
+        font-size: 11px;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .image-preview-size i {
+        font-size: 10px;
+    }
+
+    .image-counter-info {
+        margin-top: 15px;
+        padding: 12px 16px;
+        background: var(--mint);
+        border-radius: 8px;
+        border: 1px solid #d1fae5;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--green-dark);
+    }
+
+    .image-counter-info i {
+        font-size: 16px;
+        color: var(--green);
+    }
+
     .form-actions {
         display: flex;
         gap: 15px;
@@ -563,33 +729,45 @@
         </div>
         @endif
 
-        <!-- Upload Gambar Baru (Optional) -->
+        <!-- Upload Gambar Baru (Optional - Flexible) -->
         <div class="form-group">
             <label class="form-label">
                 <i class="fas fa-images"></i>
-                Upload Gambar Baru (Opsional - Maksimal 5 gambar total)
+                Tambah Gambar Baru (Opsional)
             </label>
-            <div class="file-upload-area">
-                <input 
-                    type="file" 
-                    id="gambar" 
-                    name="gambar[]" 
-                    accept="image/*"
-                    multiple
-                    onchange="previewNewImages(this)"
-                >
-                <label for="gambar" class="file-upload-label">
-                    <div class="file-upload-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <div class="file-upload-text">Klik untuk upload gambar baru (dapat pilih beberapa)</div>
-                    <div class="file-upload-hint">JPG, PNG, GIF | Max 2MB per gambar | Maksimal 5 gambar total</div>
-                </label>
+            
+            <!-- Add Image Button -->
+            <button 
+                type="button" 
+                id="addNewImageBtn" 
+                class="btn-add-image"
+                onclick="document.getElementById('newGambarInput').click()"
+            >
+                <i class="fas fa-plus-circle"></i>
+                Tambah Gambar Baru
+            </button>
+            
+            <!-- Hidden File Input -->
+            <input 
+                type="file" 
+                id="newGambarInput" 
+                accept="image/jpeg,image/jpg,image/png,image/gif"
+                style="display: none;"
+            >
+            
+            <div class="upload-hint">
+                <i class="fas fa-info-circle"></i>
+                JPG, PNG, GIF | Max 2MB per gambar | Maksimal 5 gambar total (termasuk yang sudah ada)
             </div>
-            <div id="newImagePreview" style="display: none; margin-top: 15px;">
-                <div style="font-size: 13px; font-weight: 700; color: #6b7280; margin-bottom: 10px;">Preview Gambar Baru:</div>
-                <div id="previewGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;"></div>
+            
+            <!-- New Image Previews Container -->
+            <div class="image-previews-grid" id="newImagePreviewsGrid"></div>
+            
+            <div id="newImageCounter" class="image-counter-info" style="display: none;">
+                <i class="fas fa-images"></i>
+                <span id="newImageCountText">0 gambar baru</span>
             </div>
+            
             @error('gambar')
                 <span class="invalid-feedback">{{ $message }}</span>
             @enderror
@@ -697,53 +875,140 @@
         document.getElementById('imageCount').textContent = existingImages;
     }
     
-    // Preview new images
-    function previewNewImages(input) {
-        const previewContainer = document.getElementById('newImagePreview');
-        const previewGrid = document.getElementById('previewGrid');
+    // Flexible Image Upload System for New Images
+    let newSelectedImages = []; // Array to store new selected images
+    const maxImages = 5;
+    const maxFileSize = 2 * 1024 * 1024; // 2MB
+
+    // Handle new file selection
+    document.getElementById('newGambarInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
         
-        // Clear previous previews
-        previewGrid.innerHTML = '';
+        if (!file) return;
+
+        // Get existing image count (not marked for deletion)
+        const existingCount = document.querySelectorAll('.current-image-item:not(.marked-delete)').length;
+        const totalCount = existingCount + newSelectedImages.length;
+
+        // Check if max images reached
+        if (totalCount >= maxImages) {
+            alert(`Maksimal ${maxImages} gambar total! Anda sudah memiliki ${existingCount} gambar dan ${newSelectedImages.length} gambar baru.`);
+            e.target.value = '';
+            return;
+        }
+
+        // Validate file size
+        if (file.size > maxFileSize) {
+            alert(`File ${file.name} terlalu besar! Maksimal 2MB per gambar.`);
+            e.target.value = '';
+            return;
+        }
+
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            alert(`File ${file.name} bukan format gambar yang valid!`);
+            e.target.value = '';
+            return;
+        }
+
+        // Add image to array
+        newSelectedImages.push(file);
         
-        if (input.files && input.files.length > 0) {
-            const existingCount = document.querySelectorAll('.current-image-item:not(.marked-delete)').length;
-            const totalImages = existingCount + input.files.length;
+        // Reset file input
+        e.target.value = '';
+        
+        // Update UI
+        updateNewImagePreviews();
+        updateNewImageCounter();
+        updateAddNewImageButton();
+    });
+
+    // Update new image previews
+    function updateNewImagePreviews() {
+        const grid = document.getElementById('newImagePreviewsGrid');
+        grid.innerHTML = '';
+
+        newSelectedImages.forEach((file, index) => {
+            const reader = new FileReader();
             
-            if (totalImages > 5) {
-                alert(`Maksimal 5 gambar! Anda sudah memiliki ${existingCount} gambar. Silakan pilih maksimal ${5 - existingCount} gambar baru.`);
-                input.value = '';
-                previewContainer.style.display = 'none';
-                return;
-            }
-            
-            Array.from(input.files).forEach((file, index) => {
-                const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'image-preview-item';
                 
-                reader.onload = function(e) {
-                    const previewItem = document.createElement('div');
-                    previewItem.style.cssText = 'position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
-                    
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.cssText = 'width: 100%; height: 140px; object-fit: cover;';
-                    
-                    const badge = document.createElement('div');
-                    badge.textContent = 'Baru';
-                    badge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase;';
-                    
-                    previewItem.appendChild(img);
-                    previewItem.appendChild(badge);
-                    previewGrid.appendChild(previewItem);
-                };
+                const fileSize = (file.size / 1024).toFixed(2);
                 
-                reader.readAsDataURL(file);
-            });
+                previewDiv.innerHTML = `
+                    <div class="image-preview-badge">
+                        <i class="fas fa-plus-circle"></i> Baru
+                    </div>
+                    <button type="button" class="image-remove-btn" onclick="removeNewImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <img src="${e.target.result}" alt="${file.name}">
+                    <div class="image-preview-info">
+                        <div class="image-preview-name" title="${file.name}">${file.name}</div>
+                        <div class="image-preview-size">
+                            <i class="fas fa-weight-hanging"></i>
+                            ${fileSize} KB
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(previewDiv);
+            };
             
-            previewContainer.style.display = 'block';
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Remove new image from array
+    window.removeNewImage = function(index) {
+        newSelectedImages.splice(index, 1);
+        updateNewImagePreviews();
+        updateNewImageCounter();
+        updateAddNewImageButton();
+    };
+
+    // Update new image counter
+    function updateNewImageCounter() {
+        const counter = document.getElementById('newImageCountText');
+        const counterDiv = document.getElementById('newImageCounter');
+        const count = newSelectedImages.length;
+        
+        if (count === 0) {
+            counterDiv.style.display = 'none';
         } else {
-            previewContainer.style.display = 'none';
+            counter.textContent = `${count} gambar baru akan ditambahkan`;
+            counterDiv.style.display = 'inline-flex';
         }
     }
+
+    // Update add new image button state
+    function updateAddNewImageButton() {
+        const btn = document.getElementById('addNewImageBtn');
+        const existingCount = document.querySelectorAll('.current-image-item:not(.marked-delete)').length;
+        const totalCount = existingCount + newSelectedImages.length;
+        
+        if (totalCount >= maxImages) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Maksimal gambar tercapai';
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-plus-circle"></i> Tambah Gambar Baru';
+        }
+    }
+
+    // Update button state when existing images are marked for deletion
+    const originalToggleDeleteImage = window.toggleDeleteImage;
+    window.toggleDeleteImage = function(button, imageId) {
+        originalToggleDeleteImage(button, imageId);
+        updateAddNewImageButton();
+    };
+
+    // Initialize
+    updateNewImageCounter();
+    updateAddNewImageButton();
 
     // Auto-fill kategori berdasarkan tipe produk
     document.getElementById('tipe_produk').addEventListener('change', function() {
@@ -773,27 +1038,71 @@
         }
     });
 
-    // Form validation before submit
+    // Form validation and submission
     document.getElementById('productForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
         const hargaSubsidi = parseFloat(document.getElementById('harga_subsidi').value);
         const hargaNormal = parseFloat(document.getElementById('harga_normal').value);
         
         // Validasi harga
         if (hargaSubsidi >= hargaNormal) {
-            e.preventDefault();
             alert('Harga subsidi harus lebih kecil dari harga normal!');
             return false;
         }
         
         // Validasi total gambar
         const existingCount = document.querySelectorAll('.current-image-item:not(.marked-delete)').length;
-        const newFiles = document.getElementById('gambar').files.length;
         
-        if (existingCount === 0 && newFiles === 0) {
-            e.preventDefault();
+        if (existingCount === 0 && newSelectedImages.length === 0) {
             alert('Produk harus memiliki minimal 1 gambar!');
             return false;
         }
+
+        // Create FormData and append all fields
+        const formData = new FormData(this);
+        
+        // Remove any existing gambar[] fields from old input
+        formData.delete('gambar[]');
+        
+        // Add new selected images to FormData
+        newSelectedImages.forEach((file, index) => {
+            formData.append('gambar[]', file);
+        });
+        
+        // Submit form
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.success) {
+                window.location.href = data.redirect || '{{ route("admin.products.index") }}';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan produk. Silakan coba lagi.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+        
+        return false;
     });
 </script>
 @endpush

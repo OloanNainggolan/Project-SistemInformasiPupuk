@@ -10,11 +10,22 @@ class Order extends Model
     protected $fillable = [
         'order_number',
         'user_id',
+        'product_id',
+        'quantity',
+        'unit_price',
+        'subtotal',
+        'discount_amount',
+        'discount_id',
         'village_office',
+        'customer_name',
+        'customer_phone',
+        'customer_address',
+        'customer_notes',
         'items',
         'total_amount',
         'status',
         'confirmed_by_user',
+        'confirmed_at',
         'rejection_reason'
     ];
 
