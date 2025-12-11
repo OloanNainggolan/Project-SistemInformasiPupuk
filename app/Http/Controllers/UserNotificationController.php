@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Message;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 
 class UserNotificationController extends Controller
@@ -14,45 +15,91 @@ class UserNotificationController extends Controller
      */
     public function index()
     {
-        // Only get parent messages (not replies)
+        // Get parent messages (conversations)
         $messages = Message::where('user_id', Auth::id())
             ->whereNull('reply_to') // Only parent messages
             ->with(['replyToMessage', 'replies'])
             ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->get();
 
-        $unreadCount = Message::where('user_id', Auth::id())
+        // Get system notifications from notifications table
+        $systemNotifications = Notification::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Debug: Check notification status
+        \Log::info('System Notifications:', $systemNotifications->map(function($n) {
+            return ['id' => $n->id, 'title' => $n->title, 'is_read' => $n->is_read, 'status' => $n->status];
+        })->toArray());
+
+        // Merge and sort by created_at
+        $allNotifications = $messages->concat($systemNotifications)
+            ->sortByDesc('created_at')
+            ->values();
+
+        // Paginate manually
+        $perPage = 15;
+        $currentPage = request()->get('page', 1);
+        $notifications = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allNotifications->forPage($currentPage, $perPage),
+            $allNotifications->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        // Count unread
+        $unreadMessagesCount = Message::where('user_id', Auth::id())
             ->fromAdmin()
             ->unread()
             ->count();
+        
+        $unreadNotificationsCount = Notification::where('user_id', Auth::id())
+            ->where('is_read', 0)
+            ->count();
 
-        return view('user.notifications.index', compact('messages', 'unreadCount'));
+        $unreadCount = $unreadMessagesCount + $unreadNotificationsCount;
+
+        return view('user.notifications.index', compact('notifications', 'unreadCount'));
     }
 
     /**
-     * Display the specified message thread
+     * Display the specified notification (Message or System Notification)
      */
     public function show($id)
     {
-        // Get the parent message
+        // Try to find as Message first
         $message = Message::with(['user', 'replies' => function($query) {
                 $query->orderBy('created_at', 'asc');
             }, 'replies.user', 'replyToMessage'])
             ->where('user_id', Auth::id())
+            ->find($id);
+
+        if ($message) {
+            // Mark this message and all unread replies as read
+            if ($message->sender_type === 'admin' && $message->status === 'unread') {
+                $message->update(['status' => 'read']);
+            }
+            
+            // Mark all unread replies as read
+            $message->replies()
+                ->where('sender_type', 'admin')
+                ->where('status', 'unread')
+                ->update(['status' => 'read']);
+
+            return view('user.notifications.show', compact('message'));
+        }
+
+        // Try to find as System Notification
+        $notification = Notification::where('user_id', Auth::id())
             ->findOrFail($id);
 
-        // Mark this message and all unread replies as read
-        if ($message->sender_type === 'admin' && $message->status === 'unread') {
-            $message->update(['status' => 'read']);
+        // Mark as read
+        if ($notification->is_read == 0) {
+            $notification->update(['is_read' => 1, 'status' => 'read']);
         }
-        
-        // Mark all unread replies as read
-        $message->replies()
-            ->where('sender_type', 'admin')
-            ->where('status', 'unread')
-            ->update(['status' => 'read']);
 
-        return view('user.notifications.show', compact('message'));
+        return view('user.notifications.show-notification', compact('notification'));
     }
 
     /**
@@ -91,27 +138,44 @@ class UserNotificationController extends Controller
     }
 
     /**
-     * Delete message
+     * Delete message or notification
      */
     public function destroy($id)
     {
-        $message = Message::where('user_id', Auth::id())->findOrFail($id);
+        // Try to find as Message first
+        $message = Message::where('user_id', Auth::id())->find($id);
         
-        // Delete all replies first
-        $message->replies()->delete();
-        
-        // Delete the message
-        $message->delete();
+        if ($message) {
+            // Delete all replies first
+            $message->replies()->delete();
+            
+            // Delete the message
+            $message->delete();
+
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Pesan berhasil dihapus'
+                ]);
+            }
+
+            return redirect()->route('notifikasi')
+                ->with('success', 'Pesan berhasil dihapus');
+        }
+
+        // Try as Notification
+        $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
+        $notification->delete();
 
         if (request()->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Pesan berhasil dihapus'
+                'message' => 'Notifikasi berhasil dihapus'
             ]);
         }
 
         return redirect()->route('notifikasi')
-            ->with('success', 'Pesan berhasil dihapus');
+            ->with('success', 'Notifikasi berhasil dihapus');
     }
 
     /**
@@ -137,6 +201,47 @@ class UserNotificationController extends Controller
 
         return redirect()->route('notifikasi')
             ->with('success', "{$deleted} pesan berhasil dihapus");
+    }
+
+    /**
+     * Mark system notification as read
+     */
+    public function markNotificationAsRead($id)
+    {
+        $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
+        
+        if ($notification->is_read == 0) {
+            $notification->update(['is_read' => 1, 'status' => 'read']);
+        }
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Notifikasi telah ditandai sebagai dibaca'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Notifikasi telah ditandai sebagai dibaca');
+    }
+
+    /**
+     * Delete system notification
+     */
+    public function destroyNotification($id)
+    {
+        $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
+        
+        $notification->delete();
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Notifikasi berhasil dihapus'
+            ]);
+        }
+
+        return redirect()->route('notifikasi')
+            ->with('success', 'Notifikasi berhasil dihapus');
     }
 
     /**

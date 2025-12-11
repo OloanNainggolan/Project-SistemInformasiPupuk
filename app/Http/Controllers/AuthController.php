@@ -58,59 +58,39 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // Validasi input
-        $credentials = $request->validate([
+        // Validasi input - form menggunakan field 'login' yang bisa username atau email
+        $request->validate([
             'login' => 'required|string',
-            'password' => 'required|string',
-        ], [
-            'login.required' => 'Username atau Email wajib diisi',
-            'password.required' => 'Password wajib diisi',
+            'password' => 'required',
         ]);
 
-        // Tentukan apakah login menggunakan email atau username
-        $loginType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginField = $request->input('login');
+        $password = $request->input('password');
 
-        // Cari user berdasarkan email atau username
-        $user = User::where($loginType, $credentials['login'])->first();
+        // Cek apakah input adalah email atau username
+        $fieldType = filter_var($loginField, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (!$user) {
-            return back()
-                ->withInput($request->only('login'))
-                ->withErrors(['login' => 'Username atau Email tidak ditemukan']);
+        // Attempt login dengan email atau username
+        $credentials = [
+            $fieldType => $loginField,
+            'password' => $password,
+        ];
+
+        // Debug logging
+        \Log::info('Login attempt', [
+            'field_type' => $fieldType,
+            'field_value' => $loginField,
+            'credentials' => [$fieldType => $loginField, 'password' => '***']
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            \Log::info('Login successful', ['user_id' => Auth::id()]);
+            return redirect()->route('dashboard');
         }
 
-        // Cek apakah password di-hash atau plain text
-        $passwordMatch = false;
-        
-        // Cek jika password sudah di-hash dengan bcrypt
-        if (str_starts_with($user->password, '$2y$')) {
-            // Password sudah di-hash, gunakan Hash::check
-            $passwordMatch = Hash::check($credentials['password'], $user->password);
-        } else {
-            // Password masih plain text (backward compatibility)
-            $passwordMatch = ($credentials['password'] === $user->password);
-            
-            // Jika match, hash password untuk keamanan di masa depan
-            if ($passwordMatch) {
-                $user->password = Hash::make($credentials['password']);
-                $user->save();
-            }
-        }
-
-        if (!$passwordMatch) {
-            return back()
-                ->withInput($request->only('login'))
-                ->withErrors(['password' => 'Password yang Anda masukkan salah']);
-        }
-
-        // Login user
-        Auth::login($user, $request->filled('remember'));
-
-        // Regenerate session untuk keamanan
-        $request->session()->regenerate();
-
-        // Redirect ke dashboard
-        return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
+        \Log::warning('Login failed', ['field' => $loginField]);
+        return back()->withErrors(['login' => 'Username/Email atau password salah.'])->withInput();
     }
 
     public function logout(Request $request)
@@ -130,38 +110,57 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         
-        // Ambil pesanan user dengan relasi product
-        $orders = \App\Models\Order::with(['user', 'product'])
+        // Ambil semua pesanan untuk statistik
+        $allOrders = \App\Models\Order::with(['product'])
             ->where('user_id', $user->id)
             ->where('confirmed_by_user', true)
-            ->orderBy('created_at', 'desc')
             ->get();
         
         // Hitung statistik REAL dari database
-        $totalPesanan = $orders->count();
+        $totalPesanan = $allOrders->count();
         
         // Hitung total pupuk yang diterima (status Completed atau Ready)
         $pupukDiterima = 0;
         $bibitDiterima = 0;
         $totalPenghematan = 0;
         
-        foreach ($orders as $order) {
-            // Hitung penghematan dari semua pesanan yang confirmed
-            $totalPenghematan += $order->savings ?? 0;
+        foreach ($allOrders as $order) {
+            // Semua data ada di items JSON
+            $items = $order->items;
             
-            // Hitung pupuk/bibit yang sudah diterima (status Completed atau Ready)
-            if (in_array($order->status, ['Completed', 'Ready for Pickup'])) {
-                if ($order->product) {
-                    $qty = $order->quantity ?? 0;
+            // Decode jika masih string
+            if (is_string($items)) {
+                $items = json_decode($items, true);
+            }
+            
+            if (is_array($items)) {
+                foreach ($items as $item) {
+                    $itemQty = (int) ($item['quantity'] ?? $item['qty'] ?? 0);
+                    $itemType = $item['type'] ?? '';
+                    $itemPrice = (float) ($item['price'] ?? $item['unit_price'] ?? 0);
                     
-                    if ($order->product->tipe_produk === 'pupuk') {
-                        $pupukDiterima += $qty;
-                    } elseif ($order->product->tipe_produk === 'bibit') {
-                        $bibitDiterima += $qty;
+                    // Gunakan field type dari items
+                    if ($itemType === 'pupuk') {
+                        $pupukDiterima += $itemQty;
+                    } elseif ($itemType === 'bibit') {
+                        $bibitDiterima += $itemQty;
+                    }
+                    
+                    // Hitung penghematan (asumsi subsidi 30% dari harga normal)
+                    if ($itemPrice > 0) {
+                        $estimatedNormalPrice = $itemPrice / 0.7; // Harga subsidi = 70% dari normal
+                        $totalPenghematan += ($estimatedNormalPrice - $itemPrice) * $itemQty;
                     }
                 }
             }
         }
+        
+        // Ambil pesanan dengan pagination untuk ditampilkan
+        $orders = \App\Models\Order::with(['product'])
+            ->where('user_id', $user->id)
+            ->where('confirmed_by_user', true)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         
         return view('user.ProfilUser', compact(
             'orders',
@@ -174,10 +173,169 @@ class AuthController extends Controller
 
     public function editProfil()
     {
-        return view('user.EditProfil');
+        $user = auth()->user();
+        return view('user.EditProfil', compact('user'));
     }
 
     public function updateProfil(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validation rules
+        $rules = [
+            'nama_lengkap' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'alamat_balai_desa' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'no_telp' => 'required|string|max:20',
+            'kabupaten' => 'nullable|string|max:255',
+            'kode_pos' => 'nullable|string|max:10',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'luas_lahan' => 'nullable|numeric|min:0|max:999999.99',
+            'jenis_tanaman' => 'nullable|string|max:255',
+            'lokasi_lahan' => 'nullable|string|max:255',
+        ];
+
+        // Only add username validation if username is filled
+        if ($request->filled('username')) {
+            $rules['username'] = 'nullable|string|max:255|unique:users,username,' . $user->id;
+        }
+
+        // Only validate password if user fills in the password field
+        if ($request->filled('password')) {
+            $rules['current_password'] = 'required';
+            $rules['password'] = 'required|min:3|confirmed';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Check password if user wants to change it
+        if ($request->filled('password')) {
+            // Verify current password
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai.'])->withInput();
+            }
+            // Update with new password
+            $validated['password'] = Hash::make($request->password);
+        }
+
+        // Handle file upload
+        if ($request->hasFile('foto')) {
+            // Delete old photo if exists
+            if ($user->foto && file_exists(public_path($user->foto))) {
+                @unlink(public_path($user->foto));
+            }
+
+            $file = $request->file('foto');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/profiles'), $filename);
+            $validated['foto'] = 'images/profiles/' . $filename;
+        }
+
+        // Handle photo removal
+        if ($request->has('remove_foto') && $request->input('remove_foto') == '1') {
+            if ($user->foto && file_exists(public_path($user->foto))) {
+                @unlink(public_path($user->foto));
+            }
+            $validated['foto'] = null;
+        }
+
+        // Remove password fields if not changing password
+        if (!$request->filled('password')) {
+            unset($validated['password']);
+        }
+
+        // Remove password_confirmation from validated data
+        unset($validated['password_confirmation'], $validated['current_password']);
+
+        // Update user
+        $user->update($validated);
+
+        return redirect()->route('profil.user')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
+     * Show order detail page
+     */
+    public function showOrderDetail($id)
+    {
+        $order = \App\Models\Order::with(['product', 'user'])
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('user.order-detail', compact('order'));
+    }
+
+    public function getOrderDetail($id)
+    {
+        try {
+            $order = \App\Models\Order::with('user')
+                ->where('id', $id)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
+
+            // Parse items dari JSON
+            $items = $order->items;
+            
+            // Jika masih string, decode dulu
+            if (is_string($items)) {
+                $items = json_decode($items, true);
+            }
+            
+            $productName = 'Produk tidak tersedia';
+            $quantity = 0;
+            $unitPrice = 0;
+            $subtotal = 0;
+            
+            if (is_array($items) && count($items) > 0) {
+                // Ambil item pertama (biasanya hanya 1 item per order)
+                $firstItem = $items[0];
+                $productName = $firstItem['product_name'] ?? $firstItem['name'] ?? 'Produk tidak tersedia';
+                $quantity = (int) ($firstItem['quantity'] ?? $firstItem['qty'] ?? 0);
+                $unitPrice = (float) ($firstItem['price'] ?? $firstItem['unit_price'] ?? 0);
+                $subtotal = $quantity * $unitPrice;
+            }
+            
+            // Jika masih 0, estimasi dari total_amount
+            if ($quantity === 0 && $order->total_amount > 0 && $unitPrice > 0) {
+                $quantity = (int) ceil($order->total_amount / $unitPrice);
+            }
+
+            return response()->json([
+                'success' => true,
+                'order' => [
+                    'id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'status' => $order->status,
+                    'created_at' => $order->created_at->format('d F Y, H:i'),
+                    'product_name' => $productName,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'unit_price_formatted' => number_format($unitPrice, 0, ',', '.'),
+                    'subtotal' => $subtotal,
+                    'subtotal_formatted' => number_format($subtotal, 0, ',', '.'),
+                    'discount_amount' => 0,
+                    'discount_formatted' => '0',
+                    'total_amount' => $order->total_amount ?? 0,
+                    'total_formatted' => number_format($order->total_amount ?? 0, 0, ',', '.'),
+                    'customer_name' => $order->user->nama_lengkap ?? '-',
+                    'customer_phone' => $order->user->no_hp ?? '-',
+                    'customer_address' => $order->user->alamat ?? '-',
+                    'village_office' => $order->village_office ?? '-',
+                    'customer_notes' => null,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Order Detail Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Pesanan tidak ditemukan'
+            ], 404);
+        }
+    }
+
+    public function updateProfilSecondMethod(Request $request)
     {
         $user = Auth::user();
 
@@ -277,12 +435,6 @@ class AuthController extends Controller
             'no_telp' => 'required|string|max:20',
             'email' => 'required|email',
             'pesan' => 'required|string',
-        ], [
-            'nama.required' => 'Nama wajib diisi',
-            'no_telp.required' => 'Nomor telepon wajib diisi',
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
-            'pesan.required' => 'Pesan wajib diisi',
         ]);
 
         // Jika user login, simpan ke tabel messages (sistem notifikasi baru)
@@ -328,33 +480,22 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'new_password' => 'required|string|min:4|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d).+$/',
+            'new_password' => 'required|string|min:4|confirmed',
         ], [
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
             'new_password.required' => 'Password baru wajib diisi',
             'new_password.min' => 'Password minimal 4 karakter',
-            'new_password.regex' => 'Password harus mengandung huruf dan angka',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
-        // Cari user berdasarkan email
         $user = User::where('email', $validated['email'])->first();
-        
         if (!$user) {
-            return back()
-                ->withInput(['email' => $validated['email']])
-                ->withErrors(['email' => 'Alamat email tidak terdaftar dalam sistem.']);
+            return back()->withInput()->withErrors(['email' => 'Alamat email tidak terdaftar.']);
         }
 
-        // Update password dengan hash
+        // Update password
         $user->password = Hash::make($validated['new_password']);
         $user->save();
 
-        // Log informasi untuk debugging (optional, bisa dihapus di production)
-        \Log::info('Password reset successful for user: ' . $user->email);
-
-        return redirect()->route('login')
-            ->with('success', 'Password berhasil direset! Silakan login dengan password baru Anda.');
+        return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
     }
 }

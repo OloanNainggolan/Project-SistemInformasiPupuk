@@ -134,7 +134,7 @@ class AdminController extends Controller
             ->count();
         $pendapatanBulanLalu = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
-            ->whereBetween('completed_at', [$startOfLastMonth, $endOfLastMonth])
+            ->whereBetween('updated_at', [$startOfLastMonth, $endOfLastMonth])
             ->sum('total_amount');
         $petaniBulanLalu = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
         $produkBulanLalu = Product::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
@@ -147,7 +147,7 @@ class AdminController extends Controller
             ->count();
         $pendapatanBulanIni = Order::where('confirmed_by_user', true)
             ->where('status', 'Completed')
-            ->whereBetween('completed_at', [$startOfThisMonth, $endOfThisMonth])
+            ->whereBetween('updated_at', [$startOfThisMonth, $endOfThisMonth])
             ->sum('total_amount');
         $petaniBulanIni = User::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
         $produkBulanIni = Product::whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])->count();
@@ -392,5 +392,103 @@ class AdminController extends Controller
 
         return redirect()->route('admin.profil')
             ->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
+     * API untuk menampilkan detail data di modal dashboard
+     */
+    public function getDashboardDetail($type)
+    {
+        try {
+            switch($type) {
+                case 'orders':
+                    $data = Order::with('user')
+                        ->where('confirmed_by_user', true)
+                        ->orderBy('created_at', 'desc')
+                        ->get()
+                        ->map(function($order) {
+                            // Parse items untuk mendapatkan nama produk
+                            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
+                            $productName = 'Produk tidak tersedia';
+                            if (is_array($items) && count($items) > 0) {
+                                $productName = $items[0]['product_name'] ?? $items[0]['name'] ?? 'Produk tidak tersedia';
+                            }
+                            
+                            return [
+                                'order_number' => $order->order_number,
+                                'customer_name' => $order->user->nama_lengkap ?? 'Guest',
+                                'product_name' => $productName,
+                                'total_amount' => $order->total_amount,
+                                'status' => $order->status,
+                                'date' => $order->created_at->locale('id')->translatedFormat('d M Y, H:i')
+                            ];
+                        });
+                    break;
+
+                case 'revenue':
+                    $data = Order::with('user')
+                        ->where('confirmed_by_user', true)
+                        ->where('status', 'Completed')
+                        ->orderBy('updated_at', 'desc')
+                        ->get()
+                        ->map(function($order) {
+                            return [
+                                'order_number' => $order->order_number,
+                                'customer_name' => $order->user->nama_lengkap ?? 'Guest',
+                                'total_amount' => $order->total_amount,
+                                'date' => $order->updated_at->locale('id')->translatedFormat('d M Y')
+                            ];
+                        });
+                    break;
+
+                case 'farmers':
+                    $data = User::orderBy('created_at', 'desc')
+                        ->get()
+                        ->map(function($user) {
+                            return [
+                                'nama_lengkap' => $user->nama_lengkap,
+                                'email' => $user->email,
+                                'no_telp' => $user->no_telp ?? '-',
+                                'alamat' => $user->alamat ?? '-',
+                                'joined_date' => $user->created_at->locale('id')->translatedFormat('d M Y')
+                            ];
+                        });
+                    break;
+
+                case 'products':
+                    $data = Product::orderBy('created_at', 'desc')
+                        ->get()
+                        ->map(function($product) {
+                            return [
+                                'nama_produk' => $product->nama_produk,
+                                'tipe_produk' => ucfirst($product->tipe_produk),
+                                'kategori' => $product->kategori,
+                                'stok_produk' => $product->stok_produk,
+                                'satuan' => $product->satuan ?? 'kg',
+                                'harga_subsidi' => $product->harga_subsidi,
+                                'harga_normal' => $product->harga_normal
+                            ];
+                        });
+                    break;
+
+                default:
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tipe data tidak valid'
+                    ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Dashboard Detail Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memuat data'
+            ], 500);
+        }
     }
 }

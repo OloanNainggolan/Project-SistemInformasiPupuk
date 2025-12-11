@@ -718,24 +718,45 @@
                 <a href="{{ route('notifikasi') }}" class="notification-icon" title="Notifikasi">
                     <i class="fas fa-bell"></i>
                     @php
+                        // Count unread messages from admin (conversations)
                         $unreadMessages = \App\Models\Message::where('user_id', Auth::id())
+                            ->whereNull('reply_to')
+                            ->where('subject', 'NOT LIKE', '%Update Status Pesanan%')
+                            ->where('subject', 'NOT LIKE', '%Status Pesanan Diperbarui%')
                             ->fromAdmin()
                             ->unread()
                             ->count();
+                        
+                        // Count unread notifications from notifications table
+                        $unreadNotifications = \App\Models\Notification::where('user_id', Auth::id())
+                            ->where('is_read', false)
+                            ->count();
+                        
+                        // Count unread system messages (order status updates)
+                        $unreadSystemMessages = \App\Models\Message::where('user_id', Auth::id())
+                            ->whereNull('reply_to')
+                            ->where(function($q) {
+                                $q->where('subject', 'LIKE', '%Update Status Pesanan%')
+                                  ->orWhere('subject', 'LIKE', '%Status Pesanan Diperbarui%');
+                            })
+                            ->where('status', 'unread')
+                            ->count();
+                        
+                        $totalUnread = $unreadMessages + $unreadNotifications + $unreadSystemMessages;
                     @endphp
-                    @if($unreadMessages > 0)
-                        <span class="notification-badge">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}</span>
+                    @if($totalUnread > 0)
+                        <span class="notification-badge">{{ $totalUnread > 9 ? '9+' : $totalUnread }}</span>
                     @endif
                 </a>
 
                 <!-- Profile Section with Dropdown -->
                 <div class="profile-section">
                     <div class="profile-avatar">
-                        @if(auth()->user()->foto)
-                            <img src="{{ asset(auth()->user()->foto) }}" alt="Profile">
-                        @else
-                            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-                        @endif
+                      @if(Auth::user()->foto)
+                            <img src="{{ asset(Auth::user()->foto) }}" alt="Profile">
+                      @else
+                          {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                      @endif
                     </div>
                     <div class="profile-info">
                         <span class="profile-name">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'User' }}</span>

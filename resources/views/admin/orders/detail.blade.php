@@ -682,7 +682,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/api/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/orders/{{ $order->order_number }}/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
