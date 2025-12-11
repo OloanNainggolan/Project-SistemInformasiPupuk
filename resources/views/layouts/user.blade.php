@@ -279,6 +279,13 @@
             text-decoration: none;
             transition: background-color 0.2s;
             border-bottom: 1px solid #f0f0f0;
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
         }
 
         .dropdown-item:first-child {
@@ -298,6 +305,18 @@
             width: 20px;
             color: #004d00;
             font-size: 16px;
+        }
+
+        .dropdown-item.delete-account {
+            color: #dc3545;
+        }
+
+        .dropdown-item.delete-account i {
+            color: #dc3545;
+        }
+
+        .dropdown-item.delete-account:hover {
+            background-color: #fee2e2;
         }
 
         .dropdown-item.logout {
@@ -772,9 +791,13 @@
                             <i class="fas fa-edit"></i>
                             <span>Edit Profil</span>
                         </a>
+                        <button type="button" class="dropdown-item delete-account" onclick="confirmDeleteAccount()">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Hapus Akun</span>
+                        </button>
                         <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                             @csrf
-                            <button type="submit" class="dropdown-item logout" style="width: 100%; border: none; background: none; text-align: left; cursor: pointer; font-family: inherit; font-size: inherit;">
+                            <button type="submit" class="dropdown-item logout">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Keluar</span>
                             </button>
@@ -917,6 +940,75 @@
             }
         `;
         document.head.appendChild(style);
+    </script>
+
+    <!-- Delete Account Modal & Script -->
+    <div id="deleteAccountModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 60px; color: #dc3545;"></i>
+                <h2 style="margin: 15px 0 10px; color: #333;">Hapus Akun</h2>
+                <p style="color: #666; line-height: 1.6;">
+                    Apakah Anda yakin ingin menghapus akun Anda?<br>
+                    <strong style="color: #dc3545;">Tindakan ini tidak dapat dibatalkan!</strong><br>
+                    Semua data Anda akan dihapus secara permanen.
+                </p>
+            </div>
+            
+            <form action="{{ route('account.delete') }}" method="POST" id="deleteAccountForm">
+                @csrf
+                @method('DELETE')
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">
+                        Ketik "<strong>HAPUS AKUN SAYA</strong>" untuk konfirmasi:
+                    </label>
+                    <input type="text" id="confirmText" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;" placeholder="HAPUS AKUN SAYA" required>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button type="button" onclick="closeDeleteModal()" style="padding: 12px 30px; border: 2px solid #ddd; background: white; color: #666; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="submit" id="confirmDeleteBtn" disabled style="padding: 12px 30px; border: none; background: #dc3545; color: white; border-radius: 8px; cursor: not-allowed; font-weight: 600; transition: all 0.3s; opacity: 0.5;">
+                        <i class="fas fa-trash-alt"></i> Hapus Akun
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function confirmDeleteAccount() {
+            document.getElementById('deleteAccountModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteAccountModal').style.display = 'none';
+            document.getElementById('confirmText').value = '';
+            document.getElementById('confirmDeleteBtn').disabled = true;
+            document.getElementById('confirmDeleteBtn').style.opacity = '0.5';
+            document.getElementById('confirmDeleteBtn').style.cursor = 'not-allowed';
+        }
+
+        document.getElementById('confirmText').addEventListener('input', function(e) {
+            const btn = document.getElementById('confirmDeleteBtn');
+            if (e.target.value === 'HAPUS AKUN SAYA') {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('deleteAccountModal').addEventListener('click', function(e) {
+            if (e.target.id === 'deleteAccountModal') {
+                closeDeleteModal();
+            }
+        });
     </script>
 
     @stack('scripts')

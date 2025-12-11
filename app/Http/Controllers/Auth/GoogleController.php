@@ -13,9 +13,10 @@ class GoogleController extends Controller
 {
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->with(['prompt' => 'select_account'])  // Force Google to show account selection
+            ->redirect();
     }
-
     public function handleGoogleCallback(Request $request)
     {
         try {
@@ -24,63 +25,60 @@ class GoogleController extends Controller
             return redirect()->route('login')->with('error', 'Gagal login dengan Google: ' . $e->getMessage());
         }
 
-        // Temukan user berdasarkan email
-        $user = User::where('email', $gUser->getEmail())->first();
+        // Temukan user berdasarkan email atau google_id
+        $user = User::where('email', $gUser->getEmail())
+            ->orWhere('google_id', $gUser->getId())
+            ->first();
 
-        $isNew = false;
-        if (! $user) {
-            $isNew = true;
-            // Create minimal user but DO NOT finalize until required fields filled
-            $fullName = $gUser->getName() ?? $gUser->getNickname() ?? 'Pengguna';
+        if (!$user) {
+            // User baru - buat akun dengan data dari Google
+            $fullName = $gUser->getName() ?? $gUser->getNickname() ?? 'Pengguna Google';
             $email = $gUser->getEmail();
             $username = Str::slug(strstr($email, '@', true) ?: $fullName, '_');
+            
+            // Pastikan username unique
+            $originalUsername = $username;
+            $counter = 1;
+            while (User::where('username', $username)->exists()) {
+                $username = $originalUsername . '_' . $counter;
+                $counter++;
+            }
 
             $user = User::create([
-                'name' => $fullName,
-                'nama_lengkap' => null,
+                'nama_lengkap' => $fullName,
                 'username' => $username,
                 'email' => $email,
                 'password' => bcrypt(Str::random(40)),
                 'google_id' => $gUser->getId(),
                 'foto' => $gUser->getAvatar() ?? null,
-                // leave other required fields null to force completion step
-                'alamat' => null,
-                'alamat_balai_desa' => null,
-                'no_telp' => null,
+                // Isi field required dengan nilai default - user bisa update nanti di profil
+                'alamat' => 'Belum diisi',
+                'alamat_balai_desa' => 'Belum diisi',
+                'no_telp' => '-',
             ]);
         } else {
-            // Update google_id & foto jika belum ada
+            // User existing - update google_id & foto jika belum ada
             $updated = false;
+            
             if (empty($user->google_id)) {
                 $user->google_id = $gUser->getId();
                 $updated = true;
             }
+            
             if (empty($user->foto) && $gUser->getAvatar()) {
                 $user->foto = $gUser->getAvatar();
                 $updated = true;
             }
-            if ($updated) $user->save();
+            
+            if ($updated) {
+                $user->save();
+            }
         }
 
-        // If new user or required fields missing, redirect to completion form
-        $needsCompletion = $isNew || empty($user->nama_lengkap) || empty($user->alamat) || empty($user->alamat_balai_desa) || empty($user->no_telp);
-
-        // store temporary Google info in session for the completion form
-        session(['google_oauth' => [
-            'google_id' => $gUser->getId(),
-            'name' => $gUser->getName(),
-            'email' => $gUser->getEmail(),
-            'avatar' => $gUser->getAvatar(),
-            'user_id' => $user->id,
-        ]]);
-
-        if ($needsCompletion) {
-            return redirect()->route('register.complete.show');
-        }
-
-        // Otherwise login and go to dashboard
+        // Langsung login tanpa form tambahan
         Auth::login($user, true);
-        return redirect()->intended('/dashboard');
+        
+        return redirect()->intended('/dashboard')->with('success', 'Berhasil login dengan Google!');
     }
 
     /**
@@ -137,5 +135,21 @@ class GoogleController extends Controller
         session()->forget('google_oauth');
 
         return redirect()->intended('/dashboard')->with('success', 'Pendaftaran melalui Google berhasil diselesaikan.');
+    }
+
+    /**
+     * Alias untuk redirectToGoogle() - untuk kompatibilitas
+     */
+    public function redirect()
+    {
+        return $this->redirectToGoogle();
+    }
+
+    /**
+     * Alias untuk handleGoogleCallback() - untuk kompatibilitas
+     */
+    public function callback(Request $request)
+    {
+        return $this->handleGoogleCallback($request);
     }
 }

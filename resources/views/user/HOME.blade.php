@@ -531,4 +531,51 @@
     }
 </style>
 
+<script>
+    // Check if account was deleted (via query parameter)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('deleted') === '1') {
+        // Show success notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 16px;
+            font-weight: 600;
+            animation: slideIn 0.5s ease-out;
+        `;
+        notification.innerHTML = `
+            <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+            Akun Anda berhasil dihapus. Terima kasih telah menggunakan layanan kami.
+        `;
+        document.body.appendChild(notification);
+        
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Remove notification after 5 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.5s ease-out';
+            setTimeout(() => notification.remove(), 500);
+        }, 5000);
+        
+        // Clean URL
+        window.history.replaceState({}, document.title, '/');
+    }
+</script>
+
 @endsection

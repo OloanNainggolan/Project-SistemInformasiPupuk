@@ -570,7 +570,9 @@ class AdminController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $data
-            ]);
+            ])->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+              ->header('Pragma', 'no-cache')
+              ->header('Expires', '0');
 
         } catch (\Exception $e) {
             \Log::error('Dashboard Detail Error: ' . $e->getMessage());

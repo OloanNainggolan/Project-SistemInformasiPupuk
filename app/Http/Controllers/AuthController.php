@@ -505,4 +505,63 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
     }
+
+    /**
+     * Delete user account
+     */
+    public function deleteAccount(Request $request)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'User tidak ditemukan.');
+        }
+        
+        $userId = $user->id;
+        $fotoPath = $user->foto;
+        
+        try {
+            // Log untuk debugging
+            \Log::info("Deleting user account", ['user_id' => $userId, 'email' => $user->email]);
+            
+            // Hapus semua relasi user terlebih dahulu (gunakan DB transaction)
+            \DB::transaction(function() use ($userId, $user, $fotoPath) {
+                // Hapus semua pesanan user
+                \App\Models\Order::where('user_id', $userId)->delete();
+                
+                // Hapus semua notifikasi user
+                \App\Models\Notification::where('user_id', $userId)->delete();
+                
+                // Hapus semua pesan user
+                \App\Models\Message::where('user_id', $userId)->delete();
+                
+                // Hapus user dari database - INI YANG PENTING!
+                \DB::table('users')->where('id', $userId)->delete();
+                
+                // Log success
+                \Log::info("User deleted successfully", ['user_id' => $userId]);
+            });
+            
+            // Hapus foto profil jika ada (di luar transaction)
+            if ($fotoPath && file_exists(public_path($fotoPath))) {
+                @unlink(public_path($fotoPath));
+            }
+            
+        } catch (\Exception $e) {
+            \Log::error("Error deleting user account", [
+                'user_id' => $userId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return back()->with('error', 'Terjadi kesalahan saat menghapus akun: ' . $e->getMessage());
+        }
+        
+        // Logout dan clear session SETELAH semua operasi database selesai
+        Auth::logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+        
+        // Redirect ke homepage dengan query parameter untuk pesan sukses
+        return redirect('/?deleted=1')->withCookie(\Cookie::forget('laravel_session'));
+    }
 }
