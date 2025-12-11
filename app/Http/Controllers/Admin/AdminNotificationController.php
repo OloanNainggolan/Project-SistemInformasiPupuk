@@ -330,12 +330,13 @@ class AdminNotificationController extends Controller
             $count = 0;
 
             foreach ($users as $user) {
-                \App\Models\Notification::create([
+                Message::create([
                     'user_id' => $user->id,
-                    'title' => $validated['title'],
+                    'sender_type' => 'admin',
+                    'subject' => $validated['title'],
                     'message' => $validated['message'],
-                    'type' => $validated['type'],
-                    'is_read' => false
+                    'status' => 'unread',
+                    'reply_to' => null
                 ]);
                 $count++;
             }
@@ -347,12 +348,13 @@ class AdminNotificationController extends Controller
         // Jika kirim ke user spesifik
         $user = User::findOrFail($validated['user_id']);
 
-        \App\Models\Notification::create([
+        Message::create([
             'user_id' => $validated['user_id'],
-            'title' => $validated['title'],
+            'sender_type' => 'admin',
+            'subject' => $validated['title'],
             'message' => $validated['message'],
-            'type' => $validated['type'],
-            'is_read' => false
+            'status' => 'unread',
+            'reply_to' => null
         ]);
 
         return redirect()->route('admin.notifications.send')
@@ -382,12 +384,13 @@ class AdminNotificationController extends Controller
         $count = 0;
 
         foreach ($users as $user) {
-            \App\Models\Notification::create([
+            Message::create([
                 'user_id' => $user->id,
-                'title' => $validated['title'],
+                'sender_type' => 'admin',
+                'subject' => $validated['title'],
                 'message' => $validated['message'],
-                'type' => $validated['type'],
-                'is_read' => false
+                'status' => 'unread',
+                'reply_to' => null
             ]);
             $count++;
         }
