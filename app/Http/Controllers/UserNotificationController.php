@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserNotificationController extends Controller
 {
@@ -99,18 +100,30 @@ class UserNotificationController extends Controller
         $notification = Notification::where('user_id', Auth::id())
             ->findOrFail($id);
 
-        // Mark as read and force save
+        \Log::info("Notification accessed", [
+            'notification_id' => $id,
+            'user_id' => Auth::id(),
+            'is_read_before' => $notification->is_read,
+            'status_before' => $notification->status
+        ]);
+
+        // Mark as read - force update with timestamps
         if ($notification->is_read == 0) {
-            $notification->is_read = 1;
-            $notification->status = 'read';
-            $notification->save();
+            \DB::table('notifications')
+                ->where('id', $id)
+                ->where('user_id', Auth::id())
+                ->update([
+                    'is_read' => 1,
+                    'status' => 'read',
+                    'updated_at' => now()
+                ]);
             
-            // Refresh to get updated data
-            $notification->refresh();
+            // Refresh model to get updated data
+            $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
             
-            \Log::info("Notification {$id} marked as read", [
-                'user_id' => Auth::id(),
+            \Log::info("Notification marked as read", [
                 'notification_id' => $id,
+                'user_id' => Auth::id(),
                 'is_read_after' => $notification->is_read,
                 'status_after' => $notification->status
             ]);
@@ -120,14 +133,30 @@ class UserNotificationController extends Controller
     }
 
     /**
-     * Mark all messages as read
+     * Mark all messages and notifications as read
      */
     public function markAllAsRead()
     {
+        // Mark all messages as read
         Message::where('user_id', Auth::id())
             ->fromAdmin()
             ->unread()
             ->update(['status' => 'read']);
+
+        // Mark all system notifications as read - use DB query for reliability
+        \DB::table('notifications')
+            ->where('user_id', Auth::id())
+            ->where('is_read', 0)
+            ->update([
+                'is_read' => 1,
+                'status' => 'read',
+                'updated_at' => now()
+            ]);
+
+        \Log::info('All notifications marked as read', [
+            'user_id' => Auth::id(),
+            'timestamp' => now()
+        ]);
 
         return redirect()->route('notifikasi')
             ->with('success', 'Semua notifikasi telah ditandai sebagai dibaca');

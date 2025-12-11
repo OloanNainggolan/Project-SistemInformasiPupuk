@@ -73,7 +73,7 @@
         
         @if($isMessage)
         {{-- Message/Conversation Card --}}
-        <div class="message-card {{ $isUnread ? 'unread' : '' }}" data-message-id="{{ $item->id }}">
+        <div class="message-card type-message {{ $isUnread ? 'unread' : '' }}" data-message-id="{{ $item->id }}">
             <a href="{{ route('notifikasi.show', $item->id) }}" class="message-link">
                 <div class="message-header">
                     <div class="sender-info">
@@ -176,7 +176,7 @@
         </div>
         @else
         {{-- System Notification Card - Same style as Message Card --}}
-        <div class="message-card {{ $isUnread ? 'unread' : '' }}" data-notification-id="{{ $item->id }}">
+        <div class="message-card type-notification {{ $isUnread ? 'unread' : '' }}" data-notification-id="{{ $item->id }}">
             <a href="{{ route('notifikasi.show', $item->id) }}" class="message-link">
                 <div class="message-header">
                     <div class="sender-info">
@@ -235,14 +235,7 @@
 
                 <div class="message-preview">
                     <span class="preview-sender admin">Admin:</span>
-                    @php
-                        // Extract order number for preview
-                        $previewText = $item->message;
-                        if (preg_match('/No\.\s*Pesanan:\s*#?([A-Z0-9-]+)/i', $item->message, $matches)) {
-                            $previewText = "📋 No. Pesanan: #" . $matches[1] . "...";
-                        }
-                    @endphp
-                    {{ Str::limit($previewText, 120) }}
+                    {{ Str::limit($item->title, 100) }}
                 </div>
 
                 <div class="message-footer">
@@ -452,9 +445,19 @@
     transition: all 0.3s ease;
 }
 
-.message-card.unread {
-    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+/* Consistent green border for all card types */
+.message-card.type-message {
     border-left-color: #10b981;
+}
+
+.message-card.type-notification {
+    border-left-color: #10b981;
+}
+
+.message-card.unread {
+    background: #ffffff;
+    border-left-color: #10b981;
+    border-left-width: 5px;
 }
 
 .message-card:hover {
@@ -576,6 +579,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .message-subject i {
@@ -626,6 +632,12 @@
     color: #6b7280;
     line-height: 1.6;
     margin-bottom: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 48px;
 }
 
 .preview-sender {
@@ -1597,21 +1609,31 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Check if page needs refresh after reading notification
+// Check if page needs refresh after reading notification or marking all as read
 document.addEventListener('DOMContentLoaded', function() {
     // Check if coming back from reading notification
     if (sessionStorage.getItem('notifJustRead') === 'true') {
         console.log('Notifikasi baru saja dibaca, reload untuk update badge...');
         sessionStorage.removeItem('notifJustRead');
-        // Small delay to ensure smooth transition
+        // Force hard reload with cache bust
         setTimeout(function() {
-            window.location.reload(true);
+            window.location.href = window.location.pathname + '?t=' + Date.now();
         }, 100);
     }
     
+    // Check if "Mark All as Read" was just clicked
+    @if(session('success'))
+    console.log('Mark all as read successful, forcing reload...');
+    // Force hard reload after showing success message
+    setTimeout(function() {
+        window.location.href = window.location.pathname + '?t=' + Date.now();
+    }, 1500);
+    @endif
+    
     // Also check URL parameter for backward compatibility
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('refresh') === '1') {
+    if (urlParams.get('refresh') === '1' || urlParams.get('t')) {
+        // Clean URL after refresh
         const newUrl = window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
     }

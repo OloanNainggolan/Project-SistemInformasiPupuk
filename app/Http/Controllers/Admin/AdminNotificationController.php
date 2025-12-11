@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminNotificationController extends Controller
 {
@@ -324,6 +325,13 @@ class AdminNotificationController extends Controller
             'type.required' => 'Tipe notifikasi wajib dipilih'
         ]);
 
+        // Format pesan dengan template yang menarik
+        $formattedMessage = $this->formatAnnouncementMessage(
+            $validated['title'],
+            $validated['message'],
+            $validated['type']
+        );
+
         // Jika kirim ke semua user
         if ($validated['recipient_type'] === 'all') {
             $users = User::all();
@@ -333,15 +341,16 @@ class AdminNotificationController extends Controller
                 \App\Models\Notification::create([
                     'user_id' => $user->id,
                     'title' => $validated['title'],
-                    'message' => $validated['message'],
+                    'message' => $formattedMessage,
                     'type' => $validated['type'],
-                    'is_read' => false
+                    'is_read' => false,
+                    'status' => 'unread'
                 ]);
                 $count++;
             }
 
             return redirect()->route('admin.notifications.send')
-                ->with('success', "Notifikasi berhasil dikirim ke {$count} user");
+                ->with('success', "📢 Pengumuman berhasil dikirim ke {$count} user");
         }
 
         // Jika kirim ke user spesifik
@@ -350,13 +359,14 @@ class AdminNotificationController extends Controller
         \App\Models\Notification::create([
             'user_id' => $validated['user_id'],
             'title' => $validated['title'],
-            'message' => $validated['message'],
+            'message' => $formattedMessage,
             'type' => $validated['type'],
-            'is_read' => false
+            'is_read' => false,
+            'status' => 'unread'
         ]);
 
         return redirect()->route('admin.notifications.send')
-            ->with('success', "Notifikasi berhasil dikirim ke {$user->nama_lengkap}");
+            ->with('success', "📢 Pengumuman berhasil dikirim ke {$user->nama_lengkap}");
     }
 
     /**
@@ -368,7 +378,7 @@ class AdminNotificationController extends Controller
     }
 
     /**
-     * Broadcast notifikasi ke semua user
+     * Broadcast notifikasi ke semua user dengan format yang menarik
      */
     public function sendBroadcast(Request $request)
     {
@@ -378,22 +388,95 @@ class AdminNotificationController extends Controller
             'type' => 'required|in:info,success,warning,important'
         ]);
 
+        // Format pesan dengan template yang menarik
+        $formattedMessage = $this->formatAnnouncementMessage(
+            $validated['title'],
+            $validated['message'],
+            $validated['type']
+        );
+
         $users = User::all();
         $count = 0;
 
         foreach ($users as $user) {
+            // Create preview: combine title and message content
+            $preview = $validated['title'] . ': ' . Str::limit($validated['message'], 80);
+            
             \App\Models\Notification::create([
                 'user_id' => $user->id,
-                'title' => $validated['title'],
-                'message' => $validated['message'],
+                'title' => $preview, // Combined title + message for list preview
+                'message' => $formattedMessage, // Full formatted message for detail
                 'type' => $validated['type'],
-                'is_read' => false
+                'is_read' => false,
+                'status' => 'unread'
             ]);
             $count++;
         }
 
         return redirect()->route('admin.notifications.send')
-            ->with('success', "Notifikasi berhasil dikirim ke {$count} user");
+            ->with('success', "📢 Pengumuman berhasil dikirim ke {$count} user");
+    }
+
+    /**
+     * Format announcement message dengan template yang menarik
+     */
+    private function formatAnnouncementMessage($title, $message, $type)
+    {
+        // Icon dan warna berdasarkan tipe
+        $typeConfig = [
+            'info' => [
+                'emoji' => 'ℹ️',
+                'label' => 'INFORMASI',
+                'border' => '━'
+            ],
+            'success' => [
+                'emoji' => '✅',
+                'label' => 'PENGUMUMAN PENTING',
+                'border' => '━'
+            ],
+            'warning' => [
+                'emoji' => '⚠️',
+                'label' => 'PERHATIAN',
+                'border' => '━'
+            ],
+            'important' => [
+                'emoji' => '🔔',
+                'label' => 'PENGUMUMAN URGENT',
+                'border' => '━'
+            ]
+        ];
+
+        $config = $typeConfig[$type] ?? $typeConfig['info'];
+        $emoji = $config['emoji'];
+        $label = $config['label'];
+        $border = str_repeat($config['border'], 30);
+
+        // Build formatted message
+        $formatted = "{$border}\n";
+        $formatted .= "{$emoji} {$label} {$emoji}\n";
+        $formatted .= "{$border}\n\n";
+        
+        $formatted .= "📢 {$title}\n\n";
+        $formatted .= "{$border}\n\n";
+        
+        // Format message content
+        $formatted .= $message . "\n\n";
+        
+        $formatted .= "{$border}\n";
+        $formatted .= "📅 Dikirim: " . now()->format('d M Y, H:i') . " WIB\n";
+        $formatted .= "👤 Dari: Admin Sistem\n";
+        $formatted .= "{$border}\n\n";
+        
+        // Add footer based on type
+        if ($type === 'important' || $type === 'warning') {
+            $formatted .= "⚠️ Harap membaca dengan seksama!\n";
+        } else {
+            $formatted .= "💡 Terima kasih atas perhatiannya.\n";
+        }
+        
+        $formatted .= "📞 Hubungi admin jika ada pertanyaan.\n";
+
+        return $formatted;
     }
 
     /**

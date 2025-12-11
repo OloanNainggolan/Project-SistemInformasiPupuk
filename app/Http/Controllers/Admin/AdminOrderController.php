@@ -259,17 +259,29 @@ class AdminOrderController extends Controller
         // Buat pesan yang menarik dan informatif
         $emoji = $statusEmoji[$newStatus] ?? '📦';
         
+        // Get product name from relationship or items JSON
+        $productName = 'Produk';
+        if ($order->product && $order->product->nama_produk) {
+            $productName = $order->product->nama_produk;
+        } else {
+            // Try to get from items JSON
+            $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
+            if (is_array($items) && count($items) > 0 && isset($items[0]['product_name'])) {
+                $productName = $items[0]['product_name'];
+            }
+        }
+        
         $message = "━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
         $message .= "{$emoji} UPDATE STATUS PESANAN {$emoji}\n";
         $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
         
         $message .= "📋 No. Pesanan: #{$order->order_number}\n";
-        $message .= "📦 Produk: {$order->product_name}\n";
-        $message .= "📊 Jumlah: {$order->quantity} {$order->unit}\n";
+        $message .= "📦 Produk: {$productName}\n";
+        $message .= "📊 Jumlah: {$order->quantity} kg\n";
         
-        // Tampilkan balai desa jika ada
-        if ($order->village_office) {
-            $message .= "🏛️ Balai Desa: {$order->village_office}\n";
+        // Tampilkan balai desa jika ada dari customer_address
+        if (!empty($order->customer_address) && stripos($order->customer_address, 'balai desa') !== false) {
+            $message .= "🏛️ Balai Desa: {$order->customer_address}\n";
         }
         
         $message .= "\n";
@@ -286,32 +298,20 @@ class AdminOrderController extends Controller
             $message .= "Harap menunggu informasi selanjutnya.\n";
             $message .= "Estimasi proses: 1-3 hari kerja.\n\n";
             
-            if ($order->village_office) {
-                $message .= "📍 Lokasi Pengambilan Nantinya:\n";
-                $message .= "Balai Desa {$order->village_office}\n";
-            }
+            $message .= "📍 Lokasi Pengambilan Nantinya:\n";
+            $message .= "Balai Desa (Akan dikonfirmasi)\n";
         } elseif ($newStatus === 'Ready') {
             $message .= "✅ PESANAN SIAP DIAMBIL!\n";
             $message .= "Pesanan Anda sudah siap.\n";
             $message .= "Silakan datang untuk mengambil pesanan.\n\n";
             
-            // Tampilkan lokasi pengambilan sesuai pilihan user
-            if ($order->village_office) {
-                $message .= "📍 Lokasi Pengambilan:\n";
-                $message .= "🏛️ Balai Desa {$order->village_office}\n";
-            } else {
-                $message .= "📍 Lokasi Pengambilan:\n";
-                $message .= "Akan dikonfirmasi lebih lanjut\n";
-            }
+            $message .= "📍 Lokasi Pengambilan:\n";
+            $message .= "Balai Desa (Sesuai alamat pengiriman)\n";
             $message .= "⏰ Jam Operasional: 08.00 - 17.00 WIB\n";
             $message .= "📋 Harap bawa bukti pesanan dan identitas diri\n";
         } elseif ($newStatus === 'Completed') {
             $message .= "🎉 PESANAN SELESAI!\n";
-            
-            if ($order->village_office) {
-                $message .= "Pesanan telah diambil di Balai Desa {$order->village_office}.\n";
-            }
-            
+            $message .= "Pesanan telah diambil di Balai Desa.\n";
             $message .= "Terima kasih atas kepercayaan Anda!\n";
             $message .= "Semoga produk kami bermanfaat.\n\n";
             $message .= "💬 Silakan berikan ulasan Anda untuk membantu kami meningkatkan layanan.\n";
@@ -324,11 +324,8 @@ class AdminOrderController extends Controller
             $message .= "⏳ MENUNGGU KONFIRMASI\n";
             $message .= "Pesanan Anda telah diterima dan menunggu konfirmasi.\n";
             $message .= "Tim kami akan segera memproses pesanan Anda.\n\n";
-            
-            if ($order->village_office) {
-                $message .= "📍 Rencana Pengambilan:\n";
-                $message .= "Balai Desa {$order->village_office}\n";
-            }
+            $message .= "📍 Rencana Pengambilan:\n";
+            $message .= "Balai Desa (Sesuai alamat pengiriman)\n";
         }
         
         $message .= "\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
@@ -468,29 +465,12 @@ class AdminOrderController extends Controller
 
     /**
      * Send notification to user about status change
+     * Uses the same detailed format as sendOrderStatusNotification
      */
     private function sendNotificationToUser($order, $oldStatus, $newStatus)
     {
-        // Tentukan pesan notifikasi berdasarkan status
-        $statusMessages = [
-            'Pending' => 'Pesanan Anda sedang menunggu konfirmasi.',
-            'Processing' => 'Pesanan Anda sedang diproses oleh admin.',
-            'Ready for Pickup' => 'Pesanan Anda sudah siap untuk diambil!',
-            'Completed' => 'Pesanan Anda telah selesai. Terima kasih!',
-            'Cancelled' => 'Pesanan Anda telah dibatalkan.'
-        ];
-
-        $message = $statusMessages[$newStatus] ?? 'Status pesanan Anda telah diperbarui.';
-
-        // Buat notifikasi di tabel messages
-        Message::create([
-            'user_id' => $order->user_id,
-            'sender_type' => 'admin',
-            'subject' => "Update Status Pesanan #{$order->id}",
-            'message' => "Status pesanan Anda telah diubah dari <strong>{$oldStatus}</strong> menjadi <strong>{$newStatus}</strong>. {$message}",
-            'status' => 'unread',
-            'reply_to' => null
-        ]);
+        // Panggil method yang sama untuk konsistensi
+        $this->sendOrderStatusNotification($order, $oldStatus, $newStatus);
     }
 
     /**
