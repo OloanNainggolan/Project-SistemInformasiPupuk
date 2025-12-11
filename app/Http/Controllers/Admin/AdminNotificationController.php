@@ -338,7 +338,7 @@ class AdminNotificationController extends Controller
             $count = 0;
 
             foreach ($users as $user) {
-                \App\Models\Notification::create([
+                Message::create([
                     'user_id' => $user->id,
                     'title' => $validated['title'],
                     'message' => $formattedMessage,
@@ -356,7 +356,7 @@ class AdminNotificationController extends Controller
         // Jika kirim ke user spesifik
         $user = User::findOrFail($validated['user_id']);
 
-        \App\Models\Notification::create([
+        Message::create([
             'user_id' => $validated['user_id'],
             'title' => $validated['title'],
             'message' => $formattedMessage,

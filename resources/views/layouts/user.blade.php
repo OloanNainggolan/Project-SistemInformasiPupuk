@@ -742,7 +742,7 @@
                             ->where('status', 'unread')
                             ->count();
                         
-                        $totalUnread = $unreadMessages + $unreadNotifications + $unreadSystemMessages;
+                        $totalUnread = $unreadMessages + $unreadSystemMessages;
                     @endphp
                     @if($totalUnread > 0)
                         <span class="notification-badge">{{ $totalUnread > 9 ? '9+' : $totalUnread }}</span>

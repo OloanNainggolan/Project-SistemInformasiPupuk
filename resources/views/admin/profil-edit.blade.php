@@ -128,6 +128,16 @@
         justify-content: center;
         font-size: 40px;
         color: white;
+        transition: all 0.3s ease;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        overflow: hidden;
+    }
+
+    .avatar-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .avatar-upload-text {
@@ -146,12 +156,16 @@
         cursor: pointer;
         transition: all 0.2s ease;
         font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .btn-upload:hover {
         background: var(--green);
         color: white;
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
     }
 
     /* Form Group */
@@ -491,17 +505,161 @@
 
 @push('scripts')
 <script>
-    // Preview avatar when file is selected
-    document.getElementById('avatar').addEventListener('change', function(e) {
+    const avatarInput = document.getElementById('avatar');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const uploadBtn = document.querySelector('.btn-upload');
+    
+    // Handle file selection
+    avatarInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('avatarPreview');
-                preview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+        
+        // Validasi ukuran file (max 2MB)
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        if (file.size > maxSize) {
+            showAlert('❌ Ukuran file terlalu besar. Maksimal 2MB.', 'error');
+            avatarInput.value = '';
+            return;
+        }
+        
+        // Validasi tipe file
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            showAlert('❌ File harus berupa gambar (JPEG, PNG, JPG, atau GIF).', 'error');
+            avatarInput.value = '';
+            return;
+        }
+        
+        // Preview gambar
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Tambah loading effect
+            avatarPreview.style.opacity = '0.6';
+            avatarPreview.style.transform = 'scale(0.95)';
+            
+            // Update preview dengan smooth animation
+            setTimeout(() => {
+                avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`;
+                avatarPreview.style.opacity = '1';
+                avatarPreview.style.transform = 'scale(1)';
+            }, 150);
+        };
+        
+        // Tampilkan info file
+        const fileSize = (file.size / 1024).toFixed(2);
+        const existingInfo = avatarInput.parentElement.querySelector('.file-info');
+        if (existingInfo) {
+            existingInfo.remove();
+        }
+        
+        const fileInfo = document.createElement('p');
+        fileInfo.className = 'form-help file-info';
+        fileInfo.innerHTML = `
+            <i class="fas fa-check-circle" style="color: #10b981; margin-right: 4px;"></i>
+            File dipilih: <strong>${file.name}</strong> (${fileSize} KB)
+        `;
+        avatarInput.parentElement.appendChild(fileInfo);
+        
+        // Add visual feedback to button
+        uploadBtn.style.background = 'var(--green)';
+        uploadBtn.style.color = 'white';
+        uploadBtn.innerHTML = '<i class="fas fa-check"></i> Foto Dipilih';
+        
+        reader.readAsDataURL(file);
+    });
+
+    // Form submission handling
+    const form = document.querySelector('form');
+    const submitBtn = form.querySelector('.btn-primary');
+    const originalBtnText = submitBtn.innerHTML;
+    let isSubmitting = false;
+
+    form.addEventListener('submit', function(e) {
+        if (isSubmitting) {
+            e.preventDefault();
+            return;
+        }
+        
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+    });
+
+    // Restore button state if page is cached
+    window.addEventListener('pageshow', function() {
+        if (!isSubmitting) {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.innerHTML = originalBtnText;
         }
     });
+
+    // Alert function
+    function showAlert(message, type = 'info') {
+        // Remove existing alerts
+        const existingAlerts = document.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => alert.remove());
+        
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.innerHTML = `
+            <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+        
+        const pageTitle = document.querySelector('.page-title');
+        pageTitle.parentElement.insertBefore(alert, pageTitle.parentElement.firstChild);
+        
+        // Auto remove after 5 seconds
+        if (type === 'error') {
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+    }
+
+    // File input drag and drop
+    const uploadSection = document.querySelector('.avatar-upload-section');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadSection.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadSection.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadSection.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        uploadSection.style.background = '#e0f2fe';
+        uploadSection.style.borderColor = 'var(--green-light)';
+    }
+
+    function unhighlight(e) {
+        uploadSection.style.background = 'var(--mint)';
+        uploadSection.style.borderColor = 'var(--green-light)';
+    }
+
+    uploadSection.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            avatarInput.files = files;
+            const event = new Event('change', { bubbles: true });
+            avatarInput.dispatchEvent(event);
+        }
+    }
 </script>
 @endpush

@@ -27,6 +27,14 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pr
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process')->middleware('guest');
 
+// Google OAuth routes
+use App\Http\Controllers\Auth\GoogleController;
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+// Google OAuth registration completion (for collecting required fields)
+Route::get('/auth/google/complete', [GoogleController::class, 'showCompleteRegistration'])->name('register.complete.show');
+Route::post('/auth/google/complete', [GoogleController::class, 'completeRegistration'])->name('register.complete.process');
+
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
 
@@ -42,11 +50,6 @@ Route::get('/kontak', function () {
     return view('user.kontak');
 })->name('kontak');
 Route::post('/kontak/send', [AuthController::class, 'sendKontak'])->name('kontak.send');
-
-// Route untuk halaman Profil User
-Route::get('/profil', function () {
-    return view('user.ProfilUser');
-})->name('profil.user')->middleware('auth');
 
 // Route untuk Edit Profil
 Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit')->middleware('auth');
@@ -130,14 +133,16 @@ Route::prefix('admin')->group(function () {
 
     // Protected routes (harus login)
     Route::middleware('admin.auth')->group(function () {
+        // Dashboard Routes
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/dashboard/detail/{type}', [AdminController::class, 'getDashboardDetail'])->name('admin.dashboard.detail');
+        Route::get('/activities', [AdminController::class, 'getActivities'])->name('admin.activities');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         
         // Profile Routes
         Route::get('/profil', [AdminController::class, 'profil'])->name('admin.profil');
         Route::get('/profil/edit', [AdminController::class, 'editProfil'])->name('admin.profil.edit');
-        Route::post('/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
+        Route::match(['PUT', 'PATCH', 'POST'], '/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
         
         // Message/Notification Routes (2-way communication)
         Route::get('/notifications/send', [AdminNotificationController::class, 'createSend'])->name('admin.notifications.send');
@@ -153,36 +158,13 @@ Route::prefix('admin')->group(function () {
         Route::delete('/notifications/contact/{id}', [AdminNotificationController::class, 'deleteContact'])->name('admin.notifications.deleteContact');
         Route::post('/notifications/bulk-delete', [AdminNotificationController::class, 'bulkDelete'])->name('admin.notifications.bulkDelete');
         
-        // Order Management Routes
+        // Order Management Routes (RESTful - Simplified)
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
-        Route::patch('/orders/{orderNumber}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
         Route::get('/orders/{orderNumber}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
-        
-        // API Routes untuk Metrics & Orders (Real Data dari Database)
-        Route::prefix('api')->name('api.')->group(function () {
-            // Dashboard Metrics
-            Route::get('/metrics', [AdminApiController::class, 'getMetrics'])->name('metrics');
-            Route::get('/revenue', [AdminApiController::class, 'getRevenue'])->name('revenue');
-            
-            // Orders Management API (AdminOrderController)
-            Route::get('/orders', [AdminOrderController::class, 'getOrders'])->name('orders');
-            Route::get('/orders/stats', [AdminOrderController::class, 'getStats'])->name('orders.stats');
-            Route::patch('/orders/{orderId}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
-        });
-        
-        // Daftar Pesanan Routes
-        Route::get('/daftarpesanan', [AdminOrderController::class, 'daftarpesanan'])->name('admin.daftarpesanan');
-        Route::post('/daftarpesanan/{id}/update-status', [AdminOrderController::class, 'updateOrderStatus'])->name('admin.daftarpesanan.updateStatus');
-        Route::get('/daftarpesanan/{id}', [AdminOrderController::class, 'showOrder'])->name('admin.daftarpesanan.show');
-        Route::delete('/daftarpesanan/{id}', [AdminOrderController::class, 'deleteOrder'])->name('admin.daftarpesanan.delete');
+        Route::patch('/orders/{orderNumber}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+        Route::delete('/orders/{orderNumber}', [AdminOrderController::class, 'destroy'])->name('admin.orders.destroy');
 
-        // Pesan Masuk Routes (Kelola Pesanan)
-        Route::get('/pesanmasuk', [AdminOrderController::class, 'pesanMasuk'])->name('admin.pesanmasuk');
-        Route::post('/pesanmasuk/{orderNumber}/status', [AdminOrderController::class, 'updatePesanStatus'])->name('admin.pesanmasuk.updateStatus');
-        Route::get('/pesanmasuk/{orderNumber}', [AdminOrderController::class, 'showPesan'])->name('admin.pesanmasuk.show');
-        Route::delete('/pesanmasuk/{orderNumber}', [AdminOrderController::class, 'deletePesan'])->name('admin.pesanmasuk.delete');
-
-        // Product Management Routes - PERBAIKAN: Tambah name untuk resource
+        // Product Management Routes
         Route::resource('products', ProductController::class)->names([
             'index' => 'admin.products.index',
             'create' => 'admin.products.create',
