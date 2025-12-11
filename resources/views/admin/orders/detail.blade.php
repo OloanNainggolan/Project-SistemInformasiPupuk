@@ -558,14 +558,29 @@
         
         @php
             $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
-            $subtotal = 0;
+            $calculatedSubtotal = 0;
+            
+            // Debug: Log items structure (remove in production)
+            if (config('app.debug')) {
+                \Log::debug('Order Items Structure', [
+                    'order_id' => $order->id,
+                    'items' => $items,
+                    'order_subtotal' => $order->subtotal ?? 'NULL',
+                    'order_total' => $order->total_amount ?? 'NULL'
+                ]);
+            }
         @endphp
 
         @if(is_array($items) && count($items) > 0)
             @foreach($items as $item)
                 @php
-                    $itemSubtotal = ($item['price'] ?? 0) * ($item['quantity'] ?? 0);
-                    $subtotal += $itemSubtotal;
+                    // Use unit_price if available, otherwise fallback to price
+                    $unitPrice = $item['unit_price'] ?? $item['price'] ?? 0;
+                    $quantity = $item['quantity'] ?? 0;
+                    
+                    // Use subtotal from item if available, otherwise calculate
+                    $itemSubtotal = $item['subtotal'] ?? ($unitPrice * $quantity);
+                    $calculatedSubtotal += $itemSubtotal;
                 @endphp
                 <div class="product-item">
                     <div class="product-image">
@@ -584,7 +599,7 @@
                             <span style="margin-left: 10px;">{{ $item['category'] ?? 'N/A' }}</span>
                         </p>
                         <p class="product-quantity">
-                            <i class="fas fa-box"></i> Jumlah: {{ $item['quantity'] ?? 0 }} kg
+                            <i class="fas fa-box"></i> Jumlah: {{ $quantity }} kg
                         </p>
                     </div>
                     <div class="product-price">
@@ -592,17 +607,21 @@
                             Rp {{ number_format($itemSubtotal, 0, ',', '.') }}
                         </div>
                         <div class="product-unit-price">
-                            @ Rp {{ number_format($item['price'] ?? 0, 0, ',', '.') }}/kg
+                            @ Rp {{ number_format($unitPrice, 0, ',', '.') }}/kg
                         </div>
                     </div>
                 </div>
             @endforeach
 
             <!-- Total Section -->
+            @php
+                // Use order subtotal from DB if calculated is 0, otherwise use calculated
+                $finalSubtotal = $calculatedSubtotal > 0 ? $calculatedSubtotal : ($order->subtotal ?? 0);
+            @endphp
             <div class="total-section">
                 <div class="total-row">
                     <span class="total-label">Subtotal</span>
-                    <span class="total-value">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp {{ number_format($finalSubtotal, 0, ',', '.') }}</span>
                 </div>
                 <div class="total-row">
                     <span class="total-label">Ongkos Kirim</span>
@@ -610,7 +629,7 @@
                 </div>
                 <div class="total-row grand-total">
                     <span class="total-label">Total Pembayaran</span>
-                    <span class="total-value">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</span>
                 </div>
             </div>
         @else

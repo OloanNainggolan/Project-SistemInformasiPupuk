@@ -1,0 +1,15 @@
+Test Steps untuk Debug Notification Read Status:
+
+1. Buka browser incognito/clear cookies
+2. Login sebagai user "oloan"
+3. Buka halaman notifikasi: http://127.0.0.1:8000/notifikasi
+4. Klik notifikasi ID 4 atau 5
+5. Check terminal log untuk melihat apakah controller method `show()` ter-trigger
+6. Check database setelah buka: SELECT id, is_read, status FROM notifications WHERE id IN (4,5);
+
+Cara cek log:
+php artisan log:clear
+tail -f storage/logs/laravel.log
+
+Atau di Windows PowerShell:
+Get-Content storage\logs\laravel.log -Tail 50 -Wait

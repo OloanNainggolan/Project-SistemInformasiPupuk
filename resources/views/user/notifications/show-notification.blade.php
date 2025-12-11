@@ -6,7 +6,7 @@
 <div class="notification-detail-container">
     <!-- Back Button -->
     <div class="back-navigation">
-        <a href="{{ route('user.notifications.index') }}" class="back-link">
+        <a href="{{ route('user.notifications.index') }}" class="back-link" onclick="sessionStorage.setItem('notifJustRead', 'true');">
             <i class="fas fa-arrow-left"></i> Kembali ke Notifikasi
         </a>
     </div>
@@ -68,7 +68,7 @@
             
             // Extract jumlah
             $jumlah = null;
-            if (preg_match(/Jumlah:\s*(\d+)/i', $message, $matches)) {
+            if (preg_match('/Jumlah:\s*(\d+)/i', $message, $matches)) {
                 $jumlah = $matches[1];
             }
             
@@ -177,7 +177,7 @@
 
         <!-- Action Buttons -->
         <div class="notification-actions">
-            <a href="{{ route('user.notifications.index') }}" class="btn-action back">
+            <a href="{{ route('user.notifications.index') }}" class="btn-action back" onclick="sessionStorage.setItem('notifJustRead', 'true');">
                 <i class="fas fa-arrow-left"></i>
                 Kembali
             </a>

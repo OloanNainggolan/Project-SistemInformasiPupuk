@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserNotificationController extends Controller
 {
@@ -15,14 +16,19 @@ class UserNotificationController extends Controller
      */
     public function index()
     {
-        // Get parent messages (conversations)
+        // Prevent caching
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        
+        // Get parent messages (conversations) - always fresh
         $messages = Message::where('user_id', Auth::id())
             ->whereNull('reply_to') // Only parent messages
             ->with(['replyToMessage', 'replies'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Get system notifications from notifications table
+        // Get system notifications from notifications table - always fresh
         $systemNotifications = Notification::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -94,23 +100,63 @@ class UserNotificationController extends Controller
         $notification = Notification::where('user_id', Auth::id())
             ->findOrFail($id);
 
-        // Mark as read
+        \Log::info("Notification accessed", [
+            'notification_id' => $id,
+            'user_id' => Auth::id(),
+            'is_read_before' => $notification->is_read,
+            'status_before' => $notification->status
+        ]);
+
+        // Mark as read - force update with timestamps
         if ($notification->is_read == 0) {
-            $notification->update(['is_read' => 1, 'status' => 'read']);
+            \DB::table('notifications')
+                ->where('id', $id)
+                ->where('user_id', Auth::id())
+                ->update([
+                    'is_read' => 1,
+                    'status' => 'read',
+                    'updated_at' => now()
+                ]);
+            
+            // Refresh model to get updated data
+            $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
+            
+            \Log::info("Notification marked as read", [
+                'notification_id' => $id,
+                'user_id' => Auth::id(),
+                'is_read_after' => $notification->is_read,
+                'status_after' => $notification->status
+            ]);
         }
 
         return view('user.notifications.show-notification', compact('notification'));
     }
 
     /**
-     * Mark all messages as read
+     * Mark all messages and notifications as read
      */
     public function markAllAsRead()
     {
+        // Mark all messages as read
         Message::where('user_id', Auth::id())
             ->fromAdmin()
             ->unread()
             ->update(['status' => 'read']);
+
+        // Mark all system notifications as read - use DB query for reliability
+        \DB::table('notifications')
+            ->where('user_id', Auth::id())
+            ->where('is_read', 0)
+            ->update([
+                'is_read' => 1,
+                'status' => 'read',
+                'updated_at' => now()
+            ]);
+
+        \Log::info('All notifications marked as read', [
+            'user_id' => Auth::id(),
+            'timestamp' => now()
+        ]);
 
         return redirect()->route('notifikasi')
             ->with('success', 'Semua notifikasi telah ditandai sebagai dibaca');

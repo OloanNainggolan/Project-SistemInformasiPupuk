@@ -1018,7 +1018,7 @@
                                     <button type="button" class="quantity-btn" id="decreaseBtn" onclick="decreaseQuantity()">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="number" id="quantityInput" class="quantity-display-input" value="{{ $quantity ?? 1 }}" min="1" max="{{ $produk->stok }}" onchange="updateQuantity()" oninput="updateQuantity()">
+                                    <input type="number" id="quantityInput" class="quantity-display-input" value="{{ $quantity ?? 1 }}" min="1" max="{{ $produk->stok_produk }}" onchange="updateQuantity()" oninput="updateQuantity()">
                                     <button type="button" class="quantity-btn" id="increaseBtn" onclick="increaseQuantity()">
                                         <i class="fas fa-plus"></i>
                                     </button>
@@ -1097,7 +1097,7 @@
                     </div>
 
                     <!-- Confirm Button -->
-                    <button class="confirm-button" onclick="konfirmasiPesanan()">
+                    <button type="button" class="confirm-button" id="btnKonfirmasiPesanan">
                         <i class="fas fa-check-circle"></i>
                         Konfirmasi Pesanan
                     </button>
@@ -1119,7 +1119,7 @@
         const hargaPerUnit = {{ $produk->harga_subsidi }};
         const hargaNormal = {{ $produk->harga_normal }};
         const productName = '{{ $produk->nama_produk }}';
-        const maxStock = {{ $produk->stok }};
+        const maxStock = {{ $produk->stok_produk ?? 0 }};
         const subsidyAmount = {{ $produk->harga_normal - $produk->harga_subsidi }};
         const discountAmount = {{ $discountAmount ?? 0 }};
         
@@ -1227,15 +1227,28 @@
         
         // Konfirmasi pesanan dengan SweetAlert2
         function konfirmasiPesanan() {
-            // Ambil data dari form
-            const nama = document.getElementById('nama').value.trim();
-            const noHp = document.getElementById('no_hp').value.trim();
-            const alamat = document.getElementById('alamat').value.trim();
-            const catatan = document.getElementById('catatan').value.trim();
-            const quantity = parseInt(document.getElementById('quantityInput').value);
+            try {
+                console.log('=== konfirmasiPesanan() dipanggil ===');
+                
+                // Check if Swal is available
+                if (typeof Swal === 'undefined') {
+                    console.error('SweetAlert2 tidak loaded!');
+                    alert('Sistem sedang loading, mohon tunggu sebentar...');
+                    return;
+                }
+                
+                // Ambil data dari form
+                const nama = document.getElementById('nama').value.trim();
+                const noHp = document.getElementById('no_hp').value.trim();
+                const alamat = document.getElementById('alamat').value.trim();
+                const catatan = document.getElementById('catatan').value.trim();
+                const quantity = parseInt(document.getElementById('quantityInput').value);
+                
+                console.log('Data form:', { nama, noHp, alamat, catatan, quantity });
             
             // Validasi form
             if (!nama || !noHp || !alamat) {
+                console.warn('Validasi gagal: Data tidak lengkap');
                 Swal.fire({
                     icon: 'warning',
                     title: 'Data Belum Lengkap',
@@ -1318,6 +1331,8 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    console.log('User mengkonfirmasi pesanan');
+                    
                     // Show loading
                     Swal.fire({
                         title: 'Menyimpan Pesanan',
@@ -1325,6 +1340,17 @@
                         showConfirmButton: false,
                         allowOutsideClick: false
                     });
+                    
+                    const requestData = {
+                        quantity: quantity,
+                        customer_name: nama,
+                        customer_phone: noHp,
+                        customer_address: alamat,
+                        customer_notes: catatan
+                    };
+                    
+                    console.log('Mengirim request ke server:', requestData);
+                    console.log('URL:', '{{ route("user.pupukbibit.store", $produk->id_produk) }}');
                     
                     // Submit data ke server untuk disimpan ke database
                     fetch('{{ route("user.pupukbibit.store", $produk->id_produk) }}', {
@@ -1334,23 +1360,26 @@
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({
-                            quantity: quantity,
-                            customer_name: nama,
-                            customer_phone: noHp,
-                            customer_address: alamat,
-                            customer_notes: catatan
-                        })
+                        body: JSON.stringify(requestData)
                     })
                     .then(response => {
+                        console.log('=== Response diterima ===');
                         console.log('Response status:', response.status);
+                        console.log('Response ok:', response.ok);
+                        console.log('Response headers:', response.headers);
+                        
                         if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
+                            return response.text().then(text => {
+                                console.error('Response body (error):', text);
+                                throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+                            });
                         }
                         return response.json();
                     })
                     .then(data => {
+                        console.log('=== Response data berhasil di-parse ===');
                         console.log('Response data:', data);
+                        console.log('Success:', data.success);
                         if (data.success) {
                             const nomorPesanan = data.order_number;
                             const total = data.total_amount;
@@ -1425,21 +1454,52 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        console.error('=== ERROR TERJADI ===');
+                        console.error('Error object:', error);
+                        console.error('Error message:', error.message);
+                        console.error('Error stack:', error.stack);
+                        
                         Swal.fire({
                             icon: 'error',
                             title: 'Terjadi Kesalahan',
-                            text: 'Gagal menghubungi server. Silakan coba lagi.',
+                            html: `
+                                <p>Gagal menghubungi server. Silakan coba lagi.</p>
+                                <div style="background: #fee2e2; padding: 12px; border-radius: 8px; margin-top: 12px; text-align: left;">
+                                    <strong style="color: #991b1b;">Detail Error:</strong>
+                                    <p style="color: #991b1b; font-size: 12px; margin: 8px 0 0 0;">${error.message}</p>
+                                </div>
+                            `,
                             confirmButtonColor: '#10b981'
                         });
                     });
                 }
             });
+            } catch (error) {
+                console.error('=== FATAL ERROR di konfirmasiPesanan() ===');
+                console.error('Error:', error);
+                console.error('Stack:', error.stack);
+                alert('Terjadi kesalahan: ' + error.message);
+            }
         }
         
         // Initialize - quantity is fixed, no need for updates
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Konfirmasi pesanan page loaded');
+            console.log('=== Konfirmasi pesanan page loaded ===');
+            console.log('jQuery loaded:', typeof jQuery !== 'undefined');
+            console.log('Swal loaded:', typeof Swal !== 'undefined');
+            
+            // Attach event listener to button
+            const btnKonfirmasi = document.getElementById('btnKonfirmasiPesanan');
+            if (btnKonfirmasi) {
+                console.log('Button ditemukan, menambahkan event listener');
+                btnKonfirmasi.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('=== BUTTON DIKLIK ===');
+                    konfirmasiPesanan();
+                });
+            } else {
+                console.error('BUTTON TIDAK DITEMUKAN!');
+            }
         });
     </script>
 @endpush
