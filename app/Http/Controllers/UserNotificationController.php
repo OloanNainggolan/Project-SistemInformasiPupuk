@@ -15,14 +15,19 @@ class UserNotificationController extends Controller
      */
     public function index()
     {
-        // Get parent messages (conversations)
+        // Prevent caching
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        
+        // Get parent messages (conversations) - always fresh
         $messages = Message::where('user_id', Auth::id())
             ->whereNull('reply_to') // Only parent messages
             ->with(['replyToMessage', 'replies'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Get system notifications from notifications table
+        // Get system notifications from notifications table - always fresh
         $systemNotifications = Notification::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -94,9 +99,21 @@ class UserNotificationController extends Controller
         $notification = Notification::where('user_id', Auth::id())
             ->findOrFail($id);
 
-        // Mark as read
+        // Mark as read and force save
         if ($notification->is_read == 0) {
-            $notification->update(['is_read' => 1, 'status' => 'read']);
+            $notification->is_read = 1;
+            $notification->status = 'read';
+            $notification->save();
+            
+            // Refresh to get updated data
+            $notification->refresh();
+            
+            \Log::info("Notification {$id} marked as read", [
+                'user_id' => Auth::id(),
+                'notification_id' => $id,
+                'is_read_after' => $notification->is_read,
+                'status_after' => $notification->status
+            ]);
         }
 
         return view('user.notifications.show-notification', compact('notification'));

@@ -729,7 +729,7 @@
                         
                         // Count unread notifications from notifications table
                         $unreadNotifications = \App\Models\Notification::where('user_id', Auth::id())
-                            ->where('is_read', false)
+                            ->where('is_read', 0)
                             ->count();
                         
                         // Count unread system messages (order status updates)

@@ -860,6 +860,7 @@
     const basePrice = {{ $produk->harga_subsidi ?? 2800 }};
     const maxStock = {{ $produk->stok_produk ?? 0 }};
     const discountPerUnit = {{ $discountAmount ?? 0 }};
+    const subsidyPerUnit = {{ $subsidyAmount ?? 0 }};
     let quantity = 1;
     
     // Image Carousel Variables
@@ -1001,6 +1002,7 @@
         // Update prices
         const subtotal = basePrice * quantity;
         const discount = discountPerUnit * quantity;
+        const subsidy = subsidyPerUnit * quantity;
         const total = subtotal - discount;
         
         document.getElementById('subtotal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
@@ -1009,6 +1011,15 @@
         if (discountEl && discount > 0) {
             discountEl.textContent = '- Rp ' + discount.toLocaleString('id-ID');
         }
+        
+        // Update subsidy display
+        const subsidyEl = document.querySelector('.summary-row [class*="summary-value"]:has(+ span):last-of-type');
+        const subsidyValueEl = document.querySelectorAll('.summary-value');
+        subsidyValueEl.forEach(el => {
+            if (el.textContent.includes('Hemat Rp')) {
+                el.textContent = 'Hemat Rp ' + subsidy.toLocaleString('id-ID');
+            }
+        });
         
         document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
         
@@ -1022,6 +1033,7 @@
         
         const subtotal = basePrice * quantity;
         const discount = discountPerUnit * quantity;
+        const subsidy = subsidyPerUnit * quantity;
         const total = subtotal - discount;
         
         document.getElementById('subtotal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
@@ -1030,6 +1042,14 @@
         if (discountEl && discount > 0) {
             discountEl.textContent = '- Rp ' + discount.toLocaleString('id-ID');
         }
+        
+        // Update subsidy display
+        const subsidyValueEl = document.querySelectorAll('.summary-value');
+        subsidyValueEl.forEach(el => {
+            if (el.textContent.includes('Hemat Rp')) {
+                el.textContent = 'Hemat Rp ' + subsidy.toLocaleString('id-ID');
+            }
+        });
         
         document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
         

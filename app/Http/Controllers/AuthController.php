@@ -110,57 +110,64 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         
-        // Ambil semua pesanan untuk statistik
-        $allOrders = \App\Models\Order::with(['product'])
+        // Ambil HANYA pesanan yang sudah COMPLETED untuk statistik
+        $completedOrders = \App\Models\Order::with(['product'])
             ->where('user_id', $user->id)
             ->where('confirmed_by_user', true)
+            ->where('status', 'Completed')
             ->get();
         
         // Hitung statistik REAL dari database
-        $totalPesanan = $allOrders->count();
+        $totalPesanan = $completedOrders->count();
         
-        // Hitung total pupuk yang diterima (status Completed atau Ready)
+        // Hitung total pupuk dan bibit yang diterima (hanya yang completed)
         $pupukDiterima = 0;
         $bibitDiterima = 0;
         $totalPenghematan = 0;
         
-        foreach ($allOrders as $order) {
-            // Semua data ada di items JSON
-            $items = $order->items;
+        foreach ($completedOrders as $order) {
+            // Ambil quantity dari order
+            $quantity = $order->quantity ?? 0;
             
-            // Decode jika masih string
-            if (is_string($items)) {
-                $items = json_decode($items, true);
-            }
-            
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    $itemQty = (int) ($item['quantity'] ?? $item['qty'] ?? 0);
-                    $itemType = $item['type'] ?? '';
-                    $itemPrice = (float) ($item['price'] ?? $item['unit_price'] ?? 0);
-                    
-                    // Gunakan field type dari items
-                    if ($itemType === 'pupuk') {
-                        $pupukDiterima += $itemQty;
-                    } elseif ($itemType === 'bibit') {
-                        $bibitDiterima += $itemQty;
-                    }
-                    
-                    // Hitung penghematan (asumsi subsidi 30% dari harga normal)
-                    if ($itemPrice > 0) {
-                        $estimatedNormalPrice = $itemPrice / 0.7; // Harga subsidi = 70% dari normal
-                        $totalPenghematan += ($estimatedNormalPrice - $itemPrice) * $itemQty;
-                    }
+            // Cek tipe produk dari relasi product
+            if ($order->product) {
+                $productType = strtolower($order->product->tipe_produk ?? '');
+                
+                // Hitung berdasarkan tipe produk
+                if ($productType === 'pupuk') {
+                    $pupukDiterima += $quantity;
+                } elseif ($productType === 'bibit') {
+                    $bibitDiterima += $quantity;
+                }
+                
+                // Hitung penghematan REAL dari harga_normal - harga_subsidi
+                $hargaNormal = $order->product->harga_normal ?? 0;
+                $hargaSubsidi = $order->product->harga_subsidi ?? 0;
+                $penghematanPerUnit = $hargaNormal - $hargaSubsidi;
+                
+                if ($penghematanPerUnit > 0) {
+                    $totalPenghematan += $penghematanPerUnit * $quantity;
                 }
             }
         }
         
-        // Ambil pesanan dengan pagination untuk ditampilkan
+        // Ambil SEMUA pesanan dengan pagination untuk ditampilkan di riwayat
+        // (termasuk Pending, Processing, dll)
         $orders = \App\Models\Order::with(['product'])
             ->where('user_id', $user->id)
             ->where('confirmed_by_user', true)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+        
+        // Log statistik untuk debugging
+        \Log::info('User Profile Statistics', [
+            'user_id' => $user->id,
+            'totalPesanan' => $totalPesanan,
+            'pupukDiterima' => $pupukDiterima,
+            'bibitDiterima' => $bibitDiterima,
+            'totalPenghematan' => $totalPenghematan,
+            'completedOrdersCount' => $completedOrders->count()
+        ]);
         
         return view('user.ProfilUser', compact(
             'orders',

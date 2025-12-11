@@ -5,7 +5,7 @@
 @section('content')
 <div class="message-detail-container">
     <!-- Back Button -->
-    <a href="{{ route('notifikasi') }}" class="back-btn">
+    <a href="{{ route('notifikasi') }}" class="back-btn" onclick="sessionStorage.setItem('notifJustRead', 'true');">
         <i class="fas fa-arrow-left"></i>
         Kembali ke Notifikasi
     </a>

@@ -2,6 +2,12 @@
 
 @section('title', 'Notifikasi Saya')
 
+@push('meta')
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+@endpush
+
 @section('content')
 <div class="notifications-container">
     <!-- Success Message -->
@@ -1588,6 +1594,26 @@ function closeNotificationModal(event) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeNotificationModal();
+    }
+});
+
+// Check if page needs refresh after reading notification
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if coming back from reading notification
+    if (sessionStorage.getItem('notifJustRead') === 'true') {
+        console.log('Notifikasi baru saja dibaca, reload untuk update badge...');
+        sessionStorage.removeItem('notifJustRead');
+        // Small delay to ensure smooth transition
+        setTimeout(function() {
+            window.location.reload(true);
+        }, 100);
+    }
+    
+    // Also check URL parameter for backward compatibility
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('refresh') === '1') {
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
     }
 });
 </script>
