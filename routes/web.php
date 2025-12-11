@@ -55,6 +55,9 @@ Route::post('/kontak/send', [AuthController::class, 'sendKontak'])->name('kontak
 Route::get('/profil/edit', [AuthController::class, 'editProfil'])->name('profil.edit')->middleware('auth');
 Route::put('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update')->middleware('auth');
 
+// Route untuk Hapus Akun
+Route::delete('/account/delete', [AuthController::class, 'deleteAccount'])->name('account.delete')->middleware('auth');
+
 // Routes yang memerlukan autentikasi
 Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
     // Halaman Pupuk & Bibit
