@@ -474,6 +474,7 @@ class AuthController extends Controller
             'message' => substr($validated['pesan'], 0, 100) . (strlen($validated['pesan']) > 100 ? '...' : ''),
             'link' => route('admin.notifications.index'),
             'status' => 'unread',
+            'is_read' => false,
             'related_id' => $contact->id
         ]);
 

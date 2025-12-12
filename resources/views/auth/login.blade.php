@@ -750,7 +750,7 @@
                 </a>
 
                 <div class="links">
-                    <a href="/reset-password">Lupa Kata Sandi?</a>
+                    <a href="/reset-password-email">Lupa Kata Sandi?</a>
                     <a href="{{ route('register') }}">Daftar Akun Baru</a>
                 </div>
             </form>

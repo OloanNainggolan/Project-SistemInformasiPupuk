@@ -61,7 +61,7 @@ class UserNotificationController extends Controller
             ->count();
         
         $unreadNotificationsCount = Notification::where('user_id', Auth::id())
-            ->where('is_read', 0)
+            ->unread()
             ->count();
 
         $unreadCount = $unreadMessagesCount + $unreadNotificationsCount;
