@@ -54,10 +54,29 @@
         @php
             $message = $notification->message;
             
-            // Extract order number
+            // Try to get order from database using related_id
+            $relatedOrder = null;
+            if ($notification->related_type === 'App\\Models\\Order' && $notification->related_id) {
+                $relatedOrder = \App\Models\Order::find($notification->related_id);
+            }
+            
+            // Extract order number - berbagai format (fallback jika tidak ada related_id)
             $orderNumber = null;
-            if (preg_match('/No\.\s*Pesanan:\s*#?([A-Z0-9-]+)/i', $message, $matches)) {
+            if ($relatedOrder) {
+                $orderNumber = $relatedOrder->order_number;
+            } elseif (preg_match('/No\.\s*Pesanan:\s*#?([A-Z0-9-]+)/i', $message, $matches)) {
                 $orderNumber = $matches[1];
+            } elseif (preg_match('/#([A-Z0-9]{3,}-[A-Z0-9]{6,})/i', $message, $matches)) {
+                // Format ORD-20251212-780630
+                $orderNumber = $matches[1];
+            } elseif (preg_match('/ORD-\d{8}-[A-F0-9]{6}/i', $message, $matches)) {
+                // Direct match format ORD-YYYYMMDD-XXXXXX
+                $orderNumber = $matches[0];
+            }
+            
+            // If we don't have relatedOrder but have orderNumber, try to find it
+            if (!$relatedOrder && $orderNumber) {
+                $relatedOrder = \App\Models\Order::where('order_number', $orderNumber)->first();
             }
             
             // Extract product name
@@ -84,7 +103,14 @@
             
             // Check for shipping notice
             $isShipped = preg_match('/PESANAN\s+HARI\s+DIKIRIM/i', $message);
-            $isReady = preg_match('/PESANAN\s+ANDA\s+SUDAH\s+SIAP/i', $message);
+            
+            // Check if order is Ready - prioritas dari database, fallback ke message text
+            $isReady = false;
+            if ($relatedOrder && in_array($relatedOrder->status, ['Ready', 'Completed'])) {
+                $isReady = true;
+            } else {
+                $isReady = preg_match('/SIAP\s+DIAMBIL|PESANAN\s+(ANDA\s+)?SUDAH\s+SIAP|Status\s+Baru:.*Siap/i', $message);
+            }
             
             // Extract action steps
             $actionSteps = null;
@@ -167,11 +193,50 @@
                 <strong>Tip:</strong> {{ $tip }}
             </div>
             @endif
+
+            {{-- Tombol Maps untuk pesanan dengan status Ready/Siap Diambil --}}
+            {{-- Prioritas: 1. Order dari DB status Ready/Completed, 2. Deteksi dari message --}}
+            @if($isReady && $orderNumber)
+            <div class="map-button-section" style="margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; border: 2px solid #10b981;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <i class="fas fa-map-marked-alt" style="font-size: 48px; color: #10b981;"></i>
+                    <h3 style="color: #047857; font-size: 18px; font-weight: 700; margin-top: 10px;">Lihat Lokasi Pengambilan</h3>
+                </div>
+                <a href="{{ route('maps.show', ['order' => $orderNumber]) }}" class="btn-map" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px 32px; background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4); transition: all 0.3s; margin: 0 auto; max-width: 400px;">
+                    <i class="fab fa-google" style="font-size: 20px;"></i>
+                    Buka Peta Lokasi Pengambilan
+                </a>
+                <p class="map-hint" style="text-align: center; margin-top: 15px; color: #047857; font-size: 14px;">
+                    <i class="fas fa-info-circle"></i>
+                    Sistem akan menunjukkan titik pengambilan terdekat dari lokasi Anda dengan rute Google Maps
+                </p>
+            </div>
+            @endif
         </div>
         @else
         <!-- Regular Notification Message -->
         <div class="notification-message">
             {!! nl2br(e($notification->message)) !!}
+
+            {{-- Tombol Maps juga untuk regular message jika ada kata "siap" dan order number --}}
+            @php
+                $hasOrderNumber = preg_match('/ORD-\d{8}-[A-F0-9]{6}/i', $notification->message, $matches);
+                $orderNum = $hasOrderNumber ? $matches[0] : null;
+                $isSiap = stripos($notification->message, 'siap') !== false || stripos($notification->title, 'siap') !== false;
+            @endphp
+            
+            @if($isSiap && $orderNum)
+            <div class="map-button-section" style="margin-top: 20px;">
+                <a href="{{ route('maps.show', ['order' => $orderNum]) }}" class="btn-map">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Lihat Lokasi Pengambilan
+                </a>
+                <p class="map-hint">
+                    <i class="fas fa-info-circle"></i>
+                    Klik tombol di atas untuk melihat lokasi pengambilan terdekat dari Anda
+                </p>
+            </div>
+            @endif
         </div>
         @endif
 
@@ -490,6 +555,70 @@
     color: #f59e0b;
     font-size: 18px;
     margin-top: 2px;
+}
+
+/* Map Button Section */
+.map-button-section {
+    margin-top: 25px;
+    padding: 25px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 12px;
+    border: 2px solid #4ade80;
+    text-align: center;
+}
+
+.btn-map {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.btn-map:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.5);
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+}
+
+.btn-map i {
+    font-size: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.map-hint {
+    margin: 0;
+    color: #166534;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.map-hint i {
+    color: #22c55e;
+    font-size: 16px;
 }
 
 .notification-actions {

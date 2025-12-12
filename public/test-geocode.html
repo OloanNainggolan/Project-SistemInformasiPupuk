@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Geocoding</title>
+</head>
+<body>
+    <h1>Test Geocoding "flyover, laguboti"</h1>
+    <div id="result"></div>
+
+    <script>
+        const address = 'flyover, laguboti';
+        const apiKey = 'AIzaSyCwIXTWR4ExkFrEYJgN4kk0OCh7PNL7mxA';
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+        
+        console.log('Geocoding URL:', url);
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Geocode Result:', data);
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                
+                if (data.status === 'OK' && data.results.length > 0) {
+                    const location = data.results[0].geometry.location;
+                    console.log('Coordinates:', location);
+                    
+                    // IT Del coordinates
+                    const itDelLat = 2.6140;
+                    const itDelLng = 99.0710;
+                    
+                    // Calculate distance
+                    const distance = calculateDistance(location.lat, location.lng, itDelLat, itDelLng);
+                    console.log('Distance to IT Del:', distance, 'km');
+                    
+                    document.getElementById('result').innerHTML += `
+                        <h2>Result:</h2>
+                        <p>Address: ${data.results[0].formatted_address}</p>
+                        <p>Coordinates: ${location.lat}, ${location.lng}</p>
+                        <p>Distance to IT Del: ${distance.toFixed(2)} km</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            });
+        
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius bumi dalam km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+    </script>
+</body>
+</html>
