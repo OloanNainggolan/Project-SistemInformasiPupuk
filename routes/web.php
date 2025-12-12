@@ -35,14 +35,29 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::get('/auth/google/complete', [GoogleController::class, 'showCompleteRegistration'])->name('register.complete.show');
 Route::post('/auth/google/complete', [GoogleController::class, 'completeRegistration'])->name('register.complete.process');
 
+// Password Reset Routes - Alur 3 Halaman (Email -> OTP -> Password Baru)
+// Redirect dari URL lama ke URL baru
+Route::get('/reset-password', function () {
+    return redirect('/reset-password-email');
+});
+
+// Halaman 1: Input Email
+Route::get('/reset-password-email', function () {
+    return view('auth.reset-password-email');
+})->name('password.email');
+
+// Halaman 2: Verifikasi Kode OTP
+Route::get('/reset-password-verify', function () {
+    return view('auth.reset-password-verify');
+})->name('password.verify');
+
+// Halaman 3: Buat Password Baru
+Route::get('/reset-password-new', function () {
+    return view('auth.reset-password-new');
+})->name('password.new');
+
 // Logout Route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('web');
-
-// Password Reset Routes
-Route::get('/reset-password', function () {
-    return view('auth.resetpw');
-})->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'processReset'])->name('password.reset.post');
 
 // Public Routes
 Route::get('/pupuk-bibit', [PupukBibitController::class, 'index'])->name('pupuk.bibit');

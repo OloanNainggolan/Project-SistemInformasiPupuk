@@ -5,42 +5,42 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Catalog\ProductController;
 use App\Http\Controllers\Api\Sales\OrderController;
+use App\Http\Controllers\PasswordResetController;
 
 /*
-|--------------------------------------------------------------------------
-| API Routes - Separated by Folders
-|--------------------------------------------------------------------------
-|
-| API v1 Routes organized by business domains:
-| - Auth: Authentication endpoints
-| - Catalog: Product management (read-only for public)
-| - Sales: Order management (requires authentication)
-|
+ API Routes - Separated by Folders
+
+ API v1 Routes organized by business domains:
+ - Auth: Authentication endpoints
+ - Catalog: Product management (read-only for public)
+ - Sales: Order management (requires authentication)
 */
+
 
 Route::prefix('v1')->group(function () {
     
-    // ========================================
     // AUTH ROUTES (Public)
-    // ========================================
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     });
 
-    // ========================================
+    // PASSWORD RESET ROUTES (Public)
+    Route::prefix('password')->group(function () {
+        Route::post('/send-code', [PasswordResetController::class, 'sendCode']);
+        Route::post('/verify-code', [PasswordResetController::class, 'verifyCode']);
+        Route::post('/reset', [PasswordResetController::class, 'resetPassword']);
+    });
+
     // CATALOG ROUTES (Public - Products)
-    // ========================================
     Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
         Route::get('/{id}/stock', [ProductController::class, 'checkStock']); // Internal untuk Sales
     });
 
-    // ========================================
     // SALES ROUTES (Protected - Orders)
-    // ========================================
     Route::prefix('orders')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('api.orders.index');
         Route::post('/', [OrderController::class, 'store'])->name('api.orders.store');
@@ -49,9 +49,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('/{id}', [OrderController::class, 'destroy'])->name('api.orders.destroy');
     });
 
-    // ========================================
     // HEALTH CHECK
-    // ========================================
     Route::get('/health', function () {
         return response()->json([
             'success' => true,
