@@ -8,9 +8,54 @@
     .profile-container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 2rem;
+        padding: 2rem 1rem;
         margin-top: 140px;
         margin-bottom: 3rem;
+    }
+
+    /* Page Header */
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        border-left: 4px solid #10b981;
+    }
+
+    .back-button {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .header-content h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .header-content p {
+        color: #6b7280;
+        margin: 0;
+        font-size: 0.95rem;
     }
 
     .profile-grid {
@@ -21,63 +66,81 @@
 
     /* Profile Sidebar Card */
     .profile-sidebar {
-        background: white;
-        border-radius: 8px;
-        padding: 0.75rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+        border-radius: 20px;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         height: fit-content;
         position: sticky;
         top: 160px;
-        border: 1px solid #e5e7eb;
+        border: 2px solid #e5e7eb;
     }
 
-    .profile-avatar-wrapper {
+    .profile-setting-avatar-wrapper {
         text-align: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1.2rem;
+        position: relative;
     }
 
-    .profile-avatar {
-        width: 34px;
-        height: 34px;
+    .profile-setting-avatar {
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
-        margin: 0 auto 0.8rem;
+        margin: 0 auto;
         overflow: hidden;
         background: linear-gradient(135deg, #004d00, #047857);
-        box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+        box-shadow: 0 8px 24px rgba(16,185,129,0.3);
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         font-weight: 500;
-        flex-shrink: 0;
+        border: 4px solid white;
+        position: relative;
     }
 
-    .profile-avatar img {
+    .profile-setting-avatar img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+
+    .profile-setting-avatar::after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        background: #4caf50;
         border-radius: 50%;
+        border: 3px solid white;
     }
 
-    .profile-name {
+    .profile-setting-name {
         text-align: center;
-        margin-bottom: 0.6rem;
+        margin-bottom: 1.2rem;
     }
 
-    .profile-name h2 {
-        font-size: 1rem;
+    .profile-setting-name h2 {
+        font-size: 1.15rem;
         color: #1b5e20;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.4rem;
         font-weight: 700;
+        line-height: 1.3;
+        word-break: break-word;
+        padding: 0 0.5rem;
     }
 
-    .profile-username {
-        color: #666;
-        font-size: 0.75rem;
-        background: #f0f0f0;
-        padding: 0.2rem 0.5rem;
-        border-radius: 10px;
-        display: inline-block;
+    .profile-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: #4caf50;
+        font-size: 0.85rem;
+        background: #e8f5e9;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
         font-weight: 600;
     }
 
@@ -94,8 +157,9 @@
         gap: 0.5rem;
         margin-bottom: 0.5rem;
         color: #555;
-        font-size: 0.78rem;
-        line-height: 1.3;
+        font-size: 0.8rem;
+        line-height: 1.4;
+        word-break: break-word;
     }
 
     .detail-row:last-child {
@@ -148,18 +212,32 @@
         box-shadow: 0 5px 15px rgba(76, 175, 80, 0.35);
     }
 
-    .btn-logout {
+    .btn-delete-account {
         background: white;
         color: #dc3545;
         border: 2px solid #dc3545;
         box-shadow: none;
     }
 
-    .btn-logout:hover {
+    .btn-delete-account:hover {
         background: #dc3545;
         color: white;
         transform: translateY(-2px);
         box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-logout {
+        background: white;
+        color: #6c757d;
+        border: 2px solid #6c757d;
+        box-shadow: none;
+    }
+
+    .btn-logout:hover {
+        background: #6c757d;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
     }
 
     /* Land Info Card */
@@ -186,6 +264,7 @@
     }
 
     .land-label {
+        font-family: 'Times New Roman', Times, serif !important;
         font-size: 0.65rem;
         color: #666;
         margin-bottom: 0.15rem;
@@ -804,12 +883,12 @@
     }
 
     @media (max-width: 480px) {
-        .profile-avatar {
+        .profile-setting-avatar {
             width: 34px;
             height: 34px;
         }
 
-        .profile-name h2 {
+        .profile-setting-name h2 {
             font-size: 1.3rem;
         }
 
@@ -826,6 +905,19 @@
 
 @section('content')
 <div class="profile-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <a href="{{ route('home') }}" class="back-button">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <div class="header-content">
+            <h1>Profil Saya</h1>
+            <p>Informasi akun dan riwayat pesanan Anda</p>
+        </div>
+    </div>
+
     @if(session('success'))
         <div style="background: linear-gradient(135deg, #d4edda 0%, #c8e6c9 100%); color: #155724; border: 2px solid #81c784; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 3px 12px rgba(76, 175, 80, 0.15);">
             <i class="fas fa-check-circle" style="font-size: 1.3rem;"></i>
@@ -836,15 +928,21 @@
     <div class="profile-grid">
         <!-- Sidebar - Profile Card -->
         <aside class="profile-sidebar">
-            <div class="profile-avatar-wrapper">
-                <div class="profile-avatar">
-                    <img src="{{ auth()->user()->foto ? asset('images/profiles/' . auth()->user()->foto) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_lengkap) . '&background=047857&color=fff&size=68' }}" alt="{{ auth()->user()->nama_lengkap }}">
+            <div class="profile-setting-avatar-wrapper">
+                <div class="profile-setting-avatar">
+                    @if(auth()->user()->foto)
+                        <img src="{{ asset(auth()->user()->foto) }}" alt="{{ auth()->user()->nama_lengkap }}">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->nama_lengkap) }}&background=047857&color=fff&size=240" alt="{{ auth()->user()->nama_lengkap }}">
+                    @endif
                 </div>
             </div>
             
-            <div class="profile-name">
+            <div class="profile-setting-name">
                 <h2>{{ auth()->user()->nama_lengkap }}</h2>
-                <span class="profile-username">@oloan{{ auth()->user()->username ?? 'user' }}</span>
+                <span class="profile-badge">
+                    <i class="fas fa-check-circle"></i> Member Aktif
+                </span>
             </div>
 
             <div class="profile-details">
@@ -854,11 +952,11 @@
                 </div>
                 <div class="detail-row">
                     <span class="detail-icon"><i class="fas fa-phone"></i></span>
-                    <span>{{ auth()->user()->no_telp }}</span>
+                    <span>{{ auth()->user()->no_telp ?? '-' }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                    <span>{{ auth()->user()->alamat }}{{ auth()->user()->kabupaten ? ', ' . auth()->user()->kabupaten : '' }}</span>
+                    <span>{{ auth()->user()->alamat ? (auth()->user()->alamat . (auth()->user()->kabupaten ? ', ' . auth()->user()->kabupaten : '')) : 'Belum diisi' }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-icon"><i class="fas fa-calendar-alt"></i></span>
@@ -870,6 +968,9 @@
                 <a href="{{ route('profil.edit') }}" class="btn btn-edit-profile">
                     <i class="fas fa-edit"></i> Edit Profil
                 </a>
+                <button type="button" class="btn btn-delete-account" onclick="confirmDeleteAccount()">
+                    <i class="fas fa-trash-alt"></i> Hapus Akun
+                </button>
                 <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                     @csrf
                     <button type="submit" class="btn btn-logout" style="width: 100%;">
@@ -881,17 +982,35 @@
             <!-- Land Information -->
             <div class="land-info-card">
                 <h3><i class="fas fa-seedling"></i> Informasi Lahan</h3>
-                <div class="land-detail">
-                    <div class="land-label">Luas Lahan</div>
-                    <div class="land-value">3 Ha</div>
-                </div>
-                <div class="land-detail">
-                    <div class="land-label">Komoditas</div>
-                    <div class="commodity-list">
-                        <span class="commodity-tag commodity-padi">Padi</span>
-                        <span class="commodity-tag commodity-jagung">Jagung</span>
+                @if(auth()->user()->luas_lahan || auth()->user()->jenis_tanaman)
+                    <div class="land-detail">
+                        <div class="land-label">Luas Lahan</div>
+                        <div class="land-value">{{ auth()->user()->luas_lahan ?? '-' }} Ha</div>
                     </div>
-                </div>
+                    @if(auth()->user()->jenis_tanaman)
+                    <div class="land-detail">
+                        <div class="land-label">Jenis Tanaman</div>
+                        <div class="commodity-list">
+                            @php
+                                $tanamanArray = explode(',', auth()->user()->jenis_tanaman);
+                            @endphp
+                            @foreach($tanamanArray as $tanaman)
+                                <span class="commodity-tag commodity-{{ strtolower(trim($tanaman)) }}">{{ trim($tanaman) }}</span>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                    @if(auth()->user()->lokasi_lahan)
+                    <div class="land-detail">
+                        <div class="land-label">Lokasi Lahan</div>
+                        <div class="land-value" style="font-size: 0.8rem;">{{ auth()->user()->lokasi_lahan }}</div>
+                    </div>
+                    @endif
+                @else
+                    <p style="color: #666; font-size: 0.85rem; text-align: center; margin: 0.5rem 0;">
+                        <i class="fas fa-info-circle"></i> Data lahan belum diisi
+                    </p>
+                @endif
             </div>
         </aside>
 
@@ -1212,6 +1331,37 @@
             closeOrderDetail();
         }
     });
+
+    // Delete Account Confirmation
+    function confirmDeleteAccount() {
+        if (confirm('⚠️ PERINGATAN!\n\nApakah Anda yakin ingin menghapus akun?\n\nSemua data Anda akan dihapus secara permanen dan tidak dapat dikembalikan:\n• Profil dan informasi pribadi\n• Riwayat pesanan\n• Data lahan\n• Pesan dan notifikasi\n\nKetik "HAPUS" untuk melanjutkan.')) {
+            const confirmation = prompt('Ketik "HAPUS" (tanpa tanda kutip) untuk konfirmasi penghapusan akun:');
+            
+            if (confirmation === 'HAPUS') {
+                // Create and submit delete form
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("account.delete") }}';
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                
+                const methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                methodField.value = 'DELETE';
+                
+                form.appendChild(csrfToken);
+                form.appendChild(methodField);
+                document.body.appendChild(form);
+                form.submit();
+            } else if (confirmation !== null) {
+                alert('Konfirmasi tidak sesuai. Penghapusan akun dibatalkan.');
+            }
+        }
+    }
 </script>
 @endpush
 

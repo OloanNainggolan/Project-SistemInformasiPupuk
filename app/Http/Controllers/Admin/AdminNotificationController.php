@@ -340,10 +340,8 @@ class AdminNotificationController extends Controller
             foreach ($users as $user) {
                 Message::create([
                     'user_id' => $user->id,
-                    'title' => $validated['title'],
+                    'subject' => $validated['title'],
                     'message' => $formattedMessage,
-                    'type' => $validated['type'],
-                    'is_read' => false,
                     'status' => 'unread'
                 ]);
                 $count++;
@@ -358,10 +356,8 @@ class AdminNotificationController extends Controller
 
         Message::create([
             'user_id' => $validated['user_id'],
-            'title' => $validated['title'],
+            'subject' => $validated['title'],
             'message' => $formattedMessage,
-            'type' => $validated['type'],
-            'is_read' => false,
             'status' => 'unread'
         ]);
 
