@@ -318,7 +318,7 @@ class PupukBibitController extends Controller
                 'subtotal' => $subtotal,
                 'discount_amount' => $discountAmount,
                 'discount_id' => $discountId,
-                'total_amount' => $totalAmount,
+                'village_office' => null,
                 'customer_name' => $validated['customer_name'],
                 'customer_phone' => $validated['customer_phone'],
                 'customer_address' => $validated['customer_address'],
@@ -330,6 +330,7 @@ class PupukBibitController extends Controller
                     'unit_price' => $unitPrice,
                     'subtotal' => $subtotal
                 ]]),
+                'total_amount' => $totalAmount,
                 'status' => 'Pending',
                 'confirmed_by_user' => true,
                 'confirmed_at' => now(),

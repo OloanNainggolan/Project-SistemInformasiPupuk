@@ -274,7 +274,7 @@
     }
 
     .land-value {
-        font-size: 0.95rem;
+        font-size: 0.95rem;push
         font-weight: 700;
         color: #1b5e20;
     }
