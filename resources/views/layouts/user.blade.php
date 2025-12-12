@@ -830,10 +830,6 @@
                             <i class="fas fa-edit"></i>
                             <span>Edit Profil</span>
                         </a>
-                        <button type="button" class="dropdown-item delete-account" onclick="confirmDeleteAccount()">
-                            <i class="fas fa-trash-alt"></i>
-                            <span>Hapus Akun</span>
-                        </button>
                         <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                             @csrf
                             <button type="submit" class="dropdown-item logout">
