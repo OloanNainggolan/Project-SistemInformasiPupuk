@@ -34,9 +34,10 @@
     
     .footer-grid {
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
-        gap: 50px;
+        grid-template-columns: 2.5fr 1fr;
+        gap: 60px;
         margin-bottom: 40px;
+        align-items: flex-start;
     }
     
     .footer-logo-section {
@@ -77,10 +78,11 @@
     }
     
     .footer-description {
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.8;
         color: #d1fae5;
-        margin: 15px 0 20px 0;
+        margin: 12px 0 22px 0;
+        max-width: 680px;
     }
     
     .footer-social-title {
@@ -94,27 +96,29 @@
         display: flex;
         gap: 12px;
         margin-top: 15px;
+        flex-wrap: wrap;
     }
     
     .footer-social-links a {
-        width: 40px;
-        height: 40px;
-        background: rgba(255, 255, 255, 0.1);
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.12);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         text-decoration: none;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        font-size: 16px;
+        transition: all 0.25s ease;
+        border: 1.5px solid rgba(255, 255, 255, 0.25);
+        font-size: 18px;
     }
     
     .footer-social-links a:hover {
-        background: #004d00;
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px #004d00;
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 77, 0, 0.3);
     }
     
     .footer-section h3 {
@@ -144,17 +148,17 @@
     }
     
     .footer-menu-list li {
-        margin-bottom: 14px;
+        margin-bottom: 12px;
     }
     
     .footer-menu-list a {
-        font-size: 14px;
-        color: #d1fae5;
+        font-size: 15px;
+        color: #e6f7ef;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all 0.22s ease;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
     
     .footer-menu-list a:hover {
@@ -163,11 +167,16 @@
     }
 
     .footer-menu-list i {
-        width: 20px;
-        color: #004d00;
-        font-size: 16px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        transition: color 0.25s ease;
     }
     
+    .footer-menu-list a:hover i {
+        color: white;
+    }
+    
+    /* contact styles kept for backward compatibility but not used */
     .footer-contact-item {
         display: flex;
         align-items: flex-start;
@@ -177,7 +186,6 @@
         font-size: 14px;
         line-height: 1.6;
     }
-    
     .footer-contact-icon {
         color: #004d00;
         font-size: 18px;
@@ -208,6 +216,11 @@
     .footer-institute-badge:hover {
         background: rgba(255, 255, 255, 0.15);
         transform: translateY(-2px);
+    }
+
+    /* center the institute badge in footer-bottom */
+    .footer-bottom .footer-institute-badge {
+        margin: 8px auto 0 auto;
     }
     
     .footer-badge-icon {
@@ -334,21 +347,7 @@
                 </ul>
             </div>
 
-            <div class="footer-section" id="kontak">
-                <h3>Hubungi Kami</h3>
-                <div class="footer-contact-item">
-                    <i class="fa-solid fa-location-dot footer-contact-icon"></i>
-                    <span>Jl. Sitoluama, Laguboti, Toba</span>
-                </div>
-                <div class="footer-contact-item">
-                    <i class="fa-solid fa-phone footer-contact-icon"></i>
-                    <span>+62 813 2323 09</span>
-                </div>
-                <div class="footer-contact-item">
-                    <i class="fa-solid fa-envelope footer-contact-icon"></i>
-                    <span>info@pupuksubsidi.id</span>
-                </div>
-            </div>
+            <!-- Contact column removed per request -->
         </div>
     </div>
     

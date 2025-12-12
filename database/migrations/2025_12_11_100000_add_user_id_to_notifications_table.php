@@ -12,15 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('notifications', function (Blueprint $table) {
+            // Add missing columns if they don't exist
             if (!Schema::hasColumn('notifications', 'user_id')) {
-                $table->unsignedBigInteger('user_id')->after('id');
-                $table->foreign('user_id')->references('id')->on('users');
+                $table->unsignedBigInteger('user_id')->nullable()->after('id');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
             if (!Schema::hasColumn('notifications', 'is_read')) {
                 $table->boolean('is_read')->default(false)->after('status');
-            }
-            if (!Schema::hasColumn('notifications', 'related_type')) {
-                $table->string('related_type')->nullable()->after('related_id');
             }
         });
     }
@@ -31,8 +29,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('notifications', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropColumn(['user_id', 'is_read', 'related_type']);
+            if (Schema::hasColumn('notifications', 'user_id')) {
+                $table->dropForeign(['user_id']);
+                $table->dropColumn('user_id');
+            }
+            if (Schema::hasColumn('notifications', 'is_read')) {
+                $table->dropColumn('is_read');
+            }
         });
     }
 };
