@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminApiController;
 use App\Http\Controllers\PupukBibitController;
+use App\Http\Controllers\MapsController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\UserNotificationController;
@@ -111,6 +112,42 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifikasi/{id}/reply', [UserNotificationController::class, 'reply'])->name('notifikasi.reply')->where('id', '[0-9]+');
     Route::post('/notifikasi/{id}/mark-read', [UserNotificationController::class, 'markAsRead'])->name('user.notifications.markAsRead')->where('id', '[0-9]+');
     Route::delete('/notifikasi/{id}', [UserNotificationController::class, 'destroy'])->name('user.notifications.destroy')->where('id', '[0-9]+');
+    
+    // Maps & Pickup Location Routes
+    Route::get('/maps', [MapsController::class, 'show'])->name('maps.show');
+    Route::post('/api/geocode', [MapsController::class, 'geocode'])->name('api.geocode');
+    Route::get('/api/pickup-points', [MapsController::class, 'pickupPoints'])->name('api.pickup-points');
+    Route::post('/api/nearest-pickup', [MapsController::class, 'nearestPickup'])->name('api.nearest-pickup');
+    
+    // Test API Route
+    Route::get('/test-api', function() {
+        return view('test-api');
+    });
+    
+    // Test Admin Maps Integration
+    Route::get('/test-admin-maps', function() {
+        return view('test-admin-maps');
+    });
+    
+    // Test Final - Direct Access
+    Route::get('/test-final', function() {
+        return view('test-final');
+    });
+    
+    // Direct ke notifikasi (no login required for testing)
+    Route::get('/notif-test', function() {
+        return view('notif-direct');
+    });
+    
+    // Force reload page
+    Route::get('/force-reload', function() {
+        return response()->file(resource_path('views/force-reload.php'));
+    });
+    
+    // Test all orders maps feature
+    Route::get('/test-maps-all', function() {
+        return view('test-maps-all');
+    });
     
     // System Notification Routes
     Route::post('/notifications/{id}/mark-read', [UserNotificationController::class, 'markNotificationAsRead'])->where('id', '[0-9]+');

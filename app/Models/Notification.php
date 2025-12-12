@@ -36,4 +36,15 @@ class Notification extends Model
     {
         return $query->orderBy('created_at', 'desc');
     }
+    
+    /**
+     * Get the related order if exists
+     */
+    public function order()
+    {
+        if ($this->related_type === 'App\\Models\\Order') {
+            return $this->belongsTo(\App\Models\Order::class, 'related_id');
+        }
+        return null;
+    }
 }

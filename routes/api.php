@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Catalog\ProductController;
 use App\Http\Controllers\Api\Sales\OrderController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\MapsController;
 
 /*
  API Routes - Separated by Folders
@@ -48,6 +49,11 @@ Route::prefix('v1')->group(function () {
         Route::patch('/{id}/status', [OrderController::class, 'updateStatus'])->name('api.orders.updateStatus');
         Route::delete('/{id}', [OrderController::class, 'destroy'])->name('api.orders.destroy');
     });
+
+    // MAPS ROUTES (Public)
+    Route::post('/geocode', [MapsController::class, 'geocode']);
+    Route::get('/pickup-points', [MapsController::class, 'pickupPoints']);
+    Route::post('/nearest-pickup', [MapsController::class, 'nearestPickup']);
 
     // HEALTH CHECK
     Route::get('/health', function () {
