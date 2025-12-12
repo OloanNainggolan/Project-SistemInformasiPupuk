@@ -1214,6 +1214,19 @@
                 subsidyRow.textContent = '- Rp ' + totalSubsidy.toLocaleString('id-ID');
             }
             
+            // Update Total Penghematan
+            const savingsAmount = document.querySelector('.savings-amount');
+            if (savingsAmount) {
+                savingsAmount.textContent = 'Rp ' + totalDiscount.toLocaleString('id-ID');
+            }
+            
+            // Update savings percentage
+            const savingsPercent = document.querySelector('.savings-percent');
+            if (savingsPercent && normalPrice > 0) {
+                const percentValue = Math.round((totalDiscount / normalPrice) * 100);
+                savingsPercent.textContent = `Hemat ${percentValue}% dari harga normal!`;
+            }
+            
             // Update final total
             document.querySelectorAll('.total-row .total-value').forEach(el => {
                 el.textContent = 'Rp ' + finalTotal.toLocaleString('id-ID');
