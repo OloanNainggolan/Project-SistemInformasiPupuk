@@ -13,9 +13,9 @@ trait TrackAdminActivity
     public function logActivity(
         string $action,
         string $description,
-        string $module = null,
-        int $relatedId = null,
-        array $changes = null,
+        ?string $module = null,
+        ?int $related_id = null,
+        ?array $changes = null,
         string $status = 'success'
     ) {
         try {
@@ -23,7 +23,7 @@ trait TrackAdminActivity
                 'action' => $action,
                 'description' => $description,
                 'module' => $module,
-                'related_id' => $relatedId,
+                'related_id' => $related_id,
                 'ip_address' => Request::ip(),
                 'user_agent' => Request::header('User-Agent'),
                 'changes' => $changes ? json_encode($changes) : null,

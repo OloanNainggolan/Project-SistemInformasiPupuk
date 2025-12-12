@@ -1,8 +1,6 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Detail Pesanan - Admin'); ?>
 
-@section('title', 'Detail Pesanan - Admin')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .detail-container {
         max-width: 1400px;
@@ -168,86 +166,6 @@
         font-size: 14px;
         font-weight: 500;
         word-break: break-word;
-    }
-
-    /* Map Section Admin */
-    .map-section-admin {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 25px;
-    }
-
-    .address-box {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #10b981;
-    }
-
-    .address-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .address-icon {
-        width: 50px;
-        height: 50px;
-        background: white;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .address-icon i {
-        color: #10b981;
-        font-size: 24px;
-    }
-
-    .address-details {
-        flex: 1;
-    }
-
-    .address-label-text {
-        font-size: 13px;
-        font-weight: 600;
-        color: #065f46;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .address-value-text {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1f2937;
-        line-height: 1.6;
-    }
-
-    .map-info-box {
-        background: #f0f9ff;
-        padding: 15px 20px;
-        border-radius: 10px;
-        border-left: 4px solid #0ea5e9;
-        margin-top: 20px;
-        font-size: 14px;
-        color: #0c4a6e;
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        font-weight: 500;
-    }
-
-    .map-info-box i {
-        color: #0ea5e9;
-        flex-shrink: 0;
-        margin-top: 2px;
-        font-size: 16px;
     }
 
     /* Products Section */
@@ -442,81 +360,6 @@
         color: white;
     }
 
-    /* Map Section Admin */
-    .map-section-admin {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 25px;
-    }
-
-    .address-box {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #10b981;
-        margin-bottom: 20px;
-    }
-
-    .address-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .address-icon {
-        width: 45px;
-        height: 45px;
-        background: #10b981;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 20px;
-        flex-shrink: 0;
-    }
-
-    .address-details {
-        flex: 1;
-    }
-
-    .address-label-text {
-        font-size: 13px;
-        font-weight: 600;
-        color: #065f46;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .address-value-text {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1f2937;
-        line-height: 1.6;
-    }
-
-    .map-info-box {
-        background: #dbeafe;
-        padding: 12px 18px;
-        border-radius: 8px;
-        border-left: 3px solid #3b82f6;
-        margin-top: 15px;
-        font-size: 13px;
-        color: #1e40af;
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .map-info-box i {
-        flex-shrink: 0;
-        margin-top: 2px;
-        font-size: 16px;
-    }
-
     /* Rejection Section */
     .rejection-section {
         background: #fee2e2;
@@ -585,13 +428,13 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="detail-container">
     <!-- Back Button -->
     <div class="back-button">
-        <a href="{{ route('admin.orders') }}" class="btn-back">
+        <a href="<?php echo e(route('admin.orders')); ?>" class="btn-back">
             <i class="fas fa-arrow-left"></i>
             <span>Kembali ke Daftar Pesanan</span>
         </a>
@@ -601,15 +444,16 @@
     <div class="order-header">
         <div class="order-title-section">
             <div>
-                <h1 class="order-title">Pesanan {{ $order->order_number }}</h1>
+                <h1 class="order-title">Pesanan <?php echo e($order->order_number); ?></h1>
                 <p class="order-date">
                     <i class="far fa-calendar"></i>
-                    {{ $order->created_at->format('d F Y, H:i') }} WIB
+                    <?php echo e($order->created_at->format('d F Y, H:i')); ?> WIB
                 </p>
             </div>
             <div>
-                <span class="status-badge status-{{ strtolower($order->status) }}">
-                    {{ $order->status }}
+                <span class="status-badge status-<?php echo e(strtolower($order->status)); ?>">
+                    <?php echo e($order->status); ?>
+
                 </span>
             </div>
         </div>
@@ -629,35 +473,35 @@
                         <i class="fas fa-user-circle"></i>
                         Nama Pemesan
                     </div>
-                    <div class="info-value">{{ $order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-envelope"></i>
                         Email
                     </div>
-                    <div class="info-value">{{ $order->user->email ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->user->email ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-phone"></i>
                         No. HP
                     </div>
-                    <div class="info-value">{{ $order->customer_phone ?? $order->user->no_hp ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_phone ?? $order->user->no_hp ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-map-marker-alt"></i>
                         Alamat
                     </div>
-                    <div class="info-value">{{ $order->customer_address ?? $order->user->alamat ?? 'Belum diisi' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_address ?? $order->user->alamat ?? 'Belum diisi'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-sticky-note"></i>
                         Catatan
                     </div>
-                    <div class="info-value">{{ $order->customer_notes ?? 'Tidak ada catatan' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_notes ?? 'Tidak ada catatan'); ?></div>
                 </div>
             </div>
         </div>
@@ -666,7 +510,7 @@
     </div>
 
     <!-- Pickup Point Information (for Ready status) -->
-    @if($order->status === 'Ready' || $order->status === 'Completed')
+    <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
     <div class="info-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981;">
         <h3 class="card-title" style="color: #047857;">
             <i class="fas fa-map-marked-alt"></i>
@@ -680,36 +524,7 @@
             <!-- Will be populated by JavaScript -->
         </div>
     </div>
-    @endif
-
-    <!-- Lokasi Pengambilan Map Section -->
-    @if($order->customer_address || $order->user->alamat)
-    <div class="map-section-admin">
-        <h3 class="card-title">
-            <i class="fas fa-map-marked-alt"></i>
-            Lokasi Pengambilan Pesanan
-        </h3>
-        
-        <div class="address-box">
-            <div class="address-row">
-                <span class="address-icon">
-                    <i class="fas fa-building"></i>
-                </span>
-                <div class="address-details">
-                    <div class="address-label-text">Balai Desa</div>
-                    <div class="address-value-text">{{ $order->customer_address ?? $order->user->alamat ?? 'N/A' }}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="adminOrderMap" style="height: 400px; border-radius: 12px; margin-top: 20px; border: 2px solid #10b981; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
-        
-        <div class="map-info-box">
-            <i class="fas fa-info-circle"></i>
-            <span>Marker merah menunjukkan lokasi pengambilan di Balai Desa. Pelanggan akan mengambil pesanan di lokasi ini.</span>
-        </div>
-    </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Products Ordered -->
     <div class="products-section">
@@ -718,7 +533,7 @@
             Produk yang Dipesan
         </h3>
         
-        @php
+        <?php
             $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
             $calculatedSubtotal = 0;
             
@@ -731,11 +546,11 @@
                     'order_total' => $order->total_amount ?? 'NULL'
                 ]);
             }
-        @endphp
+        ?>
 
-        @if(is_array($items) && count($items) > 0)
-            @foreach($items as $item)
-                @php
+        <?php if(is_array($items) && count($items) > 0): ?>
+            <?php $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php
                     // Use unit_price if available, otherwise fallback to price
                     $unitPrice = $item['unit_price'] ?? $item['price'] ?? 0;
                     $quantity = $item['quantity'] ?? 0;
@@ -743,47 +558,49 @@
                     // Use subtotal from item if available, otherwise calculate
                     $itemSubtotal = $item['subtotal'] ?? ($unitPrice * $quantity);
                     $calculatedSubtotal += $itemSubtotal;
-                @endphp
+                ?>
                 <div class="product-item">
                     <div class="product-image">
-                        @if(($item['type'] ?? '') === 'pupuk')
+                        <?php if(($item['type'] ?? '') === 'pupuk'): ?>
                             <i class="fas fa-seedling"></i>
-                        @else
+                        <?php else: ?>
                             <i class="fas fa-leaf"></i>
-                        @endif
+                        <?php endif; ?>
                     </div>
                     <div class="product-info">
-                        <h4>{{ $item['product_name'] ?? 'Produk' }}</h4>
+                        <h4><?php echo e($item['product_name'] ?? 'Produk'); ?></h4>
                         <p class="product-meta">
                             <span style="background: #e0e7ff; color: #5b21b6; padding: 3px 10px; border-radius: 5px; font-weight: 600;">
-                                {{ ucfirst($item['type'] ?? 'N/A') }}
+                                <?php echo e(ucfirst($item['type'] ?? 'N/A')); ?>
+
                             </span>
-                            <span style="margin-left: 10px;">{{ $item['category'] ?? 'N/A' }}</span>
+                            <span style="margin-left: 10px;"><?php echo e($item['category'] ?? 'N/A'); ?></span>
                         </p>
                         <p class="product-quantity">
-                            <i class="fas fa-box"></i> Jumlah: {{ $quantity }} kg
+                            <i class="fas fa-box"></i> Jumlah: <?php echo e($quantity); ?> kg
                         </p>
                     </div>
                     <div class="product-price">
                         <div class="product-subtotal">
-                            Rp {{ number_format($itemSubtotal, 0, ',', '.') }}
+                            Rp <?php echo e(number_format($itemSubtotal, 0, ',', '.')); ?>
+
                         </div>
                         <div class="product-unit-price">
-                            @ Rp {{ number_format($unitPrice, 0, ',', '.') }}/kg
+                            @ Rp <?php echo e(number_format($unitPrice, 0, ',', '.')); ?>/kg
                         </div>
                     </div>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
             <!-- Total Section -->
-            @php
+            <?php
                 // Use order subtotal from DB if calculated is 0, otherwise use calculated
                 $finalSubtotal = $calculatedSubtotal > 0 ? $calculatedSubtotal : ($order->subtotal ?? 0);
-            @endphp
+            ?>
             <div class="total-section">
                 <div class="total-row">
                     <span class="total-label">Subtotal</span>
-                    <span class="total-value">Rp {{ number_format($finalSubtotal, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp <?php echo e(number_format($finalSubtotal, 0, ',', '.')); ?></span>
                 </div>
                 <div class="total-row">
                     <span class="total-label">Ongkos Kirim</span>
@@ -791,27 +608,27 @@
                 </div>
                 <div class="total-row grand-total">
                     <span class="total-label">Total Pembayaran</span>
-                    <span class="total-value">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp <?php echo e(number_format($order->total_amount ?? 0, 0, ',', '.')); ?></span>
                 </div>
             </div>
-        @else
+        <?php else: ?>
             <p style="text-align: center; color: #6b7280; padding: 40px;">
                 <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>
                 Tidak ada produk dalam pesanan ini
             </p>
-        @endif
+        <?php endif; ?>
     </div>
 
     <!-- Rejection Reason (if rejected) -->
-    @if($order->status === 'Rejected' && $order->rejection_reason)
+    <?php if($order->status === 'Rejected' && $order->rejection_reason): ?>
     <div class="rejection-section">
         <div class="rejection-title">
             <i class="fas fa-exclamation-triangle"></i>
             Alasan Penolakan
         </div>
-        <p class="rejection-reason">{{ $order->rejection_reason }}</p>
+        <p class="rejection-reason"><?php echo e($order->rejection_reason); ?></p>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Action Buttons -->
     <div class="action-section">
@@ -820,7 +637,7 @@
             Kelola Pesanan
         </h3>
         <div class="action-buttons">
-            @if($order->status === 'Pending')
+            <?php if($order->status === 'Pending'): ?>
                 <button class="btn btn-processing" onclick="updateStatus('Processing')">
                     <i class="fas fa-spinner"></i>
                     Proses Pesanan
@@ -829,7 +646,7 @@
                     <i class="fas fa-times-circle"></i>
                     Tolak Pesanan
                 </button>
-            @elseif($order->status === 'Processing')
+            <?php elseif($order->status === 'Processing'): ?>
                 <button class="btn btn-ready" onclick="updateStatus('Ready')">
                     <i class="fas fa-check"></i>
                     Siap Diambil
@@ -838,12 +655,12 @@
                     <i class="fas fa-times-circle"></i>
                     Tolak Pesanan
                 </button>
-            @elseif($order->status === 'Ready')
+            <?php elseif($order->status === 'Ready'): ?>
                 <button class="btn btn-complete" onclick="updateStatus('Completed')">
                     <i class="fas fa-check-double"></i>
                     Selesaikan Pesanan
                 </button>
-            @endif
+            <?php endif; ?>
             
             <button class="btn btn-print" onclick="window.print()">
                 <i class="fas fa-print"></i>
@@ -852,97 +669,18 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
-@endpush
-
-@push('scripts')
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
-
-@if($order->customer_address || $order->user->alamat)
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Geocode alamat menggunakan Nominatim (OpenStreetMap)
-        const address = @json($order->customer_address ?? $order->user->alamat ?? '');
-        
-        if (!address) return;
-        
-        // Koordinat default (Indonesia - Jakarta)
-        let defaultLat = -6.2088;
-        let defaultLng = 106.8456;
-        
-        // Initialize map dengan koordinat default
-        const map = L.map('adminOrderMap').setView([defaultLat, defaultLng], 13);
-        
-        // Tambahkan tile layer dari OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19,
-        }).addTo(map);
-        
-        // Custom red marker icon
-        const redIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-        
-        // Coba geocode alamat
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Indonesia')}&limit=1`)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    const lat = parseFloat(data[0].lat);
-                    const lon = parseFloat(data[0].lon);
-                    
-                    // Update map center
-                    map.setView([lat, lon], 15);
-                    
-                    // Tambahkan marker dengan icon merah
-                    L.marker([lat, lon], {icon: redIcon})
-                        .addTo(map)
-                        .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi Pengambilan</b><br><small>${address}</small></div>`)
-                        .openPopup();
-                } else {
-                    // Jika geocoding gagal, tampilkan marker di lokasi default
-                    L.marker([defaultLat, defaultLng], {icon: redIcon})
-                        .addTo(map)
-                        .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi</b><br><small>${address}</small><br><small style="color: #f59e0b;">(Koordinat tidak ditemukan)</small></div>`)
-                        .openPopup();
-                }
-            })
-            .catch(error => {
-                console.error('Geocoding error:', error);
-                // Jika error, tampilkan marker di lokasi default
-                L.marker([defaultLat, defaultLng], {icon: redIcon})
-                    .addTo(map)
-                    .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi</b><br><small>${address}</small><br><small style="color: #dc2626;">(Error geocoding)</small></div>`)
-                    .openPopup();
-            });
-    });
-</script>
-@endif
-
+<?php $__env->startPush('scripts'); ?>
 <script>
     // Load nearest pickup point for Ready orders
-    @if($order->status === 'Ready' || $order->status === 'Completed')
+    <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
     document.addEventListener('DOMContentLoaded', function() {
         loadNearestPickupForAdmin();
     });
 
     function loadNearestPickupForAdmin() {
-        const customerAddress = '{{ $order->customer_address ?? $order->user->alamat ?? "" }}';
+        const customerAddress = '<?php echo e($order->customer_address ?? $order->user->alamat ?? ""); ?>';
         const loadingSection = document.getElementById('pickupLoadingSection');
         const infoSection = document.getElementById('pickupInfoSection');
         
@@ -1094,7 +832,7 @@
             `;
         });
     }
-    @endif
+    <?php endif; ?>
 
     function updateStatus(newStatus) {
         if (!confirm(`Apakah Anda yakin ingin mengubah status pesanan menjadi "${newStatus}"?`)) {
@@ -1103,7 +841,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -1139,7 +877,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/api/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/api/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -1166,4 +904,6 @@
         });
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\Project-SistemInformasiPupuk\resources\views/admin/orders/detail.blade.php ENDPATH**/ ?>

@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Pupuk & Bibit Subsidi')</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title><?php echo $__env->yieldContent('title', 'Pupuk & Bibit Subsidi'); ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/global-standards.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/user-theme.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/global-standards.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/user-theme.css')); ?>">
     
     <style>
         * {
@@ -617,37 +617,6 @@
             color: #fff6d6;
         }
 
-        /* Contact Links Styling */
-        .contact-links a {
-            flex-direction: row;
-            align-items: center;
-            gap: 12px;
-            padding-left: 0;
-        }
-
-        .contact-links a i {
-            width: auto;
-            color: rgba(255, 215, 0, 0.95);
-            transition: transform 0.28s ease, color 0.28s ease;
-            font-size: 1em;
-            flex-shrink: 0;
-        }
-
-        .contact-links a span {
-            display: block;
-            font-size: 0.95em;
-        }
-
-        .contact-links a:hover {
-            padding-left: 0;
-            color: #ffd700;
-        }
-
-        .contact-links a:hover i {
-            transform: scale(1.15) rotate(5deg);
-            color: #fff6d6;
-        }
-
 
 
         /* Footer Bottom - full width band */
@@ -724,14 +693,14 @@
         }
     </style>
 
-    @stack('styles')
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body>
     <!-- Sticky Header -->
     <header class="user-header">
         <div class="header-container">
             <!-- Logo Section -->
-            <a href="{{ route('dashboard') }}" style="text-decoration: none;">
+            <a href="<?php echo e(route('dashboard')); ?>" style="text-decoration: none;">
                 <div class="logo-section">
                     <div class="logo">
                         <i class="fas fa-seedling"></i>
@@ -751,19 +720,19 @@
             <!-- Navigation Menu -->
             <ul class="nav-menu" id="navMenu">
                 <li>
-                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('dashboard')); ?>" class="<?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>">
                         <i class="fas fa-home"></i>
                         <span>Beranda</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('pupuk.bibit') }}" class="{{ request()->routeIs('pupuk.bibit') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('pupuk.bibit')); ?>" class="<?php echo e(request()->routeIs('pupuk.bibit') ? 'active' : ''); ?>">
                         <i class="fas fa-leaf"></i>
                         <span>Pupuk & Bibit</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('kontak') }}" class="{{ request()->routeIs('kontak') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('kontak')); ?>" class="<?php echo e(request()->routeIs('kontak') ? 'active' : ''); ?>">
                         <i class="fas fa-envelope"></i>
                         <span>Kontak</span>
                     </a>
@@ -773,9 +742,9 @@
             <!-- Right Section -->
             <div class="header-right">
                 <!-- Notification Icon -->
-                <a href="{{ route('notifikasi') }}" class="notification-icon" title="Notifikasi">
+                <a href="<?php echo e(route('notifikasi')); ?>" class="notification-icon" title="Notifikasi">
                     <i class="fas fa-bell"></i>
-                    @php
+                    <?php
                         // Count unread messages from admin (conversations)
                         $unreadMessages = \App\Models\Message::where('user_id', Auth::id())
                             ->whereNull('reply_to')
@@ -801,37 +770,42 @@
                             ->count();
                         
                         $totalUnread = $unreadMessages + $unreadSystemMessages;
-                    @endphp
-                    @if($totalUnread > 0)
-                        <span class="notification-badge">{{ $totalUnread > 9 ? '9+' : $totalUnread }}</span>
-                    @endif
+                    ?>
+                    <?php if($totalUnread > 0): ?>
+                        <span class="notification-badge"><?php echo e($totalUnread > 9 ? '9+' : $totalUnread); ?></span>
+                    <?php endif; ?>
                 </a>
 
                 <!-- Profile Section with Dropdown -->
                 <div class="profile-section">
                     <div class="profile-avatar">
-                      @if(Auth::user()->foto)
-                            <img src="{{ asset(Auth::user()->foto) }}" alt="Profile">
-                      @else
-                          {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-                      @endif
+                      <?php if(Auth::user()->foto): ?>
+                            <img src="<?php echo e(asset(Auth::user()->foto)); ?>" alt="Profile">
+                      <?php else: ?>
+                          <?php echo e(strtoupper(substr(auth()->user()->name ?? 'U', 0, 1))); ?>
+
+                      <?php endif; ?>
                     </div>
                     <div class="profile-info">
-                        <span class="profile-name">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'User' }}</span>
+                        <span class="profile-name"><?php echo e(auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'User'); ?></span>
                     </div>
                     
                     <!-- Dropdown Menu -->
                     <div class="profile-dropdown">
-                        <a href="{{ route('profil.user') }}" class="dropdown-item">
+                        <a href="<?php echo e(route('profil.user')); ?>" class="dropdown-item">
                             <i class="fas fa-user-circle"></i>
                             <span>Profil Saya</span>
                         </a>
-                        <a href="{{ route('profil.edit') }}" class="dropdown-item">
+                        <a href="<?php echo e(route('profil.edit')); ?>" class="dropdown-item">
                             <i class="fas fa-edit"></i>
                             <span>Edit Profil</span>
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                            @csrf
+                        <button type="button" class="dropdown-item delete-account" onclick="confirmDeleteAccount()">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Hapus Akun</span>
+                        </button>
+                        <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="dropdown-item logout">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Keluar</span>
@@ -845,7 +819,7 @@
 
     <!-- Main Content -->
     <div class="content-wrapper">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </div>
 
     <!-- Enhanced Footer -->
@@ -860,39 +834,21 @@
 
                 <!-- Kolom 2 - Quick Links -->
                 <div class="footer-col">
-                    <h3><i class="fas fa-link"></i> Menu Utama</h3>
+                    <h3><i class="fas fa-link"></i> Menu Cepat</h3>
                     <ul class="footer-links">
-                        <li><a href="{{ route('home') }}"><i class="fas fa-chevron-right"></i> Beranda</a></li>
-                        <li><a href="{{ route('pupuk.bibit') }}"><i class="fas fa-chevron-right"></i> Pupuk & Bibit</a></li>
-                        <li><a href="{{ route('kontak') }}"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+                        <li><a href="<?php echo e(route('home')); ?>"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                        <li><a href="<?php echo e(route('pupuk.bibit')); ?>"><i class="fas fa-chevron-right"></i> Pupuk & Bibit</a></li>
+                        <li><a href="<?php echo e(route('kontak')); ?>"><i class="fas fa-chevron-right"></i> Kontak</a></li>
                     </ul>
                 </div>
 
-                <!-- Kolom 3 - Contact Info -->
-                <div class="footer-col">
-                    <h3><i class="fas fa-phone-alt"></i> Hubungi Kami</h3>
-                    <ul class="footer-links contact-links">
-                        <li>
-                            <a href="mailto:friskarevalinamanurung@gmail.com">
-                                <i class="fas fa-envelope"></i>
-                                <span>friskarevalinamanurung@gmail.com</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="tel:+628139629578">
-                                <i class="fas fa-phone"></i>
-                                <span>+62 813-9629-5784</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
 
             </div>
 
             <!-- Copyright -->
             <div class="footer-bottom">
                 <div class="footer-bottom-inner">
-                    <p>&copy; {{ date('Y') }} <strong>Pupuk & Bibit Subsidi</strong>. All rights reserved.</p>
+                    <p>&copy; <?php echo e(date('Y')); ?> <strong>Pupuk & Bibit Subsidi</strong>. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -995,9 +951,9 @@
                 </p>
             </div>
             
-            <form action="{{ route('account.delete') }}" method="POST" id="deleteAccountForm">
-                @csrf
-                @method('DELETE')
+            <form action="<?php echo e(route('account.delete')); ?>" method="POST" id="deleteAccountForm">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('DELETE'); ?>
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">
                         Ketik "<strong>HAPUS AKUN SAYA</strong>" untuk konfirmasi:
@@ -1052,8 +1008,9 @@
     </script>
 
     <!-- Google Maps Script -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_KEY') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo e(env('GOOGLE_MAPS_KEY')); ?>"></script>
 
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
+<?php /**PATH C:\laragon\www\Project-SistemInformasiPupuk\resources\views/layouts/user.blade.php ENDPATH**/ ?>

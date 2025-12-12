@@ -266,10 +266,22 @@ class AdminOrderController extends Controller
             $message .= "Pesanan Anda sudah siap.\n";
             $message .= "Silakan datang untuk mengambil pesanan.\n\n";
             
-            $message .= "📍 Lokasi Pengambilan:\n";
-            $message .= "Balai Desa (Sesuai alamat pengiriman)\n";
+            $message .= "📍 INFORMASI PENGAMBILAN:\n";
+            $message .= "Sistem akan menunjukkan titik pengambilan terdekat dari lokasi Anda.\n";
             $message .= "⏰ Jam Operasional: 08.00 - 17.00 WIB\n";
             $message .= "📋 Harap bawa bukti pesanan dan identitas diri\n";
+            $message .= "💳 Pembayaran: Tunai di Lokasi\n\n";
+            
+            $message .= "🗺️ LIHAT LOKASI PENGAMBILAN:\n";
+            $message .= "👉 Klik notifikasi ini untuk melihat PETA lokasi pengambilan terdekat\n";
+            $message .= "👉 Sistem otomatis menampilkan titik pengambilan paling dekat dari Anda\n";
+            $message .= "👉 Lihat jarak dan rute Google Maps langsung dari halaman notifikasi\n\n";
+            
+            $message .= "📱 CARA AKSES:\n";
+            $message .= "1. Buka menu Notifikasi\n";
+            $message .= "2. Klik notifikasi ini\n";
+            $message .= "3. Scroll ke bawah - lihat card hijau dengan tombol 'Buka Peta Lokasi Pengambilan'\n";
+            $message .= "4. Klik tombol untuk melihat peta interaktif\n";
         } elseif ($newStatus === 'Completed') {
             $message .= "🎉 PESANAN SELESAI!\n";
             $message .= "Pesanan telah diambil di Balai Desa.\n";

@@ -54,10 +54,29 @@
         @php
             $message = $notification->message;
             
-            // Extract order number
+            // Try to get order from database using related_id
+            $relatedOrder = null;
+            if ($notification->related_type === 'App\\Models\\Order' && $notification->related_id) {
+                $relatedOrder = \App\Models\Order::find($notification->related_id);
+            }
+            
+            // Extract order number - berbagai format (fallback jika tidak ada related_id)
             $orderNumber = null;
-            if (preg_match('/No\.\s*Pesanan:\s*#?([A-Z0-9-]+)/i', $message, $matches)) {
+            if ($relatedOrder) {
+                $orderNumber = $relatedOrder->order_number;
+            } elseif (preg_match('/No\.\s*Pesanan:\s*#?([A-Z0-9-]+)/i', $message, $matches)) {
                 $orderNumber = $matches[1];
+            } elseif (preg_match('/#([A-Z0-9]{3,}-[A-Z0-9]{6,})/i', $message, $matches)) {
+                // Format ORD-20251212-780630
+                $orderNumber = $matches[1];
+            } elseif (preg_match('/ORD-\d{8}-[A-F0-9]{6}/i', $message, $matches)) {
+                // Direct match format ORD-YYYYMMDD-XXXXXX
+                $orderNumber = $matches[0];
+            }
+            
+            // If we don't have relatedOrder but have orderNumber, try to find it
+            if (!$relatedOrder && $orderNumber) {
+                $relatedOrder = \App\Models\Order::where('order_number', $orderNumber)->first();
             }
             
             // Extract product name
@@ -84,7 +103,14 @@
             
             // Check for shipping notice
             $isShipped = preg_match('/PESANAN\s+HARI\s+DIKIRIM/i', $message);
-            $isReady = preg_match('/PESANAN\s+ANDA\s+SUDAH\s+SIAP/i', $message);
+            
+            // Check if order is Ready - prioritas dari database, fallback ke message text
+            $isReady = false;
+            if ($relatedOrder && in_array($relatedOrder->status, ['Ready', 'Completed'])) {
+                $isReady = true;
+            } else {
+                $isReady = preg_match('/SIAP\s+DIAMBIL|PESANAN\s+(ANDA\s+)?SUDAH\s+SIAP|Status\s+Baru:.*Siap/i', $message);
+            }
             
             // Extract action steps
             $actionSteps = null;
@@ -219,6 +245,26 @@
         <!-- Regular Notification Message -->
         <div class="notification-message">
             {!! nl2br(e($notification->message)) !!}
+
+            {{-- Tombol Maps juga untuk regular message jika ada kata "siap" dan order number --}}
+            @php
+                $hasOrderNumber = preg_match('/ORD-\d{8}-[A-F0-9]{6}/i', $notification->message, $matches);
+                $orderNum = $hasOrderNumber ? $matches[0] : null;
+                $isSiap = stripos($notification->message, 'siap') !== false || stripos($notification->title, 'siap') !== false;
+            @endphp
+            
+            @if($isSiap && $orderNum)
+            <div class="map-button-section" style="margin-top: 20px;">
+                <a href="{{ route('maps.show', ['order' => $orderNum]) }}" class="btn-map">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Lihat Lokasi Pengambilan
+                </a>
+                <p class="map-hint">
+                    <i class="fas fa-info-circle"></i>
+                    Klik tombol di atas untuk melihat lokasi pengambilan terdekat dari Anda
+                </p>
+            </div>
+            @endif
         </div>
         @endif
 
