@@ -6,7 +6,7 @@
 <div class="notification-detail-container">
     <!-- Back Button -->
     <div class="back-navigation">
-        <a href="{{ route('user.notifications.index') }}" class="back-link" onclick="sessionStorage.setItem('notifJustRead', 'true');">
+        <a href="{{ route('notifikasi') }}" class="back-link" onclick="sessionStorage.setItem('notifJustRead', 'true');">
             <i class="fas fa-arrow-left"></i> Kembali ke Notifikasi
         </a>
     </div>
@@ -167,6 +167,53 @@
                 <strong>Tip:</strong> {{ $tip }}
             </div>
             @endif
+
+            {{-- Map Section - Tampilkan di dalam order info --}}
+            @php
+                // Get address from order or user
+                $mapAddress = null;
+                $addressSource = 'none';
+                
+                if ($notification->order) {
+                    if (!empty($notification->order->customer_address)) {
+                        $mapAddress = $notification->order->customer_address;
+                        $addressSource = 'order.customer_address';
+                    } elseif ($notification->order->user && !empty($notification->order->user->alamat)) {
+                        $mapAddress = $notification->order->user->alamat;
+                        $addressSource = 'order.user.alamat';
+                    }
+                }
+            @endphp
+
+            @if($mapAddress)
+            <div class="map-section" style="margin-top: 20px;">
+                <div class="section-title" style="font-size: 15px; font-weight: 700; color: #1e40af; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #93c5fd;">
+                    <i class="fas fa-map-marked-alt"></i> PETA LOKASI PENGAMBILAN
+                </div>
+                
+                <div class="address-info">
+                    <div class="address-label">
+                        <i class="fas fa-building"></i> Balai Desa
+                    </div>
+                    <div class="address-value">
+                        {{ $mapAddress }}
+                    </div>
+                </div>
+                
+                <div id="orderMap" style="height: 350px; border-radius: 12px; margin-top: 15px; border: 2px solid #e5e7eb; position: relative; background: #f3f4f6;">
+                    <div id="mapLoading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 1000;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">🗺️</div>
+                        <div style="font-size: 14px; color: #6b7280;">Memuat peta lokasi pengambilan...</div>
+                    </div>
+                </div>
+                
+                <div class="map-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Pin merah menunjukkan lokasi Balai Desa untuk pengambilan pesanan. Klik marker untuk info detail.</span>
+                </div>
+            </div>
+            @endif
+
         </div>
         @else
         <!-- Regular Notification Message -->
@@ -175,9 +222,128 @@
         </div>
         @endif
 
+        <!-- Debug Section (di luar order info) -->
+        @php
+            // Debug: Log notification data
+            \Log::info('Notification Data for Map', [
+                'notification_id' => $notification->id,
+                'has_order' => isset($notification->order),
+                'order_loaded' => $notification->order ? 'YES' : 'NO',
+                'related_id' => $notification->related_id ?? 'null',
+                'related_type' => $notification->related_type ?? 'null',
+                'user_alamat' => auth()->user()->alamat ?? 'null'
+            ]);
+            
+            // Get address from multiple sources with fallback
+            $mapAddress = null;
+            $addressSource = 'none';
+            
+            if ($notification->order) {
+                \Log::info('Order loaded, checking addresses', [
+                    'customer_address' => $notification->order->customer_address ?? 'null',
+                    'order_user_exists' => isset($notification->order->user) ? 'yes' : 'no',
+                ]);
+                
+                if (!empty($notification->order->customer_address)) {
+                    $mapAddress = $notification->order->customer_address;
+                    $addressSource = 'order.customer_address';
+                } elseif ($notification->order->user && !empty($notification->order->user->alamat)) {
+                    $mapAddress = $notification->order->user->alamat;
+                    $addressSource = 'order.user.alamat';
+                } elseif (!empty(auth()->user()->alamat)) {
+                    $mapAddress = auth()->user()->alamat;
+                    $addressSource = 'auth.user.alamat';
+                }
+            } elseif (!empty(auth()->user()->alamat)) {
+                $mapAddress = auth()->user()->alamat;
+                $addressSource = 'auth.user.alamat (no order)';
+            }
+            
+            \Log::info('Map Address Result', [
+                'address' => $mapAddress ?? 'null',
+                'source' => $addressSource
+            ]);
+        @endphp
+
+        {{-- Debug Info - ALWAYS SHOW untuk troubleshooting --}}
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107; font-size: 12px; font-family: monospace;">
+            <div style="background: #fff; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <strong style="color: #d97706;">🐛 DEBUG INFO - NOTIFICATION DATA</strong>
+                <button onclick="this.parentElement.parentElement.style.display='none'" style="float: right; background: #f59e0b; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 10px;">HIDE</button>
+            </div>
+            
+            <table style="width: 100%; font-size: 11px;">
+                <tr>
+                    <td style="padding: 3px;"><strong>Notification ID:</strong></td>
+                    <td style="padding: 3px;">{{ $notification->id }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px;"><strong>Related ID:</strong></td>
+                    <td style="padding: 3px; {{ $notification->related_id ? 'color: green;' : 'color: red;' }}">
+                        {{ $notification->related_id ?? '❌ NULL' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px;"><strong>Related Type:</strong></td>
+                    <td style="padding: 3px;">{{ $notification->related_type ?? 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px;"><strong>Has Order Loaded:</strong></td>
+                    <td style="padding: 3px; {{ $notification->order ? 'color: green;' : 'color: red;' }}">
+                        {{ $notification->order ? '✅ YES' : '❌ NO' }}
+                    </td>
+                </tr>
+                @if($notification->order)
+                <tr style="background: #f0fdf4;">
+                    <td style="padding: 3px;"><strong>Order Number:</strong></td>
+                    <td style="padding: 3px;">{{ $notification->order->order_number ?? 'N/A' }}</td>
+                </tr>
+                <tr style="background: #f0fdf4;">
+                    <td style="padding: 3px;"><strong>Customer Address:</strong></td>
+                    <td style="padding: 3px; {{ $notification->order->customer_address ? 'color: green; font-weight: bold;' : 'color: red;' }}">
+                        {{ $notification->order->customer_address ?? '❌ NULL' }}
+                    </td>
+                </tr>
+                <tr style="background: #f0fdf4;">
+                    <td style="padding: 3px;"><strong>Order User Loaded:</strong></td>
+                    <td style="padding: 3px;">{{ $notification->order->user ? '✅ Yes' : '❌ No' }}</td>
+                </tr>
+                @if($notification->order->user)
+                <tr style="background: #f0fdf4;">
+                    <td style="padding: 3px;"><strong>Order User Alamat:</strong></td>
+                    <td style="padding: 3px;">{{ $notification->order->user->alamat ?? 'NULL' }}</td>
+                </tr>
+                @endif
+                @endif
+                <tr>
+                    <td style="padding: 3px;"><strong>Auth User Alamat:</strong></td>
+                    <td style="padding: 3px;">{{ auth()->user()->alamat ?? 'NULL' }}</td>
+                </tr>
+                <tr style="background: {{ $mapAddress ? '#dcfce7' : '#fee2e2' }};">
+                    <td style="padding: 3px;"><strong>FINAL MAP ADDRESS:</strong></td>
+                    <td style="padding: 3px; font-weight: bold; {{ $mapAddress ? 'color: #16a34a;' : 'color: #dc2626;' }}">
+                        {{ $mapAddress ?? '❌ NULL - MAP WON\'T SHOW!' }}
+                    </td>
+                </tr>
+                @if($mapAddress)
+                <tr style="background: #dcfce7;">
+                    <td style="padding: 3px;"><strong>Address Source:</strong></td>
+                    <td style="padding: 3px; color: #16a34a;">{{ $addressSource ?? 'unknown' }}</td>
+                </tr>
+                @endif
+            </table>
+            
+            @if(!$mapAddress)
+            <div style="background: #fee2e2; padding: 10px; border-radius: 5px; margin-top: 10px; color: #991b1b;">
+                <strong>⚠️ WARNING:</strong> Map tidak akan muncul karena tidak ada alamat!<br>
+                <small>Solusi: Pastikan order memiliki customer_address atau user memiliki alamat.</small>
+            </div>
+            @endif
+        </div>
+
         <!-- Action Buttons -->
         <div class="notification-actions">
-            <a href="{{ route('user.notifications.index') }}" class="btn-action back" onclick="sessionStorage.setItem('notifJustRead', 'true');">
+            <a href="{{ route('notifikasi') }}" class="btn-action back" onclick="sessionStorage.setItem('notifJustRead', 'true');">
                 <i class="fas fa-arrow-left"></i>
                 Kembali
             </a>
@@ -492,6 +658,58 @@
     margin-top: 2px;
 }
 
+/* Map Section */
+.map-section {
+    background: #f9fafb;
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    margin-top: 25px;
+}
+
+.address-info {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #3b82f6;
+    margin-bottom: 15px;
+}
+
+.address-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.address-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+    line-height: 1.6;
+}
+
+.map-notice {
+    background: #eff6ff;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 3px solid #3b82f6;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #1e40af;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.map-notice i {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
 .notification-actions {
     display: flex;
     gap: 10px;
@@ -585,3 +803,115 @@
 }
 </style>
 @endsection
+
+@push('styles')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+@endpush
+
+@push('scripts')
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+@if($mapAddress)
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🗺️ Initializing map for notification...');
+        console.log('📍 Address:', @json($mapAddress));
+        console.log('🔍 Leaflet loaded:', typeof L !== 'undefined');
+        
+        if (typeof L === 'undefined') {
+            console.error('❌ Leaflet library not loaded!');
+            return;
+        }
+        
+        const mapElement = document.getElementById('orderMap');
+        if (!mapElement) {
+            console.error('❌ Map element #orderMap not found!');
+            console.log('Available elements:', document.querySelectorAll('[id*="map"]'));
+            return;
+        }
+        console.log('✅ Map element found:', mapElement);
+        
+        // Geocode alamat menggunakan Nominatim (OpenStreetMap)
+        const address = @json($mapAddress);
+        
+        // Koordinat default (Indonesia - Jakarta)
+        let defaultLat = -6.2088;
+        let defaultLng = 106.8456;
+        
+        // Initialize map dengan koordinat default
+        console.log('📍 Creating map...');
+        const map = L.map('orderMap').setView([defaultLat, defaultLng], 13);
+        
+        // Hide loading indicator setelah map initialized
+        const loadingEl = document.getElementById('mapLoading');
+        if (loadingEl) {
+            loadingEl.style.display = 'none';
+        }
+        
+        // Tambahkan tile layer dari OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19,
+        }).addTo(map);
+        
+        // Custom red marker icon
+        const redIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+        
+        // Coba geocode alamat
+        console.log('🔍 Geocoding address:', address);
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Indonesia')}&limit=1`)
+            .then(response => {
+                console.log('📡 Geocoding response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('📊 Geocoding data:', data);
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lon = parseFloat(data[0].lon);
+                    console.log('✅ Coordinates found:', { lat, lon });
+                    
+                    // Update map center
+                    map.setView([lat, lon], 15);
+                    
+                    // Tambahkan marker dengan icon merah
+                    L.marker([lat, lon], {icon: redIcon})
+                        .addTo(map)
+                        .bindPopup(`<b>📍 Lokasi Pengambilan</b><br>${address}`)
+                        .openPopup();
+                } else {
+                    console.warn('⚠️ No coordinates found, using default location');
+                    // Jika geocoding gagal, tampilkan marker di lokasi default
+                    L.marker([defaultLat, defaultLng], {icon: redIcon})
+                        .addTo(map)
+                        .bindPopup(`<b>📍 Lokasi</b><br>${address}<br><small>(Koordinat tidak ditemukan, menampilkan lokasi default)</small>`)
+                        .openPopup();
+                }
+            })
+            .catch(error => {
+                console.error('❌ Geocoding error:', error);
+                // Jika error, tampilkan marker di lokasi default
+                L.marker([defaultLat, defaultLng], {icon: redIcon})
+                    .addTo(map)
+                    .bindPopup(`<b>📍 Lokasi</b><br>${address}<br><small>(Error geocoding, menampilkan lokasi default)</small>`)
+                    .openPopup();
+            });
+        
+        console.log('✅ Map initialization completed');
+    });
+</script>
+@endif
+@endpush

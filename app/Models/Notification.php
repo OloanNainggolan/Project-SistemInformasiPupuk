@@ -36,4 +36,20 @@ class Notification extends Model
     {
         return $query->orderBy('created_at', 'desc');
     }
+    
+    /**
+     * Get the related order if notification is order-related
+     */
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'related_id');
+    }
+    
+    /**
+     * Get the user that owns the notification
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
