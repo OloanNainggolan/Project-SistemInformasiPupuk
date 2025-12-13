@@ -425,97 +425,98 @@
 
         /* ========== FOOTER ========== */
         .admin-footer {
-            background: linear-gradient(135deg, #1a5e3a, #2d7a50);
+            background: linear-gradient(135deg, #0d4a2c 0%, #1a6b3f 50%, #2d8f4f 100%);
             color: white;
-            padding: 40px 0 0;
+            padding: 60px 0 0;
             margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700, #64c864, #ffd700);
+        }
+
+        .admin-footer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.3), rgba(100, 200, 100, 0.3), rgba(255, 215, 0, 0.3));
         }
 
         .footer-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 50px;
+            padding: 0 40px;
         }
 
-        .footer-grid {
+        .footer-columns {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 50px;
+            padding-bottom: 50px;
         }
 
-        .footer-section h3 {
-            font-size: 18px;
+        .footer-col h3 {
+            color: #ffd700;
+            font-size: 1.5em;
             font-weight: 700;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .footer-about {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .footer-brand {
+            margin-bottom: 18px;
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .footer-brand i {
-            font-size: 40px;
-            color: white;
-        }
-
-        .footer-brand-text h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 0 0 4px 0;
-        }
-
-        .footer-brand-text p {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            margin: 0;
-        }
-
-        .footer-description {
-            font-size: 14px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.85);
-            margin-top: 8px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 18px;
+            position: relative;
+            padding-bottom: 12px;
         }
 
-        .social-link:hover {
-            background: white;
-            color: var(--green-dark);
-            transform: translateY(-3px);
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, #ffd700, rgba(255, 215, 0, 0));
+            border-radius: 1px;
         }
 
+        .footer-col:hover h3 {
+            color: #ffed4e;
+        }
+
+        .footer-col h3 i {
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-col:hover h3 i {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .footer-col p {
+            color: rgba(255, 255, 255, 0.88);
+            line-height: 1.8;
+            margin-bottom: 0;
+            font-size: 1.05em;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        /* Footer Links */
         .footer-links {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .footer-links li {
@@ -523,71 +524,138 @@
         }
 
         .footer-links a {
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.92);
             text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .footer-links a:hover {
-            color: white;
-            padding-left: 8px;
+            gap: 14px;
+            transition: all 0.28s cubic-bezier(.2,.8,.2,1);
+            font-size: 1em;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            padding-left: 0;
         }
 
         .footer-links a i {
-            font-size: 14px;
-            width: 16px;
+            font-size: 0.9em;
+            transition: transform 0.28s ease, color 0.28s ease;
+            color: rgba(255, 215, 0, 0.95);
+            width: 18px;
+            text-align: center;
         }
 
-        .footer-contact {
-            list-style: none;
-            padding: 0;
+        .footer-links a:hover {
+            color: #ffd700;
+            padding-left: 8px;
         }
 
-        .footer-contact li {
-            margin-bottom: 14px;
-            display: flex;
-            align-items: flex-start;
+        .footer-links a:hover i {
+            transform: translateX(4px) scale(1.02);
+            color: #fff6d6;
+        }
+
+        /* Contact Links Styling */
+        .contact-links a {
+            flex-direction: row;
+            align-items: center;
             gap: 12px;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 14px;
-            line-height: 1.6;
+            padding-left: 0;
         }
 
-        .footer-contact li i {
-            font-size: 16px;
-            color: white;
-            margin-top: 2px;
-            min-width: 20px;
+        .contact-links a i {
+            width: auto;
+            color: rgba(255, 215, 0, 0.95);
+            transition: transform 0.28s ease, color 0.28s ease;
+            font-size: 1em;
+            flex-shrink: 0;
         }
 
+        .contact-links a span {
+            display: block;
+            font-size: 0.95em;
+        }
+
+        .contact-links a:hover {
+            padding-left: 0;
+            color: #ffd700;
+        }
+
+        .contact-links a:hover i {
+            transform: scale(1.15) rotate(5deg);
+            color: #fff6d6;
+        }
+
+        /* Footer Bottom - full width band */
         .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 24px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
+            border-top: 1px solid rgba(255, 215, 0, 0.06);
+            padding: 28px 40px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
         }
 
-        .footer-bottom-content {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.85);
+        .footer-bottom-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
         }
 
-        .footer-bottom-content i {
-            font-size: 18px;
-            color: white;
+        .footer-bottom p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.95em;
+            letter-spacing: 0.3px;
+            font-weight: 400;
         }
 
-        .footer-bottom-content strong {
-            color: white;
-            font-weight: 600;
+        .footer-bottom strong {
+            color: #ffd700;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom:hover strong {
+            color: #ffed4e;
+        }
+
+        /* Responsive Footer */
+        @media (max-width: 768px) {
+            .admin-footer {
+                padding: 40px 0 0;
+            }
+
+            .footer-container {
+                padding: 0 20px;
+            }
+
+            .footer-columns {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+                padding-bottom: 40px;
+            }
+
+            .footer-col h3 {
+                justify-content: center;
+                margin-bottom: 16px;
+            }
+
+            .footer-col h3::after {
+                display: none;
+            }
+
+            .footer-links a {
+                justify-content: center;
+                font-size: 0.95em;
+            }
+
+            .footer-bottom {
+                padding: 25px 0;
+            }
+
+            .footer-bottom p {
+                font-size: 0.9em;
+            }
         }
 
         /* ========== RESPONSIVE ========== */
@@ -771,65 +839,49 @@
     <!-- Footer -->
     <footer class="admin-footer">
         <div class="footer-container">
-            <div class="footer-grid">
-                <!-- About Section -->
-                <div class="footer-section footer-about">
-                    <div class="footer-brand">
-                        <i class="fas fa-seedling"></i>
-                        <div class="footer-brand-text">
-                            <h3>Pupuk Subsidi Indonesia</h3>
-                            <p>Program Pemerintah untuk Petani</p>
-                        </div>
-                    </div>
-                    <p class="footer-description">
-                        Platform resmi pemerintah untuk distribusi pupuk dan bibit bersubsidi kepada petani Indonesia. Mendukung ketahanan pangan nasional melalui program subsidi berkualitas.
-                    </p>
-                    <div class="follow-us">
-                        <p style="font-size: 14px; margin-bottom: 8px; font-weight: 600;">Follow us!</p>
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        </div>
-                    </div>
+            <div class="footer-columns">
+                <!-- Kolom 1 - About -->
+                <div class="footer-col">
+                    <h3><i class="fas fa-seedling"></i> Tentang Kami</h3>
+                    <p>Platform digital terpercaya untuk mengelola subsidi pupuk dan bibit berkualitas bagi petani Indonesia.</p>
                 </div>
 
-                <!-- Menu Links -->
-                <div class="footer-section">
-                    <h3>Menu Utama</h3>
+                <!-- Kolom 2 - Menu Utama Admin -->
+                <div class="footer-col">
+                    <h3><i class="fas fa-link"></i> Menu Utama</h3>
                     <ul class="footer-links">
-                        <li><a href="<?php echo e(route('admin.dashboard')); ?>"><i class="fas fa-angle-right"></i> Overview</a></li>
-                        <li><a href="<?php echo e(route('admin.orders')); ?>"><i class="fas fa-angle-right"></i> Pesanan</a></li>
-                        <li><a href="<?php echo e(route('admin.products.index')); ?>"><i class="fas fa-angle-right"></i> Produk</a></li>
-                        <li><a href="<?php echo e(route('admin.notifications.send')); ?>"><i class="fas fa-angle-right"></i> Kirim Notifikasi</a></li>
+                        <li><a href="<?php echo e(route('admin.dashboard')); ?>"><i class="fas fa-chevron-right"></i> Overview</a></li>
+                        <li><a href="<?php echo e(route('admin.orders')); ?>"><i class="fas fa-chevron-right"></i> Pesanan</a></li>
+                        <li><a href="<?php echo e(route('admin.products.index')); ?>"><i class="fas fa-chevron-right"></i> Produk</a></li>
+                        <li><a href="<?php echo e(route('admin.notifications.inbox')); ?>"><i class="fas fa-chevron-right"></i> Notifikasi Masuk</a></li>
+                        <li><a href="<?php echo e(route('admin.notifications.send')); ?>"><i class="fas fa-chevron-right"></i> Kirim Notifikasi</a></li>
                     </ul>
                 </div>
 
-                <!-- Contact Section -->
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <ul class="footer-contact">
+                <!-- Kolom 3 - Contact Info -->
+                <div class="footer-col">
+                    <h3><i class="fas fa-phone-alt"></i> Hubungi Kami</h3>
+                    <ul class="footer-links contact-links">
                         <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Jl. Sitoluama, Laguboti, Toba</span>
+                            <a href="mailto:friskarevalinamanurung@gmail.com">
+                                <i class="fas fa-envelope"></i>
+                                <span>friskarevalinamanurung@gmail.com</span>
+                            </a>
                         </li>
                         <li>
-                            <i class="fas fa-phone"></i>
-                            <span>+91 91813 23 2309</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>hello@squareup.com</span>
+                            <a href="tel:+628139629578">
+                                <i class="fas fa-phone"></i>
+                                <span>+62 813-9629-5784</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Bottom Bar -->
+            <!-- Copyright -->
             <div class="footer-bottom">
-                <div class="footer-bottom-content">
-                    <i class="fas fa-landmark"></i>
-                    <span><strong>INFORMATION SYSTEMS</strong> Del Institute of Technology</span>
+                <div class="footer-bottom-inner">
+                    <p>&copy; <?php echo e(date('Y')); ?> <strong>Pupuk & Bibit Subsidi</strong>. All rights reserved.</p>
                 </div>
             </div>
         </div>
