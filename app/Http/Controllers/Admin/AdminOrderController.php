@@ -140,7 +140,7 @@ class AdminOrderController extends Controller
             action: 'update_order_status',
             description: "Mengubah status pesanan #{$orderNumber} dari {$oldStatus} menjadi {$newStatus}",
             module: 'orders',
-            relatedId: $order->id,
+            related_id: $order->id,
             changes: [
                 'order_number' => $orderNumber,
                 'status' => ['old' => $oldStatus, 'new' => $newStatus]
@@ -318,17 +318,7 @@ class AdminOrderController extends Controller
         // Buat subject yang menarik
         $subject = "{$emoji} Update Status Pesanan #{$order->order_number} - {$statusMessages[$newStatus]}";
 
-        // Kirim sebagai Message (untuk inbox)
-        Message::create([
-            'user_id' => $order->user_id,
-            'sender_type' => 'admin',
-            'subject' => $subject,
-            'message' => $message,
-            'status' => 'unread',
-            'reply_to' => null,
-        ]);
-
-        // PENTING: Kirim juga sebagai System Notification dengan related_id untuk maps
+        // KIRIM HANYA 1 NOTIFIKASI (System Notification dengan data lengkap)
         // Tentukan tipe notifikasi berdasarkan status
         $notificationType = 'info';
         if ($newStatus === 'Ready') {
@@ -339,6 +329,68 @@ class AdminOrderController extends Controller
             $notificationType = 'success';
         }
 
+        // Untuk status Ready/Completed, ambil data pickup point terdekat
+        $pickupData = null;
+        if ($newStatus === 'Ready' || $newStatus === 'Completed') {
+            try {
+                $customerAddress = $order->customer_address ?? $order->user->alamat ?? null;
+                
+                if ($customerAddress) {
+                    // Tentukan koordinat customer berdasarkan alamat
+                    $areaCoordinates = [
+                        'flyover' => ['lat' => 2.5950, 'lng' => 99.0300],
+                        'pasar' => ['lat' => 2.5800, 'lng' => 99.0450],
+                        'pantai' => ['lat' => 2.6400, 'lng' => 99.1200],
+                        'desa' => ['lat' => 2.5700, 'lng' => 99.0600],
+                        'balai' => ['lat' => 2.5700, 'lng' => 99.0600],
+                        'kota' => ['lat' => 2.5900, 'lng' => 99.0500],
+                        'default' => ['lat' => 2.5850, 'lng' => 99.0550]
+                    ];
+                    
+                    $customerCoords = $areaCoordinates['default'];
+                    $addressLower = strtolower($customerAddress);
+                    
+                    foreach ($areaCoordinates as $keyword => $coords) {
+                        if ($keyword !== 'default' && strpos($addressLower, $keyword) !== false) {
+                            $customerCoords = $coords;
+                            break;
+                        }
+                    }
+                    
+                    // Ambil nearest pickup point menggunakan internal call
+                    $mapsController = new \App\Http\Controllers\MapsController();
+                    $request = new \Illuminate\Http\Request();
+                    $request->merge([
+                        'lat' => $customerCoords['lat'],
+                        'lng' => $customerCoords['lng']
+                    ]);
+                    
+                    try {
+                        $response = $mapsController->nearestPickup($request);
+                        $result = $response->getData(true);
+                        
+                        if (isset($result['nearest_location'])) {
+                            $pickupData = [
+                                'customer_address' => $customerAddress,
+                                'customer_lat' => $customerCoords['lat'],
+                                'customer_lng' => $customerCoords['lng'],
+                                'pickup_name' => $result['nearest_location']['name'],
+                                'pickup_address' => $result['nearest_location']['address'],
+                                'pickup_lat' => $result['nearest_location']['latitude'],
+                                'pickup_lng' => $result['nearest_location']['longitude'],
+                                'distance' => round($result['nearest_location']['distance'], 2),
+                                'maps_url' => "https://www.google.com/maps/dir/?api=1&origin={$customerCoords['lat']},{$customerCoords['lng']}&destination={$result['nearest_location']['latitude']},{$result['nearest_location']['longitude']}&travelmode=driving"
+                            ];
+                        }
+                    } catch (\Exception $e) {
+                        \Log::error('Error fetching pickup point for notification: ' . $e->getMessage());
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::error('Error preparing pickup data for notification: ' . $e->getMessage());
+            }
+        }
+
         Notification::create([
             'user_id' => $order->user_id,
             'type' => $notificationType,
@@ -346,9 +398,10 @@ class AdminOrderController extends Controller
             'message' => $message,
             'status' => 'unread',
             'is_read' => false,
-            'related_id' => $order->id,  // KUNCI: Simpan order ID agar bisa load data order + maps
+            'related_id' => $order->id,
             'related_type' => 'Order',
             'link' => null,
+            'data' => $pickupData ? json_encode($pickupData) : null,
         ]);
     }
 

@@ -682,35 +682,6 @@
     </div>
     @endif
 
-    <!-- Lokasi Pengambilan Map Section -->
-    @if($order->customer_address || $order->user->alamat)
-    <div class="map-section-admin">
-        <h3 class="card-title">
-            <i class="fas fa-map-marked-alt"></i>
-            Lokasi Pengambilan Pesanan
-        </h3>
-        
-        <div class="address-box">
-            <div class="address-row">
-                <span class="address-icon">
-                    <i class="fas fa-building"></i>
-                </span>
-                <div class="address-details">
-                    <div class="address-label-text">Balai Desa</div>
-                    <div class="address-value-text">{{ $order->customer_address ?? $order->user->alamat ?? 'N/A' }}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="adminOrderMap" style="height: 400px; border-radius: 12px; margin-top: 20px; border: 2px solid #10b981; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
-        
-        <div class="map-info-box">
-            <i class="fas fa-info-circle"></i>
-            <span>Marker merah menunjukkan lokasi pengambilan di Balai Desa. Pelanggan akan mengambil pesanan di lokasi ini.</span>
-        </div>
-    </div>
-    @endif
-
     <!-- Products Ordered -->
     <div class="products-section">
         <h3 class="card-title">
@@ -902,73 +873,6 @@
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
-@if($order->customer_address || $order->user->alamat)
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Geocode alamat menggunakan Nominatim (OpenStreetMap)
-        const address = @json($order->customer_address ?? $order->user->alamat ?? '');
-        
-        if (!address) return;
-        
-        // Koordinat default (Indonesia - Jakarta)
-        let defaultLat = -6.2088;
-        let defaultLng = 106.8456;
-        
-        // Initialize map dengan koordinat default
-        const map = L.map('adminOrderMap').setView([defaultLat, defaultLng], 13);
-        
-        // Tambahkan tile layer dari OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19,
-        }).addTo(map);
-        
-        // Custom red marker icon
-        const redIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-        
-        // Coba geocode alamat
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Indonesia')}&limit=1`)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    const lat = parseFloat(data[0].lat);
-                    const lon = parseFloat(data[0].lon);
-                    
-                    // Update map center
-                    map.setView([lat, lon], 15);
-                    
-                    // Tambahkan marker dengan icon merah
-                    L.marker([lat, lon], {icon: redIcon})
-                        .addTo(map)
-                        .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi Pengambilan</b><br><small>${address}</small></div>`)
-                        .openPopup();
-                } else {
-                    // Jika geocoding gagal, tampilkan marker di lokasi default
-                    L.marker([defaultLat, defaultLng], {icon: redIcon})
-                        .addTo(map)
-                        .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi</b><br><small>${address}</small><br><small style="color: #f59e0b;">(Koordinat tidak ditemukan)</small></div>`)
-                        .openPopup();
-                }
-            })
-            .catch(error => {
-                console.error('Geocoding error:', error);
-                // Jika error, tampilkan marker di lokasi default
-                L.marker([defaultLat, defaultLng], {icon: redIcon})
-                    .addTo(map)
-                    .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi</b><br><small>${address}</small><br><small style="color: #dc2626;">(Error geocoding)</small></div>`)
-                    .openPopup();
-            });
-    });
-</script>
-@endif
-
 <script>
     // Load nearest pickup point for Ready orders
     @if($order->status === 'Ready' || $order->status === 'Completed')
@@ -1149,18 +1053,33 @@
                 status: newStatus
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            // Handle 419 error (CSRF token expired)
+            if (response.status === 419) {
+                alert('⚠️ Session Anda telah berakhir. Halaman akan di-refresh untuk memperbarui session.');
+                location.reload();
+                return Promise.reject('Session expired');
+            }
+            
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            
+            return response.json();
+        })
         .then(data => {
-            if (data.success) {
+            if (data && data.success) {
                 alert('✅ Status pesanan berhasil diupdate!');
                 location.reload();
             } else {
-                alert('❌ Gagal mengupdate status: ' + (data.message || 'Unknown error'));
+                alert('❌ Gagal mengupdate status: ' + (data?.message || 'Unknown error'));
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('❌ Terjadi kesalahan saat mengupdate status');
+            if (error !== 'Session expired') {
+                console.error('Error:', error);
+                alert('❌ Terjadi kesalahan: ' + (error.message || 'Unknown error'));
+            }
         });
     }
 
@@ -1174,7 +1093,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/api/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/orders/{{ $order->order_number }}/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -1186,18 +1105,33 @@
                 rejection_reason: reason.trim()
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            // Handle 419 error (CSRF token expired)
+            if (response.status === 419) {
+                alert('⚠️ Session Anda telah berakhir. Halaman akan di-refresh untuk memperbarui session.');
+                location.reload();
+                return Promise.reject('Session expired');
+            }
+            
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            
+            return response.json();
+        })
         .then(data => {
-            if (data.success) {
+            if (data && data.success) {
                 alert('✅ Pesanan berhasil ditolak!');
                 location.reload();
             } else {
-                alert('❌ Gagal menolak pesanan: ' + (data.message || 'Unknown error'));
+                alert('❌ Gagal menolak pesanan: ' + (data?.message || 'Unknown error'));
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('❌ Terjadi kesalahan saat menolak pesanan');
+            if (error !== 'Session expired') {
+                console.error('Error:', error);
+                alert('❌ Terjadi kesalahan: ' + (error.message || 'Unknown error'));
+            }
         });
     }
 </script>

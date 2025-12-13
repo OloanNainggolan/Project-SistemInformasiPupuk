@@ -1,12 +1,10 @@
-@extends('layouts.user')
+<?php $__env->startSection('title', 'Detail Notifikasi'); ?>
 
-@section('title', 'Detail Notifikasi')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="notification-detail-container">
     <!-- Back Button -->
     <div class="back-navigation">
-        <a href="{{ route('notifikasi') }}" class="back-link" onclick="sessionStorage.setItem('notifJustRead', 'true');">
+        <a href="<?php echo e(route('notifikasi')); ?>" class="back-link" onclick="sessionStorage.setItem('notifJustRead', 'true');">
             <i class="fas fa-arrow-left"></i> Kembali ke Notifikasi
         </a>
     </div>
@@ -26,32 +24,34 @@
                     </div>
                     <div class="notification-date">
                         <i class="fas fa-clock"></i>
-                        {{ $notification->created_at->format('d M Y, H:i') }}
+                        <?php echo e($notification->created_at->format('d M Y, H:i')); ?>
+
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Notification Type Badge -->
-        <div class="notification-type-badge {{ $notification->type }}">
-            @if($notification->type === 'info')
+        <div class="notification-type-badge <?php echo e($notification->type); ?>">
+            <?php if($notification->type === 'info'): ?>
                 <i class="fas fa-info-circle"></i> Informasi
-            @elseif($notification->type === 'success')
+            <?php elseif($notification->type === 'success'): ?>
                 <i class="fas fa-check-circle"></i> Sukses
-            @elseif($notification->type === 'warning')
+            <?php elseif($notification->type === 'warning'): ?>
                 <i class="fas fa-exclamation-triangle"></i> Peringatan
-            @elseif($notification->type === 'important')
+            <?php elseif($notification->type === 'important'): ?>
                 <i class="fas fa-exclamation-circle"></i> Penting
-            @endif
+            <?php endif; ?>
         </div>
 
         <!-- Title -->
         <div class="notification-title">
             <i class="fas fa-bell"></i>
-            {{ $notification->title }}
+            <?php echo e($notification->title); ?>
+
         </div>
 
-        @php
+        <?php
             $message = $notification->message;
             
             // Try to get order from database using related_id
@@ -128,79 +128,81 @@
             if (preg_match('/💡\s*Tip:\s*(.+?)(?:\n|$)/i', $message, $matches)) {
                 $tip = trim($matches[1]);
             }
-        @endphp
+        ?>
 
-        @if($orderNumber || $productName || $oldStatus || $newStatus)
+        <?php if($orderNumber || $productName || $oldStatus || $newStatus): ?>
         <!-- Order Status Update Section -->
         <div class="order-info-section">
             <div class="section-title">
                 <i class="fas fa-box"></i> UPDATE STATUS PESANAN 📦
             </div>
             
-            @if($orderNumber)
+            <?php if($orderNumber): ?>
             <div class="info-item">
                 <span class="info-label">📋 No. Pesanan:</span>
-                <span class="info-value">#{{ $orderNumber }}</span>
+                <span class="info-value">#<?php echo e($orderNumber); ?></span>
             </div>
-            @endif
+            <?php endif; ?>
 
-            @if($productName)
+            <?php if($productName): ?>
             <div class="info-item">
                 <span class="info-label">📦 Produk:</span>
-                <span class="info-value">{{ $productName }}</span>
+                <span class="info-value"><?php echo e($productName); ?></span>
             </div>
-            @endif
+            <?php endif; ?>
 
-            @if($jumlah)
+            <?php if($jumlah): ?>
             <div class="info-item">
                 <span class="info-label">🔢 Jumlah:</span>
-                <span class="info-value">{{ $jumlah }}</span>
+                <span class="info-value"><?php echo e($jumlah); ?></span>
             </div>
-            @endif
+            <?php endif; ?>
 
-            @if($oldStatus && $newStatus)
+            <?php if($oldStatus && $newStatus): ?>
             <div class="status-change-section">
                 <div class="status-item lama">
                     <span class="status-icon old">📦</span>
                     <span class="status-label">Status Lama:</span>
-                    <span class="status-value">{{ $oldStatus }}</span>
+                    <span class="status-value"><?php echo e($oldStatus); ?></span>
                 </div>
                 <div class="status-item baru">
                     <span class="status-icon new">✅</span>
                     <span class="status-label">Status Baru:</span>
-                    <span class="status-value highlight">{{ $newStatus }}</span>
+                    <span class="status-value highlight"><?php echo e($newStatus); ?></span>
                 </div>
             </div>
-            @endif
+            <?php endif; ?>
 
-            @if($isShipped)
+            <?php if($isShipped): ?>
             <div class="highlight-banner shipped">
                 📦 PESANAN HARI DIKIRIM!
             </div>
-            @elseif($isReady)
+            <?php elseif($isReady): ?>
             <div class="highlight-banner ready">
                 PESANAN ANDA SUDAH SIAP.
             </div>
-            @endif
+            <?php endif; ?>
 
-            @if($actionSteps)
+            <?php if($actionSteps): ?>
             <div class="action-section">
                 <div class="action-title">🔔 Langkah Pengambilan:</div>
                 <div class="action-content">
-                    {!! nl2br(e($actionSteps)) !!}
+                    <?php echo nl2br(e($actionSteps)); ?>
+
                 </div>
             </div>
-            @endif
+            <?php endif; ?>
 
-            @if($tip)
+            <?php if($tip): ?>
             <div class="tip-section">
                 <i class="fas fa-lightbulb"></i>
-                <strong>Tip:</strong> {{ $tip }}
-            </div>
-            @endif
+                <strong>Tip:</strong> <?php echo e($tip); ?>
 
-            {{-- Pickup Point Information - Data dari admin --}}
-            @php
+            </div>
+            <?php endif; ?>
+
+            
+            <?php
                 // Cek apakah ada data pickup point
                 $hasPickupData = false;
                 $pickupData = null;
@@ -214,9 +216,9 @@
                         $hasPickupData = true;
                     }
                 }
-            @endphp
+            ?>
             
-            @if($hasPickupData && $pickupData)
+            <?php if($hasPickupData && $pickupData): ?>
             <div class="pickup-info-card">
                 <div class="section-title" style="font-size: 16px; font-weight: 700; color: #047857; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-map-marked-alt"></i> 
@@ -229,10 +231,12 @@
                             <i class="fas fa-home" style="color: #6366f1;"></i> Alamat Customer:
                         </div>
                         <div class="pickup-value">
-                            {{ $pickupData['customer_address'] ?? 'N/A' }}
+                            <?php echo e($pickupData['customer_address'] ?? 'N/A'); ?>
+
                         </div>
                         <div class="pickup-coords">
-                            📍 Koordinat: {{ number_format($pickupData['customer_lat'] ?? 0, 4) }}, {{ number_format($pickupData['customer_lng'] ?? 0, 4) }}
+                            📍 Koordinat: <?php echo e(number_format($pickupData['customer_lat'] ?? 0, 4)); ?>, <?php echo e(number_format($pickupData['customer_lng'] ?? 0, 4)); ?>
+
                         </div>
                     </div>
 
@@ -241,7 +245,8 @@
                             <i class="fas fa-building" style="color: #047857;"></i> Titik Pengambilan Terdekat:
                         </div>
                         <div class="pickup-value main">
-                            {{ $pickupData['pickup_name'] ?? 'N/A' }}
+                            <?php echo e($pickupData['pickup_name'] ?? 'N/A'); ?>
+
                         </div>
                     </div>
 
@@ -250,10 +255,12 @@
                             <i class="fas fa-map-marker-alt"></i> Alamat Pickup Point:
                         </div>
                         <div class="pickup-value">
-                            {{ $pickupData['pickup_address'] ?? 'N/A' }}
+                            <?php echo e($pickupData['pickup_address'] ?? 'N/A'); ?>
+
                         </div>
                         <div class="pickup-coords">
-                            📍 Koordinat: {{ $pickupData['pickup_lat'] ?? 'N/A' }}, {{ $pickupData['pickup_lng'] ?? 'N/A' }}
+                            📍 Koordinat: <?php echo e($pickupData['pickup_lat'] ?? 'N/A'); ?>, <?php echo e($pickupData['pickup_lng'] ?? 'N/A'); ?>
+
                         </div>
                     </div>
 
@@ -262,7 +269,7 @@
                             <i class="fas fa-route"></i> Jarak dari Customer:
                         </div>
                         <div class="pickup-value distance">
-                            {{ $pickupData['distance'] ?? 'N/A' }} km
+                            <?php echo e($pickupData['distance'] ?? 'N/A'); ?> km
                         </div>
                     </div>
 
@@ -275,17 +282,17 @@
                         </div>
                     </div>
 
-                    @if(isset($pickupData['maps_url']))
+                    <?php if(isset($pickupData['maps_url'])): ?>
                     <div class="maps-button-container">
-                        <a href="{{ $pickupData['maps_url'] }}" target="_blank" class="btn-google-maps">
+                        <a href="<?php echo e($pickupData['maps_url']); ?>" target="_blank" class="btn-google-maps">
                             <i class="fab fa-google"></i>
                             Buka Rute di Google Maps
                         </a>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
                 
-                {{-- Peta Interaktif --}}
+                
                 <div class="pickup-map-container" style="margin-top: 20px;">
                     <div class="section-title" style="font-size: 15px; font-weight: 700; color: #047857; margin-bottom: 15px;">
                         <i class="fas fa-map"></i> Peta Lokasi
@@ -306,10 +313,10 @@
                     </div>
                 </div>
             </div>
-            @endif
+            <?php endif; ?>
 
-            {{-- Map Section - Tampilkan di dalam order info --}}
-            @php
+            
+            <?php
                 // Get address from order or user
                 $mapAddress = null;
                 $addressSource = 'none';
@@ -323,24 +330,25 @@
                         $addressSource = 'order.user.alamat';
                     }
                 }
-            @endphp
+            ?>
 
         </div>
-        @else
+        <?php else: ?>
         <!-- Regular Notification Message -->
         <div class="notification-message">
-            {!! nl2br(e($notification->message)) !!}
+            <?php echo nl2br(e($notification->message)); ?>
 
-            {{-- Tombol Maps juga untuk regular message jika ada kata "siap" dan order number --}}
-            @php
+
+            
+            <?php
                 $hasOrderNumber = preg_match('/ORD-\d{8}-[A-F0-9]{6}/i', $notification->message, $matches);
                 $orderNum = $hasOrderNumber ? $matches[0] : null;
                 $isSiap = stripos($notification->message, 'siap') !== false || stripos($notification->title, 'siap') !== false;
-            @endphp
+            ?>
             
-            @if($isSiap && $orderNum)
+            <?php if($isSiap && $orderNum): ?>
             <div class="map-button-section" style="margin-top: 20px;">
-                <a href="{{ route('maps.show', ['order' => $orderNum]) }}" class="btn-map">
+                <a href="<?php echo e(route('maps.show', ['order' => $orderNum])); ?>" class="btn-map">
                     <i class="fas fa-map-marked-alt"></i>
                     Lihat Lokasi Pengambilan
                 </a>
@@ -349,12 +357,12 @@
                     Klik tombol di atas untuk melihat lokasi pengambilan terdekat dari Anda
                 </p>
             </div>
-            @endif
+            <?php endif; ?>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Debug Section (di luar order info) -->
-        @php
+        <?php
             // Debug: Log notification data
             \Log::info('Notification Data for Map', [
                 'notification_id' => $notification->id,
@@ -394,18 +402,18 @@
                 'address' => $mapAddress ?? 'null',
                 'source' => $addressSource
             ]);
-        @endphp
+        ?>
 
         <!-- Action Buttons -->
         <div class="notification-actions">
-            <a href="{{ route('notifikasi') }}" class="btn-action back" onclick="sessionStorage.setItem('notifJustRead', 'true');">
+            <a href="<?php echo e(route('notifikasi')); ?>" class="btn-action back" onclick="sessionStorage.setItem('notifJustRead', 'true');">
                 <i class="fas fa-arrow-left"></i>
                 Kembali
             </a>
             
-            <form action="{{ route('user.notifications.destroy', $notification->id) }}" method="POST" style="display: inline;">
-                @csrf
-                @method('DELETE')
+            <form action="<?php echo e(route('user.notifications.destroy', $notification->id)); ?>" method="POST" style="display: inline;">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('DELETE'); ?>
                 <button type="submit" class="btn-action delete" onclick="return confirm('Yakin ingin menghapus notifikasi ini?')">
                     <i class="fas fa-trash"></i>
                     Hapus
@@ -951,28 +959,28 @@
     }
 }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
-{{-- Script untuk Pickup Map dengan data dari admin --}}
-@if($hasPickupData && $pickupData)
+
+<?php if($hasPickupData && $pickupData): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🗺️ Initializing pickup map...');
     
-    const pickupData = @json($pickupData);
+    const pickupData = <?php echo json_encode($pickupData, 15, 512) ?>;
     console.log('📦 Pickup data:', pickupData);
     
     const mapElement = document.getElementById('pickupMap');
@@ -1081,13 +1089,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-@endif
+<?php endif; ?>
 
-@if($mapAddress)
+<?php if($mapAddress): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🗺️ Initializing map for notification...');
-        console.log('📍 Address:', @json($mapAddress));
+        console.log('📍 Address:', <?php echo json_encode($mapAddress, 15, 512) ?>);
         console.log('🔍 Leaflet loaded:', typeof L !== 'undefined');
         
         if (typeof L === 'undefined') {
@@ -1096,5 +1104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 </script>
-@endif
-@endpush
+<?php endif; ?>
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\Project-SistemInformasiPupuk\resources\views/user/notifications/show-notification.blade.php ENDPATH**/ ?>

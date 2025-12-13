@@ -18,7 +18,13 @@ class Notification extends Model
         'status',
         'is_read',
         'related_id',
-        'related_type'
+        'related_type',
+        'data'
+    ];
+    
+    protected $casts = [
+        'data' => 'array',
+        'is_read' => 'boolean',
     ];
     
     /**
