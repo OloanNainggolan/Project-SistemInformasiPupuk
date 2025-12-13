@@ -1,8 +1,6 @@
-@extends('layouts.user')
+<?php $__env->startSection('title', 'Detail Produk'); ?>
 
-@section('title', 'Detail Produk')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     * {
         margin: 0;
@@ -548,11 +546,11 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-detail">
-    <a href="{{ route('pupuk.bibit') }}" class="back-link">
+    <a href="<?php echo e(route('pupuk.bibit')); ?>" class="back-link">
         <i class="fas fa-arrow-left"></i>
         <span>Kembali</span>
     </a>
@@ -560,7 +558,7 @@
     <div class="product-detail-grid">
         <!-- Product Images -->
         <div class="product-images">
-            @php
+            <?php
             $imageList = [];
             if(isset($produk->images) && $produk->images->count() > 0) {
                 foreach($produk->images as $image) {
@@ -595,10 +593,10 @@
                 $imageList[] = $fallbackSrc;
             }
             $imageSrc = $imageList[0] ?? asset('images/pupuk.jpg');
-            @endphp
+            ?>
             
             <!-- Hidden data untuk JavaScript -->
-            <div id="imageData" data-images='@json($imageList)' style="display: none;"></div>
+            <div id="imageData" data-images='<?php echo json_encode($imageList, 15, 512) ?>' style="display: none;"></div>
             
             <div class="main-image">
                 <!-- Tombol Previous -->
@@ -606,7 +604,7 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 
-                <img id="mainProductImage" src="{{ $imageSrc }}" alt="{{ $produk->nama_produk ?? 'Produk' }}">
+                <img id="mainProductImage" src="<?php echo e($imageSrc); ?>" alt="<?php echo e($produk->nama_produk ?? 'Produk'); ?>">
                 
                 <!-- Tombol Next -->
                 <button class="carousel-btn next" onclick="nextImage()" id="nextBtn">
@@ -615,23 +613,23 @@
             </div>
             
             <div class="thumbnail-grid">
-                @if(isset($produk->images) && $produk->images->count() > 0)
-                    @foreach($produk->images as $index => $image)
-                        <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="goToImage({{ $index }})" data-index="{{ $index }}">
-                            <img src="{{ asset($image->image_path) }}" alt="Thumbnail {{ $index + 1 }}">
+                <?php if(isset($produk->images) && $produk->images->count() > 0): ?>
+                    <?php $__currentLoopData = $produk->images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="thumbnail <?php echo e($index === 0 ? 'active' : ''); ?>" onclick="goToImage(<?php echo e($index); ?>)" data-index="<?php echo e($index); ?>">
+                            <img src="<?php echo e(asset($image->image_path)); ?>" alt="Thumbnail <?php echo e($index + 1); ?>">
                         </div>
-                    @endforeach
-                @else
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php else: ?>
                     <div class="thumbnail active" onclick="goToImage(0)" data-index="0">
-                        <img src="{{ $imageSrc }}" alt="Thumbnail 1">
+                        <img src="<?php echo e($imageSrc); ?>" alt="Thumbnail 1">
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- Product Info -->
         <div class="product-info-card">
-            <h1 class="product-title">{{ $produk->nama_produk ?? 'Pupuk Urea' }}</h1>
+            <h1 class="product-title"><?php echo e($produk->nama_produk ?? 'Pupuk Urea'); ?></h1>
             
             <div>
                 <span class="badge badge-subsidi">
@@ -643,11 +641,11 @@
             <div class="price-section">
                 <div class="price-row">
                     <span class="price-label">Harga Normal</span>
-                    <span class="price-normal">Rp {{ number_format($produk->harga_normal ?? 2800, 0, ',', '.') }}</span>
+                    <span class="price-normal">Rp <?php echo e(number_format($produk->harga_normal ?? 2800, 0, ',', '.')); ?></span>
                 </div>
                 <div class="price-row">
                     <span class="price-label">Harga Subsidi</span>
-                    <span class="price-value">Rp{{ number_format($produk->harga_subsidi ?? 2800, 0, ',', '.') }}</span>
+                    <span class="price-value">Rp<?php echo e(number_format($produk->harga_subsidi ?? 2800, 0, ',', '.')); ?></span>
                 </div>
             </div>
 
@@ -658,26 +656,26 @@
                         Jumlah Produk yang dipesan:
                     </span>
                     <div class="quantity-buttons">
-                        <button class="qty-btn" onclick="decreaseQty()" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
+                        <button class="qty-btn" onclick="decreaseQty()" <?php echo e(($produk->stok_produk ?? 0) == 0 ? 'disabled' : ''); ?>>
                             <i class="fas fa-minus"></i>
                         </button>
-                        <input type="number" class="qty-display" id="qtyDisplay" value="1" min="1" max="{{ $produk->stok_produk ?? 1 }}" oninput="handleManualInput(this.value)" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
-                        <button class="qty-btn" onclick="increaseQty()" {{ ($produk->stok_produk ?? 0) == 0 ? 'disabled' : '' }}>
+                        <input type="number" class="qty-display" id="qtyDisplay" value="1" min="1" max="<?php echo e($produk->stok_produk ?? 1); ?>" oninput="handleManualInput(this.value)" <?php echo e(($produk->stok_produk ?? 0) == 0 ? 'disabled' : ''); ?>>
+                        <button class="qty-btn" onclick="increaseQty()" <?php echo e(($produk->stok_produk ?? 0) == 0 ? 'disabled' : ''); ?>>
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
-                    @php
+                    <?php
                         $stock = $produk->stok_produk ?? 0;
-                    @endphp
-                    <span class="stock-info" id="stockInfo" style="{{ $stock == 0 ? 'color: #ef4444;' : ($stock < 10 ? 'color: #f59e0b;' : 'color: #10b981;') }}">
-                        <i class="fas fa-{{ $stock == 0 ? 'times-circle' : ($stock < 10 ? 'exclamation-triangle' : 'warehouse') }}"></i>
-                        @if($stock == 0)
+                    ?>
+                    <span class="stock-info" id="stockInfo" style="<?php echo e($stock == 0 ? 'color: #ef4444;' : ($stock < 10 ? 'color: #f59e0b;' : 'color: #10b981;')); ?>">
+                        <i class="fas fa-<?php echo e($stock == 0 ? 'times-circle' : ($stock < 10 ? 'exclamation-triangle' : 'warehouse')); ?>"></i>
+                        <?php if($stock == 0): ?>
                             Stok Habis
-                        @elseif($stock < 10)
-                            Tersisa {{ $stock }} unit (Segera habis!)
-                        @else
-                            Tersedia {{ $stock }} unit
-                        @endif
+                        <?php elseif($stock < 10): ?>
+                            Tersisa <?php echo e($stock); ?> unit (Segera habis!)
+                        <?php else: ?>
+                            Tersedia <?php echo e($stock); ?> unit
+                        <?php endif; ?>
                     </span>
                     <div id="stockWarning" style="display: none; background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 13px; font-weight: 600;">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -688,53 +686,53 @@
                 <div class="summary-box">
                     <div class="summary-row">
                         <span class="summary-label">Subtotal</span>
-                        <span class="summary-value" id="subtotal">Rp {{ number_format($produk->harga_subsidi ?? 2800, 0, ',', '.') }}</span>
+                        <span class="summary-value" id="subtotal">Rp <?php echo e(number_format($produk->harga_subsidi ?? 2800, 0, ',', '.')); ?></span>
                     </div>
-                    @php
+                    <?php
                         $discountAmt = $discountAmount ?? 0;
                         $subsidyAmt = $subsidyAmount ?? 0;
-                    @endphp
-                    @if($discountAmt > 0)
+                    ?>
+                    <?php if($discountAmt > 0): ?>
                     <div class="summary-row" style="color: #10b981;">
                         <span class="summary-label">
                             <i class="fas fa-tag"></i> Potongan
-                            @if(isset($bestDiscount))
-                                <small style="font-size: 11px; opacity: 0.8;">({{ $bestDiscount->code }})</small>
-                            @endif
+                            <?php if(isset($bestDiscount)): ?>
+                                <small style="font-size: 11px; opacity: 0.8;">(<?php echo e($bestDiscount->code); ?>)</small>
+                            <?php endif; ?>
                         </span>
-                        <span class="summary-value" id="discountDisplay">- Rp {{ number_format($discountAmt, 0, ',', '.') }}</span>
+                        <span class="summary-value" id="discountDisplay">- Rp <?php echo e(number_format($discountAmt, 0, ',', '.')); ?></span>
                     </div>
-                    @endif
-                    @if($subsidyAmt > 0)
+                    <?php endif; ?>
+                    <?php if($subsidyAmt > 0): ?>
                     <div class="summary-row" style="color: #059669; font-size: 13px;">
                         <span class="summary-label">
                             <i class="fas fa-gift"></i> Subsidi Pemerintah
                         </span>
-                        <span class="summary-value">Hemat Rp {{ number_format($subsidyAmt, 0, ',', '.') }}</span>
+                        <span class="summary-value">Hemat Rp <?php echo e(number_format($subsidyAmt, 0, ',', '.')); ?></span>
                     </div>
-                    @endif
+                    <?php endif; ?>
                     <div class="summary-row summary-total">
                         <span class="summary-label">Total</span>
-                        <span class="summary-value" id="total">Rp {{ number_format(($produk->harga_subsidi ?? 2800) - $discountAmt, 0, ',', '.') }}</span>
+                        <span class="summary-value" id="total">Rp <?php echo e(number_format(($produk->harga_subsidi ?? 2800) - $discountAmt, 0, ',', '.')); ?></span>
                     </div>
                 </div>
 
-                <form action="{{ route('user.pupukbibit.konfirmasi', $produk->id_produk ?? 1) }}" method="POST" id="orderForm">
-                    @csrf
+                <form action="<?php echo e(route('user.pupukbibit.konfirmasi', $produk->id_produk ?? 1)); ?>" method="POST" id="orderForm">
+                    <?php echo csrf_field(); ?>
                     <input type="hidden" name="quantity" id="quantityInput" value="1">
-                    <input type="hidden" name="product_id" value="{{ $produk->id_produk ?? 1 }}">
+                    <input type="hidden" name="product_id" value="<?php echo e($produk->id_produk ?? 1); ?>">
                     
-                    @if(($produk->stok_produk ?? 0) > 0)
+                    <?php if(($produk->stok_produk ?? 0) > 0): ?>
                         <button type="submit" class="btn-order" id="orderBtn">
                             <i class="fas fa-shopping-cart"></i>
                             Pesan Sekarang
                         </button>
-                    @else
+                    <?php else: ?>
                         <button type="button" class="btn-order" disabled style="opacity: 0.5; cursor: not-allowed; background: linear-gradient(135deg, #9ca3af, #6b7280);">
                             <i class="fas fa-times-circle"></i>
                             Stok Habis
                         </button>
-                    @endif
+                    <?php endif; ?>
                 </form>
 
                 <div class="info-notice">
@@ -753,44 +751,45 @@
         </h2>
 
         <!-- Deskripsi Umum -->
-        @if($produk->deskripsi)
+        <?php if($produk->deskripsi): ?>
         <div style="margin-bottom: 24px;">
             <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Deskripsi Produk
             </h3>
             <p style="color: #4b5563; line-height: 1.8; font-size: 15px;">
-                {{ $produk->deskripsi }}
+                <?php echo e($produk->deskripsi); ?>
+
             </p>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Manfaat -->
-        @if($produk->manfaat)
+        <?php if($produk->manfaat): ?>
         <div style="margin-bottom: 24px;">
             <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Manfaat & Keunggulan
             </h3>
             <ul style="list-style: none; padding: 0; margin: 0;">
-                @foreach(explode("\n", $produk->manfaat) as $manfaatItem)
-                    @if(trim($manfaatItem))
+                <?php $__currentLoopData = explode("\n", $produk->manfaat); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $manfaatItem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if(trim($manfaatItem)): ?>
                     <li style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; color: #4b5563; line-height: 1.7; font-size: 15px;">
                         <i class="fas fa-check" style="color: #10b981; margin-top: 4px; flex-shrink: 0;"></i>
-                        <span>{{ trim($manfaatItem) }}</span>
+                        <span><?php echo e(trim($manfaatItem)); ?></span>
                     </li>
-                    @endif
-                @endforeach
+                    <?php endif; ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Panduan Penggunaan -->
-        @if($produk->cara_penggunaan)
+        <?php if($produk->cara_penggunaan): ?>
         <div style="margin-bottom: 24px;">
             <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 16px; font-weight: 700;">
                 Panduan Penggunaan
             </h3>
             
-            @php
+            <?php
                 // Split cara_penggunaan by common section patterns
                 $sections = [];
                 $lines = explode("\n", $produk->cara_penggunaan);
@@ -825,55 +824,59 @@
                         'content' => $currentContent
                     ];
                 }
-            @endphp
+            ?>
             
-            @if(count($sections) > 0)
-                @foreach($sections as $index => $section)
+            <?php if(count($sections) > 0): ?>
+                <?php $__currentLoopData = $sections; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div style="margin-bottom: 18px;">
                     <h4 style="font-size: 16px; color: #065f46; margin-bottom: 10px; font-weight: 700;">
-                        {{ $index + 1 }}. {{ $section['title'] }}
+                        <?php echo e($index + 1); ?>. <?php echo e($section['title']); ?>
+
                     </h4>
                     <ul style="list-style: none; padding: 0; margin: 0; padding-left: 20px;">
-                        @foreach($section['content'] as $item)
+                        <?php $__currentLoopData = $section['content']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <li style="color: #4b5563; line-height: 1.7; font-size: 14px; margin-bottom: 6px; position: relative; padding-left: 20px;">
                             <span style="position: absolute; left: 0; color: #6b7280;">•</span>
-                            {{ $item }}
+                            <?php echo e($item); ?>
+
                         </li>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
-                @endforeach
-            @else
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
                 <p style="color: #4b5563; line-height: 1.8; font-size: 15px; white-space: pre-line;">
-                    {{ $produk->cara_penggunaan }}
+                    <?php echo e($produk->cara_penggunaan); ?>
+
                 </p>
-            @endif
+            <?php endif; ?>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Bahan/Komposisi -->
-        @if($produk->bahan)
+        <?php if($produk->bahan): ?>
         <div style="margin-bottom: 24px;">
             <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 12px; font-weight: 700;">
                 Bahan/Komposisi
             </h3>
             <p style="color: #4b5563; line-height: 1.8; font-size: 15px; white-space: pre-line;">
-                {{ $produk->bahan }}
+                <?php echo e($produk->bahan); ?>
+
             </p>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
-    const productId = {{ $produk->id_produk ?? 1 }};
-    const productName = '{{ $produk->nama_produk ?? "Produk" }}';
-    const basePrice = {{ $produk->harga_subsidi ?? 2800 }};
-    const maxStock = {{ $produk->stok_produk ?? 0 }};
-    const discountPerUnit = {{ $discountAmount ?? 0 }};
-    const subsidyPerUnit = {{ $subsidyAmount ?? 0 }};
+    const productId = <?php echo e($produk->id_produk ?? 1); ?>;
+    const productName = '<?php echo e($produk->nama_produk ?? "Produk"); ?>';
+    const basePrice = <?php echo e($produk->harga_subsidi ?? 2800); ?>;
+    const maxStock = <?php echo e($produk->stok_produk ?? 0); ?>;
+    const discountPerUnit = <?php echo e($discountAmount ?? 0); ?>;
+    const subsidyPerUnit = <?php echo e($subsidyAmount ?? 0); ?>;
     let quantity = 1;
     
     // Image Carousel Variables
@@ -1127,4 +1130,6 @@
         updateDisplay();
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/user/lihat-detail-pesan.blade.php ENDPATH**/ ?>

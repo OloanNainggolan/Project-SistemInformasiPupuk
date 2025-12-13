@@ -1,8 +1,6 @@
-@extends('layouts.user')
+<?php $__env->startSection('title', 'Pupuk & Bibit Subsidi'); ?>
 
-@section('title', 'Pupuk & Bibit Subsidi')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     * {
         margin: 0;
@@ -453,14 +451,14 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <main>
-    @php
+    <?php
         $pupukProducts = $products->where('tipe_produk', 'pupuk');
         $bibitProducts = $products->where('tipe_produk', 'bibit');
-    @endphp
+    ?>
 
     <!-- Pupuk Subsidi Section -->
     <section id="pupuk-subsidi">
@@ -469,12 +467,12 @@
             <h2>Pupuk Subsidi</h2>
         </div>
 
-        @if($pupukProducts->count() > 0)
+        <?php if($pupukProducts->count() > 0): ?>
             <div class="card-grid">
-                @foreach($pupukProducts as $product)
-                    <div class="product-card" data-product-id="{{ $product->id_produk }}">
+                <?php $__currentLoopData = $pupukProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="product-card" data-product-id="<?php echo e($product->id_produk); ?>">
                         <div class="product-image">
-                            @php
+                            <?php
                                 $imageSrc = asset('images/pupuk.jpg'); // Default pupuk
                                 
                                 if($product->primaryImage) {
@@ -492,51 +490,52 @@
                                         $imageSrc = asset($product->gambar);
                                     }
                                 }
-                            @endphp
-                            <img src="{{ $imageSrc }}" alt="{{ $product->nama_produk }}" onerror="this.src='{{ asset('images/pupuk.jpg') }}'">
+                            ?>
+                            <img src="<?php echo e($imageSrc); ?>" alt="<?php echo e($product->nama_produk); ?>" onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
                         </div>
                         <div class="product-info">
-                            <h3>{{ $product->nama_produk }}</h3>
+                            <h3><?php echo e($product->nama_produk); ?></h3>
                             
-                            @if($product->kategori)
+                            <?php if($product->kategori): ?>
                                 <span class="product-category">
-                                    {{ $product->kategori }}
-                                </span>
-                            @endif
+                                    <?php echo e($product->kategori); ?>
 
-                            @if($product->manfaat)
-                                <p>{{ Str::limit($product->manfaat, 100) }}</p>
-                            @endif
+                                </span>
+                            <?php endif; ?>
+
+                            <?php if($product->manfaat): ?>
+                                <p><?php echo e(Str::limit($product->manfaat, 100)); ?></p>
+                            <?php endif; ?>
 
                             <div class="price-section">
                                 <div class="price-item">
                                     <div class="price-label">Harga Normal</div>
-                                    <div class="price-value price-normal">Rp {{ number_format($product->harga_normal, 0, ',', '.') }}</div>
+                                    <div class="price-value price-normal">Rp <?php echo e(number_format($product->harga_normal, 0, ',', '.')); ?></div>
                                 </div>
                                 <div class="price-item">
                                     <div class="price-label">Harga Subsidi</div>
-                                    <div class="price-value price-subsidi">Rp {{ number_format($product->harga_subsidi, 0, ',', '.') }}</div>
+                                    <div class="price-value price-subsidi">Rp <?php echo e(number_format($product->harga_subsidi, 0, ',', '.')); ?></div>
                                 </div>
                             </div>
 
                             <div class="stock-badge">
-                                <span><i class="fas fa-box"></i> Stok: {{ number_format($product->stok_produk) }} unit</span>
+                                <span><i class="fas fa-box"></i> Stok: <?php echo e(number_format($product->stok_produk)); ?> unit</span>
                             </div>
 
-                            <button class="btn-detail btn-green" onclick="window.location.href='{{ route('user.pupukbibit.detail', $product->id_produk) }}'">
+                            <button class="btn-detail btn-green" onclick="window.location.href='<?php echo e(route('user.pupukbibit.detail', $product->id_produk)); ?>'">
                                 <i class="fas fa-eye"></i> Lihat Detail & Pesan
                             </button>
                         </div>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-        @else
+        <?php else: ?>
             <div class="empty-state">
                 <div class="icon">🌿</div>
                 <h3>Belum Ada Pupuk Tersedia</h3>
                 <p>Produk pupuk subsidi akan segera ditambahkan oleh admin.</p>
             </div>
-        @endif
+        <?php endif; ?>
     </section>
 
     <!-- Bibit Subsidi Section -->
@@ -546,12 +545,12 @@
             <h2>Bibit Subsidi</h2>
         </div>
 
-        @if($bibitProducts->count() > 0)
+        <?php if($bibitProducts->count() > 0): ?>
             <div class="card-grid">
-                @foreach($bibitProducts as $product)
-                    <div class="product-card" data-product-id="{{ $product->id_produk }}">
+                <?php $__currentLoopData = $bibitProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="product-card" data-product-id="<?php echo e($product->id_produk); ?>">
                         <div class="product-image">
-                            @php
+                            <?php
                                 $imageSrc = asset('images/bibit.jpg'); // Default bibit
                                 
                                 if($product->primaryImage) {
@@ -569,56 +568,57 @@
                                         $imageSrc = asset($product->gambar);
                                     }
                                 }
-                            @endphp
-                            <img src="{{ $imageSrc }}" alt="{{ $product->nama_produk }}" onerror="this.src='{{ asset('images/bibit.jpg') }}'">
+                            ?>
+                            <img src="<?php echo e($imageSrc); ?>" alt="<?php echo e($product->nama_produk); ?>" onerror="this.src='<?php echo e(asset('images/bibit.jpg')); ?>'">
                         </div>
                         <div class="product-info">
-                            <h3>{{ $product->nama_produk }}</h3>
+                            <h3><?php echo e($product->nama_produk); ?></h3>
                             
-                            @if($product->kategori)
+                            <?php if($product->kategori): ?>
                                 <span class="product-category">
-                                    {{ $product->kategori }}
-                                </span>
-                            @endif
+                                    <?php echo e($product->kategori); ?>
 
-                            @if($product->manfaat)
-                                <p>{{ Str::limit($product->manfaat, 100) }}</p>
-                            @endif
+                                </span>
+                            <?php endif; ?>
+
+                            <?php if($product->manfaat): ?>
+                                <p><?php echo e(Str::limit($product->manfaat, 100)); ?></p>
+                            <?php endif; ?>
 
                             <div class="price-section">
                                 <div class="price-item">
                                     <div class="price-label">Harga Normal</div>
-                                    <div class="price-value price-normal">Rp {{ number_format($product->harga_normal, 0, ',', '.') }}</div>
+                                    <div class="price-value price-normal">Rp <?php echo e(number_format($product->harga_normal, 0, ',', '.')); ?></div>
                                 </div>
                                 <div class="price-item">
                                     <div class="price-label">Harga Subsidi</div>
-                                    <div class="price-value price-subsidi">Rp {{ number_format($product->harga_subsidi, 0, ',', '.') }}</div>
+                                    <div class="price-value price-subsidi">Rp <?php echo e(number_format($product->harga_subsidi, 0, ',', '.')); ?></div>
                                 </div>
                             </div>
 
                             <div class="stock-badge">
-                                <span><i class="fas fa-box"></i> Stok: {{ number_format($product->stok_produk) }} unit</span>
+                                <span><i class="fas fa-box"></i> Stok: <?php echo e(number_format($product->stok_produk)); ?> unit</span>
                             </div>
 
-                            <button class="btn-detail btn-blue" onclick="window.location.href='{{ route('user.pupukbibit.detail', $product->id_produk) }}'">
+                            <button class="btn-detail btn-blue" onclick="window.location.href='<?php echo e(route('user.pupukbibit.detail', $product->id_produk)); ?>'">
                                 <i class="fas fa-eye"></i> Lihat Detail & Pesan
                             </button>
                         </div>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-        @else
+        <?php else: ?>
             <div class="empty-state">
                 <div class="icon">🌱</div>
                 <h3>Belum Ada Bibit Tersedia</h3>
                 <p>Produk bibit subsidi akan segera ditambahkan oleh admin.</p>
             </div>
-        @endif
+        <?php endif; ?>
     </section>
 </main>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     // Smooth scroll effect for all anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -656,5 +656,7 @@
         observer.observe(card);
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
+
+<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/user/pupukdanbibit.blade.php ENDPATH**/ ?>

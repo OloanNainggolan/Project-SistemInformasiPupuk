@@ -93,7 +93,13 @@ class AdminOrderController extends Controller
      */
     public function show($orderNumber)
     {
-        $order = Order::with(['user', 'product'])
+        $order = Order::with([
+                'user',
+                'product.images' => function($query) {
+                    $query->orderBy('order');
+                },
+                'product.primaryImage'
+            ])
             ->where('order_number', $orderNumber)
             ->firstOrFail();
         

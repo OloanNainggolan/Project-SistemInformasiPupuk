@@ -101,12 +101,12 @@
     .success-circle {
         width: 120px;
         height: 120px;
-        background: linear-gradient(135deg, #004d00);
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5), 0 0 0 10px rgba(16, 185, 129, 0.1);
         animation: pulse 2s ease infinite;
         position: relative;
     }
@@ -114,9 +114,9 @@
     .success-circle::after {
         content: '';
         position: absolute;
-        width: 140px;
-        height: 140px;
-        border: 3px solid rgba(16, 185, 129, 0.2);
+        width: 145px;
+        height: 145px;
+        border: 4px solid rgba(16, 185, 129, 0.3);
         border-radius: 50%;
         animation: pulse 2s ease infinite;
     }
@@ -155,13 +155,14 @@
     /* Success Content */
     .success-title {
         font-size: 42px;
-        font-weight: 700;
+        font-weight: 800;
         color: #065f46;
         margin-bottom: 20px;
-        background: linear-gradient(135deg, #004d00, #047857);
+        background: linear-gradient(135deg, #065f46 0%, #10b981 50%, #059669 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        text-shadow: 0 2px 10px rgba(16, 185, 129, 0.1);
     }
 
     .success-subtitle {
@@ -177,11 +178,25 @@
 
     /* Order Info */
     .order-info {
-        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-        border-radius: 20px;
-        padding: 40px;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #d1fae5 100%);
+        border-radius: 24px;
+        padding: 45px;
         margin: 50px 0;
-        border: 2px solid #10b981;
+        border: 3px solid #10b981;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .order-info::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
     }
 
     .order-number {
@@ -201,11 +216,17 @@
     }
 
     .order-number-value {
-        font-size: 32px;
-        font-weight: 700;
-        color: #004d00;
-        letter-spacing: 2px;
+        font-size: 36px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 3px;
         font-family: 'Courier New', monospace;
+        padding: 10px 20px;
+        border-radius: 12px;
+        background-color: rgba(16, 185, 129, 0.05);
     }
 
     .order-details {
@@ -218,18 +239,37 @@
     .order-detail-row {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        padding: 20px;
-        background: white;
-        border-radius: 15px;
-        transition: all 0.3s ease;
-        border: 2px solid #f3f4f6;
+        gap: 12px;
+        padding: 24px;
+        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid #e5e7eb;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .order-detail-row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #10b981, #059669);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
     }
 
     .order-detail-row:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(16, 185, 129, 0.25);
         border-color: #10b981;
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    }
+
+    .order-detail-row:hover::before {
+        transform: scaleY(1);
     }
 
     .order-detail-label {

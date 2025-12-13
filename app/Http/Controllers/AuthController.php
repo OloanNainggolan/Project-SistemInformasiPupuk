@@ -266,7 +266,13 @@ class AuthController extends Controller
      */
     public function showOrderDetail($id)
     {
-        $order = \App\Models\Order::with(['product', 'user'])
+        $order = \App\Models\Order::with([
+                'product.images' => function($query) {
+                    $query->orderBy('order');
+                },
+                'product.primaryImage',
+                'user'
+            ])
             ->where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();

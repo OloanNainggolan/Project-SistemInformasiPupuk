@@ -1,8 +1,6 @@
-@extends('layouts.user')
+<?php $__env->startSection('title', 'Konfirmasi Pesanan - Pupuk & Bibit Subsidi'); ?>
 
-@section('title', 'Konfirmasi Pesanan - Pupuk & Bibit Subsidi')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
@@ -902,13 +900,13 @@
             }
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="main-container">
         <!-- Back Button -->
         <div class="back-button">
-            <a href="{{ route('user.pupukbibit.detail', $produk->id_produk) }}" class="back-link">
+            <a href="<?php echo e(route('user.pupukbibit.detail', $produk->id_produk)); ?>" class="back-link">
                 <i class="fas fa-arrow-left"></i>
                 <span>Kembali</span>
             </a>
@@ -942,19 +940,19 @@
                     <form id="formInfoPesanan">
                         <div class="form-group">
                             <label class="form-label"><i class="fas fa-user-circle"></i> Nama Lengkap</label>
-                            <input type="text" class="form-input" id="nama" name="nama" value="{{ auth()->user()->name }}" required>
+                            <input type="text" class="form-input" id="nama" name="nama" value="<?php echo e(auth()->user()->name); ?>" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><i class="fas fa-phone"></i> Nomor HP</label>
-                            <input type="tel" class="form-input" id="no_hp" name="no_hp" value="{{ auth()->user()->no_hp ?? '08123456789' }}" required>
+                            <input type="tel" class="form-input" id="no_hp" name="no_hp" value="<?php echo e(auth()->user()->no_hp ?? '08123456789'); ?>" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><i class="fas fa-map-marker-alt"></i> Alamat Lengkap</label>
-                            <textarea class="form-input" id="alamat" name="alamat" rows="3" required>{{ auth()->user()->alamat ?? 'Jl. Jalan-jalan, balai desa sukamaju' }}</textarea>
+                            <textarea class="form-input" id="alamat" name="alamat" rows="3" required><?php echo e(auth()->user()->alamat ?? 'Jl. Jalan-jalan, balai desa sukamaju'); ?></textarea>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><i class="fas fa-comment-dots"></i> Catatan (Opsional)</label>
-                            <textarea class="form-input" id="catatan" name="catatan" rows="2" placeholder="Tambahkan catatan untuk pesanan...">{{ $catatan ?? '' }}</textarea>
+                            <textarea class="form-input" id="catatan" name="catatan" rows="2" placeholder="Tambahkan catatan untuk pesanan..."><?php echo e($catatan ?? ''); ?></textarea>
                         </div>
                     </form>
                 </div>
@@ -1011,7 +1009,7 @@
 
                     <!-- Product Item -->
                     <div class="product-item">
-                        @php
+                        <?php
                             $imageSrc = asset('images/pupuk.jpg'); // Default fallback
                             
                             // Cek gambar dari relasi database
@@ -1038,11 +1036,11 @@
                                     }
                                 }
                             }
-                        @endphp
-                        <img src="{{ $imageSrc }}" alt="{{ $produk->nama_produk }}" class="product-image" onerror="this.src='{{ asset('images/pupuk.jpg') }}'">
+                        ?>
+                        <img src="<?php echo e($imageSrc); ?>" alt="<?php echo e($produk->nama_produk); ?>" class="product-image" onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
                         <div class="product-details" style="flex: 1;">
-                            <div class="product-name">{{ $produk->nama_produk }}</div>
-                            <div class="product-sku">{{ $produk->kategori ?? 'NPK 16-16-16' }}</div>
+                            <div class="product-name"><?php echo e($produk->nama_produk); ?></div>
+                            <div class="product-sku"><?php echo e($produk->kategori ?? 'NPK 16-16-16'); ?></div>
                             
                             <div class="quantity-display">
                                 <span class="quantity-label"><i class="fas fa-box"></i> Jumlah Pesanan:</span>
@@ -1050,7 +1048,7 @@
                                     <button type="button" class="quantity-btn" id="decreaseBtn" onclick="decreaseQuantity()">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="number" id="quantityInput" class="quantity-display-input" value="{{ $quantity ?? 1 }}" min="1" max="{{ $produk->stok_produk }}" onchange="updateQuantity()" oninput="updateQuantity()">
+                                    <input type="number" id="quantityInput" class="quantity-display-input" value="<?php echo e($quantity ?? 1); ?>" min="1" max="<?php echo e($produk->stok_produk); ?>" onchange="updateQuantity()" oninput="updateQuantity()">
                                     <button type="button" class="quantity-btn" id="increaseBtn" onclick="increaseQuantity()">
                                         <i class="fas fa-plus"></i>
                                     </button>
@@ -1059,72 +1057,73 @@
                             </div>
                             <div class="product-quantity" style="margin-top: 12px;">
                                 <span class="price-per-unit-label">Harga:</span>
-                                <span id="pricePerUnit" class="price-per-unit-value">Rp {{ number_format($produk->harga_subsidi, 0, ',', '.') }}</span>
+                                <span id="pricePerUnit" class="price-per-unit-value">Rp <?php echo e(number_format($produk->harga_subsidi, 0, ',', '.')); ?></span>
                                 <span class="price-per-unit-label">/ kg</span>
                             </div>
                         </div>
                         <div class="product-price" id="productTotalPrice">
-                            Rp. {{ number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.') }}
+                            Rp. <?php echo e(number_format($produk->harga_subsidi * ($quantity ?? 1), 0, ',', '.')); ?>
+
                         </div>
                     </div>
 
                     <!-- Price Summary -->
                     <div class="price-summary">
-                        @php
+                        <?php
                             $calculatedSubsidy = ($produk->harga_normal - $produk->harga_subsidi) * ($quantity ?? 1);
                             $totalDiscount = ($discountAmount ?? 0) + $calculatedSubsidy;
-                        @endphp
+                        ?>
                         
                         <div class="price-row">
                             <span class="price-label"><i class="fas fa-receipt" style="color: #6b7280;"></i> Harga Normal</span>
-                            <span class="price-value original-price">Rp {{ number_format($produk->harga_normal * ($quantity ?? 1), 0, ',', '.') }}</span>
+                            <span class="price-value original-price">Rp <?php echo e(number_format($produk->harga_normal * ($quantity ?? 1), 0, ',', '.')); ?></span>
                         </div>
                         
                         <!-- Subsidi Pemerintah -->
-                        @if($calculatedSubsidy > 0)
+                        <?php if($calculatedSubsidy > 0): ?>
                         <div class="discount-row subsidy-row">
                             <span class="discount-label">
                                 <i class="fas fa-hand-holding-heart"></i> Subsidi Pemerintah
                             </span>
-                            <span class="discount-value">- Rp {{ number_format($calculatedSubsidy, 0, ',', '.') }}</span>
+                            <span class="discount-value">- Rp <?php echo e(number_format($calculatedSubsidy, 0, ',', '.')); ?></span>
                         </div>
-                        @endif
+                        <?php endif; ?>
                         
                         <!-- Potongan Tambahan -->
-                        @if(($discountAmount ?? 0) > 0)
+                        <?php if(($discountAmount ?? 0) > 0): ?>
                         <div class="discount-row promo-row">
                             <span class="discount-label">
                                 <i class="fas fa-tags"></i> Potongan Promo
-                                @if(isset($bestDiscount))
-                                    <span class="promo-code">{{ $bestDiscount->code }}</span>
-                                @endif
+                                <?php if(isset($bestDiscount)): ?>
+                                    <span class="promo-code"><?php echo e($bestDiscount->code); ?></span>
+                                <?php endif; ?>
                             </span>
-                            <span class="discount-value">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
+                            <span class="discount-value">- Rp <?php echo e(number_format($discountAmount, 0, ',', '.')); ?></span>
                         </div>
-                        @endif
+                        <?php endif; ?>
                         
                         <!-- Total Penghematan -->
-                        @if($totalDiscount > 0)
+                        <?php if($totalDiscount > 0): ?>
                         <div class="savings-highlight">
                             <div class="savings-icon">
                                 <i class="fas fa-piggy-bank"></i>
                             </div>
                             <div class="savings-content">
                                 <div class="savings-label">Total Penghematan Anda</div>
-                                <div class="savings-amount">Rp {{ number_format($totalDiscount, 0, ',', '.') }}</div>
-                                @php
+                                <div class="savings-amount">Rp <?php echo e(number_format($totalDiscount, 0, ',', '.')); ?></div>
+                                <?php
                                     $savingsPercent = ($produk->harga_normal > 0) ? round(($totalDiscount / ($produk->harga_normal * ($quantity ?? 1))) * 100) : 0;
-                                @endphp
-                                <div class="savings-percent">Hemat {{ $savingsPercent }}% dari harga normal!</div>
+                                ?>
+                                <div class="savings-percent">Hemat <?php echo e($savingsPercent); ?>% dari harga normal!</div>
                             </div>
                         </div>
-                        @endif
+                        <?php endif; ?>
                         
                         <div class="divider-dashed"></div>
                         
                         <div class="total-row">
                             <span class="total-label"><i class="fas fa-wallet"></i> Total Bayar</span>
-                            <span class="total-value" id="totalValue">Rp {{ number_format($total ?? ($produk->harga_subsidi * ($quantity ?? 1)), 0, ',', '.') }}</span>
+                            <span class="total-value" id="totalValue">Rp <?php echo e(number_format($total ?? ($produk->harga_subsidi * ($quantity ?? 1)), 0, ',', '.')); ?></span>
                         </div>
                     </div>
 
@@ -1141,22 +1140,22 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Harga per unit dari backend
-        const hargaPerUnit = {{ $produk->harga_subsidi }};
-        const hargaNormal = {{ $produk->harga_normal }};
-        const productName = '{{ $produk->nama_produk }}';
-        const maxStock = {{ $produk->stok_produk ?? 0 }};
-        const subsidyAmount = {{ $produk->harga_normal - $produk->harga_subsidi }};
-        const discountAmount = {{ $discountAmount ?? 0 }};
+        const hargaPerUnit = <?php echo e($produk->harga_subsidi); ?>;
+        const hargaNormal = <?php echo e($produk->harga_normal); ?>;
+        const productName = '<?php echo e($produk->nama_produk); ?>';
+        const maxStock = <?php echo e($produk->stok_produk ?? 0); ?>;
+        const subsidyAmount = <?php echo e($produk->harga_normal - $produk->harga_subsidi); ?>;
+        const discountAmount = <?php echo e($discountAmount ?? 0); ?>;
         
         // Get product image dari database
-        @php
+        <?php
             $popupImageSrc = asset('images/pupuk.jpg'); // Default fallback
             if(isset($produk->primaryImage) && $produk->primaryImage) {
                 $popupImageSrc = asset($produk->primaryImage->image_path);
@@ -1180,8 +1179,8 @@
                     }
                 }
             }
-        @endphp
-        const productImage = '{{ $popupImageSrc }}';
+        ?>
+        const productImage = '<?php echo e($popupImageSrc); ?>';
         
         // Quantity control functions
         function increaseQuantity() {
@@ -1406,14 +1405,14 @@
                     };
                     
                     console.log('Mengirim request ke server:', requestData);
-                    console.log('URL:', '{{ route("user.pupukbibit.store", $produk->id_produk) }}');
+                    console.log('URL:', '<?php echo e(route("user.pupukbibit.store", $produk->id_produk)); ?>');
                     
                     // Submit data ke server untuk disimpan ke database
-                    fetch('{{ route("user.pupukbibit.store", $produk->id_produk) }}', {
+                    fetch('<?php echo e(route("user.pupukbibit.store", $produk->id_produk)); ?>', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
                             'Accept': 'application/json'
                         },
                         body: JSON.stringify(requestData)
@@ -1497,7 +1496,7 @@
                         }
                     }).then(() => {
                         // Redirect ke dashboard
-                        window.location.href = "{{ route('dashboard') }}";
+                        window.location.href = "<?php echo e(route('dashboard')); ?>";
                     });
                         } else {
                             // Error saat menyimpan
@@ -1558,4 +1557,6 @@
             }
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/user/konfirmasi-pesanan.blade.php ENDPATH**/ ?>
