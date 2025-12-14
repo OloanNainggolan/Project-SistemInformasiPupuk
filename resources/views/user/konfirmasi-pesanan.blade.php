@@ -341,26 +341,49 @@
 
         .product-item {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             margin-bottom: 25px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-            border-radius: 15px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%);
+            border-radius: 20px;
             transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
         }
 
         .product-item:hover {
-            background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
-            transform: scale(1.02);
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+            border-color: #10b981;
         }
 
         .product-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px;
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
             object-fit: cover;
-            border: 3px solid #10b981;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+            border: 4px solid #10b981;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 4px;
+        }
+
+        .product-image:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35);
         }
 
         .product-details {
@@ -989,25 +1012,34 @@
                     <!-- Product Item -->
                     <div class="product-item">
                         @php
-                            $imageSrc = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&h=300&fit=crop';
+                            $imageSrc = asset('images/pupuk.jpg'); // Default fallback
                             
                             // Cek gambar dari relasi database
                             if (isset($produk->primaryImage) && $produk->primaryImage) {
-                                // primaryImage sudah punya image_path lengkap
                                 $imageSrc = asset($produk->primaryImage->image_path);
                             } elseif (isset($produk->images) && $produk->images->count() > 0) {
-                                // Ambil gambar pertama dari collection
                                 $imageSrc = asset($produk->images->first()->image_path);
                             } elseif (isset($produk->gambar) && !empty($produk->gambar)) {
-                                // Field gambar lama
+                                // Cek berbagai kemungkinan path
                                 if (filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
                                     $imageSrc = $produk->gambar;
-                                } else {
+                                } elseif (file_exists(public_path('images/products/' . $produk->gambar))) {
+                                    $imageSrc = asset('images/products/' . $produk->gambar);
+                                } elseif (file_exists(public_path('images/' . $produk->gambar))) {
+                                    $imageSrc = asset('images/' . $produk->gambar);
+                                } elseif (file_exists(public_path($produk->gambar))) {
                                     $imageSrc = asset($produk->gambar);
+                                } else {
+                                    // Gunakan gambar default berdasarkan tipe
+                                    if (strpos(strtolower($produk->nama_produk), 'bibit') !== false) {
+                                        $imageSrc = asset('images/bibit.jpg');
+                                    } else {
+                                        $imageSrc = asset('images/pupuk.jpg');
+                                    }
                                 }
                             }
                         @endphp
-                        <img src="{{ $imageSrc }}" alt="{{ $produk->nama_produk }}" class="product-image" onerror="this.src='https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&h=300&fit=crop'">
+                        <img src="{{ $imageSrc }}" alt="{{ $produk->nama_produk }}" class="product-image" onerror="this.src='{{ asset('images/pupuk.jpg') }}'">
                         <div class="product-details" style="flex: 1;">
                             <div class="product-name">{{ $produk->nama_produk }}</div>
                             <div class="product-sku">{{ $produk->kategori ?? 'NPK 16-16-16' }}</div>
@@ -1125,7 +1157,7 @@
         
         // Get product image dari database
         @php
-            $popupImageSrc = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=200&h=200&fit=crop';
+            $popupImageSrc = asset('images/pupuk.jpg'); // Default fallback
             if(isset($produk->primaryImage) && $produk->primaryImage) {
                 $popupImageSrc = asset($produk->primaryImage->image_path);
             } elseif(isset($produk->images) && $produk->images->count() > 0) {
@@ -1133,8 +1165,19 @@
             } elseif(isset($produk->gambar) && !empty($produk->gambar)) {
                 if(filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
                     $popupImageSrc = $produk->gambar;
-                } else {
+                } elseif (file_exists(public_path('images/products/' . $produk->gambar))) {
+                    $popupImageSrc = asset('images/products/' . $produk->gambar);
+                } elseif (file_exists(public_path('images/' . $produk->gambar))) {
+                    $popupImageSrc = asset('images/' . $produk->gambar);
+                } elseif (file_exists(public_path($produk->gambar))) {
                     $popupImageSrc = asset($produk->gambar);
+                } else {
+                    // Gunakan gambar default berdasarkan tipe
+                    if (strpos(strtolower($produk->nama_produk), 'bibit') !== false) {
+                        $popupImageSrc = asset('images/bibit.jpg');
+                    } else {
+                        $popupImageSrc = asset('images/pupuk.jpg');
+                    }
                 }
             }
         @endphp

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Message;
+use App\Models\Notification;
 use App\Traits\TrackAdminActivity;
 use Illuminate\Http\Request;
 
@@ -92,7 +93,13 @@ class AdminOrderController extends Controller
      */
     public function show($orderNumber)
     {
-        $order = Order::with(['user', 'product'])
+        $order = Order::with([
+                'user',
+                'product.images' => function($query) {
+                    $query->orderBy('order');
+                },
+                'product.primaryImage'
+            ])
             ->where('order_number', $orderNumber)
             ->firstOrFail();
         
@@ -133,7 +140,7 @@ class AdminOrderController extends Controller
             action: 'update_order_status',
             description: "Mengubah status pesanan #{$orderNumber} dari {$oldStatus} menjadi {$newStatus}",
             module: 'orders',
-            related_id: $order->id,
+            relatedId: $order->id,
             changes: [
                 'order_number' => $orderNumber,
                 'status' => ['old' => $oldStatus, 'new' => $newStatus]
@@ -311,6 +318,7 @@ class AdminOrderController extends Controller
         // Buat subject yang menarik
         $subject = "{$emoji} Update Status Pesanan #{$order->order_number} - {$statusMessages[$newStatus]}";
 
+        // Kirim sebagai Message (untuk inbox)
         Message::create([
             'user_id' => $order->user_id,
             'sender_type' => 'admin',
@@ -318,6 +326,29 @@ class AdminOrderController extends Controller
             'message' => $message,
             'status' => 'unread',
             'reply_to' => null,
+        ]);
+
+        // PENTING: Kirim juga sebagai System Notification dengan related_id untuk maps
+        // Tentukan tipe notifikasi berdasarkan status
+        $notificationType = 'info';
+        if ($newStatus === 'Ready') {
+            $notificationType = 'success';
+        } elseif ($newStatus === 'Rejected') {
+            $notificationType = 'important';
+        } elseif ($newStatus === 'Completed') {
+            $notificationType = 'success';
+        }
+
+        Notification::create([
+            'user_id' => $order->user_id,
+            'type' => $notificationType,
+            'title' => $subject,
+            'message' => $message,
+            'status' => 'unread',
+            'is_read' => false,
+            'related_id' => $order->id,  // KUNCI: Simpan order ID agar bisa load data order + maps
+            'related_type' => 'Order',
+            'link' => null,
         ]);
     }
 

@@ -776,31 +776,36 @@
                 <a href="{{ route('notifikasi') }}" class="notification-icon" title="Notifikasi">
                     <i class="fas fa-bell"></i>
                     @php
-                        // Count unread messages from admin (conversations)
-                        $unreadMessages = \App\Models\Message::where('user_id', Auth::id())
-                            ->whereNull('reply_to')
-                            ->where('subject', 'NOT LIKE', '%Update Status Pesanan%')
-                            ->where('subject', 'NOT LIKE', '%Status Pesanan Diperbarui%')
-                            ->fromAdmin()
-                            ->unread()
-                            ->count();
-                        
-                        // Count unread notifications from notifications table
-                        $unreadNotifications = \App\Models\Notification::where('user_id', Auth::id())
-                            ->unread()
-                            ->count();
-                        
-                        // Count unread system messages (order status updates)
-                        $unreadSystemMessages = \App\Models\Message::where('user_id', Auth::id())
-                            ->whereNull('reply_to')
-                            ->where(function($q) {
-                                $q->where('subject', 'LIKE', '%Update Status Pesanan%')
-                                  ->orWhere('subject', 'LIKE', '%Status Pesanan Diperbarui%');
-                            })
-                            ->where('status', 'unread')
-                            ->count();
-                        
-                        $totalUnread = $unreadMessages + $unreadSystemMessages;
+                        $totalUnread = 0;
+                        try {
+                            // Count unread messages from admin (conversations)
+                            $unreadMessages = \App\Models\Message::where('user_id', Auth::id())
+                                ->whereNull('reply_to')
+                                ->where('subject', 'NOT LIKE', '%Update Status Pesanan%')
+                                ->where('subject', 'NOT LIKE', '%Status Pesanan Diperbarui%')
+                                ->where('sender_type', 'admin')
+                                ->where('status', 'unread')
+                                ->count();
+                            
+                            // Count unread notifications from notifications table
+                            $unreadNotifications = \App\Models\Notification::where('user_id', Auth::id())
+                                ->where('is_read', false)
+                                ->count();
+                            
+                            // Count unread system messages (order status updates)
+                            $unreadSystemMessages = \App\Models\Message::where('user_id', Auth::id())
+                                ->whereNull('reply_to')
+                                ->where(function($q) {
+                                    $q->where('subject', 'LIKE', '%Update Status Pesanan%')
+                                      ->orWhere('subject', 'LIKE', '%Status Pesanan Diperbarui%');
+                                })
+                                ->where('status', 'unread')
+                                ->count();
+                            
+                            $totalUnread = $unreadMessages + $unreadSystemMessages;
+                        } catch (\Exception $e) {
+                            $totalUnread = 0;
+                        }
                     @endphp
                     @if($totalUnread > 0)
                         <span class="notification-badge">{{ $totalUnread > 9 ? '9+' : $totalUnread }}</span>

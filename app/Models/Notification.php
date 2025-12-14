@@ -38,13 +38,18 @@ class Notification extends Model
     }
     
     /**
-     * Get the related order if exists
+     * Get the related order if notification is order-related
      */
     public function order()
     {
-        if ($this->related_type === 'App\\Models\\Order') {
-            return $this->belongsTo(\App\Models\Order::class, 'related_id');
-        }
-        return null;
+        return $this->belongsTo(Order::class, 'related_id');
+    }
+    
+    /**
+     * Get the user that owns the notification
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

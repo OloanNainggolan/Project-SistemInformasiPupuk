@@ -474,13 +474,26 @@
                 @foreach($pupukProducts as $product)
                     <div class="product-card" data-product-id="{{ $product->id_produk }}">
                         <div class="product-image">
-                            @if($product->primaryImage)
-                                <img src="{{ asset($product->primaryImage->image_path) }}" alt="{{ $product->nama_produk }}">
-                            @elseif($product->gambar)
-                                <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama_produk }}">
-                            @else
-                                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=300&fit=crop" alt="{{ $product->nama_produk }}">
-                            @endif
+                            @php
+                                $imageSrc = asset('images/pupuk.jpg'); // Default pupuk
+                                
+                                if($product->primaryImage) {
+                                    $imageSrc = asset($product->primaryImage->image_path);
+                                } elseif($product->images && $product->images->count() > 0) {
+                                    $imageSrc = asset($product->images->first()->image_path);
+                                } elseif($product->gambar) {
+                                    if (filter_var($product->gambar, FILTER_VALIDATE_URL)) {
+                                        $imageSrc = $product->gambar;
+                                    } elseif (file_exists(public_path('images/products/' . $product->gambar))) {
+                                        $imageSrc = asset('images/products/' . $product->gambar);
+                                    } elseif (file_exists(public_path('images/' . $product->gambar))) {
+                                        $imageSrc = asset('images/' . $product->gambar);
+                                    } elseif (file_exists(public_path($product->gambar))) {
+                                        $imageSrc = asset($product->gambar);
+                                    }
+                                }
+                            @endphp
+                            <img src="{{ $imageSrc }}" alt="{{ $product->nama_produk }}" onerror="this.src='{{ asset('images/pupuk.jpg') }}'">
                         </div>
                         <div class="product-info">
                             <h3>{{ $product->nama_produk }}</h3>
@@ -538,13 +551,26 @@
                 @foreach($bibitProducts as $product)
                     <div class="product-card" data-product-id="{{ $product->id_produk }}">
                         <div class="product-image">
-                            @if($product->primaryImage)
-                                <img src="{{ asset($product->primaryImage->image_path) }}" alt="{{ $product->nama_produk }}">
-                            @elseif($product->gambar)
-                                <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama_produk }}">
-                            @else
-                                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&h=300&fit=crop" alt="{{ $product->nama_produk }}">
-                            @endif
+                            @php
+                                $imageSrc = asset('images/bibit.jpg'); // Default bibit
+                                
+                                if($product->primaryImage) {
+                                    $imageSrc = asset($product->primaryImage->image_path);
+                                } elseif($product->images && $product->images->count() > 0) {
+                                    $imageSrc = asset($product->images->first()->image_path);
+                                } elseif($product->gambar) {
+                                    if (filter_var($product->gambar, FILTER_VALIDATE_URL)) {
+                                        $imageSrc = $product->gambar;
+                                    } elseif (file_exists(public_path('images/products/' . $product->gambar))) {
+                                        $imageSrc = asset('images/products/' . $product->gambar);
+                                    } elseif (file_exists(public_path('images/' . $product->gambar))) {
+                                        $imageSrc = asset('images/' . $product->gambar);
+                                    } elseif (file_exists(public_path($product->gambar))) {
+                                        $imageSrc = asset($product->gambar);
+                                    }
+                                }
+                            @endphp
+                            <img src="{{ $imageSrc }}" alt="{{ $product->nama_produk }}" onerror="this.src='{{ asset('images/bibit.jpg') }}'">
                         </div>
                         <div class="product-info">
                             <h3>{{ $product->nama_produk }}</h3>

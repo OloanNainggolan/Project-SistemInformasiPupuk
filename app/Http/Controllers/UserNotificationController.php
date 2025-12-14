@@ -96,8 +96,9 @@ class UserNotificationController extends Controller
             return view('user.notifications.show', compact('message'));
         }
 
-        // Try to find as System Notification
-        $notification = Notification::where('user_id', Auth::id())
+        // Try to find as System Notification with order data
+        $notification = Notification::with(['order.user', 'order.product'])
+            ->where('user_id', Auth::id())
             ->findOrFail($id);
 
         \Log::info("Notification accessed", [
@@ -119,7 +120,9 @@ class UserNotificationController extends Controller
                 ]);
             
             // Refresh model to get updated data
-            $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
+            $notification = Notification::with(['order.user', 'order.product'])
+                ->where('user_id', Auth::id())
+                ->findOrFail($id);
             
             \Log::info("Notification marked as read", [
                 'notification_id' => $id,
