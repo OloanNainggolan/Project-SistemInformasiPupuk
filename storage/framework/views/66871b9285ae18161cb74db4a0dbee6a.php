@@ -142,13 +142,14 @@
         grid-template-columns: 1fr 1fr;
         gap: 30px;
         margin-bottom: 30px;
-        align-items: start;
+        align-items: stretch;
     }
 
     .right-column {
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 24px;
+        height: 100%;
     }
 
     @media (max-width: 968px) {
@@ -213,6 +214,7 @@
         display: flex;
         flex-direction: column;
         gap: 15px;
+        min-height: 100px;
     }
 
     .info-item {
@@ -478,6 +480,9 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         border: 2px solid #e5e7eb;
         height: fit-content;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     .action-buttons {
@@ -485,6 +490,8 @@
         flex-direction: column;
         gap: 14px;
         width: 100%;
+        flex-grow: 1;
+        justify-content: center;
     }
 
     .btn {

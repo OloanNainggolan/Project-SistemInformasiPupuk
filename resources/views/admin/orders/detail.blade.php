@@ -150,7 +150,7 @@
     .right-column {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 30px;
         height: 100%;
     }
 
@@ -216,7 +216,6 @@
         display: flex;
         flex-direction: column;
         gap: 15px;
-        min-height: 100px;
     }
 
     .info-item {
@@ -482,9 +481,13 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         border: 2px solid #e5e7eb;
         height: fit-content;
-        flex-grow: 1;
+        flex: 1;
         display: flex;
         flex-direction: column;
+    }
+
+    .action-section .card-title {
+        margin-bottom: 24px;
     }
 
     .action-buttons {
@@ -492,8 +495,6 @@
         flex-direction: column;
         gap: 14px;
         width: 100%;
-        flex-grow: 1;
-        justify-content: center;
     }
 
     .btn {
