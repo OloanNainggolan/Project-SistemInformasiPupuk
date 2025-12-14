@@ -38,6 +38,9 @@ class AdminAuth
                 return redirect()->route('admin.login')
                     ->with('error', 'Session Anda telah berakhir. Silakan login kembali.');
             }
+            
+            // Perpanjang session time setiap request (sliding session)
+            session(['admin_login_time' => now()]);
         }
 
         return $next($request);

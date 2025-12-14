@@ -168,6 +168,86 @@
         word-break: break-word;
     }
 
+    /* Map Section Admin */
+    .map-section-admin {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .address-box {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid #10b981;
+    }
+
+    .address-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .address-icon {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .address-icon i {
+        color: #10b981;
+        font-size: 24px;
+    }
+
+    .address-details {
+        flex: 1;
+    }
+
+    .address-label-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #065f46;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .address-value-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+        line-height: 1.6;
+    }
+
+    .map-info-box {
+        background: #f0f9ff;
+        padding: 15px 20px;
+        border-radius: 10px;
+        border-left: 4px solid #0ea5e9;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #0c4a6e;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-weight: 500;
+    }
+
+    .map-info-box i {
+        color: #0ea5e9;
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 16px;
+    }
+
     /* Products Section */
     .products-section {
         background: white;
@@ -358,6 +438,81 @@
     .btn-print:hover {
         background: #065f46;
         color: white;
+    }
+
+    /* Map Section Admin */
+    .map-section-admin {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .address-box {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid #10b981;
+        margin-bottom: 20px;
+    }
+
+    .address-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .address-icon {
+        width: 45px;
+        height: 45px;
+        background: #10b981;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .address-details {
+        flex: 1;
+    }
+
+    .address-label-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #065f46;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .address-value-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+        line-height: 1.6;
+    }
+
+    .map-info-box {
+        background: #dbeafe;
+        padding: 12px 18px;
+        border-radius: 8px;
+        border-left: 3px solid #3b82f6;
+        margin-top: 15px;
+        font-size: 13px;
+        color: #1e40af;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .map-info-box i {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 16px;
     }
 
     /* Rejection Section */
@@ -560,12 +715,47 @@
                     $calculatedSubtotal += $itemSubtotal;
                 ?>
                 <div class="product-item">
+                    <?php
+                        $productImage = asset('images/pupuk.jpg'); // Default
+                        
+                        if($order->product) {
+                            if($order->product->primaryImage) {
+                                $productImage = asset($order->product->primaryImage->image_path);
+                            } elseif($order->product->images && $order->product->images->count() > 0) {
+                                $productImage = asset($order->product->images->first()->image_path);
+                            } elseif($order->product->gambar) {
+                                if(filter_var($order->product->gambar, FILTER_VALIDATE_URL)) {
+                                    $productImage = $order->product->gambar;
+                                } elseif(file_exists(public_path('images/products/' . $order->product->gambar))) {
+                                    $productImage = asset('images/products/' . $order->product->gambar);
+                                } elseif(file_exists(public_path('images/' . $order->product->gambar))) {
+                                    $productImage = asset('images/' . $order->product->gambar);
+                                } elseif(file_exists(public_path($order->product->gambar))) {
+                                    $productImage = asset($order->product->gambar);
+                                } else {
+                                    // Product type specific fallback
+                                    if(isset($order->product->tipe_produk) && $order->product->tipe_produk === 'bibit') {
+                                        $productImage = asset('images/bibit.jpg');
+                                    } elseif(strpos(strtolower($order->product->nama_produk ?? ''), 'bibit') !== false) {
+                                        $productImage = asset('images/bibit.jpg');
+                                    }
+                                }
+                            } else {
+                                // Fallback based on item type
+                                if(($item['type'] ?? '') === 'bibit') {
+                                    $productImage = asset('images/bibit.jpg');
+                                }
+                            }
+                        } elseif(($item['type'] ?? '') === 'bibit') {
+                            $productImage = asset('images/bibit.jpg');
+                        }
+                    ?>
+                    
                     <div class="product-image">
-                        <?php if(($item['type'] ?? '') === 'pupuk'): ?>
-                            <i class="fas fa-seedling"></i>
-                        <?php else: ?>
-                            <i class="fas fa-leaf"></i>
-                        <?php endif; ?>
+                        <img src="<?php echo e($productImage); ?>" 
+                             alt="<?php echo e($item['product_name'] ?? 'Produk'); ?>" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                             onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
                     </div>
                     <div class="product-info">
                         <h4><?php echo e($item['product_name'] ?? 'Produk'); ?></h4>
@@ -671,7 +861,19 @@
 </div>
 <?php $__env->stopSection(); ?>
 
+<?php $__env->startPush('styles'); ?>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+<?php $__env->stopPush(); ?>
+
 <?php $__env->startPush('scripts'); ?>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
 <script>
     // Load nearest pickup point for Ready orders
     <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
@@ -852,18 +1054,33 @@
                 status: newStatus
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            // Handle 419 error (CSRF token expired)
+            if (response.status === 419) {
+                alert('⚠️ Session Anda telah berakhir. Halaman akan di-refresh untuk memperbarui session.');
+                location.reload();
+                return Promise.reject('Session expired');
+            }
+            
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            
+            return response.json();
+        })
         .then(data => {
-            if (data.success) {
+            if (data && data.success) {
                 alert('✅ Status pesanan berhasil diupdate!');
                 location.reload();
             } else {
-                alert('❌ Gagal mengupdate status: ' + (data.message || 'Unknown error'));
+                alert('❌ Gagal mengupdate status: ' + (data?.message || 'Unknown error'));
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('❌ Terjadi kesalahan saat mengupdate status');
+            if (error !== 'Session expired') {
+                console.error('Error:', error);
+                alert('❌ Terjadi kesalahan: ' + (error.message || 'Unknown error'));
+            }
         });
     }
 
@@ -877,7 +1094,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/api/orders/<?php echo e($order->order_number); ?>/status`, {
+        fetch(`/admin/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -889,18 +1106,33 @@
                 rejection_reason: reason.trim()
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            // Handle 419 error (CSRF token expired)
+            if (response.status === 419) {
+                alert('⚠️ Session Anda telah berakhir. Halaman akan di-refresh untuk memperbarui session.');
+                location.reload();
+                return Promise.reject('Session expired');
+            }
+            
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            
+            return response.json();
+        })
         .then(data => {
-            if (data.success) {
+            if (data && data.success) {
                 alert('✅ Pesanan berhasil ditolak!');
                 location.reload();
             } else {
-                alert('❌ Gagal menolak pesanan: ' + (data.message || 'Unknown error'));
+                alert('❌ Gagal menolak pesanan: ' + (data?.message || 'Unknown error'));
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('❌ Terjadi kesalahan saat menolak pesanan');
+            if (error !== 'Session expired') {
+                console.error('Error:', error);
+                alert('❌ Terjadi kesalahan: ' + (error.message || 'Unknown error'));
+            }
         });
     }
 </script>
