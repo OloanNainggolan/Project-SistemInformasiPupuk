@@ -159,16 +159,16 @@ class WhatsAppService
         }
         
         $message .= "━━━━━━━━━━━━━━━━━━━━\n";
-        $message .= "💰 *Total Pembayaran:* Rp " . number_format($order->total_amount, 0, ',', '.') . "\n\n";
+        $message .= "Total Pembayaran: Rp " . number_format($order->total_amount, 0, ',', '.') . "\n\n";
         
-        $message .= "📍 *Status:* " . $this->getStatusEmoji($order->status) . " *{$order->status}*\n\n";
+        $message .= "Status: *{$order->status}*\n\n";
         
-        $message .= "ℹ️ *Informasi:*\n";
+        $message .= "*Informasi:*\n";
         $message .= "• Pesanan Anda sedang diproses oleh admin\n";
         $message .= "• Anda akan menerima notifikasi lebih lanjut\n";
         $message .= "• Cek status pesanan di dashboard\n\n";
         
-        $message .= "📱 *Hubungi Kami:*\n";
+        $message .= "*Hubungi Kami:*\n";
         $message .= "Website: http://127.0.0.1:8000\n\n";
         
         $message .= "_Pesan otomatis dari Sistem Informasi Pupuk & Bibit Bersubsidi_";
