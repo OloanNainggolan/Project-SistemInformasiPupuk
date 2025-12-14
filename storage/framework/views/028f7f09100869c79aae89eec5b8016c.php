@@ -617,6 +617,37 @@
             color: #fff6d6;
         }
 
+        /* Contact Links Styling */
+        .contact-links a {
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            padding-left: 0;
+        }
+
+        .contact-links a i {
+            width: auto;
+            color: rgba(255, 215, 0, 0.95);
+            transition: transform 0.28s ease, color 0.28s ease;
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+
+        .contact-links a span {
+            display: block;
+            font-size: 0.95em;
+        }
+
+        .contact-links a:hover {
+            padding-left: 0;
+            color: #ffd700;
+        }
+
+        .contact-links a:hover i {
+            transform: scale(1.15) rotate(5deg);
+            color: #fff6d6;
+        }
+
 
 
         /* Footer Bottom - full width band */
@@ -800,10 +831,6 @@
                             <i class="fas fa-edit"></i>
                             <span>Edit Profil</span>
                         </a>
-                        <button type="button" class="dropdown-item delete-account" onclick="confirmDeleteAccount()">
-                            <i class="fas fa-trash-alt"></i>
-                            <span>Hapus Akun</span>
-                        </button>
                         <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
                             <?php echo csrf_field(); ?>
                             <button type="submit" class="dropdown-item logout">
@@ -834,7 +861,7 @@
 
                 <!-- Kolom 2 - Quick Links -->
                 <div class="footer-col">
-                    <h3><i class="fas fa-link"></i> Menu Cepat</h3>
+                    <h3><i class="fas fa-link"></i> Menu Utama</h3>
                     <ul class="footer-links">
                         <li><a href="<?php echo e(route('home')); ?>"><i class="fas fa-chevron-right"></i> Beranda</a></li>
                         <li><a href="<?php echo e(route('pupuk.bibit')); ?>"><i class="fas fa-chevron-right"></i> Pupuk & Bibit</a></li>
@@ -842,6 +869,24 @@
                     </ul>
                 </div>
 
+                <!-- Kolom 3 - Contact Info -->
+                <div class="footer-col">
+                    <h3><i class="fas fa-phone-alt"></i> Hubungi Kami</h3>
+                    <ul class="footer-links contact-links">
+                        <li>
+                            <a href="mailto:friskarevalinamanurung@gmail.com">
+                                <i class="fas fa-envelope"></i>
+                                <span>friskarevalinamanurung@gmail.com</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+628139629578">
+                                <i class="fas fa-phone"></i>
+                                <span>+62 813-9629-5784</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
             </div>
 
