@@ -7,6 +7,7 @@ use App\Http\Requests\Api\StoreOrderRequest;
 use App\Http\Requests\Api\UpdateOrderStatusRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -58,7 +59,7 @@ class OrderController extends Controller
     /**
      * Store a new order
      */
-    public function store(StoreOrderRequest $request)
+    public function store(StoreOrderRequest $request, WhatsAppService $whatsappService)
     {
         $data = $request->validated();
 
@@ -76,7 +77,26 @@ class OrderController extends Controller
             return $order;
         });
 
-        return response()->json(["success" => true, "order" => new OrderResource($order)], 201);
+        // Load relasi untuk WhatsApp message
+        $order->load('user');
+
+        // Kirim WhatsApp notifikasi
+        $whatsappResult = $whatsappService->sendOrderNotification($order);
+        
+        // Log hasil pengiriman WA
+        if ($whatsappResult['success']) {
+            \Log::info('WhatsApp notification sent for order', [
+                'order_number' => $order->order_number,
+                'user_id' => $order->user_id
+            ]);
+        }
+
+        return response()->json([
+            "success" => true, 
+            "order" => new OrderResource($order),
+            "whatsapp_sent" => $whatsappResult['success'],
+            "whatsapp_message" => $whatsappResult['message']
+        ], 201);
     }
 
     /**
@@ -94,15 +114,32 @@ class OrderController extends Controller
     /**
      * Update order status
      */
-    public function updateStatus(UpdateOrderStatusRequest $request, $orderNumber)
+    public function updateStatus(UpdateOrderStatusRequest $request, $orderNumber, WhatsAppService $whatsappService)
     {
         $order = Order::where('order_number', $orderNumber)->first();
         if (! $order) {
             return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
 
+        $oldStatus = $order->status;
         $order->status = $request->validated()['status'];
         $order->save();
+
+        // Load relasi untuk WhatsApp message
+        $order->load('user');
+
+        // Kirim WhatsApp notifikasi jika status berubah
+        if ($oldStatus !== $order->status) {
+            $whatsappResult = $whatsappService->sendStatusUpdateNotification($order, $oldStatus);
+            
+            if ($whatsappResult['success']) {
+                \Log::info('WhatsApp status update sent', [
+                    'order_number' => $order->order_number,
+                    'old_status' => $oldStatus,
+                    'new_status' => $order->status
+                ]);
+            }
+        }
 
         return response()->json(['success' => true, 'order' => new OrderResource($order)]);
     }

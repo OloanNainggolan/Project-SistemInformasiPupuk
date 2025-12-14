@@ -758,6 +758,35 @@
     </div>
 
     <script>
+        // Prevent browser from caching this page
+        window.addEventListener('beforeunload', function() {
+            // Force reload on back button
+            window.onpageshow = function(event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            };
+        });
+
+        // Auto-refresh page if loaded from cache (untuk fix CSRF expired)
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                console.log('Page loaded from cache, refreshing...');
+                window.location.reload(true); // Hard reload
+            }
+        });
+
+        // Check if page is loaded via back button
+        if (performance.navigation.type === 2) {
+            console.log('Page accessed via back button, reloading...');
+            window.location.reload(true);
+        }
+
+        // Prevent form resubmission
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
         // Toggle password
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('password');

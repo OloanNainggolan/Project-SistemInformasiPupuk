@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Order;
+use App\Services\WhatsAppService;
 
 class PupukBibitController extends Controller
 {
@@ -306,6 +307,41 @@ class PupukBibitController extends Controller
         // Generate nomor pesanan
         $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
         
+        // Update profil user dengan data terbaru untuk konsistensi
+        $user = auth()->user();
+        $updateData = [];
+        
+        if (!empty($validated['customer_name']) && $validated['customer_name'] !== $user->nama_lengkap) {
+            $updateData['nama_lengkap'] = $validated['customer_name'];
+        }
+        
+        if (!empty($validated['customer_phone'])) {
+            // Format nomor HP ke format internasional Indonesia
+            $phone = preg_replace('/[^0-9]/', '', $validated['customer_phone']);
+            if (substr($phone, 0, 1) === '0') {
+                $phone = '62' . substr($phone, 1);
+            } elseif (substr($phone, 0, 2) !== '62') {
+                $phone = '62' . $phone;
+            }
+            
+            if ($phone !== $user->no_telp) {
+                $updateData['no_telp'] = $phone;
+            }
+        }
+        
+        if (!empty($validated['customer_address']) && $validated['customer_address'] !== $user->alamat) {
+            $updateData['alamat'] = $validated['customer_address'];
+        }
+        
+        // Update user profile jika ada perubahan
+        if (!empty($updateData)) {
+            $user->update($updateData);
+            \Log::info('User profile updated', [
+                'user_id' => $user->id,
+                'updated_fields' => array_keys($updateData)
+            ]);
+        }
+        
         // Simpan ke database dengan DB transaction
         DB::beginTransaction();
         try {
@@ -345,6 +381,31 @@ class PupukBibitController extends Controller
                 'order_id' => $order->id,
                 'order_number' => $orderNumber
             ]);
+            
+            // Kirim WhatsApp Notifikasi
+            try {
+                $order->load('user');
+                $whatsappService = app(WhatsAppService::class);
+                $whatsappResult = $whatsappService->sendOrderNotification($order);
+                
+                if ($whatsappResult['success']) {
+                    \Log::info('WhatsApp notification sent for order', [
+                        'order_number' => $order->order_number,
+                        'user_id' => $order->user_id,
+                        'phone' => $order->user->no_telp ?? 'N/A'
+                    ]);
+                } else {
+                    \Log::warning('WhatsApp notification failed', [
+                        'order_number' => $order->order_number,
+                        'error' => $whatsappResult['message']
+                    ]);
+                }
+            } catch (\Exception $e) {
+                \Log::error('WhatsApp notification error', [
+                    'order_number' => $order->order_number,
+                    'error' => $e->getMessage()
+                ]);
+            }
             
         } catch (\Exception $e) {
             DB::rollBack();

@@ -1,8 +1,6 @@
-@extends('layouts.user')
+<?php $__env->startSection('title', 'Beranda'); ?>
 
-@section('title', 'Beranda')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     /* Reset semua spacing untuk dashboard page */
     body {
@@ -50,7 +48,7 @@
     .hero-section {
         padding: 0;
         margin: 0;
-        background-image: url("{{ asset('images/teh.png') }}");
+        background-image: url("<?php echo e(asset('images/teh.png')); ?>");
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
@@ -489,11 +487,11 @@
     }
 
     .pupuk-detail .detail-image {
-        background-image: url("{{ asset('images/pupuk subs.jpg') }}");
+        background-image: url("<?php echo e(asset('images/pupuk subs.jpg')); ?>");
     }
 
     .bibit-detail .detail-image {
-        background-image: url("{{ asset('images/bibit subs.jpg') }}");
+        background-image: url("<?php echo e(asset('images/bibit subs.jpg')); ?>");
     }
 
     .detail-icon-overlay {
@@ -832,9 +830,9 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <section class="hero-section">
     <div class="container hero-content">
         <div class="hero-image"></div>
@@ -937,7 +935,7 @@
                     <span class="tag green">Kualitas Terjamin SNI</span>
                     <span class="tag green">Distribusi merata</span>
                 </div>
-                <a href="{{ route('pupuk.bibit') }}" style="display: block; text-decoration: none;">
+                <a href="<?php echo e(route('pupuk.bibit')); ?>" style="display: block; text-decoration: none;">
                     <button class="action-button-detail bg-primary-green">Pesan Pupuk Sekarang</button>
                 </a>
             </div>
@@ -961,7 +959,7 @@
                     <span class="tag purple">Bersertifikat resmi</span>
                     <span class="tag purple">Hasil panen optimal</span>
                 </div>
-                <a href="{{ route('pupuk.bibit') }}" style="display: block; text-decoration: none;">
+                <a href="<?php echo e(route('pupuk.bibit')); ?>" style="display: block; text-decoration: none;">
                     <button class="action-button-detail bg-secondary-blue">Pesan Bibit Sekarang</button>
                 </a>
             </div>
@@ -981,4 +979,6 @@
         }
     }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw10\Project-SistemInformasiPupuk\resources\views/user/dashboard.blade.php ENDPATH**/ ?>
