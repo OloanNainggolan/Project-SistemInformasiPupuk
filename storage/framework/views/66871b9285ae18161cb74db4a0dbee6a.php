@@ -835,33 +835,6 @@
         </div>
     </div>
 
-    <!-- Customer & Delivery Info -->
-    <div class="detail-grid">
-        <!-- Delivery Information -->
-        <div class="detail-card">
-            <h3 class="card-title">
-                <i class="fas fa-truck"></i>
-                Informasi Pengiriman
-            </h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-calendar-alt"></i>
-                        Tanggal Pesan
-                    </div>
-                    <div class="info-value"><?php echo e($order->created_at->format('d F Y')); ?></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-clock"></i>
-                        Waktu
-                    </div>
-                    <div class="info-value"><?php echo e($order->created_at->format('H:i')); ?> WIB</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Pickup Point Information (for Ready status) -->
     <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
     <div class="info-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981;">
@@ -1018,9 +991,33 @@
     </div>
     <?php endif; ?>
 
+    <!-- Informasi Pengiriman -->
+    <div class="detail-card" style="margin-bottom: 30px;">
+        <h3 class="card-title">
+            <i class="fas fa-truck"></i>
+            Informasi Pengiriman
+        </h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-calendar-alt"></i>
+                    Tanggal Pesan
+                </div>
+                <div class="info-value"><?php echo e($order->created_at->format('d F Y')); ?></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-clock"></i>
+                    Waktu
+                </div>
+                <div class="info-value"><?php echo e($order->created_at->format('H:i')); ?> WIB</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Management Grid: Action Buttons & Customer Info -->
     <div class="management-grid">
-        <!-- Action Buttons -->
+        <!-- Kelola Pesanan (Kiri) -->
         <div class="action-section">
             <h3 class="card-title">
                 <i class="fas fa-cogs"></i>
@@ -1059,7 +1056,7 @@
             </div>
         </div>
 
-        <!-- Customer Information -->
+        <!-- Informasi Pelanggan (Kanan) -->
         <div class="detail-card">
             <h3 class="card-title">
                 <i class="fas fa-user"></i>
