@@ -539,6 +539,20 @@
             color: #10b981;
         }
 
+        .form-help {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 6px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .form-help i {
+            margin-right: 4px;
+            font-size: 11px;
+        }
+
         .form-input {
             width: 100%;
             padding: 12px 15px;
@@ -942,19 +956,22 @@
                     <form id="formInfoPesanan">
                         <div class="form-group">
                             <label class="form-label"><i class="fas fa-user-circle"></i> Nama Lengkap</label>
-                            <input type="text" class="form-input" id="nama" name="nama" value="{{ auth()->user()->name }}" required>
+                            <input type="text" class="form-input" id="nama" name="nama" value="{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}" required placeholder="Masukkan nama lengkap Anda">
+                            <small class="form-help"><i class="fas fa-info-circle"></i> Data ini akan tersimpan untuk mempermudah pesanan berikutnya</small>
                         </div>
                         <div class="form-group">
-                            <label class="form-label"><i class="fas fa-phone"></i> Nomor HP</label>
-                            <input type="tel" class="form-input" id="no_hp" name="no_hp" value="{{ auth()->user()->no_hp ?? '08123456789' }}" required>
+                            <label class="form-label"><i class="fas fa-phone"></i> Nomor HP/WhatsApp</label>
+                            <input type="tel" class="form-input" id="no_hp" name="no_hp" value="{{ auth()->user()->no_telp ?? '' }}" required placeholder="Contoh: 6287773156762">
+                            <small class="form-help"><i class="fas fa-whatsapp" style="color: #25D366;"></i> Notifikasi pesanan akan dikirim via WhatsApp ke nomor ini</small>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><i class="fas fa-map-marker-alt"></i> Alamat Lengkap</label>
-                            <textarea class="form-input" id="alamat" name="alamat" rows="3" required>{{ auth()->user()->alamat ?? 'Jl. Jalan-jalan, balai desa sukamaju' }}</textarea>
+                            <textarea class="form-input" id="alamat" name="alamat" rows="3" required placeholder="Contoh: Jl. Merdeka No.10, Balai Desa Sukamaju, Kec. Tebing Tinggi">{{ auth()->user()->alamat ?? '' }}</textarea>
+                            <small class="form-help"><i class="fas fa-info-circle"></i> Alamat untuk menentukan lokasi pengambilan terdekat</small>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><i class="fas fa-comment-dots"></i> Catatan (Opsional)</label>
-                            <textarea class="form-input" id="catatan" name="catatan" rows="2" placeholder="Tambahkan catatan untuk pesanan...">{{ $catatan ?? '' }}</textarea>
+                            <textarea class="form-input" id="catatan" name="catatan" rows="2" placeholder="Tambahkan catatan khusus untuk pesanan ini (jika ada)..."></textarea>
                         </div>
                     </form>
                 </div>

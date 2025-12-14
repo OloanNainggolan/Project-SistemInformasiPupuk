@@ -1,0 +1,15 @@
+Sekarang coba test update status order lagi:
+
+1. Buka browser
+2. Login sebagai admin
+3. Buka menu "Kelola Pesanan"
+4. Pilih order
+5. Update status (misal: Pending → Processing)
+
+Seharusnya sekarang:
+✅ Status berhasil diupdate
+✅ Notification tersimpan di database
+✅ WhatsApp terkirim ke user
+✅ TIDAK ada error lagi
+
+Coba test dan lihat hasilnya!

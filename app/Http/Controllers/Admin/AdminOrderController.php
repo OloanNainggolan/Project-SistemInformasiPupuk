@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Message;
 use App\Models\Notification;
 use App\Traits\TrackAdminActivity;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -149,6 +150,32 @@ class AdminOrderController extends Controller
 
         // Kirim notifikasi ke user bahwa status pesanan telah diupdate
         $this->sendOrderStatusNotification($order, $oldStatus, $newStatus);
+
+        // Kirim WhatsApp notifikasi update status
+        try {
+            $order->load('user');
+            $whatsappService = app(WhatsAppService::class);
+            $whatsappResult = $whatsappService->sendStatusUpdateNotification($order, $oldStatus);
+            
+            if ($whatsappResult['success']) {
+                \Log::info('WhatsApp status update sent', [
+                    'order_number' => $order->order_number,
+                    'old_status' => $oldStatus,
+                    'new_status' => $newStatus,
+                    'phone' => $order->user->no_telp ?? 'N/A'
+                ]);
+            } else {
+                \Log::warning('WhatsApp status update failed', [
+                    'order_number' => $order->order_number,
+                    'error' => $whatsappResult['message']
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('WhatsApp status update error', [
+                'order_number' => $order->order_number,
+                'error' => $e->getMessage()
+            ]);
+        }
 
         // Jika request adalah JSON/AJAX, return JSON response
         if ($request->expectsJson() || $request->ajax()) {
@@ -392,16 +419,12 @@ class AdminOrderController extends Controller
         }
 
         Notification::create([
-            'user_id' => $order->user_id,
             'type' => $notificationType,
             'title' => $subject,
             'message' => $message,
             'status' => 'unread',
-            'is_read' => false,
             'related_id' => $order->id,
-            'related_type' => 'Order',
             'link' => null,
-            'data' => $pickupData ? json_encode($pickupData) : null,
         ]);
     }
 
