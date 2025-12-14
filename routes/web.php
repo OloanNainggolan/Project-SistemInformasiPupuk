@@ -20,6 +20,20 @@ Route::get('/', function () {
     return view('user.HOME');
 })->name('home');
 
+// CSRF Debug Test Route (untuk troubleshooting)
+Route::get('/csrf-test', function () {
+    return view('csrf-test');
+})->name('csrf.test');
+
+Route::post('/csrf-test-submit', function (Illuminate\Http\Request $request) {
+    return response()->json([
+        'success' => true,
+        'message' => 'CSRF token valid! Form berhasil di-submit.',
+        'data' => $request->input('test_data'),
+        'csrf_token' => csrf_token()
+    ]);
+})->name('csrf.test.submit');
+
 // User Registration Routes
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process')->middleware('guest');

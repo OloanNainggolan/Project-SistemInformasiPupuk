@@ -55,6 +55,23 @@ Route::prefix('v1')->group(function () {
     Route::get('/pickup-points', [MapsController::class, 'pickupPoints']);
     Route::post('/nearest-pickup', [MapsController::class, 'nearestPickup']);
 
+    // WHATSAPP TEST ROUTES (For testing only)
+    Route::post('/whatsapp/test', function (Illuminate\Http\Request $request) {
+        $whatsappService = app(\App\Services\WhatsAppService::class);
+        
+        $phoneNumber = $request->input('phone');
+        if (!$phoneNumber) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Phone number is required'
+            ], 400);
+        }
+        
+        $result = $whatsappService->testConnection($phoneNumber);
+        
+        return response()->json($result);
+    });
+
     // HEALTH CHECK
     Route::get('/health', function () {
         return response()->json([

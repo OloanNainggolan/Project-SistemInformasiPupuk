@@ -21,6 +21,7 @@ class User extends Authenticatable
         'password',
         'foto',
         'google_id',
+        'facebook_id',
         'luas_lahan',
         'jenis_tanaman',
         'lokasi_lahan',

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <title>Pupuk dan Bibit Bersubsidi Pemerintah – Masuk</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -635,7 +635,7 @@
         <div class="left-side">
             <div class="logo-section">
                 <div class="logo-circle">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo Pupuk & Bibit" />
+                    <img src="<?php echo e(asset('images/logo.png')); ?>" alt="Logo Pupuk & Bibit" />
                 </div>
                 <h1>Bergabung Bersama Kami</h1>
                 <p>Akses mudah ke pupuk dan bibit subsidi berkualitas untuk meningkatkan hasil pertanian Anda</p>
@@ -669,30 +669,30 @@
             </div>
 
             <!-- Alerts -->
-            @if($errors->any())
+            <?php if($errors->any()): ?>
             <div class="alert alert-error show">
                 <i class="fas fa-exclamation-circle"></i>
-                <span>{{ $errors->first() }}</span>
+                <span><?php echo e($errors->first()); ?></span>
             </div>
-            @endif
+            <?php endif; ?>
 
-            @if(session('success'))
+            <?php if(session('success')): ?>
             <div class="alert alert-success show">
                 <i class="fas fa-check-circle"></i>
-                <span>{{ session('success') }}</span>
+                <span><?php echo e(session('success')); ?></span>
             </div>
-            @endif
+            <?php endif; ?>
 
             <!-- Info Box -->
             <div class="info-box">
                 <i class="fas fa-info-circle"></i>
                 <strong>Informasi:</strong> Halaman ini untuk user. Admin silakan ke 
-                <a href="{{ route('admin.login') }}">halaman login admin</a>.
+                <a href="<?php echo e(route('admin.login')); ?>">halaman login admin</a>.
             </div>
 
             <!-- Form -->
-            <form id="loginForm" action="{{ route('login.process') }}" method="POST">
-                @csrf
+            <form id="loginForm" action="<?php echo e(route('login.process')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
 
                 <div class="form-group">
                     <label for="login">Username atau Email</label>
@@ -702,7 +702,7 @@
                             id="login" 
                             name="login" 
                             placeholder="username atau email@example.com"
-                            value="{{ old('login') }}"
+                            value="<?php echo e(old('login')); ?>"
                             required
                         />
                         <i class="fas fa-user"></i>
@@ -737,7 +737,7 @@
                     <span>atau</span>
                 </div>
 
-                <a href="{{ route('auth.google') }}" class="btn-google">
+                <a href="<?php echo e(route('auth.google')); ?>" class="btn-google">
                     <div class="google-logo">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -751,7 +751,7 @@
 
                 <div class="links">
                     <a href="/reset-password-email">Lupa Kata Sandi?</a>
-                    <a href="{{ route('register') }}">Daftar Akun Baru</a>
+                    <a href="<?php echo e(route('register')); ?>">Daftar Akun Baru</a>
                 </div>
             </form>
         </div>
@@ -855,3 +855,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\laragon\www\ppw10\Project-SistemInformasiPupuk\resources\views/auth/login.blade.php ENDPATH**/ ?>

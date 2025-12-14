@@ -53,11 +53,31 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        return view('auth.login');
+        // Regenerate CSRF token untuk setiap load halaman login
+        // Ini memastikan token selalu fresh
+        if (!session()->has('_token')) {
+            session()->regenerateToken();
+        }
+        
+        // Set header untuk mencegah browser cache halaman login
+        return response()
+            ->view('auth.login')
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     public function login(Request $request)
     {
+        // Log request info untuk debugging CSRF
+        \Log::info('Login POST received', [
+            'has_csrf_token' => $request->has('_token'),
+            'session_id' => session()->getId(),
+            'session_token' => session()->token(),
+            'request_token' => $request->input('_token'),
+            'tokens_match' => $request->input('_token') === session()->token(),
+        ]);
+        
         // Validasi input - form menggunakan field 'login' yang bisa username atau email
         $request->validate([
             'login' => 'required|string',
@@ -83,14 +103,18 @@ class AuthController extends Controller
             'credentials' => [$fieldType => $loginField, 'password' => '***']
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             \Log::info('Login successful', ['user_id' => Auth::id()]);
-            return redirect()->route('dashboard');
+            
+            return redirect()->intended(route('dashboard'))
+                ->with('success', 'Selamat datang kembali!');
         }
 
         \Log::warning('Login failed', ['field' => $loginField]);
-        return back()->withErrors(['login' => 'Username/Email atau password salah.'])->withInput();
+        return back()
+            ->withErrors(['login' => 'Username/Email atau password salah.'])
+            ->withInput($request->only('login'));
     }
 
     public function logout(Request $request)
