@@ -1,8 +1,6 @@
-@extends('layouts.user')
+<?php $__env->startSection('title', 'Detail Pesanan'); ?>
 
-@section('title', 'Detail Pesanan')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .detail-container {
         max-width: 1200px;
@@ -327,18 +325,18 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="detail-container">
-    <a href="{{ route('profil.user') }}" class="back-button">
+    <a href="<?php echo e(route('profil.user')); ?>" class="back-button">
         <i class="fas fa-arrow-left"></i>
         Kembali ke Profil
     </a>
 
     <div class="detail-header">
         <h1><i class="fas fa-receipt"></i> Detail Pesanan</h1>
-        <p class="order-number">Order Number: <strong>{{ $order->order_number }}</strong></p>
+        <p class="order-number">Order Number: <strong><?php echo e($order->order_number); ?></strong></p>
     </div>
 
     <div class="detail-content">
@@ -351,7 +349,7 @@
             <div class="info-grid">
                 <div class="info-item">
                     <span class="info-label">Status Saat Ini</span>
-                    @php
+                    <?php
                         $statusClass = match($order->status) {
                             'Menunggu Konfirmasi' => 'pending',
                             'Sedang Diproses' => 'processing',
@@ -360,19 +358,20 @@
                             'Dibatalkan' => 'cancelled',
                             default => 'pending'
                         };
-                    @endphp
-                    <span class="status-badge {{ $statusClass }}">
+                    ?>
+                    <span class="status-badge <?php echo e($statusClass); ?>">
                         <i class="fas fa-circle" style="font-size: 8px;"></i>
-                        {{ $order->status }}
+                        <?php echo e($order->status); ?>
+
                     </span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Tanggal Pesanan</span>
-                    <span class="info-value">{{ $order->created_at->format('d F Y, H:i') }} WIB</span>
+                    <span class="info-value"><?php echo e($order->created_at->format('d F Y, H:i')); ?> WIB</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Terakhir Diperbarui</span>
-                    <span class="info-value">{{ $order->updated_at->format('d F Y, H:i') }} WIB</span>
+                    <span class="info-value"><?php echo e($order->updated_at->format('d F Y, H:i')); ?> WIB</span>
                 </div>
             </div>
         </div>
@@ -384,7 +383,7 @@
                 Informasi Produk
             </h2>
             <div class="product-card">
-                @php
+                <?php
                     $productImage = asset('images/pupuk.jpg'); // Default
                     
                     if($order->product) {
@@ -411,33 +410,34 @@
                             }
                         }
                     }
-                @endphp
+                ?>
                 
-                <img src="{{ $productImage }}" 
-                     alt="{{ $order->product->nama_produk ?? 'Produk' }}" 
+                <img src="<?php echo e($productImage); ?>" 
+                     alt="<?php echo e($order->product->nama_produk ?? 'Produk'); ?>" 
                      class="product-image"
-                     onerror="this.src='{{ asset('images/pupuk.jpg') }}'">
+                     onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
                 
                 <div class="product-info">
                     <div>
-                        <h3 class="product-name">{{ $order->product->nama_produk ?? 'Produk tidak tersedia' }}</h3>
-                        <span class="product-type">{{ $order->product->tipe_produk ?? '-' }}</span>
+                        <h3 class="product-name"><?php echo e($order->product->nama_produk ?? 'Produk tidak tersedia'); ?></h3>
+                        <span class="product-type"><?php echo e($order->product->tipe_produk ?? '-'); ?></span>
                         <p style="color: #6b7280; margin: 0.5rem 0;">
-                            {{ $order->product->deskripsi ?? '-' }}
+                            <?php echo e($order->product->deskripsi ?? '-'); ?>
+
                         </p>
                     </div>
                     <div class="product-details">
                         <div class="product-detail-item">
                             <span class="product-detail-label">Jumlah</span>
-                            <span class="product-detail-value">{{ $order->quantity }} Kg</span>
+                            <span class="product-detail-value"><?php echo e($order->quantity); ?> Kg</span>
                         </div>
                         <div class="product-detail-item">
                             <span class="product-detail-label">Harga Satuan</span>
-                            <span class="product-detail-value">Rp {{ number_format($order->product->harga_subsidi ?? 0, 0, ',', '.') }}</span>
+                            <span class="product-detail-value">Rp <?php echo e(number_format($order->product->harga_subsidi ?? 0, 0, ',', '.')); ?></span>
                         </div>
                         <div class="product-detail-item">
                             <span class="product-detail-label">Subtotal</span>
-                            <span class="product-detail-value">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</span>
+                            <span class="product-detail-value">Rp <?php echo e(number_format($order->total_amount ?? 0, 0, ',', '.')); ?></span>
                         </div>
                     </div>
                 </div>
@@ -453,22 +453,22 @@
             <div class="info-grid">
                 <div class="info-item">
                     <span class="info-label">Nama Lengkap</span>
-                    <span class="info-value">{{ $order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? '-' }}</span>
+                    <span class="info-value"><?php echo e($order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? '-'); ?></span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Nomor Telepon</span>
-                    <span class="info-value">{{ $order->customer_phone ?? $order->user->no_telp ?? '-' }}</span>
+                    <span class="info-value"><?php echo e($order->customer_phone ?? $order->user->no_telp ?? '-'); ?></span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Alamat Lengkap</span>
-                    <span class="info-value">{{ $order->customer_address ?? $order->user->alamat ?? '-' }}</span>
+                    <span class="info-value"><?php echo e($order->customer_address ?? $order->user->alamat ?? '-'); ?></span>
                 </div>
-                @if($order->customer_notes)
+                <?php if($order->customer_notes): ?>
                 <div class="info-item" style="grid-column: 1 / -1;">
                     <span class="info-label">Catatan Pesanan</span>
-                    <span class="info-value" style="white-space: pre-wrap;">{{ $order->customer_notes }}</span>
+                    <span class="info-value" style="white-space: pre-wrap;"><?php echo e($order->customer_notes); ?></span>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
@@ -481,27 +481,28 @@
             <div class="summary-box">
                 <div class="summary-row">
                     <span class="summary-label">Subtotal Produk</span>
-                    <span class="summary-value">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</span>
+                    <span class="summary-value">Rp <?php echo e(number_format($order->total_amount ?? 0, 0, ',', '.')); ?></span>
                 </div>
                 <div class="summary-row">
                     <span class="summary-label">Diskon Subsidi</span>
                     <span class="summary-value" style="color: #10b981;">
-                        @if($order->product)
-                            - Rp {{ number_format(($order->product->harga_normal - $order->product->harga_subsidi) * $order->quantity, 0, ',', '.') }}
-                        @else
+                        <?php if($order->product): ?>
+                            - Rp <?php echo e(number_format(($order->product->harga_normal - $order->product->harga_subsidi) * $order->quantity, 0, ',', '.')); ?>
+
+                        <?php else: ?>
                             Rp 0
-                        @endif
+                        <?php endif; ?>
                     </span>
                 </div>
                 <div class="summary-row">
                     <span class="summary-label">TOTAL PEMBAYARAN</span>
-                    <span class="summary-value">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</span>
+                    <span class="summary-value">Rp <?php echo e(number_format($order->total_amount ?? 0, 0, ',', '.')); ?></span>
                 </div>
             </div>
         </div>
 
         <!-- Order Timeline -->
-        @if($order->status !== 'Menunggu Konfirmasi')
+        <?php if($order->status !== 'Menunggu Konfirmasi'): ?>
         <div class="detail-section">
             <h2 class="section-title">
                 <i class="fas fa-history"></i>
@@ -512,52 +513,54 @@
                     <div class="timeline-icon"></div>
                     <div class="timeline-content">
                         <div class="timeline-title">Pesanan Dibuat</div>
-                        <div class="timeline-date">{{ $order->created_at->format('d F Y, H:i') }} WIB</div>
+                        <div class="timeline-date"><?php echo e($order->created_at->format('d F Y, H:i')); ?> WIB</div>
                     </div>
                 </div>
                 
-                @if($order->status !== 'Menunggu Konfirmasi')
+                <?php if($order->status !== 'Menunggu Konfirmasi'): ?>
                 <div class="timeline-item">
                     <div class="timeline-icon"></div>
                     <div class="timeline-content">
                         <div class="timeline-title">Pesanan Dikonfirmasi</div>
-                        <div class="timeline-date">{{ $order->updated_at->format('d F Y, H:i') }} WIB</div>
+                        <div class="timeline-date"><?php echo e($order->updated_at->format('d F Y, H:i')); ?> WIB</div>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
 
-                @if(in_array($order->status, ['Sedang Diproses', 'Siap Diambil', 'Selesai']))
+                <?php if(in_array($order->status, ['Sedang Diproses', 'Siap Diambil', 'Selesai'])): ?>
                 <div class="timeline-item">
                     <div class="timeline-icon"></div>
                     <div class="timeline-content">
                         <div class="timeline-title">Pesanan Diproses</div>
-                        <div class="timeline-date">{{ $order->updated_at->format('d F Y, H:i') }} WIB</div>
+                        <div class="timeline-date"><?php echo e($order->updated_at->format('d F Y, H:i')); ?> WIB</div>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
 
-                @if(in_array($order->status, ['Siap Diambil', 'Selesai']))
+                <?php if(in_array($order->status, ['Siap Diambil', 'Selesai'])): ?>
                 <div class="timeline-item">
                     <div class="timeline-icon"></div>
                     <div class="timeline-content">
                         <div class="timeline-title">Pesanan Siap Diambil</div>
-                        <div class="timeline-date">{{ $order->updated_at->format('d F Y, H:i') }} WIB</div>
+                        <div class="timeline-date"><?php echo e($order->updated_at->format('d F Y, H:i')); ?> WIB</div>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
 
-                @if($order->status === 'Selesai')
+                <?php if($order->status === 'Selesai'): ?>
                 <div class="timeline-item">
                     <div class="timeline-icon"></div>
                     <div class="timeline-content">
                         <div class="timeline-title">Pesanan Selesai</div>
-                        <div class="timeline-date">{{ $order->updated_at->format('d F Y, H:i') }} WIB</div>
+                        <div class="timeline-date"><?php echo e($order->updated_at->format('d F Y, H:i')); ?> WIB</div>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/user/order-detail.blade.php ENDPATH**/ ?>

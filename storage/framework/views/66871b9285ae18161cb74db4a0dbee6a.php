@@ -1,8 +1,6 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Detail Pesanan - Admin'); ?>
 
-@section('title', 'Detail Pesanan - Admin')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .detail-container {
         max-width: 1400px;
@@ -585,13 +583,13 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="detail-container">
     <!-- Back Button -->
     <div class="back-button">
-        <a href="{{ route('admin.orders') }}" class="btn-back">
+        <a href="<?php echo e(route('admin.orders')); ?>" class="btn-back">
             <i class="fas fa-arrow-left"></i>
             <span>Kembali ke Daftar Pesanan</span>
         </a>
@@ -601,15 +599,16 @@
     <div class="order-header">
         <div class="order-title-section">
             <div>
-                <h1 class="order-title">Pesanan {{ $order->order_number }}</h1>
+                <h1 class="order-title">Pesanan <?php echo e($order->order_number); ?></h1>
                 <p class="order-date">
                     <i class="far fa-calendar"></i>
-                    {{ $order->created_at->format('d F Y, H:i') }} WIB
+                    <?php echo e($order->created_at->format('d F Y, H:i')); ?> WIB
                 </p>
             </div>
             <div>
-                <span class="status-badge status-{{ strtolower($order->status) }}">
-                    {{ $order->status }}
+                <span class="status-badge status-<?php echo e(strtolower($order->status)); ?>">
+                    <?php echo e($order->status); ?>
+
                 </span>
             </div>
         </div>
@@ -629,35 +628,35 @@
                         <i class="fas fa-user-circle"></i>
                         Nama Pemesan
                     </div>
-                    <div class="info-value">{{ $order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-envelope"></i>
                         Email
                     </div>
-                    <div class="info-value">{{ $order->user->email ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->user->email ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-phone"></i>
                         No. HP
                     </div>
-                    <div class="info-value">{{ $order->customer_phone ?? $order->user->no_hp ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_phone ?? $order->user->no_hp ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-map-marker-alt"></i>
                         Alamat
                     </div>
-                    <div class="info-value">{{ $order->customer_address ?? $order->user->alamat ?? 'Belum diisi' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_address ?? $order->user->alamat ?? 'Belum diisi'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-sticky-note"></i>
                         Catatan
                     </div>
-                    <div class="info-value">{{ $order->customer_notes ?? 'Tidak ada catatan' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_notes ?? 'Tidak ada catatan'); ?></div>
                 </div>
             </div>
         </div>
@@ -666,7 +665,7 @@
     </div>
 
     <!-- Pickup Point Information (for Ready status) -->
-    @if($order->status === 'Ready' || $order->status === 'Completed')
+    <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
     <div class="info-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981;">
         <h3 class="card-title" style="color: #047857;">
             <i class="fas fa-map-marked-alt"></i>
@@ -680,10 +679,10 @@
             <!-- Will be populated by JavaScript -->
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Lokasi Pengambilan Map Section -->
-    @if($order->customer_address || $order->user->alamat)
+    <?php if($order->customer_address || $order->user->alamat): ?>
     <div class="map-section-admin">
         <h3 class="card-title">
             <i class="fas fa-map-marked-alt"></i>
@@ -697,7 +696,7 @@
                 </span>
                 <div class="address-details">
                     <div class="address-label-text">Balai Desa</div>
-                    <div class="address-value-text">{{ $order->customer_address ?? $order->user->alamat ?? 'N/A' }}</div>
+                    <div class="address-value-text"><?php echo e($order->customer_address ?? $order->user->alamat ?? 'N/A'); ?></div>
                 </div>
             </div>
         </div>
@@ -709,7 +708,7 @@
             <span>Marker merah menunjukkan lokasi pengambilan di Balai Desa. Pelanggan akan mengambil pesanan di lokasi ini.</span>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Products Ordered -->
     <div class="products-section">
@@ -718,7 +717,7 @@
             Produk yang Dipesan
         </h3>
         
-        @php
+        <?php
             $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
             $calculatedSubtotal = 0;
             
@@ -731,11 +730,11 @@
                     'order_total' => $order->total_amount ?? 'NULL'
                 ]);
             }
-        @endphp
+        ?>
 
-        @if(is_array($items) && count($items) > 0)
-            @foreach($items as $item)
-                @php
+        <?php if(is_array($items) && count($items) > 0): ?>
+            <?php $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php
                     // Use unit_price if available, otherwise fallback to price
                     $unitPrice = $item['unit_price'] ?? $item['price'] ?? 0;
                     $quantity = $item['quantity'] ?? 0;
@@ -743,9 +742,9 @@
                     // Use subtotal from item if available, otherwise calculate
                     $itemSubtotal = $item['subtotal'] ?? ($unitPrice * $quantity);
                     $calculatedSubtotal += $itemSubtotal;
-                @endphp
+                ?>
                 <div class="product-item">
-                    @php
+                    <?php
                         $productImage = asset('images/pupuk.jpg'); // Default
                         
                         if($order->product) {
@@ -779,46 +778,48 @@
                         } elseif(($item['type'] ?? '') === 'bibit') {
                             $productImage = asset('images/bibit.jpg');
                         }
-                    @endphp
+                    ?>
                     
                     <div class="product-image">
-                        <img src="{{ $productImage }}" 
-                             alt="{{ $item['product_name'] ?? 'Produk' }}" 
+                        <img src="<?php echo e($productImage); ?>" 
+                             alt="<?php echo e($item['product_name'] ?? 'Produk'); ?>" 
                              style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                             onerror="this.src='{{ asset('images/pupuk.jpg') }}'">
+                             onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
                     </div>
                     <div class="product-info">
-                        <h4>{{ $item['product_name'] ?? 'Produk' }}</h4>
+                        <h4><?php echo e($item['product_name'] ?? 'Produk'); ?></h4>
                         <p class="product-meta">
                             <span style="background: #e0e7ff; color: #5b21b6; padding: 3px 10px; border-radius: 5px; font-weight: 600;">
-                                {{ ucfirst($item['type'] ?? 'N/A') }}
+                                <?php echo e(ucfirst($item['type'] ?? 'N/A')); ?>
+
                             </span>
-                            <span style="margin-left: 10px;">{{ $item['category'] ?? 'N/A' }}</span>
+                            <span style="margin-left: 10px;"><?php echo e($item['category'] ?? 'N/A'); ?></span>
                         </p>
                         <p class="product-quantity">
-                            <i class="fas fa-box"></i> Jumlah: {{ $quantity }} kg
+                            <i class="fas fa-box"></i> Jumlah: <?php echo e($quantity); ?> kg
                         </p>
                     </div>
                     <div class="product-price">
                         <div class="product-subtotal">
-                            Rp {{ number_format($itemSubtotal, 0, ',', '.') }}
+                            Rp <?php echo e(number_format($itemSubtotal, 0, ',', '.')); ?>
+
                         </div>
                         <div class="product-unit-price">
-                            @ Rp {{ number_format($unitPrice, 0, ',', '.') }}/kg
+                            @ Rp <?php echo e(number_format($unitPrice, 0, ',', '.')); ?>/kg
                         </div>
                     </div>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
             <!-- Total Section -->
-            @php
+            <?php
                 // Use order subtotal from DB if calculated is 0, otherwise use calculated
                 $finalSubtotal = $calculatedSubtotal > 0 ? $calculatedSubtotal : ($order->subtotal ?? 0);
-            @endphp
+            ?>
             <div class="total-section">
                 <div class="total-row">
                     <span class="total-label">Subtotal</span>
-                    <span class="total-value">Rp {{ number_format($finalSubtotal, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp <?php echo e(number_format($finalSubtotal, 0, ',', '.')); ?></span>
                 </div>
                 <div class="total-row">
                     <span class="total-label">Ongkos Kirim</span>
@@ -826,27 +827,27 @@
                 </div>
                 <div class="total-row grand-total">
                     <span class="total-label">Total Pembayaran</span>
-                    <span class="total-value">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp <?php echo e(number_format($order->total_amount ?? 0, 0, ',', '.')); ?></span>
                 </div>
             </div>
-        @else
+        <?php else: ?>
             <p style="text-align: center; color: #6b7280; padding: 40px;">
                 <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>
                 Tidak ada produk dalam pesanan ini
             </p>
-        @endif
+        <?php endif; ?>
     </div>
 
     <!-- Rejection Reason (if rejected) -->
-    @if($order->status === 'Rejected' && $order->rejection_reason)
+    <?php if($order->status === 'Rejected' && $order->rejection_reason): ?>
     <div class="rejection-section">
         <div class="rejection-title">
             <i class="fas fa-exclamation-triangle"></i>
             Alasan Penolakan
         </div>
-        <p class="rejection-reason">{{ $order->rejection_reason }}</p>
+        <p class="rejection-reason"><?php echo e($order->rejection_reason); ?></p>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Action Buttons -->
     <div class="action-section">
@@ -855,7 +856,7 @@
             Kelola Pesanan
         </h3>
         <div class="action-buttons">
-            @if($order->status === 'Pending')
+            <?php if($order->status === 'Pending'): ?>
                 <button class="btn btn-processing" onclick="updateStatus('Processing')">
                     <i class="fas fa-spinner"></i>
                     Proses Pesanan
@@ -864,7 +865,7 @@
                     <i class="fas fa-times-circle"></i>
                     Tolak Pesanan
                 </button>
-            @elseif($order->status === 'Processing')
+            <?php elseif($order->status === 'Processing'): ?>
                 <button class="btn btn-ready" onclick="updateStatus('Ready')">
                     <i class="fas fa-check"></i>
                     Siap Diambil
@@ -873,12 +874,12 @@
                     <i class="fas fa-times-circle"></i>
                     Tolak Pesanan
                 </button>
-            @elseif($order->status === 'Ready')
+            <?php elseif($order->status === 'Ready'): ?>
                 <button class="btn btn-complete" onclick="updateStatus('Completed')">
                     <i class="fas fa-check-double"></i>
                     Selesaikan Pesanan
                 </button>
-            @endif
+            <?php endif; ?>
             
             <button class="btn btn-print" onclick="window.print()">
                 <i class="fas fa-print"></i>
@@ -887,26 +888,26 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
-@if($order->customer_address || $order->user->alamat)
+<?php if($order->customer_address || $order->user->alamat): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Geocode alamat menggunakan Nominatim (OpenStreetMap)
-        const address = @json($order->customer_address ?? $order->user->alamat ?? '');
+        const address = <?php echo json_encode($order->customer_address ?? $order->user->alamat ?? '', 15, 512) ?>;
         
         if (!address) return;
         
@@ -967,17 +968,17 @@
             });
     });
 </script>
-@endif
+<?php endif; ?>
 
 <script>
     // Load nearest pickup point for Ready orders
-    @if($order->status === 'Ready' || $order->status === 'Completed')
+    <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
     document.addEventListener('DOMContentLoaded', function() {
         loadNearestPickupForAdmin();
     });
 
     function loadNearestPickupForAdmin() {
-        const customerAddress = '{{ $order->customer_address ?? $order->user->alamat ?? "" }}';
+        const customerAddress = '<?php echo e($order->customer_address ?? $order->user->alamat ?? ""); ?>';
         const loadingSection = document.getElementById('pickupLoadingSection');
         const infoSection = document.getElementById('pickupInfoSection');
         
@@ -1129,7 +1130,7 @@
             `;
         });
     }
-    @endif
+    <?php endif; ?>
 
     function updateStatus(newStatus) {
         if (!confirm(`Apakah Anda yakin ingin mengubah status pesanan menjadi "${newStatus}"?`)) {
@@ -1138,7 +1139,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -1174,7 +1175,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/api/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/api/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -1201,4 +1202,6 @@
         });
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/admin/orders/detail.blade.php ENDPATH**/ ?>
