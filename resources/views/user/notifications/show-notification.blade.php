@@ -134,26 +134,26 @@
         <!-- Order Status Update Section -->
         <div class="order-info-section">
             <div class="section-title">
-                <i class="fas fa-box"></i> UPDATE STATUS PESANAN 📦
+                <i class="fas fa-box"></i> UPDATE STATUS PESANAN
             </div>
             
             @if($orderNumber)
             <div class="info-item">
-                <span class="info-label">📋 No. Pesanan:</span>
+                <span class="info-label"><i class="fas fa-file-alt"></i> No. Pesanan:</span>
                 <span class="info-value">#{{ $orderNumber }}</span>
             </div>
             @endif
 
             @if($productName)
             <div class="info-item">
-                <span class="info-label">📦 Produk:</span>
+                <span class="info-label"><i class="fas fa-box-open"></i> Produk:</span>
                 <span class="info-value">{{ $productName }}</span>
             </div>
             @endif
 
             @if($jumlah)
             <div class="info-item">
-                <span class="info-label">🔢 Jumlah:</span>
+                <span class="info-label"><i class="fas fa-sort-numeric-up"></i> Jumlah:</span>
                 <span class="info-value">{{ $jumlah }}</span>
             </div>
             @endif
@@ -161,12 +161,12 @@
             @if($oldStatus && $newStatus)
             <div class="status-change-section">
                 <div class="status-item lama">
-                    <span class="status-icon old">📦</span>
+                    <span class="status-icon old"><i class="fas fa-clock"></i></span>
                     <span class="status-label">Status Lama:</span>
                     <span class="status-value">{{ $oldStatus }}</span>
                 </div>
                 <div class="status-item baru">
-                    <span class="status-icon new">✅</span>
+                    <span class="status-icon new"><i class="fas fa-check-circle"></i></span>
                     <span class="status-label">Status Baru:</span>
                     <span class="status-value highlight">{{ $newStatus }}</span>
                 </div>
@@ -175,7 +175,7 @@
 
             @if($isShipped)
             <div class="highlight-banner shipped">
-                📦 PESANAN HARI DIKIRIM!
+                <i class="fas fa-truck"></i> PESANAN HARI DIKIRIM!
             </div>
             @elseif($isReady)
             <div class="highlight-banner ready">
@@ -185,7 +185,7 @@
 
             @if($actionSteps)
             <div class="action-section">
-                <div class="action-title">🔔 Langkah Pengambilan:</div>
+                <div class="action-title"><i class="fas fa-bell"></i> Langkah Pengambilan:</div>
                 <div class="action-content">
                     {!! nl2br(e($actionSteps)) !!}
                 </div>
@@ -220,7 +220,7 @@
             <div class="pickup-info-card">
                 <div class="section-title" style="font-size: 16px; font-weight: 700; color: #047857; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-map-marked-alt"></i> 
-                    <span>📍 INFORMASI PENGAMBILAN PESANAN</span>
+                    <span>INFORMASI PENGAMBILAN PESANAN</span>
                 </div>
                 
                 <div class="pickup-details">
@@ -232,7 +232,7 @@
                             {{ $pickupData['customer_address'] ?? 'N/A' }}
                         </div>
                         <div class="pickup-coords">
-                            📍 Koordinat: {{ number_format($pickupData['customer_lat'] ?? 0, 4) }}, {{ number_format($pickupData['customer_lng'] ?? 0, 4) }}
+                            <i class="fas fa-map-pin"></i> Koordinat: {{ number_format($pickupData['customer_lat'] ?? 0, 4) }}, {{ number_format($pickupData['customer_lng'] ?? 0, 4) }}
                         </div>
                     </div>
 

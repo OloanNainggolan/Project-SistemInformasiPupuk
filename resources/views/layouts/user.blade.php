@@ -734,7 +734,7 @@
             <a href="{{ route('dashboard') }}" style="text-decoration: none;">
                 <div class="logo-section">
                     <div class="logo">
-                        <i class="fas fa-leaf"></i>
+                        <i class="fas fa-seedling"></i>
                     </div>
                     <div class="logo-text">
                         <h1>Pupuk & Bibit Subsidi</h1>
@@ -859,13 +859,13 @@
             <div class="footer-columns">
                 <!-- Kolom 1 - About -->
                 <div class="footer-col">
-                    <h3><i class="fas fa-leaf"></i> Tentang Kami</h3>
+                    <h3><i class="fas fa-seedling"></i> Tentang Kami</h3>
                     <p>Platform digital terpercaya untuk subsidi pupuk dan bibit berkualitas bagi petani Indonesia.</p>
                 </div>
 
                 <!-- Kolom 2 - Quick Links -->
                 <div class="footer-col">
-                    <h3><i class="fas fa-bars"></i> Menu Utama</h3>
+                    <h3><i class="fas fa-link"></i> Menu Utama</h3>
                     <ul class="footer-links">
                         <li><a href="{{ route('home') }}"><i class="fas fa-chevron-right"></i> Beranda</a></li>
                         <li><a href="{{ route('pupuk.bibit') }}"><i class="fas fa-chevron-right"></i> Pupuk & Bibit</a></li>

@@ -421,23 +421,19 @@ class AdminNotificationController extends Controller
         // Icon dan warna berdasarkan tipe
         $typeConfig = [
             'info' => [
-                'emoji' => 'ℹ️',
-                'label' => 'INFORMASI',
+                'label' => '[INFO] INFORMASI',
                 'border' => '━'
             ],
             'success' => [
-                'emoji' => '✅',
-                'label' => 'PENGUMUMAN PENTING',
+                'label' => '[SUKSES] PENGUMUMAN PENTING',
                 'border' => '━'
             ],
             'warning' => [
-                'emoji' => '⚠️',
-                'label' => 'PERHATIAN',
+                'label' => '[PERINGATAN] PERHATIAN',
                 'border' => '━'
             ],
             'important' => [
-                'emoji' => '🔔',
-                'label' => 'PENGUMUMAN URGENT',
+                'label' => '[URGENT] PENGUMUMAN URGENT',
                 'border' => '━'
             ]
         ];
@@ -449,23 +445,23 @@ class AdminNotificationController extends Controller
 
         // Build formatted message
         $formatted = "{$border}\n";
-        $formatted .= "{$emoji} {$label} {$emoji}\n";
+        $formatted .= "{$label}\n";
         $formatted .= "{$border}\n\n";
         
-        $formatted .= "📢 {$title}\n\n";
+        $formatted .= "{$title}\n\n";
         $formatted .= "{$border}\n\n";
         
         // Format message content
         $formatted .= $message . "\n\n";
         
         $formatted .= "{$border}\n";
-        $formatted .= "📅 Dikirim: " . now()->format('d M Y, H:i') . " WIB\n";
-        $formatted .= "👤 Dari: Admin Sistem\n";
+        $formatted .= "Dikirim: " . now()->format('d M Y, H:i') . " WIB\n";
+        $formatted .= "Dari: Admin Sistem\n";
         $formatted .= "{$border}\n\n";
         
         // Add footer based on type
         if ($type === 'important' || $type === 'warning') {
-            $formatted .= "⚠️ Harap membaca dengan seksama!\n";
+            $formatted .= ">> Harap membaca dengan seksama!\n";
         } else {
             $formatted .= "💡 Terima kasih atas perhatiannya.\n";
         }

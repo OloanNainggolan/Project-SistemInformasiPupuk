@@ -132,16 +132,16 @@ class WhatsAppService
         $user = $order->user;
         $items = json_decode($order->items, true);
         
-        $message = "*🌾 Pesanan Pupuk & Bibit Bersubsidi*\n\n";
+        $message = "*[SISTEM] Pesanan Pupuk & Bibit Bersubsidi*\n\n";
         $message .= "Halo *{$user->nama_lengkap}*,\n\n";
-        $message .= "Terima kasih telah melakukan pemesanan! ✅\n\n";
-        $message .= "📋 *Detail Pesanan:*\n";
+        $message .= "Terima kasih telah melakukan pemesanan!\n\n";
+        $message .= "*Detail Pesanan:*\n";
         $message .= "━━━━━━━━━━━━━━━━━━━━\n";
-        $message .= "📦 No. Pesanan: *{$order->order_number}*\n";
-        $message .= "📅 Tanggal: " . $order->created_at->format('d M Y, H:i') . "\n";
-        $message .= "🏛️ Balai Desa: {$order->village_office}\n\n";
+        $message .= "No. Pesanan: *{$order->order_number}*\n";
+        $message .= "Tanggal: " . $order->created_at->format('d M Y, H:i') . "\n";
+        $message .= "Balai Desa: {$order->village_office}\n\n";
         
-        $message .= "🛒 *Produk yang Dipesan:*\n";
+        $message .= "*Produk yang Dipesan:*\n";
         $message .= "━━━━━━━━━━━━━━━━━━━━\n";
         
         if (is_array($items)) {
@@ -210,26 +210,26 @@ class WhatsAppService
     {
         $user = $order->user;
         
-        $message = "*🔔 Update Status Pesanan*\n\n";
+        $message = "*[UPDATE] Status Pesanan*\n\n";
         $message .= "Halo *{$user->nama_lengkap}*,\n\n";
         $message .= "Status pesanan Anda telah diperbarui!\n\n";
-        $message .= "📦 No. Pesanan: *{$order->order_number}*\n";
-        $message .= "📅 Tanggal Update: " . now()->format('d M Y, H:i') . "\n\n";
+        $message .= "No. Pesanan: *{$order->order_number}*\n";
+        $message .= "Tanggal Update: " . now()->format('d M Y, H:i') . "\n\n";
         $message .= "Status berubah dari:\n";
-        $message .= "❌ *{$oldStatus}* → ✅ *{$order->status}*\n\n";
+        $message .= "*{$oldStatus}* --> *{$order->status}*\n\n";
         
         // Custom message based on status
         switch ($order->status) {
             case 'Confirmed':
-                $message .= "✅ Pesanan Anda telah dikonfirmasi!\n";
+                $message .= "[OK] Pesanan Anda telah dikonfirmasi!\n";
                 $message .= "Silakan ambil pesanan di balai desa sesuai jadwal.\n";
                 break;
             case 'Completed':
-                $message .= "🎉 Terima kasih! Pesanan telah selesai.\n";
+                $message .= "[SELESAI] Terima kasih! Pesanan telah selesai.\n";
                 $message .= "Semoga pupuk & bibit bermanfaat untuk pertanian Anda!\n";
                 break;
             case 'Cancelled':
-                $message .= "❌ Pesanan dibatalkan.\n";
+                $message .= "[BATAL] Pesanan dibatalkan.\n";
                 if ($order->rejection_reason) {
                     $message .= "Alasan: {$order->rejection_reason}\n";
                 }
@@ -238,7 +238,7 @@ class WhatsAppService
                 $message .= "Status pesanan: {$order->status}\n";
         }
         
-        $message .= "\n📱 Cek detail lengkap di:\n";
+        $message .= "\nCek detail lengkap di:\n";
         $message .= "http://127.0.0.1:8000/dashboard\n\n";
         
         $message .= "_Pesan otomatis dari Sistem Informasi Pupuk & Bibit Bersubsidi_";
@@ -271,25 +271,6 @@ class WhatsAppService
     }
 
     /**
-     * Get emoji for status
-     *
-     * @param string $status
-     * @return string
-     */
-    protected function getStatusEmoji($status)
-    {
-        $emojis = [
-            'Pending' => '⏳',
-            'Confirmed' => '✅',
-            'Completed' => '🎉',
-            'Cancelled' => '❌',
-            'Processing' => '⚙️',
-        ];
-        
-        return $emojis[$status] ?? '📋';
-    }
-
-    /**
      * Test WhatsApp connection
      *
      * @param string $phoneNumber
@@ -297,9 +278,9 @@ class WhatsAppService
      */
     public function testConnection($phoneNumber)
     {
-        $message = "*🧪 Test Koneksi WhatsApp*\n\n";
+        $message = "*[TEST] Koneksi WhatsApp*\n\n";
         $message .= "Halo! Ini adalah pesan test dari sistem.\n";
-        $message .= "Jika Anda menerima pesan ini, berarti koneksi WhatsApp API berhasil! ✅\n\n";
+        $message .= "Jika Anda menerima pesan ini, berarti koneksi WhatsApp API berhasil!\n\n";
         $message .= "Timestamp: " . now()->format('d M Y, H:i:s');
         
         return $this->sendMessage($phoneNumber, $message);

@@ -655,7 +655,7 @@
                     <span>Proses Pemesanan Mudah</span>
                 </div>
                 <div class="feature-item">
-                    <i class="fas fa-sign-in-alt"></i>
+                    <i class="fas fa-handshake"></i>
                     <span>Layanan Petani Indonesia</span>
                 </div>
             </div>

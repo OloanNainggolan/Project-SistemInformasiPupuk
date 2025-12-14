@@ -1101,7 +1101,7 @@
                         @if($calculatedSubsidy > 0)
                         <div class="discount-row subsidy-row">
                             <span class="discount-label">
-                                <i class="fas fa-badge-percent"></i> Subsidi Pemerintah
+                                <i class="fas fa-hand-holding-heart"></i> Subsidi Pemerintah
                             </span>
                             <span class="discount-value">- Rp {{ number_format($calculatedSubsidy, 0, ',', '.') }}</span>
                         </div>
@@ -1501,7 +1501,7 @@
                                 </div>
                                 
                                 <p style="font-size: 16px; color: #059669; font-weight: 700; margin-top: 20px;">
-                                    <i class="fas fa-check-circle" style="color: #10b981;"></i> Terima kasih atas pesanan Anda!
+                                    <i class="fas fa-heart" style="color: #ef4444;"></i> Terima kasih atas pesanan Anda!
                                 </p>
                             </div>
                         `,

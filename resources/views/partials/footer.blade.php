@@ -312,7 +312,7 @@
             <div class="footer-section">
                 <div class="footer-logo-section">
                     <div class="footer-logo-icon">
-                        <i class="fa-solid fa-leaf"></i>
+                        <i class="fa-solid fa-seedling"></i>
                     </div>
                     <div class="footer-logo-text">
                         <h4>Pupuk Subsidi Indonesia</h4>

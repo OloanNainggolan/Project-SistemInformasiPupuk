@@ -858,7 +858,7 @@
                 <p>Pupuk bersubsidi adalah sarana produksi pertanian yang disediakan pemerintah dengan harga lebih murah dari harga eceran tertinggi (HET) untuk membantu petani meningkatkan produktivitas.</p>
             </div>
             <div class="card-choice">
-                <div class="card-icon bibit"><i class="fas fa-spa"></i></div>
+                <div class="card-icon bibit"><i class="fas fa-link"></i></div>
                 <h3>Bibit Subsidi</h3>
                 <p>Bibit unggul adalah benih tanaman yang telah melalui proses seleksi dan sertifikasi untuk menghasilkan tanaman dengan produktivitas tinggi, tahan hama penyakit, dan adaptif terhadap lingkungan.</p>
             </div>
@@ -909,7 +909,7 @@
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon-circle yellow"><i class="fas fa-award"></i></div>
+                <div class="feature-icon-circle yellow"><i class="fas fa-star"></i></div>
                 <h4>Penilaian Baik</h4>
                 <p>Rating 4.9/5</p>
             </div>
@@ -945,7 +945,7 @@
 
         <div class="product-card-detail bibit-detail">
             <div class="detail-image">
-                <div class="detail-icon-overlay bg-secondary-blue"><i class="fas fa-spa"></i></div>
+                <div class="detail-icon-overlay bg-secondary-blue"><i class="fas fa-link"></i></div>
             </div>
             <div class="detail-body">
                 <h3>Bibit Subsidi</h3>

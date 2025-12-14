@@ -237,21 +237,10 @@ class AdminOrderController extends Controller
             'Pending' => 'Menunggu Konfirmasi',
             'Processing' => 'Sedang Diproses',
             'Ready' => 'Siap Diambil',
-            'Completed' => 'Selesai',
             'Rejected' => 'Ditolak',
         ];
 
-        // Emoji untuk setiap status
-        $statusEmoji = [
-            'Pending' => '⏳',
-            'Processing' => '⚙️',
-            'Ready' => '✅',
-            'Completed' => '🎉',
-            'Rejected' => '❌',
-        ];
-
         // Buat pesan yang menarik dan informatif
-        $emoji = $statusEmoji[$newStatus] ?? '📦';
         
         // Get product name from relationship or items JSON
         $productName = 'Produk';
@@ -266,84 +255,84 @@ class AdminOrderController extends Controller
         }
         
         $message = "━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-        $message .= "{$emoji} UPDATE STATUS PESANAN {$emoji}\n";
+        $message .= "[UPDATE] STATUS PESANAN\n";
         $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
         
-        $message .= "📋 No. Pesanan: #{$order->order_number}\n";
-        $message .= "📦 Produk: {$productName}\n";
-        $message .= "📊 Jumlah: {$order->quantity} kg\n";
+        $message .= "No. Pesanan: #{$order->order_number}\n";
+        $message .= "Produk: {$productName}\n";
+        $message .= "Jumlah: {$order->quantity} kg\n";
         
         // Tampilkan balai desa jika ada dari customer_address
         if (!empty($order->customer_address) && stripos($order->customer_address, 'balai desa') !== false) {
-            $message .= "🏛️ Balai Desa: {$order->customer_address}\n";
+            $message .= "Balai Desa: {$order->customer_address}\n";
         }
         
         $message .= "\n";
         
-        $message .= "🔄 Status Lama: {$statusEmoji[$oldStatus]} {$statusMessages[$oldStatus]}\n";
-        $message .= "✨ Status Baru: {$emoji} {$statusMessages[$newStatus]}\n\n";
+        $message .= "Status Lama: {$statusMessages[$oldStatus]}\n";
+        $message .= "Status Baru: {$statusMessages[$newStatus]}\n\n";
         
         $message .= "━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
         
         // Pesan khusus berdasarkan status
         if ($newStatus === 'Processing') {
-            $message .= "⚙️ INFORMASI:\n";
+            $message .= "[INFO] SEDANG DIPROSES:\n";
             $message .= "Pesanan Anda sedang diproses oleh tim kami.\n";
             $message .= "Harap menunggu informasi selanjutnya.\n";
             $message .= "Estimasi proses: 1-3 hari kerja.\n\n";
             
-            $message .= "📍 Lokasi Pengambilan Nantinya:\n";
+            $message .= "Lokasi Pengambilan Nantinya:\n";
             $message .= "Balai Desa (Akan dikonfirmasi)\n";
         } elseif ($newStatus === 'Ready') {
-            $message .= "✅ PESANAN SIAP DIAMBIL!\n";
+            $message .= "[SIAP] PESANAN SIAP DIAMBIL!\n";
             $message .= "Pesanan Anda sudah siap.\n";
             $message .= "Silakan datang untuk mengambil pesanan.\n\n";
             
-            $message .= "📍 INFORMASI PENGAMBILAN:\n";
+            $message .= "INFORMASI PENGAMBILAN:\n";
             $message .= "Sistem akan menunjukkan titik pengambilan terdekat dari lokasi Anda.\n";
-            $message .= "⏰ Jam Operasional: 08.00 - 17.00 WIB\n";
-            $message .= "📋 Harap bawa bukti pesanan dan identitas diri\n";
-            $message .= "💳 Pembayaran: Tunai di Lokasi\n\n";
+            $message .= "Jam Operasional: 08.00 - 17.00 WIB\n";
+            $message .= "Harap bawa bukti pesanan dan identitas diri\n";
+            $message .= "Pembayaran: Tunai di Lokasi\n\n";
             
-            $message .= "🗺️ LIHAT LOKASI PENGAMBILAN:\n";
-            $message .= "👉 Klik notifikasi ini untuk melihat PETA lokasi pengambilan terdekat\n";
-            $message .= "👉 Sistem otomatis menampilkan titik pengambilan paling dekat dari Anda\n";
-            $message .= "👉 Lihat jarak dan rute Google Maps langsung dari halaman notifikasi\n\n";
+            $message .= "LIHAT LOKASI PENGAMBILAN:\n";
+            $message .= ">> Klik notifikasi ini untuk melihat PETA lokasi pengambilan terdekat\n";
+            $message .= ">> Sistem otomatis menampilkan titik pengambilan paling dekat dari Anda\n";
+            $message .= ">> Lihat jarak dan rute Google Maps langsung dari halaman notifikasi\n\n";
             
-            $message .= "📱 CARA AKSES:\n";
+            $message .= "CARA AKSES:\n";
             $message .= "1. Buka menu Notifikasi\n";
             $message .= "2. Klik notifikasi ini\n";
             $message .= "3. Scroll ke bawah - lihat card hijau dengan tombol 'Buka Peta Lokasi Pengambilan'\n";
             $message .= "4. Klik tombol untuk melihat peta interaktif\n";
         } elseif ($newStatus === 'Completed') {
-            $message .= "🎉 PESANAN SELESAI!\n";
+            $message .= "[SELESAI] PESANAN SELESAI!\n";
             $message .= "Pesanan telah diambil di Balai Desa.\n";
             $message .= "Terima kasih atas kepercayaan Anda!\n";
             $message .= "Semoga produk kami bermanfaat.\n\n";
-            $message .= "💬 Silakan berikan ulasan Anda untuk membantu kami meningkatkan layanan.\n";
+            $message .= "Silakan berikan ulasan Anda untuk membantu kami meningkatkan layanan.\n";
         } elseif ($newStatus === 'Rejected') {
-            $message .= "❌ PESANAN DITOLAK\n";
+            $message .= "[DITOLAK] PESANAN DITOLAK\n";
             $message .= "Mohon maaf, pesanan Anda tidak dapat diproses.\n";
             
             if ($order->rejection_reason) {
-                $message .= "\n📝 Alasan: {$order->rejection_reason}\n";
+                $message .= "\nAlasan: {$order->rejection_reason}\n";
             }
             
             $message .= "\nSilakan hubungi admin untuk informasi lebih lanjut.\n";
-            $message .= "📞 Hubungi kami untuk klarifikasi.\n";
+            $message .= "Hubungi kami untuk klarifikasi.\n";
         } elseif ($newStatus === 'Pending') {
-            $message .= "⏳ MENUNGGU KONFIRMASI\n";
+            $message .= "[PENDING] MENUNGGU KONFIRMASI\n";
             $message .= "Pesanan Anda telah diterima dan menunggu konfirmasi.\n";
             $message .= "Tim kami akan segera memproses pesanan Anda.\n\n";
-            $message .= "📍 Rencana Pengambilan:\n";
+            $message .= "Rencana Pengambilan:\n";
             $message .= "Balai Desa (Sesuai alamat pengiriman)\n";
         }
         
         $message .= "\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-        $message .= "💡 Tip: Anda dapat membalas pesan ini jika ada pertanyaan.\n";
+        $message .= "Tip: Anda dapat membalas pesan ini jika ada pertanyaan.\n";
 
         // Buat subject yang menarik
-        $subject = "{$emoji} Update Status Pesanan #{$order->order_number} - {$statusMessages[$newStatus]}";
+        $subject = "[UPDATE] Status Pesanan #{$order->order_number} - {$statusMessages[$newStatus]}";
 
         // KIRIM HANYA 1 NOTIFIKASI (System Notification dengan data lengkap)
         // Tentukan tipe notifikasi berdasarkan status
