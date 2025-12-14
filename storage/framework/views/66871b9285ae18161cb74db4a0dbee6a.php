@@ -718,7 +718,7 @@
             customerCoords = areaCoordinates.kota;
             console.log('✅ Detected Kota area');
         } else {
-            console.log('ℹ Using default Laguboti coordinates');
+            console.log('ℹ️ Using default Laguboti coordinates');
         }
         
         console.log('📍 Customer coordinates:', customerCoords);
@@ -750,8 +750,9 @@
             if (data.nearest_location) {
                 const nearest = data.nearest_location;
                 const distance = nearest.distance.toFixed(2);
-                const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${nearest.latitude},${nearest.longitude}&travelmode=driving`;                
-                console.log('🗺 Google Maps URL:', mapsUrl);
+                const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${nearest.latitude},${nearest.longitude}&travelmode=driving`;
+                
+                console.log('🗺️ Google Maps URL:', mapsUrl);
                 console.log('📍 Origin (Customer):', { lat, lng });
                 console.log('📍 Destination (Pickup):', { lat: nearest.latitude, lng: nearest.longitude });
                 console.log('📏 Distance:', distance, 'km');
@@ -840,7 +841,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(/admin/orders/<?php echo e($order->order_number); ?>/status, {
+        fetch(`/admin/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -876,7 +877,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(/admin/api/orders/<?php echo e($order->order_number); ?>/status, {
+        fetch(`/admin/api/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -904,4 +905,5 @@
     }
 </script>
 <?php $__env->stopPush(); ?>
+
 <?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/admin/orders/detail.blade.php ENDPATH**/ ?>

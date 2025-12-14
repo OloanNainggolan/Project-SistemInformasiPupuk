@@ -560,56 +560,68 @@
     margin-top: 2px;
 }
 
-/* Map Section */
-.map-section {
-    background: #f9fafb;
-    padding: 25px;
-    border-radius: 12px;
-    border: 2px solid #e5e7eb;
+/* Map Button Section */
+.map-button-section {
     margin-top: 25px;
+    padding: 25px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 12px;
+    border: 2px solid #4ade80;
+    text-align: center;
 }
 
-.address-info {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    border-left: 4px solid #3b82f6;
+.btn-map {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
     margin-bottom: 15px;
 }
 
-.address-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #6b7280;
-    margin-bottom: 5px;
+.btn-map:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.5);
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+}
+
+.btn-map i {
+    font-size: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.map-hint {
+    margin: 0;
+    color: #166534;
+    font-size: 14px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 }
 
-.address-value {
-    font-size: 15px;
-    font-weight: 600;
-    color: #1f2937;
-    line-height: 1.6;
-}
-
-.map-notice {
-    background: #eff6ff;
-    padding: 12px 15px;
-    border-radius: 8px;
-    border-left: 3px solid #3b82f6;
-    margin-top: 15px;
-    font-size: 13px;
-    color: #1e40af;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-}
-
-.map-notice i {
-    flex-shrink: 0;
-    margin-top: 2px;
+.map-hint i {
+    color: #22c55e;
+    font-size: 16px;
 }
 
 .notification-actions {
@@ -702,70 +714,6 @@
         width: 100%;
         justify-content: center;
     }
-}
-
-/* Map Button Section */
-.map-button-section {
-    margin-top: 25px;
-    padding: 25px;
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    border-radius: 12px;
-    border: 2px solid #4ade80;
-    text-align: center;
-}
-
-.btn-map {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 16px 32px;
-    background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%);
-    color: white;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 16px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 15px;
-}
-
-.btn-map:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.5);
-    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-}
-
-.btn-map i {
-    font-size: 20px;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-}
-
-.map-hint {
-    margin: 0;
-    color: #166534;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.map-hint i {
-    color: #22c55e;
-    font-size: 16px;
 }
 </style>
 <?php $__env->stopSection(); ?>

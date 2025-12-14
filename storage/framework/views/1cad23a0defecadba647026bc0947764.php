@@ -1052,6 +1052,9 @@
         });
     </script>
 
+    <!-- Google Maps Script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo e(env('GOOGLE_MAPS_KEY')); ?>"></script>
+
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
