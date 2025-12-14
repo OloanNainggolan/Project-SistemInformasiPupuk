@@ -14,7 +14,7 @@
     .products-container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 30px 40px;
+        padding: 0 40px 30px;
     }
 
     /* Page Header */

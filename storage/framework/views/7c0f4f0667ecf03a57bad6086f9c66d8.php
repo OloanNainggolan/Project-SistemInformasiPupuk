@@ -4,7 +4,7 @@
 <style>
     .inbox-container {
         max-width: 1400px;
-        margin: 30px auto;
+        margin: 0 auto;
         padding: 0 20px;
     }
 

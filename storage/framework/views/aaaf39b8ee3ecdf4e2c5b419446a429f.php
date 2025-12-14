@@ -11,7 +11,7 @@
     .dashboard-wrapper {
         background: linear-gradient(135deg, #e8f5f1 0%, #d4f1e8 100%);
         min-height: 100vh;
-        padding: 30px;
+        padding: 0 30px 30px;
     }
 
     /* Welcome Banner */

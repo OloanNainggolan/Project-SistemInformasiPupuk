@@ -839,7 +839,7 @@
                 
                 const isPrimary = index === 0;
                 const badge = isPrimary 
-                    ? `<div class="image-preview-badge"><i class="fas fa-star"></i> Gambar Utama</div>` 
+                    ? `<div class="image-preview-badge"><i class="fas fa-image"></i> Gambar Utama</div>` 
                     : '';
                 
                 const fileSize = (file.size / 1024).toFixed(2);

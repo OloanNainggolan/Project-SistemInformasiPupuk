@@ -790,7 +790,7 @@
     <!-- Quick Actions -->
     <div class="quick-actions">
         <div class="section-header">
-            <i class="fas fa-bolt"></i>
+            <i class="fas fa-tachometer-alt"></i>
             <h3>Aksi Cepat</h3>
         </div>
         <div class="actions-grid">

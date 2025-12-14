@@ -708,7 +708,7 @@
                     @if($subsidyAmt > 0)
                     <div class="summary-row" style="color: #059669; font-size: 13px;">
                         <span class="summary-label">
-                            <i class="fas fa-gift"></i> Subsidi Pemerintah
+                            <i class="fas fa-tag"></i> Subsidi Pemerintah
                         </span>
                         <span class="summary-value">Hemat Rp {{ number_format($subsidyAmt, 0, ',', '.') }}</span>
                     </div>

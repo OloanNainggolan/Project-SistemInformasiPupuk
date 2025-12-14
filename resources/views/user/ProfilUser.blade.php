@@ -981,7 +981,7 @@
 
             <!-- Land Information -->
             <div class="land-info-card">
-                <h3><i class="fas fa-seedling"></i> Informasi Lahan</h3>
+                <h3><i class="fas fa-map-marked-alt"></i> Informasi Lahan</h3>
                 @if(auth()->user()->luas_lahan || auth()->user()->jenis_tanaman)
                     <div class="land-detail">
                         <div class="land-label">Luas Lahan</div>
@@ -1034,7 +1034,7 @@
                 </div>
                 <div class="stat-card orange">
                     <div class="stat-icon">
-                        <i class="fas fa-seedling"></i>
+                        <i class="fas fa-tractor"></i>
                     </div>
                     <div class="stat-value">{{ number_format($bibitDiterima, 0) }} Kg</div>
                     <div class="stat-label">Bibit Diterima</div>

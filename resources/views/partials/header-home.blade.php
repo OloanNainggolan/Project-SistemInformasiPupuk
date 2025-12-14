@@ -4,7 +4,7 @@
         <div style="display:flex;align-items:center;gap:15px;">
             <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:15px;text-decoration:none;color:inherit;transition:all 0.3s ease;" class="logo-link">
                 <div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(16,185,129,0.3);">
-                    <i class="fas fa-seedling" style="color:white;font-size:24px;"></i>
+                    <i class="fas fa-leaf" style="color:white;font-size:24px;"></i>
                 </div>
                 <div>
                     <div style="font-weight:700;color:#065f46;font-size:17px;letter-spacing:0.3px;">Pupuk & Bibit Subsidi</div>

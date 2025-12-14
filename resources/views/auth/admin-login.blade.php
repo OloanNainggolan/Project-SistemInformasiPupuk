@@ -601,7 +601,7 @@
         <div class="left-side">
             <div class="logo-section">
                 <div class="admin-badge">
-                    <i class="fas fa-crown"></i> Administrator
+                    <i class="fas fa-shield-alt"></i> Administrator
                 </div>
                 <div class="logo-circle">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo Pupuk & Bibit" />
