@@ -489,11 +489,11 @@
     }
 
     .pupuk-detail .detail-image {
-        background-image: url('product-pupuk-greenhouse.jpg');
+        background-image: url("{{ asset('images/pupuk subs.jpg') }}");
     }
 
     .bibit-detail .detail-image {
-        background-image: url('product-bibit-seedling.jpg');
+        background-image: url("{{ asset('images/bibit subs.jpg') }}");
     }
 
     .detail-icon-overlay {
