@@ -136,12 +136,19 @@
         margin-bottom: 30px;
     }
 
-    /* Management Grid - for Action and Customer Info */
+    /* Management Grid - for Customer Info (left) and Right Column (Shipping Info + Action) */
     .management-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 30px;
         margin-bottom: 30px;
+        align-items: start;
+    }
+
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
     }
 
     @media (max-width: 968px) {
@@ -991,72 +998,9 @@
     </div>
     <?php endif; ?>
 
-    <!-- Informasi Pengiriman -->
-    <div class="detail-card" style="margin-bottom: 30px;">
-        <h3 class="card-title">
-            <i class="fas fa-truck"></i>
-            Informasi Pengiriman
-        </h3>
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">
-                    <i class="fas fa-calendar-alt"></i>
-                    Tanggal Pesan
-                </div>
-                <div class="info-value"><?php echo e($order->created_at->format('d F Y')); ?></div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">
-                    <i class="fas fa-clock"></i>
-                    Waktu
-                </div>
-                <div class="info-value"><?php echo e($order->created_at->format('H:i')); ?> WIB</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Management Grid: Action Buttons & Customer Info -->
+    <!-- Management Grid: Customer Info (Left) & Right Column (Shipping + Action) -->
     <div class="management-grid">
-        <!-- Kelola Pesanan (Kiri) -->
-        <div class="action-section">
-            <h3 class="card-title">
-                <i class="fas fa-cogs"></i>
-                Kelola Pesanan
-            </h3>
-            <div class="action-buttons">
-                <?php if($order->status === 'Pending'): ?>
-                    <button class="btn btn-processing" onclick="updateStatus('Processing')">
-                        <i class="fas fa-spinner"></i>
-                        Proses Pesanan
-                    </button>
-                    <button class="btn btn-reject" onclick="rejectOrder()">
-                        <i class="fas fa-times-circle"></i>
-                        Tolak Pesanan
-                    </button>
-                <?php elseif($order->status === 'Processing'): ?>
-                    <button class="btn btn-ready" onclick="updateStatus('Ready')">
-                        <i class="fas fa-check"></i>
-                        Siap Diambil
-                    </button>
-                    <button class="btn btn-reject" onclick="rejectOrder()">
-                        <i class="fas fa-times-circle"></i>
-                        Tolak Pesanan
-                    </button>
-                <?php elseif($order->status === 'Ready'): ?>
-                    <button class="btn btn-complete" onclick="updateStatus('Completed')">
-                        <i class="fas fa-check-double"></i>
-                        Selesaikan Pesanan
-                    </button>
-                <?php endif; ?>
-                
-                <button class="btn btn-print" onclick="window.print()">
-                    <i class="fas fa-print"></i>
-                    Cetak Detail
-                </button>
-            </div>
-        </div>
-
-        <!-- Informasi Pelanggan (Kanan) -->
+        <!-- Informasi Pelanggan (Kiri) -->
         <div class="detail-card">
             <h3 class="card-title">
                 <i class="fas fa-user"></i>
@@ -1099,6 +1043,72 @@
                     <div class="info-value"><?php echo e($order->customer_notes ?? 'Tidak ada catatan'); ?></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Right Column: Informasi Pengiriman + Kelola Pesanan -->
+        <div class="right-column">
+            <!-- Informasi Pengiriman (Kanan Atas) -->
+            <div class="detail-card">
+                <h3 class="card-title">
+                    <i class="fas fa-truck"></i>
+                    Informasi Pengiriman
+                </h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-alt"></i>
+                            Tanggal Pesan
+                        </div>
+                        <div class="info-value"><?php echo e($order->created_at->format('d F Y')); ?></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-clock"></i>
+                            Waktu
+                        </div>
+                        <div class="info-value"><?php echo e($order->created_at->format('H:i')); ?> WIB</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kelola Pesanan (Kanan Bawah) -->
+            <div class="action-section">
+                <h3 class="card-title">
+                    <i class="fas fa-cogs"></i>
+                    Kelola Pesanan
+                </h3>
+                <div class="action-buttons">
+                <?php if($order->status === 'Pending'): ?>
+                    <button class="btn btn-processing" onclick="updateStatus('Processing')">
+                        <i class="fas fa-spinner"></i>
+                        Proses Pesanan
+                    </button>
+                    <button class="btn btn-reject" onclick="rejectOrder()">
+                        <i class="fas fa-times-circle"></i>
+                        Tolak Pesanan
+                    </button>
+                <?php elseif($order->status === 'Processing'): ?>
+                    <button class="btn btn-ready" onclick="updateStatus('Ready')">
+                        <i class="fas fa-check"></i>
+                        Siap Diambil
+                    </button>
+                    <button class="btn btn-reject" onclick="rejectOrder()">
+                        <i class="fas fa-times-circle"></i>
+                        Tolak Pesanan
+                    </button>
+                <?php elseif($order->status === 'Ready'): ?>
+                    <button class="btn btn-complete" onclick="updateStatus('Completed')">
+                        <i class="fas fa-check-double"></i>
+                        Selesaikan Pesanan
+                    </button>
+                <?php endif; ?>
+                
+                <button class="btn btn-print" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    Cetak Detail
+                </button>
+            </div>
+        </div>
         </div>
     </div>
 </div>
