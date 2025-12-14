@@ -27,6 +27,9 @@
         align-items: center;
         gap: 18px;
         margin-bottom: 32px;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1200px;
         padding: 24px 28px;
         background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
         border-radius: 20px;
