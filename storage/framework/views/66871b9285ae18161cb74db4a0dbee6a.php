@@ -168,86 +168,6 @@
         word-break: break-word;
     }
 
-    /* Map Section Admin */
-    .map-section-admin {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 25px;
-    }
-
-    .address-box {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #10b981;
-    }
-
-    .address-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .address-icon {
-        width: 50px;
-        height: 50px;
-        background: white;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .address-icon i {
-        color: #10b981;
-        font-size: 24px;
-    }
-
-    .address-details {
-        flex: 1;
-    }
-
-    .address-label-text {
-        font-size: 13px;
-        font-weight: 600;
-        color: #065f46;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .address-value-text {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1f2937;
-        line-height: 1.6;
-    }
-
-    .map-info-box {
-        background: #f0f9ff;
-        padding: 15px 20px;
-        border-radius: 10px;
-        border-left: 4px solid #0ea5e9;
-        margin-top: 20px;
-        font-size: 14px;
-        color: #0c4a6e;
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        font-weight: 500;
-    }
-
-    .map-info-box i {
-        color: #0ea5e9;
-        flex-shrink: 0;
-        margin-top: 2px;
-        font-size: 16px;
-    }
-
     /* Products Section */
     .products-section {
         background: white;
@@ -440,81 +360,6 @@
         color: white;
     }
 
-    /* Map Section Admin */
-    .map-section-admin {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 25px;
-    }
-
-    .address-box {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #10b981;
-        margin-bottom: 20px;
-    }
-
-    .address-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .address-icon {
-        width: 45px;
-        height: 45px;
-        background: #10b981;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 20px;
-        flex-shrink: 0;
-    }
-
-    .address-details {
-        flex: 1;
-    }
-
-    .address-label-text {
-        font-size: 13px;
-        font-weight: 600;
-        color: #065f46;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .address-value-text {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1f2937;
-        line-height: 1.6;
-    }
-
-    .map-info-box {
-        background: #dbeafe;
-        padding: 12px 18px;
-        border-radius: 8px;
-        border-left: 3px solid #3b82f6;
-        margin-top: 15px;
-        font-size: 13px;
-        color: #1e40af;
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .map-info-box i {
-        flex-shrink: 0;
-        margin-top: 2px;
-        font-size: 16px;
-    }
-
     /* Rejection Section */
     .rejection-section {
         background: #fee2e2;
@@ -681,35 +526,6 @@
     </div>
     <?php endif; ?>
 
-    <!-- Lokasi Pengambilan Map Section -->
-    <?php if($order->customer_address || $order->user->alamat): ?>
-    <div class="map-section-admin">
-        <h3 class="card-title">
-            <i class="fas fa-map-marked-alt"></i>
-            Lokasi Pengambilan Pesanan
-        </h3>
-        
-        <div class="address-box">
-            <div class="address-row">
-                <span class="address-icon">
-                    <i class="fas fa-building"></i>
-                </span>
-                <div class="address-details">
-                    <div class="address-label-text">Balai Desa</div>
-                    <div class="address-value-text"><?php echo e($order->customer_address ?? $order->user->alamat ?? 'N/A'); ?></div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="adminOrderMap" style="height: 400px; border-radius: 12px; margin-top: 20px; border: 2px solid #10b981; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
-        
-        <div class="map-info-box">
-            <i class="fas fa-info-circle"></i>
-            <span>Marker merah menunjukkan lokasi pengambilan di Balai Desa. Pelanggan akan mengambil pesanan di lokasi ini.</span>
-        </div>
-    </div>
-    <?php endif; ?>
-
     <!-- Products Ordered -->
     <div class="products-section">
         <h3 class="card-title">
@@ -744,47 +560,12 @@
                     $calculatedSubtotal += $itemSubtotal;
                 ?>
                 <div class="product-item">
-                    <?php
-                        $productImage = asset('images/pupuk.jpg'); // Default
-                        
-                        if($order->product) {
-                            if($order->product->primaryImage) {
-                                $productImage = asset($order->product->primaryImage->image_path);
-                            } elseif($order->product->images && $order->product->images->count() > 0) {
-                                $productImage = asset($order->product->images->first()->image_path);
-                            } elseif($order->product->gambar) {
-                                if(filter_var($order->product->gambar, FILTER_VALIDATE_URL)) {
-                                    $productImage = $order->product->gambar;
-                                } elseif(file_exists(public_path('images/products/' . $order->product->gambar))) {
-                                    $productImage = asset('images/products/' . $order->product->gambar);
-                                } elseif(file_exists(public_path('images/' . $order->product->gambar))) {
-                                    $productImage = asset('images/' . $order->product->gambar);
-                                } elseif(file_exists(public_path($order->product->gambar))) {
-                                    $productImage = asset($order->product->gambar);
-                                } else {
-                                    // Product type specific fallback
-                                    if(isset($order->product->tipe_produk) && $order->product->tipe_produk === 'bibit') {
-                                        $productImage = asset('images/bibit.jpg');
-                                    } elseif(strpos(strtolower($order->product->nama_produk ?? ''), 'bibit') !== false) {
-                                        $productImage = asset('images/bibit.jpg');
-                                    }
-                                }
-                            } else {
-                                // Fallback based on item type
-                                if(($item['type'] ?? '') === 'bibit') {
-                                    $productImage = asset('images/bibit.jpg');
-                                }
-                            }
-                        } elseif(($item['type'] ?? '') === 'bibit') {
-                            $productImage = asset('images/bibit.jpg');
-                        }
-                    ?>
-                    
                     <div class="product-image">
-                        <img src="<?php echo e($productImage); ?>" 
-                             alt="<?php echo e($item['product_name'] ?? 'Produk'); ?>" 
-                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                             onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
+                        <?php if(($item['type'] ?? '') === 'pupuk'): ?>
+                            <i class="fas fa-seedling"></i>
+                        <?php else: ?>
+                            <i class="fas fa-leaf"></i>
+                        <?php endif; ?>
                     </div>
                     <div class="product-info">
                         <h4><?php echo e($item['product_name'] ?? 'Produk'); ?></h4>
@@ -890,86 +671,7 @@
 </div>
 <?php $__env->stopSection(); ?>
 
-<?php $__env->startPush('styles'); ?>
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
-<?php $__env->stopPush(); ?>
-
 <?php $__env->startPush('scripts'); ?>
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
-
-<?php if($order->customer_address || $order->user->alamat): ?>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Geocode alamat menggunakan Nominatim (OpenStreetMap)
-        const address = <?php echo json_encode($order->customer_address ?? $order->user->alamat ?? '', 15, 512) ?>;
-        
-        if (!address) return;
-        
-        // Koordinat default (Indonesia - Jakarta)
-        let defaultLat = -6.2088;
-        let defaultLng = 106.8456;
-        
-        // Initialize map dengan koordinat default
-        const map = L.map('adminOrderMap').setView([defaultLat, defaultLng], 13);
-        
-        // Tambahkan tile layer dari OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19,
-        }).addTo(map);
-        
-        // Custom red marker icon
-        const redIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-        
-        // Coba geocode alamat
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Indonesia')}&limit=1`)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    const lat = parseFloat(data[0].lat);
-                    const lon = parseFloat(data[0].lon);
-                    
-                    // Update map center
-                    map.setView([lat, lon], 15);
-                    
-                    // Tambahkan marker dengan icon merah
-                    L.marker([lat, lon], {icon: redIcon})
-                        .addTo(map)
-                        .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi Pengambilan</b><br><small>${address}</small></div>`)
-                        .openPopup();
-                } else {
-                    // Jika geocoding gagal, tampilkan marker di lokasi default
-                    L.marker([defaultLat, defaultLng], {icon: redIcon})
-                        .addTo(map)
-                        .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi</b><br><small>${address}</small><br><small style="color: #f59e0b;">(Koordinat tidak ditemukan)</small></div>`)
-                        .openPopup();
-                }
-            })
-            .catch(error => {
-                console.error('Geocoding error:', error);
-                // Jika error, tampilkan marker di lokasi default
-                L.marker([defaultLat, defaultLng], {icon: redIcon})
-                    .addTo(map)
-                    .bindPopup(`<div style="text-align: center;"><b>📍 Lokasi</b><br><small>${address}</small><br><small style="color: #dc2626;">(Error geocoding)</small></div>`)
-                    .openPopup();
-            });
-    });
-</script>
-<?php endif; ?>
-
 <script>
     // Load nearest pickup point for Ready orders
     <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>

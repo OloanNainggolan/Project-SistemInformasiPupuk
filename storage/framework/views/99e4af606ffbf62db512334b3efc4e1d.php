@@ -1148,7 +1148,6 @@
 
 <?php $__env->startPush('scripts'); ?>
 <script>
-    // Updated: 2025-12-12 15:45 WIB - Dynamic Pickup Points Integration
     // Data pesanan untuk JavaScript
     const ordersData = <?php echo json_encode($orders, 15, 512) ?>;
 
@@ -1232,41 +1231,31 @@
 
             <div class="detail-section">
                 <div class="detail-section-title">
-                    <i class="fas fa-user"></i> Informasi Pelanggan
+                    <i class="fas fa-user"></i> Informasi Penerima
                 </div>
                 <div class="detail-grid">
                     <div class="detail-item-modal">
-                        <div class="detail-label-modal"><i class="fas fa-user-circle"></i> Nama Lengkap</div>
-                        <div class="detail-value-modal">${order.customer_name || '<?php echo e(auth()->user()->nama_lengkap ?? auth()->user()->name); ?>'}</div>
+                        <div class="detail-label-modal">Nama</div>
+                        <div class="detail-value-modal">${order.customer_name || '-'}</div>
                     </div>
                     <div class="detail-item-modal">
-                        <div class="detail-label-modal"><i class="fas fa-envelope"></i> Email</div>
-                        <div class="detail-value-modal"><?php echo e(auth()->user()->email); ?></div>
+                        <div class="detail-label-modal">No. Telepon</div>
+                        <div class="detail-value-modal">${order.customer_phone || '-'}</div>
                     </div>
                     <div class="detail-item-modal" style="grid-column: 1 / -1;">
-                        <div class="detail-label-modal"><i class="fas fa-map-marker-alt"></i> Alamat</div>
-                        <div class="detail-value-modal">${order.customer_address || '<?php echo e(auth()->user()->alamat ?? "-"); ?>'}</div>
+                        <div class="detail-label-modal">Alamat</div>
+                        <div class="detail-value-modal">${order.customer_address || '-'}</div>
                     </div>
-                    <div class="detail-item-modal">
-                        <div class="detail-label-modal"><i class="fas fa-phone"></i> No. Telepon</div>
-                        <div class="detail-value-modal">${order.customer_phone || '<?php echo e(auth()->user()->no_telp ?? auth()->user()->no_hp ?? "N/A"); ?>'}</div>
+                    <div class="detail-item-modal" style="grid-column: 1 / -1;">
+                        <div class="detail-label-modal">Balai Desa</div>
+                        <div class="detail-value-modal">${order.village_office || '-'}</div>
                     </div>
                     ${order.customer_notes ? `
                     <div class="detail-item-modal" style="grid-column: 1 / -1;">
-                        <div class="detail-label-modal"><i class="fas fa-sticky-note"></i> Catatan</div>
+                        <div class="detail-label-modal">Catatan</div>
                         <div class="detail-value-modal">${order.customer_notes}</div>
                     </div>
                     ` : ''}
-                </div>
-            </div>
-
-            <div class="detail-section" id="pickupInfoSection-${orderId}" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; border: 2px solid #10b981;">
-                <div class="detail-section-title" style="color: #047857;">
-                    <i class="fas fa-map-marked-alt"></i> Informasi Pengambilan
-                </div>
-                <div class="pickup-loading" style="text-align: center; padding: 20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #047857;"></i>
-                    <p style="margin-top: 10px; color: #047857;">Mencari titik pengambilan terdekat...</p>
                 </div>
             </div>
 
@@ -1320,107 +1309,6 @@
         document.getElementById('orderDetailContent').innerHTML = content;
         document.getElementById('orderDetailModal').classList.add('active');
         document.body.style.overflow = 'hidden';
-
-        // Load nearest pickup point
-        loadNearestPickupPoint(orderId);
-    }
-
-    function loadNearestPickupPoint(orderId) {
-        const pickupSection = document.getElementById(`pickupInfoSection-${orderId}`);
-        if (!pickupSection) return;
-
-        // Default coordinates (Laguboti area - IT Del)
-        let userLat = 2.6140;
-        let userLng = 99.0710;
-
-        // Try to get user's location if available
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    userLat = position.coords.latitude;
-                    userLng = position.coords.longitude;
-                    fetchNearestPoint(userLat, userLng);
-                },
-                () => {
-                    // Fallback to default location
-                    fetchNearestPoint(userLat, userLng);
-                }
-            );
-        } else {
-            fetchNearestPoint(userLat, userLng);
-        }
-
-        function fetchNearestPoint(lat, lng) {
-            fetch('/api/nearest-pickup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
-                },
-                body: JSON.stringify({ lat, lng })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.nearest_location) {
-                    const nearest = data.nearest_location;
-                    const distance = nearest.distance.toFixed(2);
-                    const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${nearest.latitude},${nearest.longitude}&travelmode=driving`;
-
-                    pickupSection.innerHTML = `
-                        <div class="detail-section-title" style="color: #047857;">
-                            <i class="fas fa-map-marked-alt"></i> Informasi Pengambilan
-                        </div>
-                        <div class="detail-grid">
-                            <div class="detail-item-modal" style="grid-column: 1 / -1;">
-                                <div class="detail-label-modal"><i class="fas fa-building"></i> Titik Pengambilan Terdekat</div>
-                                <div class="detail-value-modal" style="color: #047857; font-weight: 700; font-size: 1.1rem;">${nearest.name}</div>
-                            </div>
-                            <div class="detail-item-modal" style="grid-column: 1 / -1;">
-                                <div class="detail-label-modal"><i class="fas fa-location-dot"></i> Alamat Lengkap</div>
-                                <div class="detail-value-modal">${nearest.address}</div>
-                            </div>
-                            <div class="detail-item-modal">
-                                <div class="detail-label-modal"><i class="fas fa-route"></i> Jarak</div>
-                                <div class="detail-value-modal" style="color: #ea580c; font-weight: 700;">${distance} km dari lokasi Anda</div>
-                            </div>
-                            <div class="detail-item-modal">
-                                <div class="detail-label-modal"><i class="fas fa-credit-card"></i> Metode Pembayaran</div>
-                                <div class="detail-value-modal">Tunai di Lokasi</div>
-                            </div>
-                            <div class="detail-item-modal" style="grid-column: 1 / -1; margin-top: 1rem;">
-                                <a href="${mapsUrl}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); transition: all 0.3s;">
-                                    <i class="fab fa-google"></i> Buka di Google Maps
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    pickupSection.innerHTML = `
-                        <div class="detail-section-title" style="color: #047857;">
-                            <i class="fas fa-map-marked-alt"></i> Informasi Pengambilan
-                        </div>
-                        <div class="detail-grid">
-                            <div class="detail-item-modal" style="grid-column: 1 / -1;">
-                                <div class="detail-value-modal">Titik pengambilan belum tersedia</div>
-                            </div>
-                        </div>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                pickupSection.innerHTML = `
-                    <div class="detail-section-title" style="color: #047857;">
-                        <i class="fas fa-map-marked-alt"></i> Informasi Pengambilan
-                    </div>
-                    <div class="detail-grid">
-                        <div class="detail-item-modal" style="grid-column: 1 / -1;">
-                            <div class="detail-value-modal">Gagal memuat informasi pengambilan</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
     }
 
     function closeOrderDetail() {

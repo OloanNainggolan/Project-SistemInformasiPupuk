@@ -565,34 +565,21 @@
                     $imageList[] = asset($image->image_path);
                 }
             } else {
-                // Determine fallback image based on product type
-                $fallbackSrc = asset('images/pupuk.jpg'); // Default
-                
-                if(isset($produk->primaryImage)) {
-                    $fallbackSrc = asset($produk->primaryImage->image_path);
-                } elseif(isset($produk->gambar) && !empty($produk->gambar)) {
-                    if(filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
-                        $fallbackSrc = $produk->gambar;
-                    } elseif(file_exists(public_path('images/products/' . $produk->gambar))) {
-                        $fallbackSrc = asset('images/products/' . $produk->gambar);
-                    } elseif(file_exists(public_path('images/' . $produk->gambar))) {
-                        $fallbackSrc = asset('images/' . $produk->gambar);
-                    } elseif(file_exists(public_path($produk->gambar))) {
-                        $fallbackSrc = asset($produk->gambar);
-                    } else {
-                        // Use product type specific image
-                        if(isset($produk->tipe_produk) && $produk->tipe_produk === 'bibit') {
-                            $fallbackSrc = asset('images/bibit.jpg');
-                        } elseif(strpos(strtolower($produk->nama_produk ?? ''), 'bibit') !== false) {
-                            $fallbackSrc = asset('images/bibit.jpg');
+                $fallbackSrc = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=600&fit=crop';
+                if(isset($produk)) {
+                    if(isset($produk->primaryImage)) {
+                        $fallbackSrc = asset($produk->primaryImage->gambar);
+                    } elseif(isset($produk->gambar)) {
+                        if(filter_var($produk->gambar, FILTER_VALIDATE_URL)) {
+                            $fallbackSrc = $produk->gambar;
                         } else {
-                            $fallbackSrc = asset('images/pupuk.jpg');
+                            $fallbackSrc = asset($produk->gambar);
                         }
                     }
                 }
                 $imageList[] = $fallbackSrc;
             }
-            $imageSrc = $imageList[0] ?? asset('images/pupuk.jpg');
+            $imageSrc = $imageList[0] ?? '';
             ?>
             
             <!-- Hidden data untuk JavaScript -->

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Google Maps API</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .info { background: #dbeafe; color: #1e40af; }
+        pre { background: #f3f4f6; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🗺️ Google Maps API Test</h1>
+    
+    <div class="info status">
+        <strong>API Key:</strong> AIzaSyCwIXTWR4ExkFrEYJgN4kk0OCh7PNL7mxA
+    </div>
+
+    <h2>Test Results:</h2>
+    <div id="results">Testing...</div>
+
+    <script>
+        const API_KEY = 'AIzaSyCwIXTWR4ExkFrEYJgN4kk0OCh7PNL7mxA';
+        const resultsDiv = document.getElementById('results');
+
+        // Test Geocoding API
+        fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=Jakarta&key=${API_KEY}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log('Geocoding API Response:', data);
+                
+                let html = '';
+                
+                if (data.status === 'OK') {
+                    html += '<div class="success status">✅ <strong>Geocoding API:</strong> Working!</div>';
+                    html += '<pre>' + JSON.stringify(data.results[0], null, 2) + '</pre>';
+                } else if (data.status === 'REQUEST_DENIED') {
+                    html += '<div class="error status">❌ <strong>Geocoding API:</strong> REQUEST_DENIED</div>';
+                    html += '<p><strong>Error:</strong> ' + data.error_message + '</p>';
+                    html += '<h3>Cara Mengaktifkan:</h3>';
+                    html += '<ol>';
+                    html += '<li>Buka <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>';
+                    html += '<li>Pilih project Anda</li>';
+                    html += '<li>Pergi ke "APIs & Services" > "Library"</li>';
+                    html += '<li>Cari dan aktifkan: <strong>Maps JavaScript API</strong></li>';
+                    html += '<li>Cari dan aktifkan: <strong>Geocoding API</strong></li>';
+                    html += '<li>Pergi ke "APIs & Services" > "Credentials"</li>';
+                    html += '<li>Edit API Key Anda</li>';
+                    html += '<li>Di "API restrictions", pilih "Restrict key"</li>';
+                    html += '<li>Centang: Maps JavaScript API dan Geocoding API</li>';
+                    html += '<li>Di "Website restrictions", tambahkan: http://localhost:8000/*, http://127.0.0.1:8000/*</li>';
+                    html += '<li>Pastikan billing sudah aktif (ada free tier $200/bulan)</li>';
+                    html += '</ol>';
+                } else {
+                    html += '<div class="error status">❌ <strong>Status:</strong> ' + data.status + '</div>';
+                }
+                
+                resultsDiv.innerHTML = html;
+            })
+            .catch(error => {
+                resultsDiv.innerHTML = '<div class="error status">❌ <strong>Error:</strong> ' + error.message + '</div>';
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>

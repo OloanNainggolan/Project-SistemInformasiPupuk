@@ -472,26 +472,13 @@
                 <?php $__currentLoopData = $pupukProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="product-card" data-product-id="<?php echo e($product->id_produk); ?>">
                         <div class="product-image">
-                            <?php
-                                $imageSrc = asset('images/pupuk.jpg'); // Default pupuk
-                                
-                                if($product->primaryImage) {
-                                    $imageSrc = asset($product->primaryImage->image_path);
-                                } elseif($product->images && $product->images->count() > 0) {
-                                    $imageSrc = asset($product->images->first()->image_path);
-                                } elseif($product->gambar) {
-                                    if (filter_var($product->gambar, FILTER_VALIDATE_URL)) {
-                                        $imageSrc = $product->gambar;
-                                    } elseif (file_exists(public_path('images/products/' . $product->gambar))) {
-                                        $imageSrc = asset('images/products/' . $product->gambar);
-                                    } elseif (file_exists(public_path('images/' . $product->gambar))) {
-                                        $imageSrc = asset('images/' . $product->gambar);
-                                    } elseif (file_exists(public_path($product->gambar))) {
-                                        $imageSrc = asset($product->gambar);
-                                    }
-                                }
-                            ?>
-                            <img src="<?php echo e($imageSrc); ?>" alt="<?php echo e($product->nama_produk); ?>" onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
+                            <?php if($product->primaryImage): ?>
+                                <img src="<?php echo e(asset($product->primaryImage->image_path)); ?>" alt="<?php echo e($product->nama_produk); ?>">
+                            <?php elseif($product->gambar): ?>
+                                <img src="<?php echo e(asset($product->gambar)); ?>" alt="<?php echo e($product->nama_produk); ?>">
+                            <?php else: ?>
+                                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=300&fit=crop" alt="<?php echo e($product->nama_produk); ?>">
+                            <?php endif; ?>
                         </div>
                         <div class="product-info">
                             <h3><?php echo e($product->nama_produk); ?></h3>
@@ -550,26 +537,13 @@
                 <?php $__currentLoopData = $bibitProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="product-card" data-product-id="<?php echo e($product->id_produk); ?>">
                         <div class="product-image">
-                            <?php
-                                $imageSrc = asset('images/bibit.jpg'); // Default bibit
-                                
-                                if($product->primaryImage) {
-                                    $imageSrc = asset($product->primaryImage->image_path);
-                                } elseif($product->images && $product->images->count() > 0) {
-                                    $imageSrc = asset($product->images->first()->image_path);
-                                } elseif($product->gambar) {
-                                    if (filter_var($product->gambar, FILTER_VALIDATE_URL)) {
-                                        $imageSrc = $product->gambar;
-                                    } elseif (file_exists(public_path('images/products/' . $product->gambar))) {
-                                        $imageSrc = asset('images/products/' . $product->gambar);
-                                    } elseif (file_exists(public_path('images/' . $product->gambar))) {
-                                        $imageSrc = asset('images/' . $product->gambar);
-                                    } elseif (file_exists(public_path($product->gambar))) {
-                                        $imageSrc = asset($product->gambar);
-                                    }
-                                }
-                            ?>
-                            <img src="<?php echo e($imageSrc); ?>" alt="<?php echo e($product->nama_produk); ?>" onerror="this.src='<?php echo e(asset('images/bibit.jpg')); ?>'">
+                            <?php if($product->primaryImage): ?>
+                                <img src="<?php echo e(asset($product->primaryImage->image_path)); ?>" alt="<?php echo e($product->nama_produk); ?>">
+                            <?php elseif($product->gambar): ?>
+                                <img src="<?php echo e(asset($product->gambar)); ?>" alt="<?php echo e($product->nama_produk); ?>">
+                            <?php else: ?>
+                                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&h=300&fit=crop" alt="<?php echo e($product->nama_produk); ?>">
+                            <?php endif; ?>
                         </div>
                         <div class="product-info">
                             <h3><?php echo e($product->nama_produk); ?></h3>
