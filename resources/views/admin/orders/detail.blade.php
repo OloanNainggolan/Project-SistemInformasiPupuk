@@ -138,8 +138,21 @@
         margin-bottom: 30px;
     }
 
+    /* Management Grid - for Action and Customer Info */
+    .management-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
     @media (max-width: 968px) {
         .detail-grid {
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .management-grid {
             grid-template-columns: 1fr;
             gap: 25px;
         }
@@ -153,6 +166,7 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         border: 2px solid #e5e7eb;
         transition: all 0.3s ease;
+        height: fit-content;
     }
 
     .detail-card:hover {
@@ -458,13 +472,13 @@
         border-radius: 16px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         border: 2px solid #e5e7eb;
-        margin-bottom: 30px;
+        height: fit-content;
     }
 
     .action-buttons {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
         width: 100%;
     }
 
@@ -673,6 +687,11 @@
             padding: 25px 30px;
         }
 
+        .management-grid {
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
         .product-item {
             grid-template-columns: 80px 1fr 130px;
             gap: 20px;
@@ -819,52 +838,29 @@
 
     <!-- Customer & Delivery Info -->
     <div class="detail-grid">
-        <!-- Customer Information -->
+        <!-- Delivery Information -->
         <div class="detail-card">
             <h3 class="card-title">
-                <i class="fas fa-user"></i>
-                Informasi Pelanggan
+                <i class="fas fa-truck"></i>
+                Informasi Pengiriman
             </h3>
             <div class="info-grid">
                 <div class="info-item">
                     <div class="info-label">
-                        <i class="fas fa-user-circle"></i>
-                        Nama Pemesan
+                        <i class="fas fa-calendar-alt"></i>
+                        Tanggal Pesan
                     </div>
-                    <div class="info-value">{{ $order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A' }}</div>
+                    <div class="info-value">{{ $order->created_at->format('d F Y') }}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
-                        <i class="fas fa-envelope"></i>
-                        Email
+                        <i class="fas fa-clock"></i>
+                        Waktu
                     </div>
-                    <div class="info-value">{{ $order->user->email ?? 'N/A' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-phone"></i>
-                        No. HP
-                    </div>
-                    <div class="info-value">{{ $order->customer_phone ?? $order->user->no_hp ?? 'N/A' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Alamat
-                    </div>
-                    <div class="info-value">{{ $order->customer_address ?? $order->user->alamat ?? 'Belum diisi' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-sticky-note"></i>
-                        Catatan
-                    </div>
-                    <div class="info-value">{{ $order->customer_notes ?? 'Tidak ada catatan' }}</div>
+                    <div class="info-value">{{ $order->created_at->format('H:i') }} WIB</div>
                 </div>
             </div>
         </div>
-
-
     </div>
 
     <!-- Pickup Point Information (for Ready status) -->
@@ -1021,42 +1017,90 @@
     </div>
     @endif
 
-    <!-- Action Buttons -->
-    <div class="action-section">
-        <h3 class="card-title">
-            <i class="fas fa-cogs"></i>
-            Kelola Pesanan
-        </h3>
-        <div class="action-buttons">
-            @if($order->status === 'Pending')
-                <button class="btn btn-processing" onclick="updateStatus('Processing')">
-                    <i class="fas fa-spinner"></i>
-                    Proses Pesanan
+    <!-- Management Grid: Action Buttons & Customer Info -->
+    <div class="management-grid">
+        <!-- Action Buttons -->
+        <div class="action-section">
+            <h3 class="card-title">
+                <i class="fas fa-cogs"></i>
+                Kelola Pesanan
+            </h3>
+            <div class="action-buttons">
+                @if($order->status === 'Pending')
+                    <button class="btn btn-processing" onclick="updateStatus('Processing')">
+                        <i class="fas fa-spinner"></i>
+                        Proses Pesanan
+                    </button>
+                    <button class="btn btn-reject" onclick="rejectOrder()">
+                        <i class="fas fa-times-circle"></i>
+                        Tolak Pesanan
+                    </button>
+                @elseif($order->status === 'Processing')
+                    <button class="btn btn-ready" onclick="updateStatus('Ready')">
+                        <i class="fas fa-check"></i>
+                        Siap Diambil
+                    </button>
+                    <button class="btn btn-reject" onclick="rejectOrder()">
+                        <i class="fas fa-times-circle"></i>
+                        Tolak Pesanan
+                    </button>
+                @elseif($order->status === 'Ready')
+                    <button class="btn btn-complete" onclick="updateStatus('Completed')">
+                        <i class="fas fa-check-double"></i>
+                        Selesaikan Pesanan
+                    </button>
+                @endif
+                
+                <button class="btn btn-print" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    Cetak Detail
                 </button>
-                <button class="btn btn-reject" onclick="rejectOrder()">
-                    <i class="fas fa-times-circle"></i>
-                    Tolak Pesanan
-                </button>
-            @elseif($order->status === 'Processing')
-                <button class="btn btn-ready" onclick="updateStatus('Ready')">
-                    <i class="fas fa-check"></i>
-                    Siap Diambil
-                </button>
-                <button class="btn btn-reject" onclick="rejectOrder()">
-                    <i class="fas fa-times-circle"></i>
-                    Tolak Pesanan
-                </button>
-            @elseif($order->status === 'Ready')
-                <button class="btn btn-complete" onclick="updateStatus('Completed')">
-                    <i class="fas fa-check-double"></i>
-                    Selesaikan Pesanan
-                </button>
-            @endif
-            
-            <button class="btn btn-print" onclick="window.print()">
-                <i class="fas fa-print"></i>
-                Cetak Detail
-            </button>
+            </div>
+        </div>
+
+        <!-- Customer Information -->
+        <div class="detail-card">
+            <h3 class="card-title">
+                <i class="fas fa-user"></i>
+                Informasi Pelanggan
+            </h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-user-circle"></i>
+                        Nama Pemesan
+                    </div>
+                    <div class="info-value">{{ $order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </div>
+                    <div class="info-value">{{ $order->user->email ?? 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-phone"></i>
+                        No. HP
+                    </div>
+                    <div class="info-value">{{ $order->customer_phone ?? $order->user->no_hp ?? 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Alamat
+                    </div>
+                    <div class="info-value">{{ $order->customer_address ?? $order->user->alamat ?? 'Belum diisi' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-sticky-note"></i>
+                        Catatan
+                    </div>
+                    <div class="info-value">{{ $order->customer_notes ?? 'Tidak ada catatan' }}</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

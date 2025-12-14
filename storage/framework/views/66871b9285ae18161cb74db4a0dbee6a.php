@@ -199,17 +199,9 @@
         grid-template-columns: 160px 1fr;
         gap: 16px;
         padding: 16px 20px;
-        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+        background: #f9fafb;
         border-radius: 10px;
-        border-left: 4px solid #10b981;
-        transition: all 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .info-item:hover {
-        transform: translateX(4px);
-        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.15);
-        background: linear-gradient(135deg, #ecfdf5 0%, #f9fafb 100%);
+        border: 2px solid #e5e7eb;
     }
 
     .info-label {
@@ -335,18 +327,11 @@
         grid-template-columns: 90px 1fr 140px;
         gap: 24px;
         padding: 24px;
-        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+        background: #f9fafb;
         border-radius: 12px;
         margin-bottom: 18px;
         align-items: center;
         border: 2px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-
-    .product-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        border-color: #10b981;
     }
 
     .product-item:last-child {
@@ -475,25 +460,29 @@
     }
 
     .action-buttons {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        width: 100%;
     }
 
     .btn {
-        padding: 14px 28px;
+        padding: 16px 24px;
         border: none;
         border-radius: 10px;
         font-weight: 700;
         font-size: 15px;
         cursor: pointer;
         transition: all 0.3s ease;
-        display: inline-flex;
+        display: flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
         text-decoration: none;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         letter-spacing: 0.3px;
+        text-align: center;
+        width: 100%;
     }
 
     .btn:hover {
@@ -745,7 +734,7 @@
         }
 
         .action-buttons {
-            flex-direction: column;
+            grid-template-columns: 1fr;
         }
 
         .btn {
