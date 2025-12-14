@@ -14,7 +14,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('primaryImage')->get();
+        $products = Product::with(['primaryImage', 'images' => function($query) {
+            $query->orderBy('order');
+        }])->get();
         return view('admin.products.index', compact('products'));
     }
 

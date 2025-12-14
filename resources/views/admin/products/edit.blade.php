@@ -12,6 +12,13 @@
         --blue: #3b82f6;
     }
 
+    /* Edit Product Container */
+    .edit-product-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px 30px;
+    }
+
     /* Same styles as create.blade.php */
     .page-header {
         margin-bottom: 30px;
@@ -23,9 +30,11 @@
         background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         display: flex;
         align-items: center;
         gap: 12px;
+        margin-bottom: 8px;
     }
 
     .page-title i {
@@ -33,20 +42,22 @@
         background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .page-subtitle {
         color: #6b7280;
         font-size: 14px;
-        margin-top: 5px;
+        margin-top: 0;
+        font-weight: 500;
     }
 
     .form-container {
         background: white;
-        padding: 35px;
+        padding: 40px;
         border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(5, 150, 105, 0.1);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        border: 2px solid #f3f4f6;
     }
 
     .alert {
@@ -54,26 +65,29 @@
         border-radius: 12px;
         margin-bottom: 25px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 12px;
         font-weight: 600;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        line-height: 1.5;
     }
 
     .alert-success {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        background: #d1fae5;
         border: 2px solid var(--green-light);
         color: var(--green-dark);
     }
 
     .alert-danger {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        background: #fee2e2;
         border: 2px solid #f87171;
         color: #991b1b;
     }
 
     .alert i {
-        font-size: 20px;
+        font-size: 18px;
+        margin-top: 2px;
+        flex-shrink: 0;
     }
 
     .alert ul {
@@ -88,14 +102,14 @@
     }
 
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
     }
 
     .form-label {
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         color: #374151;
         margin-bottom: 10px;
@@ -105,42 +119,52 @@
 
     .form-label i {
         color: var(--green);
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .form-label .required {
         color: #ef4444;
+        margin-left: 2px;
     }
 
     .form-input {
         width: 100%;
-        padding: 14px 18px;
+        padding: 12px 16px;
         border: 2px solid #e5e7eb;
         border-radius: 10px;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 500;
         color: #1f2937;
         transition: all 0.3s ease;
         font-family: 'Inter', sans-serif;
+        background: white;
     }
 
     .form-input:focus {
         outline: none;
         border-color: var(--green);
-        box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
     }
 
     .form-input.is-invalid {
         border-color: #ef4444;
+        background: #fef2f2;
     }
 
     textarea.form-input {
         resize: vertical;
-        min-height: 120px;
+        min-height: 100px;
+        line-height: 1.6;
     }
 
     select.form-input {
         cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+        background-position: right 12px center;
+        background-repeat: no-repeat;
+        background-size: 20px;
+        padding-right: 40px;
     }
 
     .form-help {
@@ -162,21 +186,33 @@
 
     /* Current Images Display */
     .current-images {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
+        padding: 20px;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
     }
 
     .current-images-title {
         font-size: 13px;
         font-weight: 700;
-        color: #6b7280;
-        margin-bottom: 10px;
+        color: #374151;
+        margin-bottom: 12px;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .current-images-title i {
+        color: var(--green);
     }
 
     .current-images-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
     }
 
     .current-image-item {
@@ -347,6 +383,45 @@
         display: flex;
         align-items: center;
         gap: 6px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1440px) {
+        .edit-product-container {
+            padding: 25px 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .edit-product-container {
+            padding: 20px 16px;
+        }
+
+        .form-container {
+            padding: 24px 20px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-title {
+            font-size: 22px;
+        }
+
+        .page-title i {
+            font-size: 26px;
+        }
+
+        .current-images-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .current-images-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
     .upload-hint i {
@@ -536,14 +611,15 @@
 @endpush
 
 @section('content')
-<!-- Page Header -->
-<div class="page-header">
-    <h1 class="page-title">
-        <i class="fas fa-edit"></i>
-        Edit Produk
-    </h1>
-    <p class="page-subtitle">Perbarui informasi produk {{ $product->nama_produk }}</p>
-</div>
+<div class="edit-product-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-edit"></i>
+            Edit Produk
+        </h1>
+        <p class="page-subtitle">Perbarui informasi produk {{ $product->nama_produk }}</p>
+    </div>
 
 <!-- Form Container -->
 <div class="form-container">
@@ -843,6 +919,7 @@
         </div>
     </form>
 </div>
+</div> <!-- End edit-product-container -->
 @endsection
 
 @push('scripts')

@@ -62,7 +62,7 @@
 <style>
 .contact-detail-container {
     max-width: 900px;
-    margin: 40px auto;
+    margin: 0 auto;
     padding: 0 20px;
 }
 

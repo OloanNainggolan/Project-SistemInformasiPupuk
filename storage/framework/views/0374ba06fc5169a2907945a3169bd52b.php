@@ -25,6 +25,9 @@
         align-items: center;
         gap: 18px;
         margin-bottom: 32px;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1200px;
         padding: 24px 28px;
         background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
         border-radius: 20px;
@@ -71,9 +74,13 @@
     /* Card Grid - Responsive */
     .card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 28px;
         margin-bottom: 60px;
+        justify-items: center;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .product-card {
@@ -85,6 +92,8 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        width: 100%;
+        max-width: 380px;
         border: 1px solid rgba(0,0,0,0.04);
         position: relative;
     }
@@ -394,8 +403,9 @@
     /* Responsive Design */
     @media (max-width: 1200px) {
         .card-grid {
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
+            justify-items: center;
         }
     }
 
@@ -424,8 +434,12 @@
             grid-template-columns: 1fr;
             gap: 20px;
             margin-bottom: 50px;
+            justify-items: center;
         }
 
+        .product-card {
+            max-width: 100%;
+        }
         .product-image {
             padding-bottom: 65%; /* Slightly shorter on mobile */
         }
@@ -659,4 +673,4 @@
 <?php $__env->stopPush(); ?>
 
 
-<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw10\Project-SistemInformasiPupuk\resources\views/user/pupukdanbibit.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.user', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/user/pupukdanbibit.blade.php ENDPATH**/ ?>

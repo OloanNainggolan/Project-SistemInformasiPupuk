@@ -420,6 +420,7 @@
         .admin-main {
             min-height: auto;
             margin-top: 65px;
+            padding-top: 30px;
             padding-bottom: 40px;
         }
 
@@ -915,4 +916,4 @@
 
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
-</html><?php /**PATH C:\laragon\www\ppw10\Project-SistemInformasiPupuk\resources\views/layouts/admin.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\laragon\www\ppw\resources\views/layouts/admin.blade.php ENDPATH**/ ?>

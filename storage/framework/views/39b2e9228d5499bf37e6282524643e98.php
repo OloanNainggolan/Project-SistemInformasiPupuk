@@ -1,8 +1,6 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Kelola Produk - Admin Panel'); ?>
 
-@section('title', 'Kelola Produk - Admin Panel')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     :root {
         --green-dark: #065f46;
@@ -405,9 +403,9 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="products-container">
     <!-- Page Header -->
     <div class="page-header">
@@ -418,19 +416,19 @@
         </h1>
         <p class="page-subtitle">Manajemen produk pupuk dan bibit subsidi</p>
     </div>
-    <a href="{{ route('admin.products.create') }}" class="btn-add">
+    <a href="<?php echo e(route('admin.products.create')); ?>" class="btn-add">
         <i class="fas fa-plus-circle"></i>
         Tambah Produk Baru
     </a>
 </div>
 
 <!-- Alert Messages -->
-@if(session('success'))
+<?php if(session('success')): ?>
 <div class="alert-success">
     <i class="fas fa-check-circle"></i>
-    <span>{{ session('success') }}</span>
+    <span><?php echo e(session('success')); ?></span>
 </div>
-@endif
+<?php endif; ?>
 
 <!-- Filter Section -->
 <div class="filter-section">
@@ -465,9 +463,9 @@
 
 <!-- Products Grid -->
 <div class="products-grid">
-    @forelse($products as $product)
-    <div class="product-card" data-type="{{ $product->tipe_produk }}" data-category="{{ $product->kategori }}">
-        @php
+    <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+    <div class="product-card" data-type="<?php echo e($product->tipe_produk); ?>" data-category="<?php echo e($product->kategori); ?>">
+        <?php
             $productImage = asset('images/pupuk.jpg'); // Default
             
             if($product->primaryImage) {
@@ -492,45 +490,46 @@
             } elseif($product->tipe_produk === 'bibit') {
                 $productImage = asset('images/bibit.jpg');
             }
-        @endphp
+        ?>
         
-        <img src="{{ $productImage }}" 
-             alt="{{ $product->nama_produk }}" 
+        <img src="<?php echo e($productImage); ?>" 
+             alt="<?php echo e($product->nama_produk); ?>" 
              class="product-image"
-             onerror="this.src='{{ $product->tipe_produk === 'bibit' ? asset('images/bibit.jpg') : asset('images/pupuk.jpg') }}'">
+             onerror="this.src='<?php echo e($product->tipe_produk === 'bibit' ? asset('images/bibit.jpg') : asset('images/pupuk.jpg')); ?>'">
         
         <div class="product-body">
-            <span class="product-type-badge badge-{{ $product->tipe_produk }}">
-                {{ ucfirst($product->tipe_produk) }}
+            <span class="product-type-badge badge-<?php echo e($product->tipe_produk); ?>">
+                <?php echo e(ucfirst($product->tipe_produk)); ?>
+
             </span>
             
-            <h3 class="product-name">{{ $product->nama_produk }}</h3>
-            <p class="product-category">Kategori: {{ $product->kategori }}</p>
+            <h3 class="product-name"><?php echo e($product->nama_produk); ?></h3>
+            <p class="product-category">Kategori: <?php echo e($product->kategori); ?></p>
             
             <div class="product-prices">
                 <div class="price-item">
                     <div class="price-label">Subsidi</div>
-                    <div class="price-value">Rp {{ number_format($product->harga_subsidi, 0, ',', '.') }}</div>
+                    <div class="price-value">Rp <?php echo e(number_format($product->harga_subsidi, 0, ',', '.')); ?></div>
                 </div>
                 <div class="price-item">
                     <div class="price-label">Normal</div>
-                    <div class="price-value price-normal">Rp {{ number_format($product->harga_normal, 0, ',', '.') }}</div>
+                    <div class="price-value price-normal">Rp <?php echo e(number_format($product->harga_normal, 0, ',', '.')); ?></div>
                 </div>
             </div>
             
             <div class="product-stock">
                 <i class="fas fa-box"></i>
-                <span class="stock-text">Stok: {{ $product->stok }} unit</span>
+                <span class="stock-text">Stok: <?php echo e($product->stok); ?> unit</span>
             </div>
             
             <div class="product-actions">
-                <a href="{{ route('admin.products.edit', $product->id_produk) }}" class="btn-action btn-edit">
+                <a href="<?php echo e(route('admin.products.edit', $product->id_produk)); ?>" class="btn-action btn-edit">
                     <i class="fas fa-edit"></i>
                     Edit
                 </a>
-                <form action="{{ route('admin.products.destroy', $product->id_produk) }}" method="POST" style="flex: 1;" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
-                    @csrf
-                    @method('DELETE')
+                <form action="<?php echo e(route('admin.products.destroy', $product->id_produk)); ?>" method="POST" style="flex: 1;" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
                     <button type="submit" class="btn-action btn-delete" style="width: 100%;">
                         <i class="fas fa-trash"></i>
                         Hapus
@@ -539,22 +538,22 @@
             </div>
         </div>
     </div>
-    @empty
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
     <div class="empty-state" style="grid-column: 1 / -1;">
         <i class="fas fa-box-open" style="font-size: 80px; color: #d1d5db; margin-bottom: 24px;"></i>
         <h3 style="font-size: 24px; font-weight: 800; color: #374151; margin-bottom: 12px;">Belum Ada Produk</h3>
         <p style="font-size: 16px; color: #6b7280; margin-bottom: 28px;">Mulai tambahkan produk pupuk atau bibit subsidi untuk ditampilkan kepada petani</p>
-        <a href="{{ route('admin.products.create') }}" class="btn-add" style="display: inline-flex; padding: 16px 32px; font-size: 16px; font-weight: 700;">
+        <a href="<?php echo e(route('admin.products.create')); ?>" class="btn-add" style="display: inline-flex; padding: 16px 32px; font-size: 16px; font-weight: 700;">
             <i class="fas fa-plus-circle"></i>
             Tambah Produk Pertama
         </a>
     </div>
-    @endforelse
+    <?php endif; ?>
 </div>
 </div> <!-- End products-container -->
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     // Filter functionality
     const filterType = document.getElementById('filterType');
@@ -612,4 +611,6 @@
         cards.forEach(card => grid.appendChild(card));
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/admin/products/index.blade.php ENDPATH**/ ?>

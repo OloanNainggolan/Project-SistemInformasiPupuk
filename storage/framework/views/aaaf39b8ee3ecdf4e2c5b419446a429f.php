@@ -1,8 +1,6 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Dashboard Admin'); ?>
 
-@section('title', 'Dashboard Admin')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     * {
         margin: 0;
@@ -624,15 +622,15 @@
         font-size: 14px;
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-wrapper">
     <!-- Welcome Banner -->
     <div class="welcome-banner">
         <div class="welcome-content">
             <h1>Selamat Datang, Administrator! 👋</h1>
-            <p>Berikut adalah ringkasan sistem hari ini - {{ now()->locale('id')->translatedFormat('l, d F Y') }}</p>
+            <p>Berikut adalah ringkasan sistem hari ini - <?php echo e(now()->locale('id')->translatedFormat('l, d F Y')); ?></p>
         </div>
     </div>
 
@@ -643,10 +641,10 @@
                 <i class="fas fa-shopping-cart"></i>
             </div>
             <div class="stat-label">Total Pesanan</div>
-            <div class="stat-value">{{ $totalPesanan ?? 0 }}</div>
-            <div class="stat-change {{ ($pertumbuhanPesanan ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                <i class="fas fa-arrow-{{ ($pertumbuhanPesanan ?? 0) >= 0 ? 'up' : 'down' }}"></i>
-                {{ ($pertumbuhanPesanan ?? 0) > 0 ? '+' : '' }}{{ $pertumbuhanPesanan ?? 0 }}% dari bulan lalu
+            <div class="stat-value"><?php echo e($totalPesanan ?? 0); ?></div>
+            <div class="stat-change <?php echo e(($pertumbuhanPesanan ?? 0) >= 0 ? 'positive' : 'negative'); ?>">
+                <i class="fas fa-arrow-<?php echo e(($pertumbuhanPesanan ?? 0) >= 0 ? 'up' : 'down'); ?>"></i>
+                <?php echo e(($pertumbuhanPesanan ?? 0) > 0 ? '+' : ''); ?><?php echo e($pertumbuhanPesanan ?? 0); ?>% dari bulan lalu
             </div>
         </div>
 
@@ -655,10 +653,10 @@
                 <i class="fas fa-wallet"></i>
             </div>
             <div class="stat-label">Total Pendapatan</div>
-            <div class="stat-value">Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.')}}</div>            
-            <div class="stat-change {{ ($pertumbuhanPendapatan ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                <i class="fas fa-arrow-{{ ($pertumbuhanPendapatan ?? 0) >= 0 ? 'up' : 'down' }}"></i>
-                {{ ($pertumbuhanPendapatan ?? 0) > 0 ? '+' : '' }}{{ $pertumbuhanPendapatan ?? 0 }}% dari bulan lalu
+            <div class="stat-value">Rp <?php echo e(number_format($totalRevenue ?? 0, 0, ',', '.')); ?></div>            
+            <div class="stat-change <?php echo e(($pertumbuhanPendapatan ?? 0) >= 0 ? 'positive' : 'negative'); ?>">
+                <i class="fas fa-arrow-<?php echo e(($pertumbuhanPendapatan ?? 0) >= 0 ? 'up' : 'down'); ?>"></i>
+                <?php echo e(($pertumbuhanPendapatan ?? 0) > 0 ? '+' : ''); ?><?php echo e($pertumbuhanPendapatan ?? 0); ?>% dari bulan lalu
             </div>
         </div>
 
@@ -667,10 +665,10 @@
                 <i class="fas fa-users"></i>
             </div>
             <div class="stat-label">Total Petani</div>
-            <div class="stat-value">{{ $totalPetani ?? 1 }}</div>
-            <div class="stat-change {{ ($pertumbuhanPetani ?? 100) >= 0 ? 'positive' : 'negative' }}">
-                <i class="fas fa-arrow-{{ ($pertumbuhanPetani ?? 100) >= 0 ? 'up' : 'down' }}"></i>
-                +{{ $pertumbuhanPetani ?? 100 }}% dari bulan lalu
+            <div class="stat-value"><?php echo e($totalPetani ?? 1); ?></div>
+            <div class="stat-change <?php echo e(($pertumbuhanPetani ?? 100) >= 0 ? 'positive' : 'negative'); ?>">
+                <i class="fas fa-arrow-<?php echo e(($pertumbuhanPetani ?? 100) >= 0 ? 'up' : 'down'); ?>"></i>
+                +<?php echo e($pertumbuhanPetani ?? 100); ?>% dari bulan lalu
             </div>
         </div>
 
@@ -679,10 +677,10 @@
                 <i class="fas fa-box"></i>
             </div>
             <div class="stat-label">Total Produk</div>
-            <div class="stat-value">{{ $totalProduk ?? 0 }}</div>
-            <div class="stat-change {{ ($pertumbuhanProduk ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                <i class="fas fa-arrow-{{ ($pertumbuhanProduk ?? 0) >= 0 ? 'up' : 'down' }}"></i>
-                {{ ($pertumbuhanProduk ?? 0) > 0 ? '+' : '' }}{{ $pertumbuhanProduk ?? 0 }}% dari bulan lalu
+            <div class="stat-value"><?php echo e($totalProduk ?? 0); ?></div>
+            <div class="stat-change <?php echo e(($pertumbuhanProduk ?? 0) >= 0 ? 'positive' : 'negative'); ?>">
+                <i class="fas fa-arrow-<?php echo e(($pertumbuhanProduk ?? 0) >= 0 ? 'up' : 'down'); ?>"></i>
+                <?php echo e(($pertumbuhanProduk ?? 0) > 0 ? '+' : ''); ?><?php echo e($pertumbuhanProduk ?? 0); ?>% dari bulan lalu
             </div>
         </div>
     </div>
@@ -694,7 +692,7 @@
             <div class="section-header">
                 <i class="fas fa-chart-pie"></i>
                 <h3>Status Pesanan</h3>
-                <span class="status-badge">{{ $totalPesanan ?? 0 }} Total</span>
+                <span class="status-badge"><?php echo e($totalPesanan ?? 0); ?> Total</span>
             </div>
             <ul class="status-list">
                 <li class="status-item">
@@ -702,35 +700,35 @@
                         <span class="status-dot pending"></span>
                         <span class="status-name">Pending</span>
                     </div>
-                    <span class="status-count">{{ $pendingCount ?? 0 }}</span>
+                    <span class="status-count"><?php echo e($pendingCount ?? 0); ?></span>
                 </li>
                 <li class="status-item">
                     <div class="status-info">
                         <span class="status-dot processing"></span>
                         <span class="status-name">Processing</span>
                     </div>
-                    <span class="status-count">{{ $processingCount ?? 0 }}</span>
+                    <span class="status-count"><?php echo e($processingCount ?? 0); ?></span>
                 </li>
                 <li class="status-item">
                     <div class="status-info">
                         <span class="status-dot ready"></span>
                         <span class="status-name">Ready</span>
                     </div>
-                    <span class="status-count">{{ $readyCount ?? 0 }}</span>
+                    <span class="status-count"><?php echo e($readyCount ?? 0); ?></span>
                 </li>
                 <li class="status-item">
                     <div class="status-info">
                         <span class="status-dot completed"></span>
                         <span class="status-name">Completed</span>
                     </div>
-                    <span class="status-count">{{ $completedCount ?? 0 }}</span>
+                    <span class="status-count"><?php echo e($completedCount ?? 0); ?></span>
                 </li>
                 <li class="status-item">
                     <div class="status-info">
                         <span class="status-dot rejected"></span>
                         <span class="status-name">Rejected</span>
                     </div>
-                    <span class="status-count">{{ $rejectedCount ?? 0 }}</span>
+                    <span class="status-count"><?php echo e($rejectedCount ?? 0); ?></span>
                 </li>
             </ul>
         </div>
@@ -740,12 +738,12 @@
             <div class="section-header">
                 <i class="fas fa-clock"></i>
                 <h3>Pesanan Terbaru</h3>
-                <a href="{{ route('admin.orders') }}" class="view-all-link">
+                <a href="<?php echo e(route('admin.orders')); ?>" class="view-all-link">
                     Lihat Semua <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
             
-            @if(isset($recentOrders) && $recentOrders->count() > 0)
+            <?php if(isset($recentOrders) && $recentOrders->count() > 0): ?>
                 <table class="orders-table">
                     <thead>
                         <tr>
@@ -758,34 +756,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($recentOrders->take(5) as $order)
+                        <?php $__currentLoopData = $recentOrders->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
-                            <td><strong>#{{ $order->order_number }}</strong></td>
-                            <td>{{ $order->user->name ?? 'N/A' }}</td>
-                            <td>{{ $order->product->nama_produk ?? 'N/A' }}</td>
-                            <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                            <td><strong>#<?php echo e($order->order_number); ?></strong></td>
+                            <td><?php echo e($order->user->name ?? 'N/A'); ?></td>
+                            <td><?php echo e($order->product->nama_produk ?? 'N/A'); ?></td>
+                            <td>Rp <?php echo e(number_format($order->total_amount, 0, ',', '.')); ?></td>
                             <td>
-                                <span class="order-status-badge {{ strtolower($order->status) }}">
-                                    {{ $order->status }}
+                                <span class="order-status-badge <?php echo e(strtolower($order->status)); ?>">
+                                    <?php echo e($order->status); ?>
+
                                 </span>
                             </td>
-                            <td>{{ $order->created_at->format('d/m/Y') }}</td>
+                            <td><?php echo e($order->created_at->format('d/m/Y')); ?></td>
                         </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
-            @else
+            <?php else: ?>
                 <div class="empty-state">
                     <i class="fas fa-inbox"></i>
                     <h4>Belum ada pesanan</h4>
                     <p>Pesanan akan muncul di sini ketika ada customer yang memesan</p>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 
     <!-- Activity Log Section -->
-    @include('admin.partials.activity-log')
+    <?php echo $__env->make('admin.partials.activity-log', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <!-- Quick Actions -->
     <div class="quick-actions">
@@ -794,19 +793,19 @@
             <h3>Aksi Cepat</h3>
         </div>
         <div class="actions-grid">
-            <a href="{{ route('admin.products.create') }}" class="action-btn">
+            <a href="<?php echo e(route('admin.products.create')); ?>" class="action-btn">
                 <i class="fas fa-plus-circle"></i>
                 <span>Tambah Produk</span>
             </a>
-            <a href="{{ route('admin.orders') }}" class="action-btn">
+            <a href="<?php echo e(route('admin.orders')); ?>" class="action-btn">
                 <i class="fas fa-list-alt"></i>
                 <span>Kelola Pesanan</span>
             </a>
-            <a href="{{ route('admin.notifications.inbox') }}" class="action-btn">
+            <a href="<?php echo e(route('admin.notifications.inbox')); ?>" class="action-btn">
                 <i class="fas fa-inbox"></i>
                 <span>Notifikasi Masuk</span>
             </a>
-            <a href="{{ route('admin.notifications.send') }}" class="action-btn">
+            <a href="<?php echo e(route('admin.notifications.send')); ?>" class="action-btn">
                 <i class="fas fa-paper-plane"></i>
                 <span>Kirim Notifikasi</span>
             </a>
@@ -1078,4 +1077,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

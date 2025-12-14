@@ -1,8 +1,6 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Kirim Notifikasi ke User'); ?>
 
-@section('title', 'Kirim Notifikasi ke User')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .notif-container {
         max-width: 900px;
@@ -282,9 +280,9 @@
         background: rgba(239, 68, 68, 0.1);
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="notif-container">
     <!-- Page Header -->
     <div class="page-header">
@@ -293,46 +291,46 @@
     </div>
 
     <!-- Success Message -->
-    @if(session('success'))
+    <?php if(session('success')): ?>
     <div class="alert alert-success">
         <i class="fas fa-check-circle"></i>
-        <span>{{ session('success') }}</span>
+        <span><?php echo e(session('success')); ?></span>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Error Messages -->
-    @if($errors->any())
+    <?php if($errors->any()): ?>
     <div class="alert alert-error">
         <i class="fas fa-exclamation-circle"></i>
         <div>
             <strong>Terjadi kesalahan:</strong>
             <ul style="margin: 5px 0 0 20px; padding: 0;">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <li><?php echo e($error); ?></li>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Form Card -->
     <div class="form-card">
-        <form action="{{ route('admin.notifications.send') }}" method="POST">
-            @csrf
+        <form action="<?php echo e(route('admin.notifications.send')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
 
             <!-- Recipient Type -->
             <div class="form-group">
                 <label class="form-label">Kirim Ke <span class="required">*</span></label>
                 <div class="recipient-type">
                     <div class="recipient-option">
-                        <input type="radio" name="recipient_type" id="all_users" value="all" {{ old('recipient_type', 'all') == 'all' ? 'checked' : '' }} onchange="toggleUserSelect()">
+                        <input type="radio" name="recipient_type" id="all_users" value="all" <?php echo e(old('recipient_type', 'all') == 'all' ? 'checked' : ''); ?> onchange="toggleUserSelect()">
                         <label for="all_users">
                             <i class="fas fa-users"></i>
                             Semua User
                         </label>
                     </div>
                     <div class="recipient-option">
-                        <input type="radio" name="recipient_type" id="specific_user" value="specific" {{ old('recipient_type') == 'specific' ? 'checked' : '' }} onchange="toggleUserSelect()">
+                        <input type="radio" name="recipient_type" id="specific_user" value="specific" <?php echo e(old('recipient_type') == 'specific' ? 'checked' : ''); ?> onchange="toggleUserSelect()">
                         <label for="specific_user">
                             <i class="fas fa-user"></i>
                             Pilih User
@@ -343,57 +341,110 @@
                 <!-- Specific User Selection -->
                 <div class="user-select-group" id="userSelectGroup">
                     <label class="form-label">Pilih User</label>
-                    <select name="user_id" class="form-control form-select @error('user_id') is-invalid @enderror">
+                    <select name="user_id" class="form-control form-select <?php $__errorArgs = ['user_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
                         <option value="">-- Pilih User --</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                {{ $user->nama_lengkap ?? $user->name ?? 'User #'.$user->id }} ({{ $user->email }})
+                        <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($user->id); ?>" <?php echo e(old('user_id') == $user->id ? 'selected' : ''); ?>>
+                                <?php echo e($user->nama_lengkap ?? $user->name ?? 'User #'.$user->id); ?> (<?php echo e($user->email); ?>)
                             </option>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
-                    @error('user_id')
+                    <?php $__errorArgs = ['user_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                         <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
-                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                            <i class="fas fa-exclamation-circle"></i> <?php echo e($message); ?>
+
                         </div>
-                    @enderror
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
-                @error('recipient_type')
+                <?php $__errorArgs = ['recipient_type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                     <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
-                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                        <i class="fas fa-exclamation-circle"></i> <?php echo e($message); ?>
+
                     </div>
-                @enderror
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
             </div>
 
             <!-- Subject -->
             <div class="form-group">
                 <label class="form-label" for="title">Judul Notifikasi <span class="required">*</span></label>
-                <input type="text" name="title" id="title" class="form-control @error('title') is-invalid @enderror" 
+                <input type="text" name="title" id="title" class="form-control <?php $__errorArgs = ['title'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
                        placeholder="Contoh: Pengumuman Penting - Perubahan Jadwal Distribusi" 
-                       value="{{ old('title') }}" required maxlength="100">
+                       value="<?php echo e(old('title')); ?>" required maxlength="100">
                 <div class="char-count">
                     <span id="subjectCount">0</span>/100 karakter
                 </div>
-                @error('title')
+                <?php $__errorArgs = ['title'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                     <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
-                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                        <i class="fas fa-exclamation-circle"></i> <?php echo e($message); ?>
+
                     </div>
-                @enderror
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
             </div>
 
             <!-- Message -->
             <div class="form-group">
                 <label class="form-label" for="message">Isi Pesan <span class="required">*</span></label>
-                <textarea name="message" id="message" class="form-control @error('message') is-invalid @enderror" 
+                <textarea name="message" id="message" class="form-control <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
                           placeholder="Tulis pesan atau pengumuman yang akan dikirim ke user..." 
-                          required maxlength="1000">{{ old('message') }}</textarea>
+                          required maxlength="1000"><?php echo e(old('message')); ?></textarea>
                 <div class="char-count">
                     <span id="messageCount">0</span>/1000 karakter
                 </div>
-                @error('message')
+                <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                     <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
-                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                        <i class="fas fa-exclamation-circle"></i> <?php echo e($message); ?>
+
                     </div>
-                @enderror
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
             </div>
 
             <!-- Priority -->
@@ -401,35 +452,43 @@
                 <label class="form-label">Tipe Notifikasi <span class="required">*</span></label>
                 <div class="priority-badges">
                     <div class="priority-option low">
-                        <input type="radio" name="type" id="type_info" value="info" {{ old('type', 'info') == 'info' ? 'checked' : '' }}>
+                        <input type="radio" name="type" id="type_info" value="info" <?php echo e(old('type', 'info') == 'info' ? 'checked' : ''); ?>>
                         <label for="type_info" class="low">
                             <i class="fas fa-info-circle"></i> Info
                         </label>
                     </div>
                     <div class="priority-option normal">
-                        <input type="radio" name="type" id="type_success" value="success" {{ old('type') == 'success' ? 'checked' : '' }}>
+                        <input type="radio" name="type" id="type_success" value="success" <?php echo e(old('type') == 'success' ? 'checked' : ''); ?>>
                         <label for="type_success" class="normal">
                             <i class="fas fa-check-circle"></i> Sukses
                         </label>
                     </div>
                     <div class="priority-option high">
-                        <input type="radio" name="type" id="type_warning" value="warning" {{ old('type') == 'warning' ? 'checked' : '' }}>
+                        <input type="radio" name="type" id="type_warning" value="warning" <?php echo e(old('type') == 'warning' ? 'checked' : ''); ?>>
                         <label for="type_warning" class="high">
                             <i class="fas fa-exclamation-circle"></i> Peringatan
                         </label>
                     </div>
                     <div class="priority-option urgent">
-                        <input type="radio" name="type" id="type_important" value="important" {{ old('type') == 'important' ? 'checked' : '' }}>
+                        <input type="radio" name="type" id="type_important" value="important" <?php echo e(old('type') == 'important' ? 'checked' : ''); ?>>
                         <label for="type_important" class="urgent">
                             <i class="fas fa-exclamation-triangle"></i> Penting
                         </label>
                     </div>
                 </div>
-                @error('type')
+                <?php $__errorArgs = ['type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                     <div class="text-danger" style="font-size: 12px; margin-top: 5px;">
-                        <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                        <i class="fas fa-exclamation-circle"></i> <?php echo e($message); ?>
+
                     </div>
-                @enderror
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
             </div>
 
             <!-- Action Buttons -->
@@ -438,7 +497,7 @@
                     <i class="fas fa-paper-plane"></i>
                     Kirim Notifikasi
                 </button>
-                <a href="{{ route('admin.notifications.inbox') }}" class="btn btn-secondary">
+                <a href="<?php echo e(route('admin.notifications.inbox')); ?>" class="btn btn-secondary">
                     <i class="fas fa-times"></i>
                     Batal
                 </a>
@@ -483,4 +542,6 @@
         }
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/admin/notifications/send.blade.php ENDPATH**/ ?>

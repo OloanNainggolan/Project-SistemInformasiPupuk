@@ -14,7 +14,7 @@
     .notification-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 30px;
+        padding: 0 30px 30px;
     }
 
     /* Page Header */
