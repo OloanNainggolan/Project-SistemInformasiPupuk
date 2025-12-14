@@ -1,192 +1,133 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Detail Pesanan - Admin'); ?>
 
-@section('title', 'Detail Pesanan - Admin')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .detail-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 30px 40px;
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 20px;
     }
 
     /* Back Button */
     .back-button {
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
 
     .btn-back {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        padding: 12px 24px;
+        gap: 8px;
+        padding: 10px 20px;
         background: white;
         border: 2px solid #e5e7eb;
         border-radius: 10px;
         color: #065f46;
         text-decoration: none;
-        font-weight: 700;
+        font-weight: 600;
         font-size: 14px;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .btn-back:hover {
         background: #065f46;
         color: white;
         border-color: #065f46;
-        transform: translateX(-4px);
-        box-shadow: 0 4px 12px rgba(5, 95, 70, 0.2);
-    }
-
-    .btn-back i {
-        font-size: 16px;
+        transform: translateX(-5px);
     }
 
     /* Header Section */
     .order-header {
         background: white;
-        padding: 32px;
-        border-radius: 16px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        margin-bottom: 24px;
-        border: 2px solid #f3f4f6;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
     }
 
     .order-title-section {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 24px;
-        padding-bottom: 24px;
-        border-bottom: 3px solid #f3f4f6;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f3f4f6;
     }
 
     .order-title {
-        font-size: 26px;
-        font-weight: 800;
+        font-size: 24px;
+        font-weight: 700;
         color: #065f46;
         margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .order-title i {
-        color: #10b981;
-        font-size: 28px;
     }
 
     .order-date {
         font-size: 14px;
         color: #6b7280;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .order-date i {
-        color: #9ca3af;
     }
 
     .status-badge {
-        padding: 12px 24px;
+        padding: 10px 20px;
         border-radius: 10px;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: 2px solid;
     }
 
     .status-pending {
         background: #fef3c7;
         color: #92400e;
-        border-color: #fbbf24;
     }
 
     .status-processing {
         background: #e0e7ff;
         color: #5b21b6;
-        border-color: #8b5cf6;
     }
 
     .status-ready {
         background: #d1fae5;
         color: #065f46;
-        border-color: #10b981;
     }
 
     .status-completed {
         background: #d1fae5;
         color: #065f46;
-        border-color: #10b981;
     }
 
     .status-rejected {
         background: #fee2e2;
         color: #991b1b;
-        border-color: #ef4444;
     }
 
     /* Grid Layout */
     .detail-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin-bottom: 30px;
-    }
-
-    @media (max-width: 968px) {
-        .detail-grid {
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
+        gap: 25px;
+        margin-bottom: 25px;
     }
 
     /* Card Styles */
     .detail-card {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 2px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-
-    .detail-card:hover {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-        border-color: #10b981;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .card-title {
-        font-size: 20px;
-        font-weight: 800;
+        font-size: 18px;
+        font-weight: 700;
         color: #065f46;
-        margin-bottom: 24px;
-        padding-bottom: 16px;
-        border-bottom: 3px solid transparent;
-        background: linear-gradient(to right, #10b981 0%, #10b981 40%, transparent 40%);
-        background-repeat: no-repeat;
-        background-position: bottom;
-        background-size: 100% 3px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #10b981;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
     }
 
     .card-title i {
-        width: 36px;
-        height: 36px;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+        font-size: 20px;
     }
 
     /* Info Rows */
@@ -198,20 +139,12 @@
 
     .info-item {
         display: grid;
-        grid-template-columns: 160px 1fr;
-        gap: 16px;
-        padding: 16px 20px;
-        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
-        border-radius: 10px;
-        border-left: 4px solid #10b981;
-        transition: all 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .info-item:hover {
-        transform: translateX(4px);
-        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.15);
-        background: linear-gradient(135deg, #ecfdf5 0%, #f9fafb 100%);
+        grid-template-columns: 140px 1fr;
+        gap: 15px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+        border-left: 3px solid #10b981;
     }
 
     .info-label {
@@ -245,11 +178,10 @@
     }
 
     .address-box {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #d1fae5 100%);
-        padding: 24px;
-        border-radius: 12px;
-        border: 3px solid #10b981;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid #10b981;
     }
 
     .address-row {
@@ -319,36 +251,21 @@
     /* Products Section */
     .products-section {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 2px solid #e5e7eb;
-        margin-bottom: 30px;
-        transition: all 0.3s ease;
-    }
-
-    .products-section:hover {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-        border-color: #10b981;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
     }
 
     .product-item {
         display: grid;
-        grid-template-columns: 90px 1fr 140px;
-        gap: 24px;
-        padding: 24px;
-        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
-        border-radius: 12px;
-        margin-bottom: 18px;
+        grid-template-columns: 80px 1fr 120px;
+        gap: 20px;
+        padding: 20px;
+        background: #f9fafb;
+        border-radius: 10px;
+        margin-bottom: 15px;
         align-items: center;
-        border: 2px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-
-    .product-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        border-color: #10b981;
     }
 
     .product-item:last-child {
@@ -356,74 +273,59 @@
     }
 
     .product-image {
-        width: 90px;
-        height: 90px;
-        border-radius: 12px;
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
         background: #e5e7eb;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 36px;
+        font-size: 32px;
         color: #10b981;
-        overflow: hidden;
-        border: 2px solid #e5e7eb;
     }
 
     .product-info h4 {
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 700;
         color: #065f46;
-        margin-bottom: 8px;
-        line-height: 1.4;
+        margin-bottom: 5px;
     }
 
     .product-meta {
-        font-size: 14px;
+        font-size: 13px;
         color: #6b7280;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        margin-bottom: 8px;
     }
 
     .product-quantity {
-        font-size: 14px;
+        font-size: 13px;
         color: #374151;
         font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 6px;
     }
 
     .product-price {
         text-align: right;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 6px;
     }
 
     .product-subtotal {
-        font-size: 20px;
-        font-weight: 800;
+        font-size: 18px;
+        font-weight: 700;
         color: #065f46;
-        letter-spacing: 0.5px;
     }
 
     .product-unit-price {
-        font-size: 13px;
+        font-size: 12px;
         color: #6b7280;
-        font-weight: 500;
+        margin-top: 5px;
     }
 
     /* Total Section */
     .total-section {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #d1fae5 100%);
-        padding: 24px 28px;
-        border-radius: 12px;
-        margin-top: 24px;
-        border: 3px solid #10b981;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        border: 2px solid #10b981;
     }
 
     .total-row {
@@ -446,34 +348,29 @@
     }
 
     .grand-total {
-        border-top: 3px solid #10b981;
-        margin-top: 12px;
-        padding-top: 18px;
+        border-top: 2px solid #10b981;
+        margin-top: 10px;
+        padding-top: 15px;
     }
 
     .grand-total .total-label {
-        font-size: 22px;
-        font-weight: 800;
+        font-size: 20px;
+        font-weight: 700;
         color: #065f46;
-        letter-spacing: 0.5px;
     }
 
     .grand-total .total-value {
-        font-size: 28px;
-        font-weight: 800;
+        font-size: 24px;
+        font-weight: 700;
         color: #10b981;
-        letter-spacing: 0.5px;
-        text-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
     }
 
     /* Action Buttons */
     .action-section {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 2px solid #e5e7eb;
-        margin-bottom: 30px;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .action-buttons {
@@ -483,86 +380,64 @@
     }
 
     .btn {
-        padding: 14px 28px;
+        padding: 12px 24px;
         border: none;
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: 15px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
         cursor: pointer;
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         text-decoration: none;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        letter-spacing: 0.3px;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
-
-    .btn:active {
-        transform: translateY(0);
     }
 
     .btn-processing {
-        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        background: #8b5cf6;
         color: white;
-        box-shadow: 0 4px 8px rgba(139, 92, 246, 0.3);
     }
 
     .btn-processing:hover {
-        background: linear-gradient(135deg, #7c3aed, #6d28d9);
-        box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+        background: #7c3aed;
     }
 
     .btn-ready {
-        background: linear-gradient(135deg, #10b981, #059669);
+        background: #10b981;
         color: white;
-        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
     }
 
     .btn-ready:hover {
-        background: linear-gradient(135deg, #059669, #047857);
-        box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
+        background: #059669;
     }
 
     .btn-complete {
-        background: linear-gradient(135deg, #065f46, #064e3b);
+        background: #065f46;
         color: white;
-        box-shadow: 0 4px 8px rgba(6, 95, 70, 0.3);
     }
 
     .btn-complete:hover {
-        background: linear-gradient(135deg, #064e3b, #022c22);
-        box-shadow: 0 6px 12px rgba(6, 95, 70, 0.4);
+        background: #064e3b;
     }
 
     .btn-reject {
-        background: linear-gradient(135deg, #ef4444, #dc2626);
+        background: #ef4444;
         color: white;
-        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
     }
 
     .btn-reject:hover {
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
-        box-shadow: 0 6px 12px rgba(239, 68, 68, 0.4);
+        background: #dc2626;
     }
 
     .btn-print {
         background: white;
         color: #065f46;
-        border: 3px solid #065f46;
-        box-shadow: 0 2px 6px rgba(6, 95, 70, 0.1);
+        border: 2px solid #065f46;
     }
 
     .btn-print:hover {
-        background: linear-gradient(135deg, #065f46, #047857);
+        background: #065f46;
         color: white;
-        border-color: #065f46;
-        box-shadow: 0 6px 12px rgba(6, 95, 70, 0.3);
     }
 
     /* Map Section Admin */
@@ -642,104 +517,56 @@
 
     /* Rejection Section */
     .rejection-section {
-        background: linear-gradient(135deg, #fee2e2, #fecaca);
-        padding: 24px;
-        border-radius: 12px;
-        border: 3px solid #ef4444;
-        margin-top: 24px;
-        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+        background: #fee2e2;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #ef4444;
+        margin-top: 20px;
     }
 
     .rejection-title {
-        font-size: 18px;
-        font-weight: 800;
+        font-size: 16px;
+        font-weight: 700;
         color: #991b1b;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
-        gap: 10px;
-    }
-
-    .rejection-title i {
-        width: 32px;
-        height: 32px;
-        background: #ef4444;
-        color: white;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        gap: 8px;
     }
 
     .rejection-reason {
-        font-size: 15px;
+        font-size: 14px;
         color: #7f1d1d;
-        line-height: 1.7;
-        font-weight: 500;
+        line-height: 1.6;
     }
 
     /* Responsive */
-    @media (max-width: 1200px) {
-        .detail-container {
-            padding: 25px 30px;
+    @media (max-width: 1024px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
         }
 
         .product-item {
-            grid-template-columns: 80px 1fr 130px;
-            gap: 20px;
+            grid-template-columns: 60px 1fr 100px;
+            gap: 15px;
         }
 
         .product-image {
-            width: 80px;
-            height: 80px;
-        }
-    }
-
-    @media (max-width: 968px) {
-        .detail-container {
-            padding: 20px;
-        }
-
-        .detail-card, .products-section, .map-section-admin, .action-section {
-            padding: 20px;
-        }
-
-        .product-item {
-            grid-template-columns: 70px 1fr 110px;
-            gap: 16px;
-            padding: 18px;
-        }
-
-        .product-image {
-            width: 70px;
-            height: 70px;
-        }
-
-        .info-item {
-            grid-template-columns: 140px 1fr;
-            gap: 12px;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
         }
     }
 
     @media (max-width: 768px) {
-        .order-header {
-            padding: 24px;
-        }
-
-        .order-title {
-            font-size: 22px;
+        .order-title-section {
+            flex-direction: column;
+            gap: 15px;
         }
 
         .product-item {
             grid-template-columns: 1fr;
             text-align: center;
-            gap: 12px;
-        }
-
-        .product-image {
-            margin: 0 auto;
-            width: 80px;
-            height: 80px;
         }
 
         .product-price {
@@ -754,57 +581,15 @@
             width: 100%;
             justify-content: center;
         }
-
-        .info-item {
-            grid-template-columns: 1fr;
-            gap: 8px;
-        }
-
-        .grand-total .total-label {
-            font-size: 18px;
-        }
-
-        .grand-total .total-value {
-            font-size: 24px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .detail-container {
-            padding: 15px;
-        }
-
-        .detail-card, .products-section, .map-section-admin, .action-section {
-            padding: 16px;
-        }
-
-        .order-title {
-            font-size: 20px;
-        }
-
-        .card-title {
-            font-size: 18px;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            font-size: 14px;
-        }
-    }
-
-        .btn {
-            width: 100%;
-            justify-content: center;
-        }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="detail-container">
     <!-- Back Button -->
     <div class="back-button">
-        <a href="{{ route('admin.orders') }}" class="btn-back">
+        <a href="<?php echo e(route('admin.orders')); ?>" class="btn-back">
             <i class="fas fa-arrow-left"></i>
             <span>Kembali ke Daftar Pesanan</span>
         </a>
@@ -814,15 +599,16 @@
     <div class="order-header">
         <div class="order-title-section">
             <div>
-                <h1 class="order-title">Pesanan {{ $order->order_number }}</h1>
+                <h1 class="order-title">Pesanan <?php echo e($order->order_number); ?></h1>
                 <p class="order-date">
                     <i class="far fa-calendar"></i>
-                    {{ $order->created_at->format('d F Y, H:i') }} WIB
+                    <?php echo e($order->created_at->format('d F Y, H:i')); ?> WIB
                 </p>
             </div>
             <div>
-                <span class="status-badge status-{{ strtolower($order->status) }}">
-                    {{ $order->status }}
+                <span class="status-badge status-<?php echo e(strtolower($order->status)); ?>">
+                    <?php echo e($order->status); ?>
+
                 </span>
             </div>
         </div>
@@ -842,35 +628,35 @@
                         <i class="fas fa-user-circle"></i>
                         Nama Pemesan
                     </div>
-                    <div class="info-value">{{ $order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_name ?? $order->user->nama_lengkap ?? $order->user->name ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-envelope"></i>
                         Email
                     </div>
-                    <div class="info-value">{{ $order->user->email ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->user->email ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-phone"></i>
                         No. HP
                     </div>
-                    <div class="info-value">{{ $order->customer_phone ?? $order->user->no_hp ?? 'N/A' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_phone ?? $order->user->no_hp ?? 'N/A'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-map-marker-alt"></i>
                         Alamat
                     </div>
-                    <div class="info-value">{{ $order->customer_address ?? $order->user->alamat ?? 'Belum diisi' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_address ?? $order->user->alamat ?? 'Belum diisi'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">
                         <i class="fas fa-sticky-note"></i>
                         Catatan
                     </div>
-                    <div class="info-value">{{ $order->customer_notes ?? 'Tidak ada catatan' }}</div>
+                    <div class="info-value"><?php echo e($order->customer_notes ?? 'Tidak ada catatan'); ?></div>
                 </div>
             </div>
         </div>
@@ -879,7 +665,7 @@
     </div>
 
     <!-- Pickup Point Information (for Ready status) -->
-    @if($order->status === 'Ready' || $order->status === 'Completed')
+    <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
     <div class="info-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981;">
         <h3 class="card-title" style="color: #047857;">
             <i class="fas fa-map-marked-alt"></i>
@@ -893,7 +679,7 @@
             <!-- Will be populated by JavaScript -->
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Products Ordered -->
     <div class="products-section">
@@ -902,7 +688,7 @@
             Produk yang Dipesan
         </h3>
         
-        @php
+        <?php
             $items = is_string($order->items) ? json_decode($order->items, true) : $order->items;
             $calculatedSubtotal = 0;
             
@@ -915,11 +701,11 @@
                     'order_total' => $order->total_amount ?? 'NULL'
                 ]);
             }
-        @endphp
+        ?>
 
-        @if(is_array($items) && count($items) > 0)
-            @foreach($items as $item)
-                @php
+        <?php if(is_array($items) && count($items) > 0): ?>
+            <?php $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php
                     // Use unit_price if available, otherwise fallback to price
                     $unitPrice = $item['unit_price'] ?? $item['price'] ?? 0;
                     $quantity = $item['quantity'] ?? 0;
@@ -927,9 +713,9 @@
                     // Use subtotal from item if available, otherwise calculate
                     $itemSubtotal = $item['subtotal'] ?? ($unitPrice * $quantity);
                     $calculatedSubtotal += $itemSubtotal;
-                @endphp
+                ?>
                 <div class="product-item">
-                    @php
+                    <?php
                         $productImage = asset('images/pupuk.jpg'); // Default
                         
                         if($order->product) {
@@ -963,46 +749,48 @@
                         } elseif(($item['type'] ?? '') === 'bibit') {
                             $productImage = asset('images/bibit.jpg');
                         }
-                    @endphp
+                    ?>
                     
                     <div class="product-image">
-                        <img src="{{ $productImage }}" 
-                             alt="{{ $item['product_name'] ?? 'Produk' }}" 
+                        <img src="<?php echo e($productImage); ?>" 
+                             alt="<?php echo e($item['product_name'] ?? 'Produk'); ?>" 
                              style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                             onerror="this.src='{{ asset('images/pupuk.jpg') }}'">
+                             onerror="this.src='<?php echo e(asset('images/pupuk.jpg')); ?>'">
                     </div>
                     <div class="product-info">
-                        <h4>{{ $item['product_name'] ?? 'Produk' }}</h4>
+                        <h4><?php echo e($item['product_name'] ?? 'Produk'); ?></h4>
                         <p class="product-meta">
                             <span style="background: #e0e7ff; color: #5b21b6; padding: 3px 10px; border-radius: 5px; font-weight: 600;">
-                                {{ ucfirst($item['type'] ?? 'N/A') }}
+                                <?php echo e(ucfirst($item['type'] ?? 'N/A')); ?>
+
                             </span>
-                            <span style="margin-left: 10px;">{{ $item['category'] ?? 'N/A' }}</span>
+                            <span style="margin-left: 10px;"><?php echo e($item['category'] ?? 'N/A'); ?></span>
                         </p>
                         <p class="product-quantity">
-                            <i class="fas fa-box"></i> Jumlah: {{ $quantity }} kg
+                            <i class="fas fa-box"></i> Jumlah: <?php echo e($quantity); ?> kg
                         </p>
                     </div>
                     <div class="product-price">
                         <div class="product-subtotal">
-                            Rp {{ number_format($itemSubtotal, 0, ',', '.') }}
+                            Rp <?php echo e(number_format($itemSubtotal, 0, ',', '.')); ?>
+
                         </div>
                         <div class="product-unit-price">
-                            @ Rp {{ number_format($unitPrice, 0, ',', '.') }}/kg
+                            @ Rp <?php echo e(number_format($unitPrice, 0, ',', '.')); ?>/kg
                         </div>
                     </div>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
             <!-- Total Section -->
-            @php
+            <?php
                 // Use order subtotal from DB if calculated is 0, otherwise use calculated
                 $finalSubtotal = $calculatedSubtotal > 0 ? $calculatedSubtotal : ($order->subtotal ?? 0);
-            @endphp
+            ?>
             <div class="total-section">
                 <div class="total-row">
                     <span class="total-label">Subtotal</span>
-                    <span class="total-value">Rp {{ number_format($finalSubtotal, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp <?php echo e(number_format($finalSubtotal, 0, ',', '.')); ?></span>
                 </div>
                 <div class="total-row">
                     <span class="total-label">Ongkos Kirim</span>
@@ -1010,27 +798,27 @@
                 </div>
                 <div class="total-row grand-total">
                     <span class="total-label">Total Pembayaran</span>
-                    <span class="total-value">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</span>
+                    <span class="total-value">Rp <?php echo e(number_format($order->total_amount ?? 0, 0, ',', '.')); ?></span>
                 </div>
             </div>
-        @else
+        <?php else: ?>
             <p style="text-align: center; color: #6b7280; padding: 40px;">
                 <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>
                 Tidak ada produk dalam pesanan ini
             </p>
-        @endif
+        <?php endif; ?>
     </div>
 
     <!-- Rejection Reason (if rejected) -->
-    @if($order->status === 'Rejected' && $order->rejection_reason)
+    <?php if($order->status === 'Rejected' && $order->rejection_reason): ?>
     <div class="rejection-section">
         <div class="rejection-title">
             <i class="fas fa-exclamation-triangle"></i>
             Alasan Penolakan
         </div>
-        <p class="rejection-reason">{{ $order->rejection_reason }}</p>
+        <p class="rejection-reason"><?php echo e($order->rejection_reason); ?></p>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Action Buttons -->
     <div class="action-section">
@@ -1039,7 +827,7 @@
             Kelola Pesanan
         </h3>
         <div class="action-buttons">
-            @if($order->status === 'Pending')
+            <?php if($order->status === 'Pending'): ?>
                 <button class="btn btn-processing" onclick="updateStatus('Processing')">
                     <i class="fas fa-spinner"></i>
                     Proses Pesanan
@@ -1048,7 +836,7 @@
                     <i class="fas fa-times-circle"></i>
                     Tolak Pesanan
                 </button>
-            @elseif($order->status === 'Processing')
+            <?php elseif($order->status === 'Processing'): ?>
                 <button class="btn btn-ready" onclick="updateStatus('Ready')">
                     <i class="fas fa-check"></i>
                     Siap Diambil
@@ -1057,12 +845,12 @@
                     <i class="fas fa-times-circle"></i>
                     Tolak Pesanan
                 </button>
-            @elseif($order->status === 'Ready')
+            <?php elseif($order->status === 'Ready'): ?>
                 <button class="btn btn-complete" onclick="updateStatus('Completed')">
                     <i class="fas fa-check-double"></i>
                     Selesaikan Pesanan
                 </button>
-            @endif
+            <?php endif; ?>
             
             <button class="btn btn-print" onclick="window.print()">
                 <i class="fas fa-print"></i>
@@ -1071,16 +859,16 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -1088,13 +876,13 @@
 
 <script>
     // Load nearest pickup point for Ready orders
-    @if($order->status === 'Ready' || $order->status === 'Completed')
+    <?php if($order->status === 'Ready' || $order->status === 'Completed'): ?>
     document.addEventListener('DOMContentLoaded', function() {
         loadNearestPickupForAdmin();
     });
 
     function loadNearestPickupForAdmin() {
-        const customerAddress = '{{ $order->customer_address ?? $order->user->alamat ?? "" }}';
+        const customerAddress = '<?php echo e($order->customer_address ?? $order->user->alamat ?? ""); ?>';
         const loadingSection = document.getElementById('pickupLoadingSection');
         const infoSection = document.getElementById('pickupInfoSection');
         
@@ -1246,7 +1034,7 @@
             `;
         });
     }
-    @endif
+    <?php endif; ?>
 
     function updateStatus(newStatus) {
         if (!confirm(`Apakah Anda yakin ingin mengubah status pesanan menjadi "${newStatus}"?`)) {
@@ -1255,7 +1043,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -1306,7 +1094,7 @@
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        fetch(`/admin/orders/{{ $order->order_number }}/status`, {
+        fetch(`/admin/orders/<?php echo e($order->order_number); ?>/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -1348,4 +1136,6 @@
         });
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/admin/orders/detail.blade.php ENDPATH**/ ?>
