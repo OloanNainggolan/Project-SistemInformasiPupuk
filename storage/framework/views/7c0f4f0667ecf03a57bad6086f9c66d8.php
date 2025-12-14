@@ -1,12 +1,10 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Notifikasi Masuk - Admin'); ?>
 
-@section('title', 'Notifikasi Masuk - Admin')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     .inbox-container {
         max-width: 1400px;
-        margin: 0 auto;
+        margin: 30px auto;
         padding: 0 20px;
     }
 
@@ -298,9 +296,9 @@
         justify-content: center;
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="inbox-container">
     <!-- Page Header -->
     <div class="page-header">
@@ -309,22 +307,22 @@
             <p>Semua notifikasi: Pesan, Kontak, Pesanan, dan User Baru</p>
         </div>
         <div class="header-stats">
-            <div class="stat-badge">{{ $totalCount }} Total</div>
-            <div class="stat-badge unread">{{ $unreadCount }} Belum Dibaca</div>
-            @if($unreadCount > 0)
-                <form action="{{ route('admin.notifications.markAllRead') }}" method="POST" style="display: inline;">
-                    @csrf
+            <div class="stat-badge"><?php echo e($totalCount); ?> Total</div>
+            <div class="stat-badge unread"><?php echo e($unreadCount); ?> Belum Dibaca</div>
+            <?php if($unreadCount > 0): ?>
+                <form action="<?php echo e(route('admin.notifications.markAllRead')); ?>" method="POST" style="display: inline;">
+                    <?php echo csrf_field(); ?>
                     <button type="submit" class="btn-mark-all">
                         <i class="fas fa-check-double"></i> Tandai Semua Dibaca
                     </button>
                 </form>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 
     <!-- Filter Section -->
     <div class="filter-tabs">
-        <form method="GET" action="{{ route('admin.notifications.inbox') }}" id="filterForm">
+        <form method="GET" action="<?php echo e(route('admin.notifications.inbox')); ?>" id="filterForm">
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
                 <!-- Sort By -->
                 <div>
@@ -332,10 +330,10 @@
                         <i class="fas fa-sort"></i> Urutkan
                     </label>
                     <select name="sort" class="form-control form-select" onchange="document.getElementById('filterForm').submit()">
-                        <option value="latest" {{ $sortBy == 'latest' ? 'selected' : '' }}>Terbaru</option>
-                        <option value="oldest" {{ $sortBy == 'oldest' ? 'selected' : '' }}>Terlama</option>
-                        <option value="name_asc" {{ $sortBy == 'name_asc' ? 'selected' : '' }}>Nama A-Z</option>
-                        <option value="name_desc" {{ $sortBy == 'name_desc' ? 'selected' : '' }}>Nama Z-A</option>
+                        <option value="latest" <?php echo e($sortBy == 'latest' ? 'selected' : ''); ?>>Terbaru</option>
+                        <option value="oldest" <?php echo e($sortBy == 'oldest' ? 'selected' : ''); ?>>Terlama</option>
+                        <option value="name_asc" <?php echo e($sortBy == 'name_asc' ? 'selected' : ''); ?>>Nama A-Z</option>
+                        <option value="name_desc" <?php echo e($sortBy == 'name_desc' ? 'selected' : ''); ?>>Nama Z-A</option>
                     </select>
                 </div>
                 
@@ -344,7 +342,7 @@
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px;">
                         <i class="fas fa-calendar"></i> Dari Tanggal
                     </label>
-                    <input type="date" name="date_from" class="form-control" value="{{ $dateFrom }}" 
+                    <input type="date" name="date_from" class="form-control" value="<?php echo e($dateFrom); ?>" 
                            onchange="document.getElementById('filterForm').submit()">
                 </div>
                 
@@ -353,13 +351,13 @@
                     <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px;">
                         <i class="fas fa-calendar"></i> Sampai Tanggal
                     </label>
-                    <input type="date" name="date_to" class="form-control" value="{{ $dateTo }}" 
+                    <input type="date" name="date_to" class="form-control" value="<?php echo e($dateTo); ?>" 
                            onchange="document.getElementById('filterForm').submit()">
                 </div>
                 
                 <!-- Reset Button -->
                 <div>
-                    <a href="{{ route('admin.notifications.inbox') }}" class="btn-reset">
+                    <a href="<?php echo e(route('admin.notifications.inbox')); ?>" class="btn-reset">
                         <i class="fas fa-redo"></i> Reset
                     </a>
                 </div>
@@ -368,77 +366,82 @@
     </div>
 
     <!-- Messages List -->
-    @if($notifications->count() > 0)
+    <?php if($notifications->count() > 0): ?>
         <div class="messages-list">
-            @foreach($notifications as $notif)
-                <div class="message-card {{ $notif['status'] == 'unread' ? 'unread' : '' }}" 
-                     data-notif-id="{{ $notif['id'] }}"
-                     data-notif-type="{{ $notif['type'] }}"
-                     onclick="openNotification('{{ $notif['id'] }}', '{{ $notif['type'] }}', '{{ $notif['link'] }}')">
+            <?php $__currentLoopData = $notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notif): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="message-card <?php echo e($notif['status'] == 'unread' ? 'unread' : ''); ?>" 
+                     data-notif-id="<?php echo e($notif['id']); ?>"
+                     data-notif-type="<?php echo e($notif['type']); ?>"
+                     onclick="openNotification('<?php echo e($notif['id']); ?>', '<?php echo e($notif['type']); ?>', '<?php echo e($notif['link']); ?>')">
                     
                     <!-- Avatar -->
-                    <div class="avatar {{ $notif['type'] }}">
-                        @if($notif['type'] == 'message')
-                            {{ strtoupper(substr($notif['sender_name'], 0, 1)) }}
-                        @elseif($notif['type'] == 'contact')
+                    <div class="avatar <?php echo e($notif['type']); ?>">
+                        <?php if($notif['type'] == 'message'): ?>
+                            <?php echo e(strtoupper(substr($notif['sender_name'], 0, 1))); ?>
+
+                        <?php elseif($notif['type'] == 'contact'): ?>
                             <i class="fas fa-address-book"></i>
-                        @elseif($notif['type'] == 'order')
+                        <?php elseif($notif['type'] == 'order'): ?>
                             <i class="fas fa-shopping-cart"></i>
-                        @else
+                        <?php else: ?>
                             <i class="fas fa-user-plus"></i>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
                     <!-- Content -->
                     <div class="message-content">
                         <div class="message-header">
                             <div class="sender-name notification-sender">
-                                @if($notif['status'] == 'unread')
+                                <?php if($notif['status'] == 'unread'): ?>
                                     <span class="unread-dot"></span>
-                                @endif
-                                {{ $notif['sender_name'] }}
+                                <?php endif; ?>
+                                <?php echo e($notif['sender_name']); ?>
+
                             </div>
-                            <span class="message-time">{{ $notif['time'] }}</span>
+                            <span class="message-time"><?php echo e($notif['time']); ?></span>
                         </div>
 
-                        <span class="message-type type-{{ $notif['type'] }}">
-                            @if($notif['type'] == 'message')
+                        <span class="message-type type-<?php echo e($notif['type']); ?>">
+                            <?php if($notif['type'] == 'message'): ?>
                                 <i class="fas fa-envelope"></i> Pesan
-                            @elseif($notif['type'] == 'contact')
+                            <?php elseif($notif['type'] == 'contact'): ?>
                                 <i class="fas fa-address-book"></i> Kontak
-                            @elseif($notif['type'] == 'order')
+                            <?php elseif($notif['type'] == 'order'): ?>
                                 <i class="fas fa-shopping-cart"></i> Pesanan
-                            @else
+                            <?php else: ?>
                                 <i class="fas fa-user-plus"></i> User Baru
-                            @endif
+                            <?php endif; ?>
                         </span>
 
                         <div class="message-text notification-message">
-                            {{ Str::limit($notif['content'], 150) }}
+                            <?php echo e(Str::limit($notif['content'], 150)); ?>
+
                         </div>
 
-                        @if($notif['type'] == 'order' && !empty($notif['order_number']))
+                        <?php if($notif['type'] == 'order' && !empty($notif['order_number'])): ?>
                             <div class="order-number">
                                 <i class="fas fa-hashtag"></i>
-                                {{ $notif['order_number'] }}
+                                <?php echo e($notif['order_number']); ?>
+
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
 
         <!-- Pagination -->
         <div class="pagination">
-            {{ $notifications->links() }}
+            <?php echo e($notifications->links()); ?>
+
         </div>
-    @else
+    <?php else: ?>
         <div class="empty-state">
             <i class="fas fa-inbox"></i>
             <h3>Tidak Ada Pesan</h3>
             <p>Belum ada pesan atau notifikasi dari pengguna</p>
         </div>
-    @endif
+    <?php endif; ?>
 </div>
 
 <script>
@@ -471,4 +474,6 @@
         }
     }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\ppw\resources\views/admin/notifications/inbox.blade.php ENDPATH**/ ?>

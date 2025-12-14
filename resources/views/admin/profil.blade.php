@@ -15,7 +15,7 @@
     .profile-page {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 30px 20px;
+        padding: 0 20px 30px;
     }
 
     /* Page Header */

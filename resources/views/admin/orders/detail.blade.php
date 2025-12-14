@@ -7,7 +7,7 @@
     .detail-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 30px 40px;
+        padding: 0 40px 30px;
     }
 
     /* Back Button */

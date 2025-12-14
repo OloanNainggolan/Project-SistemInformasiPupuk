@@ -420,6 +420,7 @@
         .admin-main {
             min-height: auto;
             margin-top: 65px;
+            padding-top: 30px;
             padding-bottom: 40px;
         }
 
