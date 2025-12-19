@@ -421,25 +421,29 @@ class AdminNotificationController extends Controller
         // Icon dan warna berdasarkan tipe
         $typeConfig = [
             'info' => [
+                'emoji' => 'ℹ️',
                 'label' => '[INFO] INFORMASI',
                 'border' => '━'
             ],
             'success' => [
+                'emoji' => '✅',
                 'label' => '[SUKSES] PENGUMUMAN PENTING',
                 'border' => '━'
             ],
             'warning' => [
+                'emoji' => '⚠️',
                 'label' => '[PERINGATAN] PERHATIAN',
                 'border' => '━'
             ],
             'important' => [
+                'emoji' => '🔴',
                 'label' => '[URGENT] PENGUMUMAN URGENT',
                 'border' => '━'
             ]
         ];
 
         $config = $typeConfig[$type] ?? $typeConfig['info'];
-        $emoji = $config['emoji'];
+        $emoji = $config['emoji'] ?? '';
         $label = $config['label'];
         $border = str_repeat($config['border'], 30);
 
